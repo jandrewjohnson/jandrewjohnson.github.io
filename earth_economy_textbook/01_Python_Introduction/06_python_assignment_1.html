@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 14&nbsp; Hosting notes</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 7&nbsp; Python Assignment 1: Big and spatial data in Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -30,8 +93,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../Appendices/quarto_notes.html" rel="next">
-<link href="../03_LULC_Classification/02_python_assignment_2.html" rel="prev">
+<link href="../02_Machine_Learning/01_linear_regression.html" rel="next">
+<link href="../01_Python_Introduction/05_gdal_rasters.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -139,7 +202,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
+  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
   </div>
 </li>
       </ul>
@@ -204,7 +267,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -223,8 +286,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#create-a-github.io-page" id="toc-create-a-github.io-page" class="nav-link active" data-scroll-target="#create-a-github.io-page"><span class="toc-section-number">14.1</span>  Create a github.io page</a></li>
-  <li><a href="#pasting-images" id="toc-pasting-images" class="nav-link" data-scroll-target="#pasting-images"><span class="toc-section-number">14.2</span>  Pasting images</a></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1"><span class="toc-section-number">7.1</span>  Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="toc-section-number">7.2</span>  Question 2</a></li>
   </ul>
 </nav>
     </div>
@@ -233,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></h1>
 </div>
 
 
@@ -248,38 +311,57 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="create-a-github.io-page" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="create-a-github.io-page"><span class="header-section-number">14.1</span> Create a github.io page</h2>
-<p>Create a new repository using your username:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
+<p>For this assignment, you will be using numpy to manipulate arrays in a way that works well for big data and will be using spatial tools to assess land-use change. Specifically, you will use data from a global, 300m resolution land-use, land-cover (LULC) map produced by ESACCI. They provide a wonderful time series of data from 1992-2019. If you want more information, check out their web viewer at https://maps.elie.ucl.ac.be/CCI/viewer/. Here you can view the data but also learn more about the classification regressions that uses time-series spectral data patterns to classify grid-cells into different types. I have extracted lulc maps for the country of Rwanda, which you will find in this assignment’s data folder.</p>
+<section id="question-1" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">7.1</span> Question 1</h2>
+<p>This question tests some basic python comprehension.</p>
+<p>Throughout, use comments to explain steps you are doing. No need to go overboard but it is always important in coding to be as descriptive as possible.</p>
+<p>Most things in this can be solved using methods shown in lecture. However, some cases will require you to search the internet for answers. This is intended because efficiently searching documentation or Stackoverflow is a requirement of modern programing.</p>
+<p>Subsequent questions will be specific to big data, statistics and economics, but for now we are just checking that you’re okay with the basics of Python.</p>
+<p><strong>Part A:</strong> Write a python function that calculates the sum of all squared numbers from 1 to x. Illustrate that it works for x = 20.</p>
+<p>HINT, ** is the exponent operator in python. HINT syntax for a python function is:</p>
+<p>def function_name(variable_name): outcome = variable_name + 1 return outcome</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1A Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Clone the newly-created repo</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-1-image-2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
+<p>The python library named “os” is a built-in library for dealing with any file on your operating system. Often, research tasks involve LOTS of files and you need to iterate over them. To show you know how to do this, use the os.listdir function to answer the following questions. Note that you need to write “import os” to import the library into your code before you can use it:</p>
+<p><strong>Part B:</strong> Print out a list of all the files in the class repository (which you have gotten from GitHub). I don’t care how many are actually there (in case you’ve added some yourself) but show me how.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#1B Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then just put the index.html file in the root directory of that repository. An example workflow is to generate the index.html from Quarto and then copy that in.</p>
-<p>Personally, I use a script in the scripts dir that copies the generated Quarto directory to the public directory in “scripts/publish_ee_book_to_github_io_site”</p>
+<p><strong>Part C:</strong> Using a FOR loop, iterate over the list from above. Using the function len(), count how many letters there are in the filenames. HINT just like in real life, you may need to google the len() function and see how it work on e.g.&nbsp;strings.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1C Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Part D:</strong> Write a Python program which iterates over the integers from 1 to 50. For multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz”. Hint: look up how to use the modulo operator (which is written as % in python) which would let you test when the remainder of a devision is exactly 0.</p>
+<p>Side-note, this is a hilariously over-used question that most software engineers get askedon their first interview for a job.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1D Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="pasting-images" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="pasting-images"><span class="header-section-number">14.2</span> Pasting images</h2>
-<p>NOTE: This is easiest to do in ipynb NOT in qmd because of the built-in options for pasting images into notebooks.</p>
-<p>Note that there are two methods: paste (ctrl-v) directly into a markdown cell of a ipynb. This adds it as an “attachment” where the raw binary image code is written into text in the cell’s attribute (and thus there is no external file saved). The other is the use the Paste Image VS Code plug in, which lets you actually write a file in a gnerated location for the PNG. This is called by ctrl-alt-v</p>
-<p>Option 1</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
+<section id="question-2" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">7.2</span> Question 2</h2>
+<p>Part a.) Using the gdal package and the gdal.Open() function, open up the land-use, land-cover map for Rwanda in 2000.</p>
+<p>In this file, there is only 1 band in this file, so you can also access it with the GetRasterBand(1) function. Without reading the whole array, show how you can determine how many total grid-cells there are in this country.</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2A Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Option 2</p>
-<p><img src="../images/2022-12-29-10-20-25.png" class="img-fluid"></p>
+<p>Part b.) Using the results of part a, read the whole array into memory as a numpy array (the default option when using the ReadAsArray() funciton, and plot it using the matplotlib imshow command. Add a nice title to the plot describing what it is.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#2B Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Part c.) Using the legend you find at https://maps.elie.ucl.ac.be/CCI/viewer/download/ESACCI-LC-QuickUserGuide-LC-Maps_v2-0-7.pdf reclassify the LULC into a simplified map where 1 = cropland (including any mosaic types that are partially cropland) and 0 = anything else. Plot this using imshow.</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2C Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Part d.) Repeat the process for the 2010 LULC map. Using this array with the one from part c, create a new array that records where there was cropland expansion (i.e., there is cropland in 2010 but not in 2000) and where there was cropland abandonment (cropland in 2000 but not in 2010). Save this classification in a single new array. Plot this last array. Optionally, add a legend indicating which values in the array denote expansion and abandonment using some variant of <code>ax.legend()</code></p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2D Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Part e.) Overall, did Rwanada see net expansion or contraction of cropland over this period? Looking at the spatial results, do you see any patterns of where this happens? Is it in the north/south, near cities, replacing forests etc.?</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#2E Answer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
@@ -420,13 +502,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../03_LULC_Classification/02_python_assignment_2.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></span>
+      <a href="../01_Python_Introduction/05_gdal_rasters.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Appendices/quarto_notes.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../02_Machine_Learning/01_linear_regression.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

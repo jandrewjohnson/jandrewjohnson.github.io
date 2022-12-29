@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 14&nbsp; Hosting notes</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 2&nbsp; Python Assignment 0</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -30,8 +93,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../Appendices/quarto_notes.html" rel="next">
-<link href="../03_LULC_Classification/02_python_assignment_2.html" rel="prev">
+<link href="../01_Python_Introduction/02_python_basics.html" rel="next">
+<link href="../01_Python_Introduction/01_jupyter_intro.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -114,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
+  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -204,7 +267,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -223,8 +286,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#create-a-github.io-page" id="toc-create-a-github.io-page" class="nav-link active" data-scroll-target="#create-a-github.io-page"><span class="toc-section-number">14.1</span>  Create a github.io page</a></li>
-  <li><a href="#pasting-images" id="toc-pasting-images" class="nav-link" data-scroll-target="#pasting-images"><span class="toc-section-number">14.2</span>  Pasting images</a></li>
+  <li><a href="#optional-more" id="toc-optional-more" class="nav-link active" data-scroll-target="#optional-more"><span class="toc-section-number">2.1</span>  Optional More</a></li>
   </ul>
 </nav>
     </div>
@@ -233,7 +295,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></h1>
 </div>
 
 
@@ -248,38 +310,33 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="create-a-github.io-page" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="create-a-github.io-page"><span class="header-section-number">14.1</span> Create a github.io page</h2>
-<p>Create a new repository using your username:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
+<p>You will submit the results of this code into the assignment page listed on Canvas. This will prove to me you’ve done everything you need to and we’ll be ready to dive into Machine Learning!. If you’re auditing this course, just email me your github name and the output of the assignment below.</p>
+<p>Assignment: 1. Open a terminal to run Python. If you’re on Windows, you can do this in the start menu by searching for or finding “Miniforge Prompt”. On mac, you can just use the built in terminal. 2. Enter the following text into the terminal, one line at a time: mamba init mamba activate 8222env1 python import hazelbean print(hazelbean) 3. Copy and paste the last line of output from these commands into the Canvas assignment, along with your GitHub username. If everything was done correctly, the outline line should start with “&lt;module ‘hazelbean’”. 4. Celebrate!</p>
+<section id="optional-more" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="optional-more"><span class="header-section-number">2.1</span> Optional More</h2>
+<p>If you’re looking for more, here is one extra task: Run this notebook in VS Code! We’ll talk more about VS Code in the next class, so don’t worry if this doesn’t make sense. If you do want to run this, open it and then select “Run All” at the top of the editor. It will automatically output how well you did (worth no class credit).</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> osgeo <span class="im">import</span> gdal</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> autograde():</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(<span class="bu">str</span>(hb.<span class="va">__name__</span>)) <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'100%'</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"0%. Keep trying! Feel free to email me in advance of the first Python lecture. Don't save this for teh last day!"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hazelbean library imported successfully:'</span>, hb)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Autograding output:'</span>, autograde())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hazelbean library imported successfully: &lt;module 'hazelbean' from 'c:\\Users\\jajohns\\AppData\\Local\\mambaforge\\envs\\8222env1\\lib\\site-packages\\hazelbean\\__init__.py'&gt;
+Autograding output: 100%</code></pre>
 </div>
-<p>Clone the newly-created repo</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-1-image-2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
 </div>
-<p>Then just put the index.html file in the root directory of that repository. An example workflow is to generate the index.html from Quarto and then copy that in.</p>
-<p>Personally, I use a script in the scripts dir that copies the generated Quarto directory to the public directory in “scripts/publish_ee_book_to_github_io_site”</p>
-</section>
-<section id="pasting-images" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="pasting-images"><span class="header-section-number">14.2</span> Pasting images</h2>
-<p>NOTE: This is easiest to do in ipynb NOT in qmd because of the built-in options for pasting images into notebooks.</p>
-<p>Note that there are two methods: paste (ctrl-v) directly into a markdown cell of a ipynb. This adds it as an “attachment” where the raw binary image code is written into text in the cell’s attribute (and thus there is no external file saved). The other is the use the Paste Image VS Code plug in, which lets you actually write a file in a gnerated location for the PNG. This is called by ctrl-alt-v</p>
-<p>Option 1</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/50a380ce-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
-</div>
-<p>Option 2</p>
-<p><img src="../images/2022-12-29-10-20-25.png" class="img-fluid"></p>
 
 
 </section>
@@ -420,13 +477,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../03_LULC_Classification/02_python_assignment_2.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></span>
+      <a href="../01_Python_Introduction/01_jupyter_intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Appendices/quarto_notes.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../01_Python_Introduction/02_python_basics.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

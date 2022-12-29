@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 2&nbsp; Python Basics</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 3&nbsp; Python Basics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02_Machine_Learning/01_linear_regression.html" rel="next">
-<link href="../01_Python_Introduction/01_jupyter_intro.html" rel="prev">
+<link href="../01_Python_Introduction/03_numpy_arrays.html" rel="next">
+<link href="../01_Python_Introduction/00_python_assignment_0.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -129,11 +129,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <body class="nav-sidebar floating">
 
+
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Basics</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -176,7 +177,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_Python_Introduction/03_numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_Python_Introduction/04_pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_Python_Introduction/05_gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
   </div>
 </li>
       </ul>
@@ -191,19 +217,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Appendices</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Machine Learning</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -211,12 +247,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../03_LULC_Classification/01_lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Cross References</span></a>
+  <a href="../03_LULC_Classification/02_python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></a>
   </div>
 </li>
       </ul>
@@ -230,17 +286,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#python-basics" id="toc-python-basics" class="nav-link active" data-scroll-target="#python-basics"><span class="toc-section-number">2.1</span>  Python Basics</a>
+  <li><a href="#python-basics" id="toc-python-basics" class="nav-link active" data-scroll-target="#python-basics"><span class="toc-section-number">3.1</span>  Python Basics</a>
   <ul class="collapse">
-  <li><a href="#important-note-python-is-not-a-typed-language" id="toc-important-note-python-is-not-a-typed-language" class="nav-link" data-scroll-target="#important-note-python-is-not-a-typed-language"><span class="toc-section-number">2.1.1</span>  Important note: Python is not a “typed” language</a></li>
+  <li><a href="#important-note-python-is-not-a-typed-language" id="toc-important-note-python-is-not-a-typed-language" class="nav-link" data-scroll-target="#important-note-python-is-not-a-typed-language"><span class="toc-section-number">3.1.1</span>  Important note: Python is not a “typed” language</a></li>
   </ul></li>
-  <li><a href="#other-python-types" id="toc-other-python-types" class="nav-link" data-scroll-target="#other-python-types"><span class="toc-section-number">2.2</span>  Other python types</a></li>
-  <li><a href="#looping" id="toc-looping" class="nav-link" data-scroll-target="#looping"><span class="toc-section-number">2.3</span>  Looping</a></li>
-  <li><a href="#defining-functions" id="toc-defining-functions" class="nav-link" data-scroll-target="#defining-functions"><span class="toc-section-number">2.4</span>  Defining functions</a></li>
-  <li><a href="#importing-packages" id="toc-importing-packages" class="nav-link" data-scroll-target="#importing-packages"><span class="toc-section-number">2.5</span>  Importing packages</a></li>
-  <li><a href="#using-packages-from-elsewhere" id="toc-using-packages-from-elsewhere" class="nav-link" data-scroll-target="#using-packages-from-elsewhere"><span class="toc-section-number">2.6</span>  Using packages from elsewhere</a></li>
-  <li><a href="#discussion-point" id="toc-discussion-point" class="nav-link" data-scroll-target="#discussion-point"><span class="toc-section-number">2.7</span>  Discussion point</a></li>
-  <li><a href="#in-class-exercise-2.1" id="toc-in-class-exercise-2.1" class="nav-link" data-scroll-target="#in-class-exercise-2.1"><span class="toc-section-number">2.8</span>  In-class exercise 2.1</a></li>
+  <li><a href="#other-python-types" id="toc-other-python-types" class="nav-link" data-scroll-target="#other-python-types"><span class="toc-section-number">3.2</span>  Other python types</a></li>
+  <li><a href="#looping" id="toc-looping" class="nav-link" data-scroll-target="#looping"><span class="toc-section-number">3.3</span>  Looping</a></li>
+  <li><a href="#defining-functions" id="toc-defining-functions" class="nav-link" data-scroll-target="#defining-functions"><span class="toc-section-number">3.4</span>  Defining functions</a></li>
+  <li><a href="#importing-packages" id="toc-importing-packages" class="nav-link" data-scroll-target="#importing-packages"><span class="toc-section-number">3.5</span>  Importing packages</a></li>
+  <li><a href="#using-packages-from-elsewhere" id="toc-using-packages-from-elsewhere" class="nav-link" data-scroll-target="#using-packages-from-elsewhere"><span class="toc-section-number">3.6</span>  Using packages from elsewhere</a></li>
+  <li><a href="#discussion-point" id="toc-discussion-point" class="nav-link" data-scroll-target="#discussion-point"><span class="toc-section-number">3.7</span>  Discussion point</a></li>
+  <li><a href="#in-class-exercise-2.1" id="toc-in-class-exercise-2.1" class="nav-link" data-scroll-target="#in-class-exercise-2.1"><span class="toc-section-number">3.8</span>  In-class exercise 2.1</a></li>
   </ul>
 </nav>
     </div>
@@ -249,7 +305,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Basics</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></h1>
 </div>
 
 
@@ -268,9 +324,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>This notebook contains a very accelerated summary of the basics of python. If this is challenging, please refer to the textbook sections.</li>
 <li>Being able to successfully run this also means you have a working Python environment! You now have installed everything you need to run this course.</li>
 </ul>
-<section id="python-basics" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="python-basics"><span class="header-section-number">2.1</span> Python Basics</h2>
-<div class="cell">
+<section id="python-basics" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="python-basics"><span class="header-section-number">3.1</span> Python Basics</h2>
+<div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comments: The hashtag makes the rest of the line a comment. The more programming you do, the more you focus on making good comments.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Jupyter lets you write formatted text, but you'll still want to put comments in the raw python.</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -284,151 +340,192 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Even though nothing is outputted above, our Python “Kernel” has the values to each variable stored for later use.</li>
 </ul>
-<section id="important-note-python-is-not-a-typed-language" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="important-note-python-is-not-a-typed-language"><span class="header-section-number">2.1.1</span> Important note: Python is not a “typed” language</h3>
+<section id="important-note-python-is-not-a-typed-language" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="important-note-python-is-not-a-typed-language"><span class="header-section-number">3.1.1</span> Important note: Python is not a “typed” language</h3>
 <ul>
 <li><p>Notice that above, we added an integer and the float (a floating point number, i.e., one with a decimal point). Python “smartly” redefines variables so that they work together.</p></li>
 <li><p>This is different from other languages which require you to manually manage the “types” of your variables.</p></li>
 </ul>
-<div class="cell">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python as a calculator. </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sum_of_two_numbers <span class="op">=</span> a <span class="op">+</span> b</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing output to the console</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Our output was'</span>, sum_of_two_numbers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Our output was 9.6</code></pre>
+</div>
 </div>
 <ul>
 <li>In the above, you’ll notice the result was a float.</li>
 <li>If needed, you can demand that python specify something as a certain type, as below.</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sum_as_int <span class="op">=</span> <span class="bu">int</span>(sum_of_two_numbers)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sum_as_int_back_to_float <span class="op">=</span> <span class="bu">float</span>(sum_as_int)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'We lost some precision in this operation:'</span>, sum_as_int_back_to_float)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sum_as_int <span class="op">=</span> <span class="bu">int</span>(sum_of_two_numbers)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sum_as_int_back_to_float <span class="op">=</span> <span class="bu">float</span>(sum_as_int)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'We lost some precision in this operation:'</span>, sum_as_int_back_to_float)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We lost some precision in this operation: 9.0</code></pre>
+</div>
 </div>
 </section>
 </section>
-<section id="other-python-types" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="other-python-types"><span class="header-section-number">2.2</span> Other python types</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reminder, this assumes you have setup an envioronment with conda using:</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>list_1 <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'list_1'</span>, list_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="other-python-types" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="other-python-types"><span class="header-section-number">3.2</span> Other python types</h2>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reminder, this assumes you have setup an envioronment with conda using:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>list_1 <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'list_1'</span>, list_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>list_1 [4, 5, 6]</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can embed lists in lists in lists, etc.</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>list_2 <span class="op">=</span> [[<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>], [<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">5</span>]]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(list_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dictionaries</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dictionary_1 <span class="op">=</span> {<span class="dv">23</span>: <span class="st">"Favorite number"</span>, <span class="dv">24</span>: <span class="st">"Second favorite number"</span>}</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'dictionary_1'</span>, dictionary_1)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is a multi line string: (also discusses improved capabilities of an IDE editor)</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>things_you_can_do_in_vs_code_that_you_cant_do_without_an_ide <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">1.) Move back and forth in your history of cursor positions (using your mouse forward and back buttons)</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">2.) Edit on multiple lines at the same time (hold alt and click new spots)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">3.) Smartly paste DIFFERENT values</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">4.) Duplicate lines (ctrl-d)</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">5.) Introspection (e.g., jump between function definition and usages)</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">6.) Debugging (Interactively walk through your code one line at a time)</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">7.) Profiling your code (see which lines take the most time to compute.)</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">8.) Keep track of a history of copy-paste items and paste from past copies. (ctrl-shift-v)</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can embed lists in lists in lists, etc.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>list_2 <span class="op">=</span> [[<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>], [<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">5</span>]]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(list_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[5, 3, 5], [6, 6, 5]]</code></pre>
 </div>
-</section>
-<section id="looping" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="looping"><span class="header-section-number">2.3</span> Looping</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>small_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'small_range:'</span>, small_range)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>small_range_as_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">10</span>))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'small_range_as_list:'</span>, small_range_as_list)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is a for loop. Also note that python EXPLICITLY USES TAB-LEVEL to denote nested things.</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># I.e., the inner part of the loop is tabbed 1 level up. Python does not use { like  R.</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># I LOVE this notation and it's a big part of why python is so pretty and readable.</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span> <span class="op">=</span> <span class="dv">0</span> <span class="co"># Set the initial variable values</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>sum_with_some <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>, <span class="dv">136</span>, <span class="dv">3</span>):</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">sum</span> <span class="op">=</span> <span class="bu">sum</span> <span class="op">+</span> i</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    num <span class="op">=</span> num <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop within a loop</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>, <span class="dv">205</span>):</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        sum_with_some <span class="op">=</span> <span class="bu">sum</span> <span class="op">+</span> j</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> <span class="bu">sum</span> <span class="op">/</span> num</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'mean'</span>, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dictionaries</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dictionary_1 <span class="op">=</span> {<span class="dv">23</span>: <span class="st">"Favorite number"</span>, <span class="dv">24</span>: <span class="st">"Second favorite number"</span>}</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'dictionary_1'</span>, dictionary_1)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is a multi line string: (also discusses improved capabilities of an IDE editor)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>things_you_can_do_in_vs_code_that_you_cant_do_without_an_ide <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">1.) Move back and forth in your history of cursor positions (using your mouse forward and back buttons)</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">2.) Edit on multiple lines at the same time (hold alt and click new spots)</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">3.) Smartly paste DIFFERENT values</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="st">4.) Duplicate lines (ctrl-d)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="st">5.) Introspection (e.g., jump between function definition and usages)</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="st">6.) Debugging (Interactively walk through your code one line at a time)</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="st">7.) Profiling your code (see which lines take the most time to compute.)</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="st">8.) Keep track of a history of copy-paste items and paste from past copies. (ctrl-shift-v)</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dictionary_1 {23: 'Favorite number', 24: 'Second favorite number'}</code></pre>
+</div>
 </div>
 </section>
-<section id="defining-functions" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="defining-functions"><span class="header-section-number">2.4</span> Defining functions</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Functions</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_function(input_parameter_1, input_parameter_2):</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    product <span class="op">=</span> input_parameter_1 <span class="op">*</span> input_parameter_2</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> product</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the function</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>value_returned <span class="op">=</span> my_function(<span class="dv">2</span>, <span class="dv">7</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value_returned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="looping" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="looping"><span class="header-section-number">3.3</span> Looping</h2>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>small_range <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'small_range:'</span>, small_range)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>small_range_as_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">10</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'small_range_as_list:'</span>, small_range_as_list)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is a for loop. Also note that python EXPLICITLY USES TAB-LEVEL to denote nested things.</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># I.e., the inner part of the loop is tabbed 1 level up. Python does not use { like  R.</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># I LOVE this notation and it's a big part of why python is so pretty and readable.</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span> <span class="op">=</span> <span class="dv">0</span> <span class="co"># Set the initial variable values</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>sum_with_some <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>, <span class="dv">136</span>, <span class="dv">3</span>):</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">sum</span> <span class="op">=</span> <span class="bu">sum</span> <span class="op">+</span> i</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    num <span class="op">=</span> num <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop within a loop</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>, <span class="dv">205</span>):</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        sum_with_some <span class="op">=</span> <span class="bu">sum</span> <span class="op">+</span> j</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> <span class="bu">sum</span> <span class="op">/</span> num</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'mean'</span>, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>small_range: range(0, 10)
+small_range_as_list: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+mean 116.5</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In-class exercise workspace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-packages" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="importing-packages"><span class="header-section-number">2.5</span> Importing packages</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Built-in packages via the Python Standard Library</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, sys, time, random</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Using imported modules</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>number_rounded_down <span class="op">=</span> math.floor(sum_of_two_numbers)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(number_rounded_down)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="defining-functions" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="defining-functions"><span class="header-section-number">3.4</span> Defining functions</h2>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Functions</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_function(input_parameter_1, input_parameter_2):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    product <span class="op">=</span> input_parameter_1 <span class="op">*</span> input_parameter_2</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> product</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the function</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>value_returned <span class="op">=</span> my_function(<span class="dv">2</span>, <span class="dv">7</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value_returned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>14</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In-class exercise workspace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="using-packages-from-elsewhere" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="using-packages-from-elsewhere"><span class="header-section-number">2.6</span> Using packages from elsewhere</h2>
+<section id="importing-packages" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="importing-packages"><span class="header-section-number">3.5</span> Importing packages</h2>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Built-in packages via the Python Standard Library</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, sys, time, random</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Using imported modules</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>number_rounded_down <span class="op">=</span> math.floor(sum_of_two_numbers)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(number_rounded_down)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>9</code></pre>
+</div>
+</div>
+</section>
+<section id="using-packages-from-elsewhere" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="using-packages-from-elsewhere"><span class="header-section-number">3.6</span> Using packages from elsewhere</h2>
 <p>When we used Mambaforge, we installed a ton of packages. These were not “built-in” to python like the ones above. Here we will import them into our notebook to use.</p>
 <p>This will also illustrate the use of numpy. We’ll use it so much we us the <code>as</code> code to name it something shorter.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np <span class="co"># The as just defines a shorter name</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an 2 by 3 array of integers</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>small_array <span class="op">=</span> np.array([[<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>], [<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">5</span>]])</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Here</span><span class="ch">\'</span><span class="st">s a small numpy array</span><span class="ch">\n</span><span class="st">'</span>, small_array)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Sidenote: from above backspace \ put in front of a character is the</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "escapce character," which makes python interpret the next thing as a string or special text operator. \n makes a line break</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np <span class="co"># The as just defines a shorter name</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an 2 by 3 array of integers</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>small_array <span class="op">=</span> np.array([[<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>], [<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">5</span>]])</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Here</span><span class="ch">\'</span><span class="st">s a small numpy array</span><span class="ch">\n</span><span class="st">'</span>, small_array)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Sidenote: from above backspace \ put in front of a character is the</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># "escapce character," which makes python interpret the next thing as a string or special text operator. \n makes a line break</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Here's a small numpy array
+ [[5 3 5]
+ [6 6 5]]</code></pre>
+</div>
 </div>
 </section>
-<section id="discussion-point" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="discussion-point"><span class="header-section-number">2.7</span> Discussion point</h2>
+<section id="discussion-point" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="discussion-point"><span class="header-section-number">3.7</span> Discussion point</h2>
 <p>The array above looks identical to the nested lists we made. It IS NOT! It is a numpy array that is ridiculously fast and can scale up to massive, massive data questions. The optional reading for today (Harris et al.&nbsp;2020, Nature) discusses how these arrays have formed the backbone of modern scientific computing.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>low <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>high <span class="op">=</span> <span class="dv">8</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>shape <span class="op">=</span> (<span class="dv">1000</span>, <span class="dv">1000</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>smallish_random_array <span class="op">=</span> np.random.randint(low, high, shape)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Here</span><span class="ch">\'</span><span class="st">s a slightly larger numpy array</span><span class="ch">\n</span><span class="st">'</span>, smallish_random_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>low <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>high <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>shape <span class="op">=</span> (<span class="dv">1000</span>, <span class="dv">1000</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>smallish_random_array <span class="op">=</span> np.random.randint(low, high, shape)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Here</span><span class="ch">\'</span><span class="st">s a slightly larger numpy array</span><span class="ch">\n</span><span class="st">'</span>, smallish_random_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Here's a slightly larger numpy array
+ [[4 7 3 ... 3 6 6]
+ [7 6 4 ... 4 7 7]
+ [5 6 3 ... 5 6 3]
+ ...
+ [4 3 7 ... 4 3 3]
+ [7 4 4 ... 3 6 6]
+ [4 5 4 ... 4 3 5]]</code></pre>
+</div>
 </div>
 </section>
-<section id="in-class-exercise-2.1" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="in-class-exercise-2.1"><span class="header-section-number">2.8</span> In-class exercise 2.1</h2>
+<section id="in-class-exercise-2.1" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="in-class-exercise-2.1"><span class="header-section-number">3.8</span> In-class exercise 2.1</h2>
 <p>Participation points note! I will call on a random table to show me their answer via their table’s monitor.</p>
 <p>Make a function that returns the square of a number. Combine the function with a loop to calculate the Sum of Squared Numbers from 1 to 100.</p>
 <p>HINT, ** is the exponent operator in python.</p>
@@ -574,13 +671,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../01_Python_Introduction/01_jupyter_intro.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></span>
+      <a href="../01_Python_Introduction/00_python_assignment_0.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02_Machine_Learning/01_linear_regression.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../01_Python_Introduction/03_numpy_arrays.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

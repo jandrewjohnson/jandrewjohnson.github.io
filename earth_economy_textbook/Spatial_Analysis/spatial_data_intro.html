@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 21&nbsp; Hosting notes</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 17&nbsp; Python for Big, Spatial Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../Appendices/quarto_notes.html" rel="next">
-<link href="../Spatial_Analysis/python_assignment_2.html" rel="prev">
+<link href="../Spatial_Analysis/classification_intro.html" rel="next">
+<link href="../Machine_Learning/nn_multilayer_perceptron.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -219,7 +219,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
+  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -249,7 +249,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -268,8 +268,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#create-a-github.io-page" id="toc-create-a-github.io-page" class="nav-link active" data-scroll-target="#create-a-github.io-page"><span class="toc-section-number">21.1</span>  Create a github.io page</a></li>
-  <li><a href="#pasting-images" id="toc-pasting-images" class="nav-link" data-scroll-target="#pasting-images"><span class="toc-section-number">21.2</span>  Pasting images</a></li>
+  <li><a href="#lecture-3-of-justins-lectures" id="toc-lecture-3-of-justins-lectures" class="nav-link active" data-scroll-target="#lecture-3-of-justins-lectures"><span class="toc-section-number">18</span>  Lecture 3 (of Justin’s lectures)</a></li>
+  <li><a href="#overview-for-today" id="toc-overview-for-today" class="nav-link" data-scroll-target="#overview-for-today"><span class="toc-section-number">19</span>  Overview for today</a></li>
+  <li><a href="#introduction-to-big-and-spatial-data" id="toc-introduction-to-big-and-spatial-data" class="nav-link" data-scroll-target="#introduction-to-big-and-spatial-data"><span class="toc-section-number">20</span>  Introduction to big and spatial data</a></li>
   </ul>
 </nav>
     </div>
@@ -278,7 +279,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></h1>
 </div>
 
 
@@ -293,38 +294,36 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="create-a-github.io-page" class="level2" data-number="21.1">
-<h2 data-number="21.1" class="anchored" data-anchor-id="create-a-github.io-page"><span class="header-section-number">21.1</span> Create a github.io page</h2>
-<p>Create a new repository using your username:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/2cebeab7-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
-</div>
-<p>Clone the newly-created repo</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/2cebeab7-1-image-2.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
-</div>
-<p>Then just put the index.html file in the root directory of that repository. An example workflow is to generate the index.html from Quarto and then copy that in.</p>
-<p>Personally, I use a script in the scripts dir that copies the generated Quarto directory to the public directory in “scripts/publish_ee_book_to_github_io_site”</p>
+<p>Random python-related tweet</p>
+<p><img src="img\1213.png" class="img-fluid"></p>
+<section id="lecture-3-of-justins-lectures" class="level1" data-number="18">
+<h1 data-number="18"><span class="header-section-number">18</span> Lecture 3 (of Justin’s lectures)</h1>
+<p>While we’re waiting, go ahead and get the lecture slides which I’ve just uploaded to canvas. Also pull the latest code from our repository.</p>
 </section>
-<section id="pasting-images" class="level2" data-number="21.2">
-<h2 data-number="21.2" class="anchored" data-anchor-id="pasting-images"><span class="header-section-number">21.2</span> Pasting images</h2>
-<p>NOTE: This is easiest to do in ipynb NOT in qmd because of the built-in options for pasting images into notebooks.</p>
-<p>Note that there are two methods: paste (ctrl-v) directly into a markdown cell of a ipynb. This adds it as an “attachment” where the raw binary image code is written into text in the cell’s attribute (and thus there is no external file saved). The other is the use the Paste Image VS Code plug in, which lets you actually write a file in a gnerated location for the PNG. This is called by ctrl-alt-v</p>
-<p>Option 1</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="hosting_notes_files/figure-html/2cebeab7-2-image.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">image.png</figcaption><p></p>
-</figure>
-</div>
-<p>Option 2</p>
-<p><img src="../images/2022-12-29-10-20-25.png" class="img-fluid"></p>
+<section id="overview-for-today" class="level1" data-number="19">
+<h1 data-number="19"><span class="header-section-number">19</span> Overview for today</h1>
+<ul>
+<li><p>Yesterday, we connected to GitHub and gave a brutally quick introduction to Python.</p></li>
+<li><p>Today we’re going to:</p>
+<ul>
+<li><p>Pickup where we left off</p></li>
+<li><p>Learn more about Numpy</p></li>
+<li><p>Learn about spatial data in Python</p></li>
+<li><p>Do raster-math “at scale”</p></li>
+<li><p>If there’s time, start into our first Machine Learning model</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="introduction-to-big-and-spatial-data" class="level1" data-number="20">
+<h1 data-number="20"><span class="header-section-number">20</span> Introduction to big and spatial data</h1>
+<p><img src="img\1214.png" class="img-fluid"></p>
+<ul>
+<li><p>Example from recent publication in Ecological Economics</p>
+<ul>
+<li>Combined both econometrics and “big-data array manipulation”</li>
+</ul></li>
+</ul>
+<p><img src="img\1215.png" class="img-fluid"></p>
 
 
 </section>
@@ -465,13 +464,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Spatial_Analysis/python_assignment_2.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></span>
+      <a href="../Machine_Learning/nn_multilayer_perceptron.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Neural Nets Code</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Appendices/quarto_notes.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cross References</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Spatial_Analysis/classification_intro.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 9&nbsp; Support Vector Machines</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 12&nbsp; Support Vector Machines</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02_Machine_Learning/03_regularization_with_lasso.html" rel="next">
-<link href="../02_Machine_Learning/01_linear_regression.html" rel="prev">
+<link href="../Machine_Learning/regularization_intro.html" rel="next">
+<link href="../Machine_Learning/linear_regression.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -137,7 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -162,12 +162,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Python</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -175,44 +175,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/01_jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/03_numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/04_pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/05_gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
+  <a href="../Introduction/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Earth Economy Modeling</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Machine Learning</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Python</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -220,22 +190,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../Python_Introduction/python_setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setup Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../Python_Introduction/jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  <a href="../Python_Introduction/python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exercise 1</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></a>
+  <a href="../Python_Introduction/python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
   </div>
 </li>
       </ul>
@@ -250,19 +240,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/01_lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  <a href="../Machine_Learning/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Machine Learning Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/02_python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></a>
+  <a href="../Machine_Learning/linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/support_vector_machines.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/neural_networks_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Neural networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Neural Nets Code</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Appendices</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Spatial Analysis</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -270,12 +285,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></a>
+  <a href="../Spatial_Analysis/classification_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cross References</span></a>
   </div>
 </li>
       </ul>
@@ -292,7 +337,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
 </div>
 
 
@@ -317,8 +362,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="load-in-some-digit-image-data" class="level4" data-number="9.0.0.1">
-<h4 data-number="9.0.0.1" class="anchored" data-anchor-id="load-in-some-digit-image-data"><span class="header-section-number">9.0.0.1</span> Load in some digit image data</h4>
+<section id="load-in-some-digit-image-data" class="level4" data-number="12.0.0.1">
+<h4 data-number="12.0.0.1" class="anchored" data-anchor-id="load-in-some-digit-image-data"><span class="header-section-number">12.0.0.1</span> Load in some digit image data</h4>
 <p>One of the canonical datasets in sklearn is a series of images of handwritten digits. We’ve imported the datasets above, but now lets load it.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -441,8 +486,8 @@ L. Wilson, NIST Form-Based Handprint Recognition System, NISTIR 5469,
 </div>
 </div>
 </section>
-<section id="extract-one-of-the-digits-to-inspect" class="level4" data-number="9.0.0.2">
-<h4 data-number="9.0.0.2" class="anchored" data-anchor-id="extract-one-of-the-digits-to-inspect"><span class="header-section-number">9.0.0.2</span> Extract one of the digits to inspect</h4>
+<section id="extract-one-of-the-digits-to-inspect" class="level4" data-number="12.0.0.2">
+<h4 data-number="12.0.0.2" class="anchored" data-anchor-id="extract-one-of-the-digits-to-inspect"><span class="header-section-number">12.0.0.2</span> Extract one of the digits to inspect</h4>
 <p>Now that we’re oriented, also look at one particular image of a digit, just so you know what it actually looks like. Below, we print just the first (index = 0) numeral of the 5620 they provide.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -467,7 +512,7 @@ L. Wilson, NIST Form-Based Handprint Recognition System, NISTIR 5469,
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(digits.images[<span class="dv">0</span>])</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="02_support_vector_machines_files/figure-html/cell-6-output-1.png" width="407" height="411"></p>
+<p><img src="support_vector_machines_files/figure-html/cell-6-output-1.png" width="407" height="411"></p>
 </div>
 </div>
 <p>Notice also in the dataset that there is a ‘targets’ attribute in the dataset. This is the correct numeral that we are trying to make the model predict.</p>
@@ -479,8 +524,8 @@ L. Wilson, NIST Form-Based Handprint Recognition System, NISTIR 5469,
 </div>
 <p>Our task now is to train a model that inputs the digit images and predicts the digit numeral. For this, we’re going to use SVM, as discussed in lecture.</p>
 </section>
-<section id="import-svm-and-create-a-new-unfitted-model-with-it." class="level4" data-number="9.0.0.3">
-<h4 data-number="9.0.0.3" class="anchored" data-anchor-id="import-svm-and-create-a-new-unfitted-model-with-it."><span class="header-section-number">9.0.0.3</span> Import SVM and create a new (unfitted) model with it.</h4>
+<section id="import-svm-and-create-a-new-unfitted-model-with-it." class="level4" data-number="12.0.0.3">
+<h4 data-number="12.0.0.3" class="anchored" data-anchor-id="import-svm-and-create-a-new-unfitted-model-with-it."><span class="header-section-number">12.0.0.3</span> Import SVM and create a new (unfitted) model with it.</h4>
 <p>For now, the parameters are going to be manually set (gamme) but we’ll address how to choose them later. Here, I want to illustrate the basic approach used in sklearn to Load, train, fit and predict the model</p>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> svm</span>
@@ -565,8 +610,8 @@ y_train [0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 9 5 5 6 5
 </div>
 </div>
 </section>
-<section id="fit-the-model" class="level4" data-number="9.0.0.4">
-<h4 data-number="9.0.0.4" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">9.0.0.4</span> Fit the model</h4>
+<section id="fit-the-model" class="level4" data-number="12.0.0.4">
+<h4 data-number="12.0.0.4" class="anchored" data-anchor-id="fit-the-model"><span class="header-section-number">12.0.0.4</span> Fit the model</h4>
 <p>Finally, now that we’ve split it, we can call the classifier’s fit method which takes the TRAINING data as input.</p>
 <div class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>classifier.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -609,8 +654,8 @@ y_train [0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 9 5 5 6 5
 </div>
 </div>
 </section>
-<section id="plot-some-results" class="level4" data-number="9.0.0.5">
-<h4 data-number="9.0.0.5" class="anchored" data-anchor-id="plot-some-results"><span class="header-section-number">9.0.0.5</span> Plot some results</h4>
+<section id="plot-some-results" class="level4" data-number="12.0.0.5">
+<h4 data-number="12.0.0.5" class="anchored" data-anchor-id="plot-some-results"><span class="header-section-number">12.0.0.5</span> Plot some results</h4>
 <p>Let’s plot a few of them in nicer format. Don’t worry about learning the plotting code but it’s a useful example to show the power.</p>
 <div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -628,7 +673,7 @@ y_train [0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 9 5 5 6 5
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">'Prediction: </span><span class="sc">%i</span><span class="st">'</span> <span class="op">%</span> prediction)</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="02_support_vector_machines_files/figure-html/cell-15-output-1.png" width="540" height="354"></p>
+<p><img src="support_vector_machines_files/figure-html/cell-15-output-1.png" width="540" height="354"></p>
 </div>
 </div>
 <div class="cell" data-execution_count="15">
@@ -658,8 +703,8 @@ weighted avg       0.97      0.97      0.97       899
 </div>
 </div>
 </section>
-<section id="confusion-matrix" class="level4" data-number="9.0.0.6">
-<h4 data-number="9.0.0.6" class="anchored" data-anchor-id="confusion-matrix"><span class="header-section-number">9.0.0.6</span> Confusion matrix</h4>
+<section id="confusion-matrix" class="level4" data-number="12.0.0.6">
+<h4 data-number="12.0.0.6" class="anchored" data-anchor-id="confusion-matrix"><span class="header-section-number">12.0.0.6</span> Confusion matrix</h4>
 <p>A more convenient way of looking at the results is t the confusion matrix. This is a built in metric for sklearn. It plots the predicted labels vs.&nbsp;the true labels.</p>
 <div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> metrics.plot_confusion_matrix(classifier, X_test, y_test)</span>
@@ -676,7 +721,7 @@ Function plot_confusion_matrix is deprecated; Function `plot_confusion_matrix` i
 </code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="02_support_vector_machines_files/figure-html/cell-17-output-2.png" width="496" height="477"></p>
+<p><img src="support_vector_machines_files/figure-html/cell-17-output-2.png" width="496" height="477"></p>
 </div>
 </div>
 <p><strong>QUESTION:</strong> Which digit was hardest to categorize and what was it most frequently confused as?</p>
@@ -820,13 +865,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02_Machine_Learning/01_linear_regression.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></span>
+      <a href="../Machine_Learning/linear_regression.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Linear Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Machine_Learning/regularization_intro.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

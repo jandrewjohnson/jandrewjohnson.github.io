@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 10&nbsp; Regularization with Lasso</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 14&nbsp; Regularization with Lasso</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" rel="next">
-<link href="../02_Machine_Learning/02_support_vector_machines.html" rel="prev">
+<link href="../Machine_Learning/neural_networks_intro.html" rel="next">
+<link href="../Machine_Learning/regularization_intro.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -137,7 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -162,12 +162,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Python</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -175,44 +175,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/01_jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/03_numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/04_pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/05_gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
+  <a href="../Introduction/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Earth Economy Modeling</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Machine Learning</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Python</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -220,22 +190,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../Python_Introduction/python_setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setup Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../Python_Introduction/jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  <a href="../Python_Introduction/python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exercise 1</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></a>
+  <a href="../Python_Introduction/python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
   </div>
 </li>
       </ul>
@@ -250,19 +240,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/01_lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  <a href="../Machine_Learning/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Machine Learning Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/02_python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></a>
+  <a href="../Machine_Learning/linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_with_lasso.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/neural_networks_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Neural networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Neural Nets Code</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Appendices</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Spatial Analysis</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -270,12 +285,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></a>
+  <a href="../Spatial_Analysis/classification_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cross References</span></a>
   </div>
 </li>
       </ul>
@@ -289,16 +334,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#automatic-feature-selection-with-lasso-regression" id="toc-automatic-feature-selection-with-lasso-regression" class="nav-link active" data-scroll-target="#automatic-feature-selection-with-lasso-regression"><span class="toc-section-number">10.1</span>  Automatic feature selection with LASSO regression</a></li>
-  <li><a href="#switch-to-lasso" id="toc-switch-to-lasso" class="nav-link" data-scroll-target="#switch-to-lasso"><span class="toc-section-number">10.2</span>  Switch to LASSO</a></li>
-  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><span class="toc-section-number">10.3</span>  Exercise 1</a></li>
-  <li><a href="#exercise-1-answer" id="toc-exercise-1-answer" class="nav-link" data-scroll-target="#exercise-1-answer"><span class="toc-section-number">10.4</span>  Exercise 1 Answer</a></li>
-  <li><a href="#operationalizing-cv-with-gridsearch" id="toc-operationalizing-cv-with-gridsearch" class="nav-link" data-scroll-target="#operationalizing-cv-with-gridsearch"><span class="toc-section-number">10.5</span>  Operationalizing CV with GridSearch</a></li>
-  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2"><span class="toc-section-number">10.6</span>  Exercise 2:</a></li>
-  <li><a href="#exercise-2-answer" id="toc-exercise-2-answer" class="nav-link" data-scroll-target="#exercise-2-answer"><span class="toc-section-number">10.7</span>  Exercise 2 Answer</a></li>
-  <li><a href="#switch-back-to-slides" id="toc-switch-back-to-slides" class="nav-link" data-scroll-target="#switch-back-to-slides"><span class="toc-section-number">10.8</span>  Switch back to slides</a></li>
-  <li><a href="#post-lasso" id="toc-post-lasso" class="nav-link" data-scroll-target="#post-lasso"><span class="toc-section-number">10.9</span>  Post-LASSO</a></li>
-  <li><a href="#class-discussion" id="toc-class-discussion" class="nav-link" data-scroll-target="#class-discussion"><span class="toc-section-number">10.10</span>  Class discussion</a></li>
+  <li><a href="#automatic-feature-selection-with-lasso-regression" id="toc-automatic-feature-selection-with-lasso-regression" class="nav-link active" data-scroll-target="#automatic-feature-selection-with-lasso-regression"><span class="toc-section-number">14.1</span>  Automatic feature selection with LASSO regression</a></li>
+  <li><a href="#switch-to-lasso" id="toc-switch-to-lasso" class="nav-link" data-scroll-target="#switch-to-lasso"><span class="toc-section-number">14.2</span>  Switch to LASSO</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><span class="toc-section-number">14.3</span>  Exercise 1</a></li>
+  <li><a href="#exercise-1-answer" id="toc-exercise-1-answer" class="nav-link" data-scroll-target="#exercise-1-answer"><span class="toc-section-number">14.4</span>  Exercise 1 Answer</a></li>
+  <li><a href="#operationalizing-cv-with-gridsearch" id="toc-operationalizing-cv-with-gridsearch" class="nav-link" data-scroll-target="#operationalizing-cv-with-gridsearch"><span class="toc-section-number">14.5</span>  Operationalizing CV with GridSearch</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2"><span class="toc-section-number">14.6</span>  Exercise 2:</a></li>
+  <li><a href="#exercise-2-answer" id="toc-exercise-2-answer" class="nav-link" data-scroll-target="#exercise-2-answer"><span class="toc-section-number">14.7</span>  Exercise 2 Answer</a></li>
+  <li><a href="#switch-back-to-slides" id="toc-switch-back-to-slides" class="nav-link" data-scroll-target="#switch-back-to-slides"><span class="toc-section-number">14.8</span>  Switch back to slides</a></li>
+  <li><a href="#post-lasso" id="toc-post-lasso" class="nav-link" data-scroll-target="#post-lasso"><span class="toc-section-number">14.9</span>  Post-LASSO</a></li>
+  <li><a href="#class-discussion" id="toc-class-discussion" class="nav-link" data-scroll-target="#class-discussion"><span class="toc-section-number">14.10</span>  Class discussion</a></li>
   </ul>
 </nav>
     </div>
@@ -307,7 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></h1>
 </div>
 
 
@@ -322,11 +367,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="automatic-feature-selection-with-lasso-regression" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="automatic-feature-selection-with-lasso-regression"><span class="header-section-number">10.1</span> Automatic feature selection with LASSO regression</h2>
+<section id="automatic-feature-selection-with-lasso-regression" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="automatic-feature-selection-with-lasso-regression"><span class="header-section-number">14.1</span> Automatic feature selection with LASSO regression</h2>
 <p>In this notebook we will learn how LASSO (Least Absolute Shrinkage and Selection Operator) regression works and how it can assist in automatically selecting which variables should be included using a <strong>Cross-Validation</strong> perspective.</p>
-<section id="start-by-importing-packages" class="level4" data-number="10.1.0.1">
-<h4 data-number="10.1.0.1" class="anchored" data-anchor-id="start-by-importing-packages"><span class="header-section-number">10.1.0.1</span> Start by importing packages</h4>
+<section id="start-by-importing-packages" class="level4" data-number="14.1.0.1">
+<h4 data-number="14.1.0.1" class="anchored" data-anchor-id="start-by-importing-packages"><span class="header-section-number">14.1.0.1</span> Start by importing packages</h4>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="62">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -343,8 +388,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.api <span class="im">import</span> OLS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="load-dataset-and-inspect-it" class="level4" data-number="10.1.0.2">
-<h4 data-number="10.1.0.2" class="anchored" data-anchor-id="load-dataset-and-inspect-it"><span class="header-section-number">10.1.0.2</span> Load dataset and inspect it</h4>
+<section id="load-dataset-and-inspect-it" class="level4" data-number="14.1.0.2">
+<h4 data-number="14.1.0.2" class="anchored" data-anchor-id="load-dataset-and-inspect-it"><span class="header-section-number">14.1.0.2</span> Load dataset and inspect it</h4>
 <p>Again we’re going to use our diabetes dataset. Inspect it again just to remind yourself what is in it.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="op">=</span> load_diabetes()</span>
@@ -400,8 +445,8 @@ Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani (2004) "Least
 </div>
 </div>
 </section>
-<section id="select-subset-of-data" class="level4" data-number="10.1.0.3">
-<h4 data-number="10.1.0.3" class="anchored" data-anchor-id="select-subset-of-data"><span class="header-section-number">10.1.0.3</span> Select subset of data</h4>
+<section id="select-subset-of-data" class="level4" data-number="14.1.0.3">
+<h4 data-number="14.1.0.3" class="anchored" data-anchor-id="select-subset-of-data"><span class="header-section-number">14.1.0.3</span> Select subset of data</h4>
 <p>To speed up calculation, we’re going to just use the first 150 observations using numpy slice notation to grab them out of the X, y</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="64">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X[:<span class="dv">150</span>]</span>
@@ -425,8 +470,8 @@ Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani (2004) "Least
 </div>
 </div>
 </section>
-<section id="run-ols-first-for-comparison" class="level4" data-number="10.1.0.4">
-<h4 data-number="10.1.0.4" class="anchored" data-anchor-id="run-ols-first-for-comparison"><span class="header-section-number">10.1.0.4</span> Run OLS first (for comparison)</h4>
+<section id="run-ols-first-for-comparison" class="level4" data-number="14.1.0.4">
+<h4 data-number="14.1.0.4" class="anchored" data-anchor-id="run-ols-first-for-comparison"><span class="header-section-number">14.1.0.4</span> Run OLS first (for comparison)</h4>
 <p>Remember the standard Sklearn model steps:</p>
 <ol type="1">
 <li>create the model object</li>
@@ -461,8 +506,8 @@ Coefficient of determination: 0.5298596601593836</code></pre>
 </div>
 </div>
 </section>
-<section id="do-it-again-in-the-econometrics-style" class="level4" data-number="10.1.0.5">
-<h4 data-number="10.1.0.5" class="anchored" data-anchor-id="do-it-again-in-the-econometrics-style"><span class="header-section-number">10.1.0.5</span> Do it again in the econometrics style</h4>
+<section id="do-it-again-in-the-econometrics-style" class="level4" data-number="14.1.0.5">
+<h4 data-number="14.1.0.5" class="anchored" data-anchor-id="do-it-again-in-the-econometrics-style"><span class="header-section-number">14.1.0.5</span> Do it again in the econometrics style</h4>
 <p>Recall that the package statsmodels is closer to the econometrician’s way of doing things. We’re going to quickly repeat the steps above but with Statsmodels so we can view it in a nice table form.</p>
 <div class="cell" data-execution_count="66">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x_with_constant <span class="op">=</span> statsmodels.api.add_constant(X)</span>
@@ -507,8 +552,8 @@ Notes:
 </div>
 </div>
 </section>
-<section id="plot-y-and-y_hat" class="level4" data-number="10.1.0.6">
-<h4 data-number="10.1.0.6" class="anchored" data-anchor-id="plot-y-and-y_hat"><span class="header-section-number">10.1.0.6</span> Plot y and y_hat</h4>
+<section id="plot-y-and-y_hat" class="level4" data-number="14.1.0.6">
+<h4 data-number="14.1.0.6" class="anchored" data-anchor-id="plot-y-and-y_hat"><span class="header-section-number">14.1.0.6</span> Plot y and y_hat</h4>
 <p>Let’s also plot y and y_hat compared to one of the most important variables, BMI. We’ll see both y and y_hat resemble each other.</p>
 <div class="cell" data-execution_count="67">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot outputs (comparing 1 variable (BMI in column 3) to y and y_hat</span></span>
@@ -518,16 +563,16 @@ Notes:
 <pre><code>&lt;matplotlib.collections.PathCollection at 0x1a2e0cf3b50&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="03_regularization_with_lasso_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+<p><img src="regularization_with_lasso_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="switch-to-lasso" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="switch-to-lasso"><span class="header-section-number">10.2</span> Switch to LASSO</h2>
+<section id="switch-to-lasso" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="switch-to-lasso"><span class="header-section-number">14.2</span> Switch to LASSO</h2>
 <p>Now that we’ve spent all this time setting up our python environment and getting sklearn, it’s almost a trivial step in many cases to try out the latest-and-greatest model.</p>
-<section id="create-a-lasso-model-object" class="level4" data-number="10.2.0.1">
-<h4 data-number="10.2.0.1" class="anchored" data-anchor-id="create-a-lasso-model-object"><span class="header-section-number">10.2.0.1</span> Create a LASSO model object</h4>
+<section id="create-a-lasso-model-object" class="level4" data-number="14.2.0.1">
+<h4 data-number="14.2.0.1" class="anchored" data-anchor-id="create-a-lasso-model-object"><span class="header-section-number">14.2.0.1</span> Create a LASSO model object</h4>
 <p>Today’s goal, however, is to do Lasso on this same dataset. To start, lets create a Lasso object. Notice that we are not setting the alpha/gamma value when we create it.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="68">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_lasso <span class="op">=</span> Lasso(alpha<span class="op">=</span><span class="fl">1.0</span>, random_state<span class="op">=</span><span class="dv">0</span>, max_iter<span class="op">=</span><span class="dv">10000</span>) <span class="co"># Note, alpha is set by default to 1.0 so we could have omitted it here (though I kept it in to make it clear)</span></span>
@@ -537,8 +582,8 @@ Notes:
 </div>
 </div>
 </section>
-<section id="fit-the-lasso" class="level4" data-number="10.2.0.2">
-<h4 data-number="10.2.0.2" class="anchored" data-anchor-id="fit-the-lasso"><span class="header-section-number">10.2.0.2</span> Fit the LASSO</h4>
+<section id="fit-the-lasso" class="level4" data-number="14.2.0.2">
+<h4 data-number="14.2.0.2" class="anchored" data-anchor-id="fit-the-lasso"><span class="header-section-number">14.2.0.2</span> Fit the LASSO</h4>
 <p>Call the lasso.fit() method.</p>
 <div class="cell" data-execution_count="69">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_lasso.fit(X, y)</span>
@@ -584,8 +629,8 @@ Notes:
 </div>
 </div>
 </section>
-<section id="plot-it-too-to-compare-it-with-the-ols-plot-from-above" class="level4" data-number="10.2.0.3">
-<h4 data-number="10.2.0.3" class="anchored" data-anchor-id="plot-it-too-to-compare-it-with-the-ols-plot-from-above"><span class="header-section-number">10.2.0.3</span> Plot it too to compare it with the OLS plot from above</h4>
+<section id="plot-it-too-to-compare-it-with-the-ols-plot-from-above" class="level4" data-number="14.2.0.3">
+<h4 data-number="14.2.0.3" class="anchored" data-anchor-id="plot-it-too-to-compare-it-with-the-ols-plot-from-above"><span class="header-section-number">14.2.0.3</span> Plot it too to compare it with the OLS plot from above</h4>
 <p>What do you see. Is this expected?</p>
 <div class="cell" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot outputs</span></span>
@@ -594,12 +639,12 @@ Notes:
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="03_regularization_with_lasso_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+<p><img src="regularization_with_lasso_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="compare-the-actual-coefficients-created" class="level4" data-number="10.2.0.4">
-<h4 data-number="10.2.0.4" class="anchored" data-anchor-id="compare-the-actual-coefficients-created"><span class="header-section-number">10.2.0.4</span> Compare the actual coefficients created</h4>
+<section id="compare-the-actual-coefficients-created" class="level4" data-number="14.2.0.4">
+<h4 data-number="14.2.0.4" class="anchored" data-anchor-id="compare-the-actual-coefficients-created"><span class="header-section-number">14.2.0.4</span> Compare the actual coefficients created</h4>
 <p>Class question: How are they different? And how are they similar?</p>
 <div class="cell" data-execution_count="72">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_lasso.coef_)</span>
@@ -613,8 +658,8 @@ Notes:
 </div>
 </section>
 </section>
-<section id="exercise-1" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">10.3</span> Exercise 1</h2>
+<section id="exercise-1" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">14.3</span> Exercise 1</h2>
 <p>Use a loop to identify the best value of alpha, as measured by r-squared.</p>
 <p>Write all of the alphas and associated r2 into a dictionary</p>
 <p>Discussion question for once you’re done: what was the optimal alpha and why does this make sense? How does this compare to OLS? Why is it that way?</p>
@@ -632,8 +677,8 @@ Notes:
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick way to get the value from the highest-valued dictionary entry</span></span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>best_alpha <span class="op">=</span> <span class="bu">max</span>(scores, key<span class="op">=</span>scores.get)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exercise-1-answer" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="exercise-1-answer"><span class="header-section-number">10.4</span> Exercise 1 Answer</h2>
+<section id="exercise-1-answer" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="exercise-1-answer"><span class="header-section-number">14.4</span> Exercise 1 Answer</h2>
 <div class="cell" data-execution_count="73">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 1 Answer Code</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> {}</span>
@@ -654,8 +699,8 @@ Notes:
 </div>
 </div>
 </section>
-<section id="operationalizing-cv-with-gridsearch" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="operationalizing-cv-with-gridsearch"><span class="header-section-number">10.5</span> Operationalizing CV with GridSearch</h2>
+<section id="operationalizing-cv-with-gridsearch" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="operationalizing-cv-with-gridsearch"><span class="header-section-number">14.5</span> Operationalizing CV with GridSearch</h2>
 <p>It seems a little weird to be automatically finding the best model. If we were just applying this to the dataset a single time, this would indeed be p-hacking to the extreme. However, showing its performance on UNSEEN data is quite the opposite of p-hacking.</p>
 <p>Here, we’re going to operationalize our method for finding th ebest model by using GridSearch. We are going to test a variety of different alphas, similar to above. Define them here using numpy logspace:</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="74">
@@ -678,15 +723,15 @@ Notes:
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="76">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>n_folds <span class="op">=</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="create-the-lasso_cv-object-from-the-lasso-object" class="level4" data-number="10.5.0.1">
-<h4 data-number="10.5.0.1" class="anchored" data-anchor-id="create-the-lasso_cv-object-from-the-lasso-object"><span class="header-section-number">10.5.0.1</span> Create the lasso_cv object from the lasso object</h4>
+<section id="create-the-lasso_cv-object-from-the-lasso-object" class="level4" data-number="14.5.0.1">
+<h4 data-number="14.5.0.1" class="anchored" data-anchor-id="create-the-lasso_cv-object-from-the-lasso-object"><span class="header-section-number">14.5.0.1</span> Create the lasso_cv object from the lasso object</h4>
 <p>Finally, we have all our objects ready to pass to the GridSearchVC function which will Give us back a classifier object. Notice that we’re reusing that model_lasso objectg we created above. The difference is that we will be systematically handing different parameters from the tuning_parameters list into the model_lasso object.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="77">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model_lasso_cv <span class="op">=</span> GridSearchCV(model_lasso, tuning_parameters, cv<span class="op">=</span>n_folds, refit<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-the-lasso_cv-object" class="level4" data-number="10.5.0.2">
-<h4 data-number="10.5.0.2" class="anchored" data-anchor-id="fit-the-lasso_cv-object"><span class="header-section-number">10.5.0.2</span> Fit the lasso_cv object</h4>
+<section id="fit-the-lasso_cv-object" class="level4" data-number="14.5.0.2">
+<h4 data-number="14.5.0.2" class="anchored" data-anchor-id="fit-the-lasso_cv-object"><span class="header-section-number">14.5.0.2</span> Fit the lasso_cv object</h4>
 <p>When we call the model_lasso_cv.fit() method, we will iteratively be calling the Lasso.fit() with different permutations of tuned parameters and then will return the classifier with the best CV fit.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="78">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>model_lasso_cv.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -741,8 +786,8 @@ scores_std [0.11754727 0.11729368 0.11699041 0.11662935 0.11620183 0.11559979
 </div>
 </section>
 </section>
-<section id="exercise-2" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="exercise-2"><span class="header-section-number">10.6</span> Exercise 2:</h2>
+<section id="exercise-2" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="exercise-2"><span class="header-section-number">14.6</span> Exercise 2:</h2>
 <p>With your table, explore the scores and alphas lists we’ve created. Identify which alpha is the best, based on the MSE score returned. A challenge here is that sklearn gave us the scores as a list rather than a dictionary (as we built above), so you will need to use the list to create the dictionary.</p>
 <p>One way to consider doing this would be to create a for loop to iterate through a range(len(scores)): object, saving the alphas and scores to a new dictionary, as in the starter code below.</p>
 <p>Save the optimal alpha as a new variable called chosen_alpha.</p>
@@ -754,8 +799,8 @@ scores_std [0.11754727 0.11729368 0.11699041 0.11662935 0.11620183 0.11559979
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'best_alpha'</span>, best_alpha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="exercise-2-answer" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="exercise-2-answer"><span class="header-section-number">10.7</span> Exercise 2 Answer</h2>
+<section id="exercise-2-answer" class="level2" data-number="14.7">
+<h2 data-number="14.7" class="anchored" data-anchor-id="exercise-2-answer"><span class="header-section-number">14.7</span> Exercise 2 Answer</h2>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="81">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 2 Code</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -771,8 +816,8 @@ scores_std [0.11754727 0.11729368 0.11699041 0.11662935 0.11620183 0.11559979
 <pre><code>best_alpha 0.07880462815669913</code></pre>
 </div>
 </div>
-<section id="use-the-built-in-attributes-to-get-the-best-alpha" class="level4" data-number="10.7.0.1">
-<h4 data-number="10.7.0.1" class="anchored" data-anchor-id="use-the-built-in-attributes-to-get-the-best-alpha"><span class="header-section-number">10.7.0.1</span> Use the built-in attributes to get the best alpha</h4>
+<section id="use-the-built-in-attributes-to-get-the-best-alpha" class="level4" data-number="14.7.0.1">
+<h4 data-number="14.7.0.1" class="anchored" data-anchor-id="use-the-built-in-attributes-to-get-the-best-alpha"><span class="header-section-number">14.7.0.1</span> Use the built-in attributes to get the best alpha</h4>
 <p>Fortunately, the authors provide a useful best_params_ attribute.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="82">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'best_parameters:'</span>, model_lasso_cv.best_params_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -789,8 +834,8 @@ scores_std [0.11754727 0.11729368 0.11699041 0.11662935 0.11620183 0.11559979
 </div>
 </div>
 </section>
-<section id="rerun-lasso-with-the-best-alpha" class="level4" data-number="10.7.0.2">
-<h4 data-number="10.7.0.2" class="anchored" data-anchor-id="rerun-lasso-with-the-best-alpha"><span class="header-section-number">10.7.0.2</span> Rerun LASSO with the best alpha</h4>
+<section id="rerun-lasso-with-the-best-alpha" class="level4" data-number="14.7.0.2">
+<h4 data-number="14.7.0.2" class="anchored" data-anchor-id="rerun-lasso-with-the-best-alpha"><span class="header-section-number">14.7.0.2</span> Rerun LASSO with the best alpha</h4>
 <p>Now we can rerun a vanilla (no CV) version of Lasso with that specific alpha. This will return, for instance, a .coef_ list.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="84">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model_lasso_cv_2 <span class="op">=</span> Lasso(alpha<span class="op">=</span>chosen_alpha, random_state<span class="op">=</span><span class="dv">0</span>, max_iter<span class="op">=</span><span class="dv">10000</span>).fit(X, y)</span>
@@ -803,8 +848,8 @@ scores_std [0.11754727 0.11729368 0.11699041 0.11662935 0.11620183 0.11559979
 </div>
 <p>Simply looking at the coefficients tells us which are to be included. Question: How will we know just by looking?</p>
 </section>
-<section id="extract-the-feature-names-and-colum-indices-of-the-features-that-lasso-has-selected." class="level4" data-number="10.7.0.3">
-<h4 data-number="10.7.0.3" class="anchored" data-anchor-id="extract-the-feature-names-and-colum-indices-of-the-features-that-lasso-has-selected."><span class="header-section-number">10.7.0.3</span> Extract the feature names and colum indices of the features that Lasso has selected.</h4>
+<section id="extract-the-feature-names-and-colum-indices-of-the-features-that-lasso-has-selected." class="level4" data-number="14.7.0.3">
+<h4 data-number="14.7.0.3" class="anchored" data-anchor-id="extract-the-feature-names-and-colum-indices-of-the-features-that-lasso-has-selected."><span class="header-section-number">14.7.0.3</span> Extract the feature names and colum indices of the features that Lasso has selected.</h4>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="85">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>selected_coefficient_labels <span class="op">=</span> []</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>selected_coefficient_indices <span class="op">=</span> []</span>
@@ -834,14 +879,14 @@ Coefficient s6 was 71.09561386767885</code></pre>
 </div>
 </div>
 </section>
-<section id="plot-the-scores-versus-the-alphas" class="level4" data-number="10.7.0.4">
-<h4 data-number="10.7.0.4" class="anchored" data-anchor-id="plot-the-scores-versus-the-alphas"><span class="header-section-number">10.7.0.4</span> Plot the scores versus the alphas</h4>
+<section id="plot-the-scores-versus-the-alphas" class="level4" data-number="14.7.0.4">
+<h4 data-number="14.7.0.4" class="anchored" data-anchor-id="plot-the-scores-versus-the-alphas"><span class="header-section-number">14.7.0.4</span> Plot the scores versus the alphas</h4>
 <p>For fun, let’s plot the alphas, scores and a confidence range. What does this show us about the optimal alpha and how it varies with score?</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="87">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>plt.figure().set_size_inches(<span class="dv">8</span>, <span class="dv">6</span>)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>plt.semilogx(alphas, scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="03_regularization_with_lasso_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+<p><img src="regularization_with_lasso_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>A fun aspect of the k-fold approach is you can get a measure of the std_errors involved. Plot those below.</p>
@@ -851,12 +896,12 @@ Coefficient s6 was 71.09561386767885</code></pre>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>plt.semilogx(alphas, scores <span class="op">+</span> std_error, <span class="st">'b--'</span>)</span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>plt.semilogx(alphas, scores <span class="op">-</span> std_error, <span class="st">'b--'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="03_regularization_with_lasso_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+<p><img src="regularization_with_lasso_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="plot-the-confidence-band-and-the-maximum-score" class="level4" data-number="10.7.0.5">
-<h4 data-number="10.7.0.5" class="anchored" data-anchor-id="plot-the-confidence-band-and-the-maximum-score"><span class="header-section-number">10.7.0.5</span> Plot the confidence band and the maximum score</h4>
+<section id="plot-the-confidence-band-and-the-maximum-score" class="level4" data-number="14.7.0.5">
+<h4 data-number="14.7.0.5" class="anchored" data-anchor-id="plot-the-confidence-band-and-the-maximum-score"><span class="header-section-number">14.7.0.5</span> Plot the confidence band and the maximum score</h4>
 <p>alpha=0.2 controls the translucency of the fill color</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="89">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>plt.fill_between(alphas, scores <span class="op">+</span> std_error, scores <span class="op">-</span> std_error, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
@@ -868,16 +913,16 @@ Coefficient s6 was 71.09561386767885</code></pre>
 <span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="03_regularization_with_lasso_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+<p><img src="regularization_with_lasso_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="switch-back-to-slides" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="switch-back-to-slides"><span class="header-section-number">10.8</span> Switch back to slides</h2>
+<section id="switch-back-to-slides" class="level2" data-number="14.8">
+<h2 data-number="14.8" class="anchored" data-anchor-id="switch-back-to-slides"><span class="header-section-number">14.8</span> Switch back to slides</h2>
 </section>
-<section id="post-lasso" class="level2" data-number="10.9">
-<h2 data-number="10.9" class="anchored" data-anchor-id="post-lasso"><span class="header-section-number">10.9</span> Post-LASSO</h2>
+<section id="post-lasso" class="level2" data-number="14.9">
+<h2 data-number="14.9" class="anchored" data-anchor-id="post-lasso"><span class="header-section-number">14.9</span> Post-LASSO</h2>
 <p>Finally, now that we have our selected labels, we can use them to select the numpy array columns that we want to use for a post-LASSO run.</p>
 <div class="cell" data-pycharm="{&quot;name&quot;:&quot;#%%\n&quot;}" data-execution_count="90">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>new_x <span class="op">=</span> X[:, selected_coefficient_indices]</span>
@@ -939,8 +984,8 @@ Notes:
 </div>
 </div>
 </section>
-<section id="class-discussion" class="level2" data-number="10.10">
-<h2 data-number="10.10" class="anchored" data-anchor-id="class-discussion"><span class="header-section-number">10.10</span> Class discussion</h2>
+<section id="class-discussion" class="level2" data-number="14.10">
+<h2 data-number="14.10" class="anchored" data-anchor-id="class-discussion"><span class="header-section-number">14.10</span> Class discussion</h2>
 <p>How does the r-squared of this model compare to the one we did at the start of the lecture?</p>
 <p>Given the above, how is the LASSO approach better than a vanilla OLS?</p>
 <p>Look at the adjusted R-squared. How does that compare across models. In what ways is the adjusted R-squared similar the CV approach?</p>
@@ -1084,13 +1129,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02_Machine_Learning/02_support_vector_machines.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span>
+      <a href="../Machine_Learning/regularization_intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Machine_Learning/neural_networks_intro.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Neural networks</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 12&nbsp; Classification of Land Cover</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 19&nbsp; Classification of Land Cover</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../03_LULC_Classification/02_python_assignment_2.html" rel="next">
-<link href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" rel="prev">
+<link href="../Spatial_Analysis/python_assignment_2.html" rel="next">
+<link href="../Spatial_Analysis/classification_intro.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -137,7 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -162,12 +162,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Python</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -175,44 +175,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/01_jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/03_numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/04_pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/05_gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
+  <a href="../Introduction/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Earth Economy Modeling</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Machine Learning</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Python</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -220,22 +190,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../Python_Introduction/python_setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setup Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../Python_Introduction/jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  <a href="../Python_Introduction/python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exercise 1</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></a>
+  <a href="../Python_Introduction/python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
   </div>
 </li>
       </ul>
@@ -250,19 +240,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/01_lulc_classification.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  <a href="../Machine_Learning/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Machine Learning Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/02_python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></a>
+  <a href="../Machine_Learning/linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/neural_networks_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Neural networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Neural Nets Code</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Appendices</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Spatial Analysis</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -270,12 +285,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></a>
+  <a href="../Spatial_Analysis/classification_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/lulc_classification.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/python_assignment_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cross References</span></a>
   </div>
 </li>
       </ul>
@@ -289,20 +334,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">12.1</span>  Introduction</a></li>
-  <li><a href="#preparing-the-dataset" id="toc-preparing-the-dataset" class="nav-link" data-scroll-target="#preparing-the-dataset"><span class="toc-section-number">12.2</span>  Preparing the dataset</a></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="toc-section-number">12.3</span>  Exercise:</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">19.1</span>  Introduction</a></li>
+  <li><a href="#preparing-the-dataset" id="toc-preparing-the-dataset" class="nav-link" data-scroll-target="#preparing-the-dataset"><span class="toc-section-number">19.2</span>  Preparing the dataset</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="toc-section-number">19.3</span>  Exercise:</a>
   <ul class="collapse">
-  <li><a href="#now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." id="toc-now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." class="nav-link" data-scroll-target="#now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile."><span class="toc-section-number">12.3.1</span>  Now our goal is to get the pixels from the raster as outlined in each shapefile.</a></li>
-  <li><a href="#building-the-training-data-for-scikit-learn" id="toc-building-the-training-data-for-scikit-learn" class="nav-link" data-scroll-target="#building-the-training-data-for-scikit-learn"><span class="toc-section-number">12.3.2</span>  Building the Training Data for <code>scikit-learn</code></a></li>
+  <li><a href="#now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." id="toc-now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." class="nav-link" data-scroll-target="#now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile."><span class="toc-section-number">19.3.1</span>  Now our goal is to get the pixels from the raster as outlined in each shapefile.</a></li>
+  <li><a href="#building-the-training-data-for-scikit-learn" id="toc-building-the-training-data-for-scikit-learn" class="nav-link" data-scroll-target="#building-the-training-data-for-scikit-learn"><span class="toc-section-number">19.3.2</span>  Building the Training Data for <code>scikit-learn</code></a></li>
   </ul></li>
-  <li><a href="#training-the-classifier" id="toc-training-the-classifier" class="nav-link" data-scroll-target="#training-the-classifier"><span class="toc-section-number">12.4</span>  Training the Classifier</a></li>
-  <li><a href="#predicting-on-the-image" id="toc-predicting-on-the-image" class="nav-link" data-scroll-target="#predicting-on-the-image"><span class="toc-section-number">12.5</span>  Predicting on the image</a>
+  <li><a href="#training-the-classifier" id="toc-training-the-classifier" class="nav-link" data-scroll-target="#training-the-classifier"><span class="toc-section-number">19.4</span>  Training the Classifier</a></li>
+  <li><a href="#predicting-on-the-image" id="toc-predicting-on-the-image" class="nav-link" data-scroll-target="#predicting-on-the-image"><span class="toc-section-number">19.5</span>  Predicting on the image</a>
   <ul class="collapse">
-  <li><a href="#lets-visualize-it" id="toc-lets-visualize-it" class="nav-link" data-scroll-target="#lets-visualize-it"><span class="toc-section-number">12.5.1</span>  Let’s visualize it!</a></li>
-  <li><a href="#this-looks-pretty-good" id="toc-this-looks-pretty-good" class="nav-link" data-scroll-target="#this-looks-pretty-good"><span class="toc-section-number">12.5.2</span>  This looks pretty good!</a></li>
+  <li><a href="#lets-visualize-it" id="toc-lets-visualize-it" class="nav-link" data-scroll-target="#lets-visualize-it"><span class="toc-section-number">19.5.1</span>  Let’s visualize it!</a></li>
+  <li><a href="#this-looks-pretty-good" id="toc-this-looks-pretty-good" class="nav-link" data-scroll-target="#this-looks-pretty-good"><span class="toc-section-number">19.5.2</span>  This looks pretty good!</a></li>
   </ul></li>
-  <li><a href="#testing-an-unsupervised-classification-algorithm" id="toc-testing-an-unsupervised-classification-algorithm" class="nav-link" data-scroll-target="#testing-an-unsupervised-classification-algorithm"><span class="toc-section-number">12.6</span>  Testing an Unsupervised Classification Algorithm</a></li>
+  <li><a href="#testing-an-unsupervised-classification-algorithm" id="toc-testing-an-unsupervised-classification-algorithm" class="nav-link" data-scroll-target="#testing-an-unsupervised-classification-algorithm"><span class="toc-section-number">19.6</span>  Testing an Unsupervised Classification Algorithm</a></li>
   </ul>
 </nav>
     </div>
@@ -311,7 +356,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></h1>
 </div>
 
 
@@ -326,14 +371,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="introduction" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">12.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">19.1</span> Introduction</h2>
 <p>In this chapter we will classify data from the Sentinel-2 satellite using a supervised classification approach which incorporates the training data represented as a vector (shapefile). Specifically, we will be using <a href="https://scikit-learn.org/stable/modules/naive_bayes.html#gaussian-naive-bayes">Naive Bayes</a>. Naive Bayes predicts the probabilities that a data point belongs to a particular class and the class with the highest probability is considered as the most likely class. The way they get these probabilities is by using Bayes’ Theorem, which describes the probability of a feature, based on prior knowledge of conditions that might be related to that feature. Naive Bayes is quite fast when compared to some other machine learning approaches (e.g., SVM can be quite computationally intensive). This isn’t to say that it is the best per se; rather it is a great first step into the world of machine learning for classification and regression.</p>
 </section>
-<section id="preparing-the-dataset" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="preparing-the-dataset"><span class="header-section-number">12.2</span> Preparing the dataset</h2>
-<section id="opening-the-images" class="level4" data-number="12.2.0.1">
-<h4 data-number="12.2.0.1" class="anchored" data-anchor-id="opening-the-images"><span class="header-section-number">12.2.0.1</span> Opening the images</h4>
+<section id="preparing-the-dataset" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="preparing-the-dataset"><span class="header-section-number">19.2</span> Preparing the dataset</h2>
+<section id="opening-the-images" class="level4" data-number="19.2.0.1">
+<h4 data-number="19.2.0.1" class="anchored" data-anchor-id="opening-the-images"><span class="header-section-number">19.2.0.1</span> Opening the images</h4>
 <p>Our first step is to import the relevant packages. Of note are a couple new ones, namely rasterio and shapely. These are excellent libraries that simplify working with rasters and vectors (respectively). They wrap around GDAL so you don’t have to do it the hard way. They also provide some very useful helper functions, like mask and mapping, which we explicitly import below.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio</span>
@@ -411,8 +456,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="exercise" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="exercise"><span class="header-section-number">12.3</span> Exercise:</h2>
+<section id="exercise" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="exercise"><span class="header-section-number">19.3</span> Exercise:</h2>
 <p>Let’s clip the image and take a look at it. In the starter code below, we use the .read() method to read three different bands into a single image that we will plot. We also use numpy slice notation to clip out a smaller part of the array.</p>
 <p>HOWEVER, the image won’t look right on its own. You can kind of tell there is color, but it doesn’t look like it should. That’s because we’re reading in the wrong bands (our eyes are expecting Red, Green and Blue).</p>
 <p>As a class race, try out different combinations of bands. When you think you’ve got it, raise your hand. When someone gets it, or after 2 minutes, whoever has the best image wins! Hint: if you want to nail this, just look at the sentinel documentation https://gprivate.com/62co2.</p>
@@ -436,12 +481,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>&lt;AxesSubplot: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-6-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Okay looks good! Our raster dataset is ready!</p>
-<section id="now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." class="level3" data-number="12.3.1">
-<h3 data-number="12.3.1" class="anchored" data-anchor-id="now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile."><span class="header-section-number">12.3.1</span> Now our goal is to get the pixels from the raster as outlined in each shapefile.</h3>
+<section id="now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile." class="level3" data-number="19.3.1">
+<h3 data-number="19.3.1" class="anchored" data-anchor-id="now-our-goal-is-to-get-the-pixels-from-the-raster-as-outlined-in-each-shapefile."><span class="header-section-number">19.3.1</span> Now our goal is to get the pixels from the raster as outlined in each shapefile.</h3>
 <p>Our training data, the shapefile we’ve worked with, contains one main field we care about: + a Classname field (String datatype)</p>
 <p>Combined with the innate location information of polygons in a Shapefile, we have all that we need to use for pairing labels with the information in our raster.</p>
 <p>However, in order to pair up our vector data with our raster pixels, we will need a way of co-aligning the datasets in space.</p>
@@ -540,8 +585,8 @@ POLYGON ((-76.67593927883173 34.69487548849214, -76.67573882771855 34.6945131991
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>full_dataset.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="building-the-training-data-for-scikit-learn" class="level3" data-number="12.3.2">
-<h3 data-number="12.3.2" class="anchored" data-anchor-id="building-the-training-data-for-scikit-learn"><span class="header-section-number">12.3.2</span> Building the Training Data for <code>scikit-learn</code></h3>
+<section id="building-the-training-data-for-scikit-learn" class="level3" data-number="19.3.2">
+<h3 data-number="19.3.2" class="anchored" data-anchor-id="building-the-training-data-for-scikit-learn"><span class="header-section-number">19.3.2</span> Building the Training Data for <code>scikit-learn</code></h3>
 <p>Now let’s do it for all features in the shapefile and create an array <code>X</code> that has all the pixels and an array <code>y</code> that has all the training labels.</p>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([], dtype<span class="op">=</span>np.int8).reshape(<span class="dv">0</span>,<span class="dv">8</span>) <span class="co"># pixels for training</span></span>
@@ -571,8 +616,8 @@ POLYGON ((-76.67593927883173 34.69487548849214, -76.67573882771855 34.6945131991
 <span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># stack the pizels onto the pixel array</span></span>
 <span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>        X <span class="op">=</span> np.vstack((X, out_image_reshaped))        </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="pairing-y-with-x" class="level4" data-number="12.3.2.1">
-<h4 data-number="12.3.2.1" class="anchored" data-anchor-id="pairing-y-with-x"><span class="header-section-number">12.3.2.1</span> Pairing Y with X</h4>
+<section id="pairing-y-with-x" class="level4" data-number="19.3.2.1">
+<h4 data-number="19.3.2.1" class="anchored" data-anchor-id="pairing-y-with-x"><span class="header-section-number">19.3.2.1</span> Pairing Y with X</h4>
 <p>Now that we have the image we want to classify (our X feature inputs), and the land cover labels (our y labeled data), let’s check to make sure they match in size so we can feed them to Naive Bayes:</p>
 <div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What are our classification labels?</span></span>
@@ -626,7 +671,7 @@ Our y array is sized: (598,)</code></pre>
 <pre><code>Text(0.5, 1.0, 'Band Intensities Higher Ref Subset')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-17-output-2.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-17-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>They look okay but emergent wetland and subtital haline look quite similar! They’re going to be difficult to differentiate.</p>
@@ -644,8 +689,8 @@ Our y array is sized: (598,)</code></pre>
 </section>
 </section>
 </section>
-<section id="training-the-classifier" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="training-the-classifier"><span class="header-section-number">12.4</span> Training the Classifier</h2>
+<section id="training-the-classifier" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="training-the-classifier"><span class="header-section-number">19.4</span> Training the Classifier</h2>
 <p>Now that we have our X matrix of feature inputs (the spectral bands) and our y array (the labels), we can train our model.</p>
 <p>Visit <a href="https://scikit-learn.org/stable/modules/naive_bayes.html#gaussian-naive-bayes">this web page to find the usage of GaussianNaiveBayes Classifier</a> from <code>scikit-learn</code>.</p>
 <div class="cell" data-execution_count="21">
@@ -659,8 +704,8 @@ Our y array is sized: (598,)</code></pre>
 </div>
 <p>It is that simple to train a classifier in <code>scikit-learn</code>! The hard part is often validation and interpretation.</p>
 </section>
-<section id="predicting-on-the-image" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="predicting-on-the-image"><span class="header-section-number">12.5</span> Predicting on the image</h2>
+<section id="predicting-on-the-image" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="predicting-on-the-image"><span class="header-section-number">19.5</span> Predicting on the image</h2>
 <p>With our Naive Bayes classifier fit, we can now proceed by trying to classify the entire image:</p>
 <p>We’re only going to open the subset of the image we viewed above because otherwise it is computationally too intensive for most users.</p>
 <div class="cell" data-execution_count="22">
@@ -694,8 +739,8 @@ Our y array is sized: (598,)</code></pre>
 <div class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>class_prediction <span class="op">=</span> str_class_to_int(class_prediction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="lets-visualize-it" class="level3" data-number="12.5.1">
-<h3 data-number="12.5.1" class="anchored" data-anchor-id="lets-visualize-it"><span class="header-section-number">12.5.1</span> Let’s visualize it!</h3>
+<section id="lets-visualize-it" class="level3" data-number="19.5.1">
+<h3 data-number="19.5.1" class="anchored" data-anchor-id="lets-visualize-it"><span class="header-section-number">19.5.1</span> Let’s visualize it!</h3>
 <p>First we’ll make a colormap so we can visualize the classes, which are just encoded as integers, in more logical colors. Don’t worry too much if this code is confusing! It can be a little clunky to specify colormaps for <code>matplotlib</code>.</p>
 <div class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> color_stretch(image, index):</span>
@@ -743,12 +788,12 @@ Our y array is sized: (598,)</code></pre>
   fig.show()</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="this-looks-pretty-good" class="level3" data-number="12.5.2">
-<h3 data-number="12.5.2" class="anchored" data-anchor-id="this-looks-pretty-good"><span class="header-section-number">12.5.2</span> This looks pretty good!</h3>
+<section id="this-looks-pretty-good" class="level3" data-number="19.5.2">
+<h3 data-number="19.5.2" class="anchored" data-anchor-id="this-looks-pretty-good"><span class="header-section-number">19.5.2</span> This looks pretty good!</h3>
 <p>Let’s generate a map of Normalized Difference Water Index (NDWI) and NDVI just to compare with out output map.</p>
 <p>NDWI is similar to NDVI but for identifying water.</p>
 <div class="cell" data-execution_count="28">
@@ -784,7 +829,7 @@ Our y array is sized: (598,)</code></pre>
 <span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Looks pretty good! Areas that are high on the NDWI ratio are generally classified as water and areas high on NDVI are forest and herbaceous. It does seem like the wetland areas (e.g.&nbsp;the bottom right island complex) aren’t being picked up so it might be worth experimenting with other algorithms!</p>
@@ -803,14 +848,14 @@ Our y array is sized: (598,)</code></pre>
   fig.show()</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-29-output-2.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-29-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>This actually doesn’t look half bad! Land cover mapping is a complex problem and one where there are many approaches and tools for improving a map.</p>
 </section>
 </section>
-<section id="testing-an-unsupervised-classification-algorithm" class="level2" data-number="12.6">
-<h2 data-number="12.6" class="anchored" data-anchor-id="testing-an-unsupervised-classification-algorithm"><span class="header-section-number">12.6</span> Testing an Unsupervised Classification Algorithm</h2>
+<section id="testing-an-unsupervised-classification-algorithm" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="testing-an-unsupervised-classification-algorithm"><span class="header-section-number">19.6</span> Testing an Unsupervised Classification Algorithm</h2>
 <p>Let’s also try a unsupervised classification algorithm, k-means clustering, in the scikit-learn library (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html">documentation</a>)</p>
 <p>K-means (<a href="https://en.wikipedia.org/wiki/K-means_clustering">wikipedia page</a>) aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster.</p>
 <div class="cell" data-execution_count="32">
@@ -835,7 +880,7 @@ Our y array is sized: (598,)</code></pre>
 <pre><code>&lt;matplotlib.image.AxesImage at 0x19a12736320&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="01_lulc_classification_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+<p><img src="lulc_classification_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Wow this looks like it was better able to distinguish some areas like the wetland and submerged sand than our supervised classification approach! But supervised usually does better with some tuning, luckily there are lots of ways to think about improving our supervised method.</p>
@@ -980,13 +1025,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></span>
+      <a href="../Spatial_Analysis/classification_intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../03_LULC_Classification/02_python_assignment_2.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Spatial_Analysis/python_assignment_2.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 13&nbsp; Python Assignment 2: Using post-LASSO on large spatial data</title>
+<title>Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium - 20&nbsp; Exercise 2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../Appendices/hosting_notes.html" rel="next">
-<link href="../03_LULC_Classification/01_lulc_classification.html" rel="prev">
+<link href="../Spatial_Analysis/lulc_classification.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -134,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -159,12 +159,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Python</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -172,44 +172,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/01_jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/00_python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Assignment 0</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/02_python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/03_numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/04_pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/05_gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01_Python_Introduction/06_python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python Assignment 1: Big and spatial data in Python</span></a>
+  <a href="../Introduction/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Earth Economy Modeling</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Machine Learning</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Python</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -217,22 +187,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/01_linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  <a href="../Python_Introduction/python_setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setup Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/02_support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  <a href="../Python_Introduction/jupyter_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Jupyter Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/03_regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  <a href="../Python_Introduction/python_assignment_0.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exercise 1</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02_Machine_Learning/04_nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Neural Nets and Multi-layer Perceptrons</span></a>
+  <a href="../Python_Introduction/python_basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/numpy_arrays.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Numpy Arrays</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/pandas_tables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/gdal_rasters.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">GDAL Rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Python_Introduction/python_assignment_1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
   </div>
 </li>
       </ul>
@@ -247,19 +237,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/01_lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  <a href="../Machine_Learning/introduction_big_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Machine Learning Intro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../03_LULC_Classification/02_python_assignment_2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></a>
+  <a href="../Machine_Learning/linear_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Linear Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/support_vector_machines.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Regularization Intro</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/regularization_with_lasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regularization with Lasso</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/neural_networks_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Neural networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Machine_Learning/nn_multilayer_perceptron.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Neural Nets Code</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Appendices</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Spatial Analysis</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -267,12 +282,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  <a href="../Spatial_Analysis/spatial_data_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Python for Big, Spatial Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Cross References</span></a>
+  <a href="../Spatial_Analysis/classification_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Last day of class!</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/lulc_classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Spatial_Analysis/python_assignment_2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/hosting_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Appendices/quarto_notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cross References</span></a>
   </div>
 </li>
       </ul>
@@ -286,19 +331,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#step-1-download-the-data-and-set-paths" id="toc-step-1-download-the-data-and-set-paths" class="nav-link active" data-scroll-target="#step-1-download-the-data-and-set-paths"><span class="toc-section-number">13.1</span>  Step 1: Download the data and set paths</a></li>
-  <li><a href="#step-2-set-raster-paths" id="toc-step-2-set-raster-paths" class="nav-link" data-scroll-target="#step-2-set-raster-paths"><span class="toc-section-number">13.2</span>  Step 2: Set raster paths</a></li>
-  <li><a href="#step-3-open-the-rasters" id="toc-step-3-open-the-rasters" class="nav-link" data-scroll-target="#step-3-open-the-rasters"><span class="toc-section-number">13.3</span>  Step 3: Open the rasters</a></li>
-  <li><a href="#step-4-define-some-arrays" id="toc-step-4-define-some-arrays" class="nav-link" data-scroll-target="#step-4-define-some-arrays"><span class="toc-section-number">13.4</span>  Step 4: Define some arrays</a></li>
-  <li><a href="#step-5-load-all-the-independent-variables" id="toc-step-5-load-all-the-independent-variables" class="nav-link" data-scroll-target="#step-5-load-all-the-independent-variables"><span class="toc-section-number">13.5</span>  Step 5: Load all the independent variables</a></li>
-  <li><a href="#step-6" id="toc-step-6" class="nav-link" data-scroll-target="#step-6"><span class="toc-section-number">14</span>  Step 6:</a></li>
-  <li><a href="#step-7" id="toc-step-7" class="nav-link" data-scroll-target="#step-7"><span class="toc-section-number">15</span>  Step 7:</a></li>
-  <li><a href="#step-8-optional-but-useful" id="toc-step-8-optional-but-useful" class="nav-link" data-scroll-target="#step-8-optional-but-useful"><span class="toc-section-number">16</span>  Step 8 (optional but useful):</a></li>
-  <li><a href="#step-9" id="toc-step-9" class="nav-link" data-scroll-target="#step-9"><span class="toc-section-number">17</span>  Step 9:</a></li>
-  <li><a href="#step-10-optional-and-just-for-fun." id="toc-step-10-optional-and-just-for-fun." class="nav-link" data-scroll-target="#step-10-optional-and-just-for-fun."><span class="toc-section-number">18</span>  Step 10, optional and just for fun:.</a></li>
-  <li><a href="#step-11" id="toc-step-11" class="nav-link" data-scroll-target="#step-11"><span class="toc-section-number">19</span>  Step 11:</a></li>
-  <li><a href="#step-12" id="toc-step-12" class="nav-link" data-scroll-target="#step-12"><span class="toc-section-number">20</span>  Step 12:</a></li>
-  <li><a href="#step-13" id="toc-step-13" class="nav-link" data-scroll-target="#step-13"><span class="toc-section-number">21</span>  Step 13:</a></li>
+  <li><a href="#using-post-lasso-on-large-spatial-data" id="toc-using-post-lasso-on-large-spatial-data" class="nav-link active" data-scroll-target="#using-post-lasso-on-large-spatial-data"><span class="toc-section-number">20.1</span>  Using post-LASSO on large spatial data</a></li>
+  <li><a href="#step-1-download-the-data-and-set-paths" id="toc-step-1-download-the-data-and-set-paths" class="nav-link" data-scroll-target="#step-1-download-the-data-and-set-paths"><span class="toc-section-number">20.2</span>  Step 1: Download the data and set paths</a></li>
+  <li><a href="#step-2-set-raster-paths" id="toc-step-2-set-raster-paths" class="nav-link" data-scroll-target="#step-2-set-raster-paths"><span class="toc-section-number">20.3</span>  Step 2: Set raster paths</a></li>
+  <li><a href="#step-3-open-the-rasters" id="toc-step-3-open-the-rasters" class="nav-link" data-scroll-target="#step-3-open-the-rasters"><span class="toc-section-number">20.4</span>  Step 3: Open the rasters</a></li>
+  <li><a href="#step-4-define-some-arrays" id="toc-step-4-define-some-arrays" class="nav-link" data-scroll-target="#step-4-define-some-arrays"><span class="toc-section-number">20.5</span>  Step 4: Define some arrays</a></li>
+  <li><a href="#step-5-load-all-the-independent-variables" id="toc-step-5-load-all-the-independent-variables" class="nav-link" data-scroll-target="#step-5-load-all-the-independent-variables"><span class="toc-section-number">20.6</span>  Step 5: Load all the independent variables</a></li>
+  <li><a href="#step-6" id="toc-step-6" class="nav-link" data-scroll-target="#step-6"><span class="toc-section-number">21</span>  Step 6:</a></li>
+  <li><a href="#step-7" id="toc-step-7" class="nav-link" data-scroll-target="#step-7"><span class="toc-section-number">22</span>  Step 7:</a></li>
+  <li><a href="#step-8-optional-but-useful" id="toc-step-8-optional-but-useful" class="nav-link" data-scroll-target="#step-8-optional-but-useful"><span class="toc-section-number">23</span>  Step 8 (optional but useful):</a></li>
+  <li><a href="#step-9" id="toc-step-9" class="nav-link" data-scroll-target="#step-9"><span class="toc-section-number">24</span>  Step 9:</a></li>
+  <li><a href="#step-10-optional-and-just-for-fun." id="toc-step-10-optional-and-just-for-fun." class="nav-link" data-scroll-target="#step-10-optional-and-just-for-fun."><span class="toc-section-number">25</span>  Step 10, optional and just for fun:.</a></li>
+  <li><a href="#step-11" id="toc-step-11" class="nav-link" data-scroll-target="#step-11"><span class="toc-section-number">26</span>  Step 11:</a></li>
+  <li><a href="#step-12" id="toc-step-12" class="nav-link" data-scroll-target="#step-12"><span class="toc-section-number">27</span>  Step 12:</a></li>
+  <li><a href="#step-13" id="toc-step-13" class="nav-link" data-scroll-target="#step-13"><span class="toc-section-number">28</span>  Step 13:</a></li>
   </ul>
 </nav>
     </div>
@@ -307,7 +353,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python Assignment 2: Using post-LASSO on large spatial data</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Exercise 2</span></h1>
 </div>
 
 
@@ -322,6 +368,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<section id="using-post-lasso-on-large-spatial-data" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="using-post-lasso-on-large-spatial-data"><span class="header-section-number">20.1</span> Using post-LASSO on large spatial data</h2>
 <p>This assignment will give you a real (active) research topic that I’ve discussed a little bit in class: predicting carbon storage as a function of high-resolution gridded data. In the class google drive you will find all the data you need. I added it just recently so if you don’t have it, be sure to go get it first.</p>
 <p>This assignment will have you use the automated variable selection approach within LASSO to deal with a common situation in regressions on raster-stacks: we have so much data everything is significant but will lead to massive overfitting. The basic approach used here will involve reading in 2d rasters, flattening them into a 1d column ready to add to a dataframe shaped object, which we will use as our X matrix.</p>
 <p>Please turn in the completed Notebook (.ipynb) file that includes the results you generate.</p>
@@ -335,15 +383,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.api <span class="im">import</span> OLS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="step-1-download-the-data-and-set-paths" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="step-1-download-the-data-and-set-paths"><span class="header-section-number">13.1</span> Step 1: Download the data and set paths</h2>
+</section>
+<section id="step-1-download-the-data-and-set-paths" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="step-1-download-the-data-and-set-paths"><span class="header-section-number">20.2</span> Step 1: Download the data and set paths</h2>
 <p>Download the latest data from the class’s google drive. In there, you will need the the files in <code>Data/python_assignment_2</code> data and assign a relative path to the <code>soyo_tile</code> directory in that assignment directory. It is your task to ensure your script runs in the right location and the data is stored in the right location that this relative path works.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-2-set-raster-paths" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="step-2-set-raster-paths"><span class="header-section-number">13.2</span> Step 2: Set raster paths</h2>
+<section id="step-2-set-raster-paths" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="step-2-set-raster-paths"><span class="header-section-number">20.3</span> Step 2: Set raster paths</h2>
 <p>Assign each of the raster paths in the directory to a dictionary for later use. I’ve included most of the code (so you don’t have to waste your time typing), but add in the missing paths.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2 code</span></span>
@@ -372,8 +421,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-3-open-the-rasters" class="level2" data-number="13.3">
-<h2 data-number="13.3" class="anchored" data-anchor-id="step-3-open-the-rasters"><span class="header-section-number">13.3</span> Step 3: Open the rasters</h2>
+<section id="step-3-open-the-rasters" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="step-3-open-the-rasters"><span class="header-section-number">20.4</span> Step 3: Open the rasters</h2>
 <p>Our dependent variable will be 30 meter observations of carbon storage from Baccini et al.&nbsp;(unpublished, but soon to be published) data. The label I assigned in the dictionary above was agb_observed_baccini_2000_30m for this variable. Use gdal.Open, GetRasterBand(1) and ReadAsArray() to read this geotiff as a numpy file</p>
 <p>Side note: If you get an error like: “ERROR 4: This is a BigTIFF file. BigTIFF is not supported by this version of GDAL and libtiff.” make sure you have installed gdal with the mamba method from lecture 1.</p>
 <div class="cell">
@@ -382,15 +431,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-4-define-some-arrays" class="level2" data-number="13.4">
-<h2 data-number="13.4" class="anchored" data-anchor-id="step-4-define-some-arrays"><span class="header-section-number">13.4</span> Step 4: Define some arrays</h2>
+<section id="step-4-define-some-arrays" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="step-4-define-some-arrays"><span class="header-section-number">20.5</span> Step 4: Define some arrays</h2>
 <p>Create an empty numpy array (or full of zeros) of the right shape to house all our raster data. A very CPU-efficient way of arranging a stack of 2d rasters (which would be 3d once stacked up), is to flatten each 2d raster into a longer 1d array. This will go into our X matrix. In order to create the right sized X matrix, first get the n_obs and n_vars by inspecting the dependent variable raster and the dictionary of inputs above. Note that the n_vars should be the number of independent AND dependent variables.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-5-load-all-the-independent-variables" class="level2" data-number="13.5">
-<h2 data-number="13.5" class="anchored" data-anchor-id="step-5-load-all-the-independent-variables"><span class="header-section-number">13.5</span> Step 5: Load all the independent variables</h2>
+<section id="step-5-load-all-the-independent-variables" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="step-5-load-all-the-independent-variables"><span class="header-section-number">20.6</span> Step 5: Load all the independent variables</h2>
 <ul>
 <li>Iterate through the dictionary and load each raster as a 2d array</li>
 <li>flatten it to 1d using the .flatten() method in numpy</li>
@@ -412,44 +461,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-6" class="level1" data-number="14">
-<h1 data-number="14"><span class="header-section-number">14</span> Step 6:</h1>
+<section id="step-6" class="level1" data-number="21">
+<h1 data-number="21"><span class="header-section-number">21</span> Step 6:</h1>
 <p>Extract the first array row of the data_array and assign it to y. Assign the rest to X.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-7" class="level1" data-number="15">
-<h1 data-number="15"><span class="header-section-number">15</span> Step 7:</h1>
+<section id="step-7" class="level1" data-number="22">
+<h1 data-number="22"><span class="header-section-number">22</span> Step 7:</h1>
 <p>Split the X and y into testing and training data such that the training data is the first million pixels and the testing data is the next 200,000. Do this using numpy slice notation on the X and y variables you created.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 7 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-8-optional-but-useful" class="level1" data-number="16">
-<h1 data-number="16"><span class="header-section-number">16</span> Step 8 (optional but useful):</h1>
+<section id="step-8-optional-but-useful" class="level1" data-number="23">
+<h1 data-number="23"><span class="header-section-number">23</span> Step 8 (optional but useful):</h1>
 <p>To make the code run faster, we are going to use every 10th pixel. We can easily get this via numpy slicing again, using x_train[::10] to get every 10th pixel.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 8 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-9" class="level1" data-number="17">
-<h1 data-number="17"><span class="header-section-number">17</span> Step 9:</h1>
+<section id="step-9" class="level1" data-number="24">
+<h1 data-number="24"><span class="header-section-number">24</span> Step 9:</h1>
 <p>Create a Lasso object (using the default penalty term alpha) and fit it to the training data. Create and print out a vector of predicted carbon values. Also print out the score using the lasso object’s .score() method on the TESTING data. Print out the fitted lasso score.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 9 code</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-10-optional-and-just-for-fun." class="level1" data-number="18">
-<h1 data-number="18"><span class="header-section-number">18</span> Step 10, optional and just for fun:.</h1>
+<section id="step-10-optional-and-just-for-fun." class="level1" data-number="25">
+<h1 data-number="25"><span class="header-section-number">25</span> Step 10, optional and just for fun:.</h1>
 <p>To view how our projections LOOK, we can create a predicted matrix on the whole X, reshape it back into the original 2d shape and look at it. You can compare this to the input array to visualize how it looks. Note that this will only work if you name your objects like mine.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 10 code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-11" class="level1" data-number="19">
-<h1 data-number="19"><span class="header-section-number">19</span> Step 11:</h1>
+<section id="step-11" class="level1" data-number="26">
+<h1 data-number="26"><span class="header-section-number">26</span> Step 11:</h1>
 <p>Create a list of 30 alphas using <code>np.logspace(-1, 3, 30)</code>.</p>
 <p>Using a for loop iterate over those alphas and run the Lasso model like above, but using the alpha values in the loop. Print out the fit score at each step. Using matplotlib, plot how this value changes as alpha changes. Finally, extract the best alpha of the bunch.</p>
 <div class="cell">
@@ -457,16 +506,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-12" class="level1" data-number="20">
-<h1 data-number="20"><span class="header-section-number">20</span> Step 12:</h1>
+<section id="step-12" class="level1" data-number="27">
+<h1 data-number="27"><span class="header-section-number">27</span> Step 12:</h1>
 <p>Rerun the lasso with that best value and identify all of the coefficiencts that were “selected” ie had non-zero values. Save these coefficient indices and labels to a list.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 12 code</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-13" class="level1" data-number="21">
-<h1 data-number="21"><span class="header-section-number">21</span> Step 13:</h1>
+<section id="step-13" class="level1" data-number="28">
+<h1 data-number="28"><span class="header-section-number">28</span> Step 13:</h1>
 <p>Using Statsmodels, run an OLS version on the selected variables.</p>
 <p>Use print to show the results table.</p>
 <p>Write a description of any advantages this approach has over vanilla OLS.</p>
@@ -614,13 +663,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../03_LULC_Classification/01_lulc_classification.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></span>
+      <a href="../Spatial_Analysis/lulc_classification.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Classification of Land Cover</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../Appendices/hosting_notes.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Hosting notes</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Hosting notes</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

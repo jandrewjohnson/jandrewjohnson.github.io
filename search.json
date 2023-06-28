@@ -1,16 +1,114 @@
 [
   {
+    "objectID": "teaching.html",
+    "href": "teaching.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "publications.html",
+    "href": "publications.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Justin Andrew Johnson",
+    "title": "Home",
     "section": "",
-    "text": "About Me\n\n\n\nI am an Assistant Professor in Applied Economics at the University of Minnesota. I also work closely with the Natural Capital Project at The Institute on the Environment, University of Minnesota and Stanford University. My research focuses on how the economy affects the environment, and vice versa, on global to local scales. Specifically, I am an expert in modeling ecosystem services (how natural capital provides valuable services to humans) and integrating these models with general equilibrium economic models. To do this, I write open-source software (Python, R and C/C++) that uses very big data (>8 billion observations) with economic modeling and machine-learning techniques. See my research page for details.\nI recently launched and now lead a new project that links the Global Trade Analysis Project (GTAP) out of Purdue University with the Integrated Valuation of Ecosystem Services and Tradeoffs (InVEST) model from the Natural Capital Project, based at Stanford University and the University of Minnesota. The project team, which includes the founder of GTAP, Thomas Hertel, and the co-founder of the Natural Capital Project, Stephen Polasky, aims to build strong quantitative evidence on how changes in ecosystem services affect economic performance at the macroeconomic level.\nIn addition to ecosystem services, I also research food security, climate change and agricultural management in developing countries, along with more traditional topics in economics such as dynamic general equilibrium modeling of economic growth. In my spare time, I am a mountain biker, rock climber and board game designer.\nSee the very rough draft of the textbook I’m working on: Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium"
+    "text": "I am an Assistant Professor in Applied Economics at the University of Minnesota. I also work closely with the Natural Capital Project at The Institute on the Environment, University of Minnesota and Stanford University. My research focuses on how the economy affects the environment, and vice versa, on global to local scales. Specifically, I am an expert in modeling ecosystem services (how natural capital provides valuable services to humans) and integrating these models with general equilibrium economic models. To do this, I write open-source software (Python, R and C/C++) that uses very big data (&gt;8 billion observations) with economic modeling and machine-learning techniques. See my research page for details.\nI recently launched and now lead a new project that links the Global Trade Analysis Project (GTAP) out of Purdue University with the Integrated Valuation of Ecosystem Services and Tradeoffs (InVEST) model from the Natural Capital Project, based at Stanford University and the University of Minnesota. The project team, which includes the founder of GTAP, Thomas Hertel, and the co-founder of the Natural Capital Project, Stephen Polasky, aims to build strong quantitative evidence on how changes in ecosystem services affect economic performance at the macroeconomic level.\nIn addition to ecosystem services, I also research food security, climate change and agricultural management in developing countries, along with more traditional topics in economics such as dynamic general equilibrium modeling of economic growth. In my spare time, I am a mountain biker, rock climber and board game designer.\nSee the very rough draft of the textbook I’m working on: Earth-Economy Modeling: Fine resolution ecosystems in general equilibrium"
+  },
+  {
+    "objectID": "gtap_invest/results/index.html",
+    "href": "gtap_invest/results/index.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Justin Andrew Johnson",
+    "title": "About me",
     "section": "",
-    "text": "About me\nTo do."
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "bio.html",
+    "href": "bio.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "gtap_invest/index.html",
+    "href": "gtap_invest/index.html",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "",
+    "text": "GTAP-InVEST is a global, earth-economy model that integrates a computable general equilibrium (CGE) model from the Global Trade Analysis Project (GTAP), a land-use change (LUC) model, and a ecosystem services model, InVEST (Integrated Valuation of Ecosystem Services and Tradeoffs), provided by the Natural Capital Project. The model has been publisehded in Johnson et al. (2023) in the Proceedings of the National Academy of Sciences at https://www.pnas.org/doi/10.1073/pnas.2220401120. Please also see the Project Website, the GTAP-InVEST User Guide, or the download page of results from the PNAS article. Additionally, we are hosting a live, visualization tool at https://mygeohub.org/tools/gtapinvest, which should be coming online shortly after official publication.\n\nGTAP-InVEST originated from several academic papers, including:\n\n“The Economic Case for Nature” (Johnson et al. 2021, World Bank Report, https://www.worldbank.org/en/topic/environment/publication/the-economic-case-for-nature)\n“Projected landscape-scale repercussions of global action for climate and biodiversity protection” (von Jeetze et al. 2023, Nature Communications, https://www.nature.com/articles/s41467-023-38043-1)\n“Closing yield gap is crucial to avoid potential surge in global carbon emissions” (Suh et al. 2020, Global Environmental Change, https://doi.org/10.1016/j.gloenvcha.2020.102100)\n“Global Future: Assessing The Global Economic Impacts of Environmental Change to Support Policy-Making” (Roxburg et al. 2020, World Wildlife Fund, https://www.gtap.agecon.purdue.edu/resources/res_display.asp?RecordID=5987).\n\nPrior versions of this repository include v0.8.0, which was the version used in the Economic Case for Nature under the Road to Kunming project, commissioned by the World Ban.\n\n\nThe GTAP-InVEST model is written in Python, C, R, and GEMPACK. All of the code specific to GTAP-InVEST is open source, but it requires a proprietary license for GEMPACK to recompile the CGE executable and it requires access/purchase of version 10 of the GTAP database. The three building blocks of the model, documented in more detail below are:\n\nThe GTAP-AEZ (Agroecological Zones) model, which calculates equilibrium prices, quantities, GDP, trade and many other economic variables, and most notably for this exercise, endogenously calculates how land is used in different sectors and how natural land is brought into economic use through agricultural, pasture and managed forest expansion.\nThe Spatial Economic Allocation Landscape Simulator (SEALS) model, which downscales regional estimates of land-use change from GTAP-AEZ to a high enough resolution (300m) to run ecosystem service models.\nInVEST, which takes the downscaled land-use, land-cover maps from SEALS to calculate changes in ecosystem service provision. These ecosystem service changes are then further expressed as shocks to the economy and used as inputs into a second run of GTAP-AEZ, which calculates how losses of ecosystem services affect economic performance.\n\n\n\n\n\nGTAP-InVEST requires a considerable amount of technical skill to run and involves multiple different programming languages and paradigms. Future versions of GTAP-InVEST will aim to simplify this software complexity, but for now, because this is the first “hard-linked” version of a global ecosystem service and general equilibrium model, there still exist many suboptimal design choices that were necessary in “gluing together” all of these models. Python is used as the main glue of the model while each of the preexisting models are coded in their default language. This section describes how to get the combined model software running.\n\n\nGTAP-InVEST uses the open-source Hazelbean library to organize and manage the code. Hazelbean is a collection of geospatial processing tools based on gdal, numpy, scipy, cython, pygeoprocessing, taskgraph, natcap.invest, geopandas and many others to assist in common spatial analysis tasks in sustainability science, ecosystem service assessment, global integrated modelling assessment, natural capital accounting, and/or calculable general equilibrium modelling. The installation instructions here are a “kitchen-sink” approach to installing every relevant library, which means this could be greatly simplified in future versions.\n\nInstall Mambaforge from https://github.com/conda-forge/miniforge#mambaforge\nFor convenience, during installation, I select yes for “Add Mambaforge to my PATH environment Variable”\n(PC) Open the Miniforge Prompt (search for it in the start menu) or (Mac) just type “mamba init”\nCreate a new mamba environment with the following commands (here it is named gtap_invest_env):\n\nmamba create -n gtap_invest_env -c conda-forge\n\nActivate the environment\n\nmamba activate gtap_invest_env\n\nInstall libraries using conda command:\n\nmamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc\n\nAnd then finally, install non-conda distributions via pip:\n\npip install mglearn pandoc datascience hazelbean"
+  },
+  {
+    "objectID": "gtap_invest/index.html#model-components",
+    "href": "gtap_invest/index.html#model-components",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "",
+    "text": "The GTAP-InVEST model is written in Python, C, R, and GEMPACK. All of the code specific to GTAP-InVEST is open source, but it requires a proprietary license for GEMPACK to recompile the CGE executable and it requires access/purchase of version 10 of the GTAP database. The three building blocks of the model, documented in more detail below are:\n\nThe GTAP-AEZ (Agroecological Zones) model, which calculates equilibrium prices, quantities, GDP, trade and many other economic variables, and most notably for this exercise, endogenously calculates how land is used in different sectors and how natural land is brought into economic use through agricultural, pasture and managed forest expansion.\nThe Spatial Economic Allocation Landscape Simulator (SEALS) model, which downscales regional estimates of land-use change from GTAP-AEZ to a high enough resolution (300m) to run ecosystem service models.\nInVEST, which takes the downscaled land-use, land-cover maps from SEALS to calculate changes in ecosystem service provision. These ecosystem service changes are then further expressed as shocks to the economy and used as inputs into a second run of GTAP-AEZ, which calculates how losses of ecosystem services affect economic performance."
+  },
+  {
+    "objectID": "gtap_invest/index.html#software-installation",
+    "href": "gtap_invest/index.html#software-installation",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "",
+    "text": "GTAP-InVEST requires a considerable amount of technical skill to run and involves multiple different programming languages and paradigms. Future versions of GTAP-InVEST will aim to simplify this software complexity, but for now, because this is the first “hard-linked” version of a global ecosystem service and general equilibrium model, there still exist many suboptimal design choices that were necessary in “gluing together” all of these models. Python is used as the main glue of the model while each of the preexisting models are coded in their default language. This section describes how to get the combined model software running.\n\n\nGTAP-InVEST uses the open-source Hazelbean library to organize and manage the code. Hazelbean is a collection of geospatial processing tools based on gdal, numpy, scipy, cython, pygeoprocessing, taskgraph, natcap.invest, geopandas and many others to assist in common spatial analysis tasks in sustainability science, ecosystem service assessment, global integrated modelling assessment, natural capital accounting, and/or calculable general equilibrium modelling. The installation instructions here are a “kitchen-sink” approach to installing every relevant library, which means this could be greatly simplified in future versions.\n\nInstall Mambaforge from https://github.com/conda-forge/miniforge#mambaforge\nFor convenience, during installation, I select yes for “Add Mambaforge to my PATH environment Variable”\n(PC) Open the Miniforge Prompt (search for it in the start menu) or (Mac) just type “mamba init”\nCreate a new mamba environment with the following commands (here it is named gtap_invest_env):\n\nmamba create -n gtap_invest_env -c conda-forge\n\nActivate the environment\n\nmamba activate gtap_invest_env\n\nInstall libraries using conda command:\n\nmamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc\n\nAnd then finally, install non-conda distributions via pip:\n\npip install mglearn pandoc datascience hazelbean"
+  },
+  {
+    "objectID": "gtap_invest/index.html#errata",
+    "href": "gtap_invest/index.html#errata",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "Errata",
+    "text": "Errata\nThe above commands are valid for Windows users. For Mac users, replace -v %cd% with -v `pwd`"
+  },
+  {
+    "objectID": "gtap_invest/index.html#numpy-errors",
+    "href": "gtap_invest/index.html#numpy-errors",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "Numpy errors",
+    "text": "Numpy errors\nIf numpy throws “wrong size or changes size binary”: upgrade numpy at the end of the installation process. See for details: https://stackoverflow.com/questions/66060487/valueerror-numpy-ndarray-size-changed-may-indicate-binary-incompatibility-exp"
+  },
+  {
+    "objectID": "gtap_invest/index.html#mac-specific-errors",
+    "href": "gtap_invest/index.html#mac-specific-errors",
+    "title": "Overview of GTAP-InVEST v0.9.0",
+    "section": "Mac specific errors",
+    "text": "Mac specific errors\nYour python environment has to have permissions to access and write to the base data folder."
+  },
+  {
+    "objectID": "gtap_invest/user_guide/index.html",
+    "href": "gtap_invest/user_guide/index.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "mesh.html",
+    "href": "mesh.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
+  },
+  {
+    "objectID": "research.html",
+    "href": "research.html",
+    "title": "About me",
+    "section": "",
+    "text": "See justinandrewjohnson.com for more information."
   }
 ]

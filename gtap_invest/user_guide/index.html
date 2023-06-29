@@ -194,17 +194,17 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
-<p>This is the User Guide for GTAP-InVEST, a new earth-economy model introduced in “Investing in nature can improve equity and economic returns” (Johnson et al.&nbsp;2023, PNAS). The content here originally derived from the suppliemental information document included with PNAS article. However, development on the model is progressing rapidly, so please this document, which will remain up-to-date. For additional details, please see the GTAP-InVEST GitHub page (github.com/jandrewjohnson/gtap_invest). All code and results of the model are available and licensed under a permissive open-source license. Full results may be downloaded at justinandrewjohnson.com/gtap_invest/results.</p>
+<p>This is the User Guide for GTAP-InVEST, a new earth-economy model introduced in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">“Investing in nature can improve equity and economic returns” (Johnson et al.&nbsp;2023, PNAS)</a>. The content here originally derived from the supplemental information document included with PNAS article. However, development on the model is progressing rapidly, so please refer to this document, which will remain up-to-date. For additional details, please see the GTAP-InVEST Github repository (<a href="github.com/jandrewjohnson/gtap_invest">github.com/jandrewjohnson/gtap_invest</a>). All code and results of the model are available and licensed under a permissive open-source license. Full results may be downloaded at <a href="justinandrewjohnson.com/gtap_invest/results">justinandrewjohnson.com/gtap_invest/results</a>.</p>
 </section>
 <section id="gtap-invest-model-summary" class="level2">
 <h2 class="anchored" data-anchor-id="gtap-invest-model-summary">2. GTAP-InVEST Model Summary</h2>
-<p>In this section, we describe how we link together the models that underly GTAP-InVEST and discuss the new elements added to each model to make this possible. This section assumes the reader is familiar with the underlying GTAP and InVEST models. If this is not the case, see SI Sections 4 and 5, which document these two models in more depth.</p>
+<p>In this section, we describe how we link together the models that underlie GTAP-InVEST and discuss the new elements added to each model to make this possible. This section assumes the reader is familiar with the underlying GTAP and InVEST models. If this is not the case, see Sections 4 and 5, which document these two models in more depth.</p>
 <section id="overall-model-structure" class="level3">
 <h3 class="anchored" data-anchor-id="overall-model-structure">2.1. Overall model structure</h3>
 <p>GTAP-InVEST is based on several existing models, though a number of new advances were necessary to make the model linkage. These necessary advances fall into two categories: 1. modifications of the underlying models so that they compute what is needed by the other models; and 2., creation of “linkage” code that expresses the outputs of one model as inputs to another model. Figure S.2.1 summarizes the overall structure of the model.</p>
 <p><img src="images/paste-1.png" class="img-fluid"></p>
 <p><strong>Figure S.2.1: Overall model linkages within GTAP-InVEST</strong></p>
-<p>The first step in the model is to project how the economy will evolve between the base year and the terminal year while ignoring impacts from ecosystem services. We refer to this as GTAP Run 1 or the “economic projections run.” It is summarized in Column 1 of Figure S.2.1 (see SI Section 3 for details on the exact input assumptions). The economic projections run calculates a business-as-usual scenario to 2030 that does not yet account for ecosystem services (we label these results as BAU-noES throughout). Because many of the policies rely on detailed consideration of how changing market forces will endogenously drive land-use change and conversion of natural land into economically-utilized land, the GTAP model has expanded representation of heterogenous land and can endogenously calculate land-use change at the GTAP-AEZ scale. See Section 2.2.3 for a description of how we created this new version of GTAP-AEZ. The results of GTAP Run 1 provide projections of regional land-use change for cropland, pastureland, managed forests and natural land. The next step in GTAP-InVEST is to downscale these regional results (Column 2) using the Spatial Economic Allocation Landscape Simulator (SEALS) from 341 regions to 8.4 billion grid-cells (10 arc-second resolution, or roughly 300 meters at the equator). This is necessary because the models of biodiversity and ecosystem services we used, specifically the Integrated Valuation of Ecosystem Services and Tradeoffs (InVEST) model, require very high-resolution data to capture local dynamics (Column 3). Finally, the outputs of InVEST are fed back into a second run of the economic model (Column 4), referred to as the GTAP Run 2, or the “ecosystem services impact run.” Run 2 assesses how changes in ecosystem services will have feedback effects on the 2030 economy. &nbsp;In our results, outputs from this second run are labeled with “allES” (or “aES” for short-name variables) to denote that the impacts on the economy from changed ecosystem services are now included. The difference between GTAP Run 1 and Run 2 identifies how much ecosystem services matter (see Figure 1 in the manuscript). The outputs of GTAP Run 2 provide detailed macroeconomic results described in figures 1-3 of the manuscript and in section 7 of this supplemental information.</p>
+<p>The first step in the model is to project how the economy will evolve between the base year and the terminal year while ignoring impacts from ecosystem services. We refer to this as GTAP Run 1 or the “economic projections run.” It is summarized in Column 1 of Figure S.2.1 (see SI Section 3 for details on the exact input assumptions). The economic projections run calculates a business-as-usual scenario to 2030 that does not yet account for ecosystem services (we label these results as BAU-noES throughout). Because many of the policies rely on detailed consideration of how changing market forces will endogenously drive land-use change and conversion of natural land into economically-utilized land, the GTAP model has expanded representation of heterogeneous land and can endogenously calculate land-use change at the GTAP-AEZ scale. See Section 2.2.3 for a description of how we created this new version of GTAP-AEZ. The results of GTAP Run 1 provide projections of regional land-use change for cropland, pastureland, managed forests and natural land. The next step in GTAP-InVEST is to downscale these regional results (Column 2) using the Spatial Economic Allocation Landscape Simulator (SEALS) from 341 regions to 8.4 billion grid-cells (10 arc-second resolution, or roughly 300 meters at the equator). This is necessary because the models of biodiversity and ecosystem services we used, specifically the Integrated Valuation of Ecosystem Services and Tradeoffs (InVEST) model, require very high-resolution data to capture local dynamics (Column 3). Finally, the outputs of InVEST are fed back into a second run of the economic model (Column 4), referred to as the GTAP Run 2, or the “ecosystem services impact run.” Run 2 assesses how changes in ecosystem services will have feedback effects on the 2030 economy. &nbsp;In our results, outputs from this second run are labeled with “allES” (or “aES” for short-name variables) to denote that the impacts on the economy from changed ecosystem services are now included. The difference between GTAP Run 1 and Run 2 identifies how much ecosystem services matter (see Figure 1 in the manuscript). The outputs of GTAP Run 2 provide detailed macroeconomic results described in figures 1-3 of the manuscript and in section 7 of this supplemental information.</p>
 </section>
 <section id="input-assumptions" class="level3">
 <h3 class="anchored" data-anchor-id="input-assumptions">2.2. Input Assumptions</h3>
@@ -758,12 +758,14 @@ ul.task-list li input[type="checkbox"] {
 <section id="calibration" class="level4">
 <h4 class="anchored" data-anchor-id="calibration">2.4.3. Calibration</h4>
 <p>A key component in SEALS is that it downscales according to observed relationships present in time-series input data. SEALS uses a spatial allocation approach that has been calibrated on the ESACCI 1992-2015 time series using an iterative Gaussian L1-loss function minimization approach. The approach is documented in Figure S.2.4.3.1. as per the following algorithm:</p>
-<p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Define a baseline condition (Panel A, using the year 2000 for this example).</p>
-<p>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Define a projection year in the set of observed years after the baseline year (2010), shown in Panel B, and calculate the net-change between the two years for each coarse resolution (30km) grid-cell. This defines the amount of change in each LULC class that our allocation algorithm will predict.</p>
-<p>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Allocate the net change of each LULC class using only the baseline map and a spatial allocation algorithm, S(p1), where p1 is the parameter set used in the allocation and is initially set to an arbitrary value.</p>
-<p>4.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Calculate how accurate the projected LULC map for 2010 (Panel C) compares to the observed 2010 LULC map. Specifically, calculate the difference score, which is the summation of 5 L1-difference functions, one for each LULC transition, that calculates how different (in terms of Gaussian-blurred distance) each class is in the projected map compared to the observed map. This generates a score for the quality of fit for the current set of parameters (Panel D).</p>
-<p>5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Iteratively for each parameter in p1_i, increase the parameter by X percent (initially 10), rerun step 4 with the new parameter, observe the new similarity score, then decrease it by 10 percent and rerun.</p>
-<p>6.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; After calculating the change in fit from each parameter increase and decrease in Step 5, identify which change had the greatest improvement in the similarity score. Update the parameter set to include the single best change, and then repeat Steps 3-6 until no additional improvements can be made.</p>
+<ol type="1">
+<li><p>Define a baseline condition (Panel A, using the year 2000 for this example).</p></li>
+<li><p>Define a projection year in the set of observed years after the baseline year (2010), shown in Panel B, and calculate the net-change between the two years for each coarse resolution (30km) grid-cell. This defines the amount of change in each LULC class that our allocation algorithm will predict.</p></li>
+<li><p>Allocate the net change of each LULC class using only the baseline map and a spatial allocation algorithm, S(p1), where p1 is the parameter set used in the allocation and is initially set to an arbitrary value.</p></li>
+<li><p>Calculate how accurate the projected LULC map for 2010 (Panel C) compares to the observed 2010 LULC map. Specifically, calculate the difference score, which is the summation of 5 L1-difference functions, one for each LULC transition, that calculates how different (in terms of Gaussian-blurred distance) each class is in the projected map compared to the observed map. This generates a score for the quality of fit for the current set of parameters (Panel D).</p></li>
+<li><p>Iteratively for each parameter in p1_i, increase the parameter by X percent (initially 10), rerun step 4 with the new parameter, observe the new similarity score, then decrease it by 10 percent and rerun.</p></li>
+<li><p>After calculating the change in fit from each parameter increase and decrease in Step 5, identify which change had the greatest improvement in the similarity score. Update the parameter set to include the single best change, and then repeat Steps 3-6 until no additional improvements can be made.</p></li>
+</ol>
 <p>Figure 2.4.3.2. shows more detail on the calibration process, highlighting where specific transitions are projected versus where they actually happen, along with the difference score implied.</p>
 <p><img src="images/paste-12.png" class="img-fluid"></p>
 <p><strong>Figure 2.4.3.1. SEALS calibration process</strong></p>
@@ -863,30 +865,8 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <tbody>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
 <td>Regions</td>
 <td>Annual growth rates of key economic drivers over 2014-2030 (in %)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -913,31 +893,9 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td>Crops</td>
 <td>Ruminant</td>
 <td>Non-ruminants</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>Argentina</td>
@@ -1780,52 +1738,19 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Table S.4.2: Historical and Projected Average Annual Growth Rate in R&amp;D Spending.</strong> Note: Subsidy Repurposing includes R&amp;D spending under Baseline 2021-2030 in addition to savings from subsidy removal.</p>
 <table class="table">
 <colgroup>
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
 </colgroup>
 <tbody>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
 <td>Region</td>
-<td></td>
 <td>Average annual growth rate</td>
 <td></td>
 <td></td>
@@ -1834,6 +1759,9 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td></td>
 <td></td>
+</tr>
+<tr class="even">
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1844,30 +1772,7 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
 <td>Historical Data</td>
-<td></td>
 <td>Future Projections</td>
 <td></td>
 <td></td>
@@ -1876,6 +1781,9 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td></td>
 <td></td>
+</tr>
+<tr class="even">
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1886,41 +1794,21 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
 <td>Baseline</td>
-<td></td>
 <td>Subsidy Repurposing 100 percent</td>
-<td></td>
 <td>Subsidy Repurposing 50 percent</td>
-<td></td>
 <td>Subsidy Repurposing 20 percent</td>
-<td></td>
 <td>Subsidy Repurposing 10 percent</td>
 <td></td>
 <td></td>
 <td></td>
 <td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1928,688 +1816,347 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
 <td>1991-2000</td>
-<td></td>
 <td>2001-2010</td>
-<td></td>
 <td>2011-2020</td>
-<td></td>
+<td>2021-2030</td>
+<td>2021-2030</td>
+<td>2021-2030</td>
+<td>2021-2030</td>
 <td>2021-2030</td>
 <td></td>
-<td>2021-2030</td>
+</tr>
+<tr class="even">
 <td></td>
-<td>2021-2030</td>
 <td></td>
-<td>2021-2030</td>
 <td></td>
-<td>2021-2030</td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
 <td>Central America</td>
-<td></td>
 <td>-3.7 percent</td>
-<td></td>
 <td>4.0 percent</td>
-<td></td>
 <td>3.2 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>62.1 percent</td>
-<td></td>
 <td>22.1 percent</td>
-<td></td>
 <td>15.3 percent</td>
-<td></td>
 <td>12.4 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>South America</td>
-<td></td>
 <td>-0.3 percent</td>
-<td></td>
 <td>2.7 percent</td>
-<td></td>
 <td>3.5 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>7.8 percent</td>
-<td></td>
 <td>5.5 percent</td>
-<td></td>
 <td>4.4 percent</td>
-<td></td>
 <td>4.1 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>South Asia</td>
-<td></td>
 <td>6.9 percent</td>
-<td></td>
 <td>5.4 percent</td>
-<td></td>
 <td>4.0 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>20.3 percent</td>
-<td></td>
 <td>9.8 percent</td>
-<td></td>
 <td>5.9 percent</td>
-<td></td>
 <td>4.3 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>South East Asia</td>
-<td></td>
 <td>3.4 percent</td>
-<td></td>
 <td>1.6 percent</td>
-<td></td>
 <td>3.4 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>35.6 percent</td>
-<td></td>
 <td>17.3 percent</td>
-<td></td>
 <td>13.3 percent</td>
-<td></td>
 <td>11.7 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>North East Asia</td>
-<td></td>
 <td>6.9 percent</td>
-<td></td>
 <td>11.5 percent</td>
-<td></td>
 <td>4.7 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>27.2 percent</td>
-<td></td>
 <td>13.0 percent</td>
-<td></td>
 <td>8.5 percent</td>
-<td></td>
 <td>6.7 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>West Asia</td>
-<td></td>
 <td>3.9 percent</td>
-<td></td>
 <td>2.6 percent</td>
-<td></td>
 <td>3.7 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>17.0 percent</td>
-<td></td>
 <td>11.3 percent</td>
-<td></td>
 <td>9.4 percent</td>
-<td></td>
 <td>8.7 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>North Africa</td>
-<td></td>
 <td>2.5 percent</td>
-<td></td>
 <td>3.0 percent</td>
-<td></td>
 <td>4.7 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>17.0 percent</td>
-<td></td>
 <td>11.3 percent</td>
-<td></td>
 <td>9.4 percent</td>
-<td></td>
 <td>8.7 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Sub-Saharan Africa</td>
-<td></td>
 <td>0.7 percent</td>
-<td></td>
 <td>2.8 percent</td>
-<td></td>
 <td>3.4 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>23.5 percent</td>
-<td></td>
 <td>14.9 percent</td>
-<td></td>
 <td>12.6 percent</td>
-<td></td>
 <td>11.8 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>South Africa</td>
-<td></td>
 <td>1.4 percent</td>
-<td></td>
 <td>-1.4 percent</td>
-<td></td>
 <td>1.1 percent</td>
-<td></td>
 <td>1.5 percent</td>
-<td></td>
 <td>4.4 percent</td>
-<td></td>
 <td>2.8 percent</td>
-<td></td>
 <td>2.0 percent</td>
-<td></td>
 <td>1.7 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Oceania</td>
-<td></td>
 <td>1.2 percent</td>
-<td></td>
 <td>-1.6 percent</td>
-<td></td>
 <td>1.2 percent</td>
-<td></td>
 <td>1.5 percent</td>
-<td></td>
 <td>4.6 percent</td>
-<td></td>
 <td>3.1 percent</td>
-<td></td>
 <td>2.3 percent</td>
-<td></td>
 <td>2.0 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Canada/USA</td>
-<td></td>
 <td>1.4 percent</td>
-<td></td>
 <td>-0.2 percent</td>
-<td></td>
 <td>0.6 percent</td>
-<td></td>
 <td>1.5 percent</td>
-<td></td>
 <td>10.0 percent</td>
-<td></td>
 <td>5.2 percent</td>
-<td></td>
 <td>2.9 percent</td>
-<td></td>
 <td>2.0 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Japan/Korea</td>
-<td></td>
 <td>2.2 percent</td>
-<td></td>
 <td>1.3 percent</td>
-<td></td>
 <td>1.3 percent</td>
-<td></td>
 <td>1.5 percent</td>
-<td></td>
 <td>10.5 percent</td>
-<td></td>
 <td>5.7 percent</td>
-<td></td>
 <td>3.4 percent</td>
-<td></td>
 <td>2.5 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Western Europe</td>
-<td></td>
 <td>0.6 percent</td>
-<td></td>
 <td>1.3 percent</td>
-<td></td>
 <td>1.4 percent</td>
-<td></td>
 <td>1.5 percent</td>
-<td></td>
 <td>16.4 percent</td>
-<td></td>
 <td>7.8 percent</td>
-<td></td>
 <td>4.2 percent</td>
-<td></td>
 <td>2.8 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
 <td>Transition Regions</td>
-<td></td>
 <td>10.9 percent</td>
-<td></td>
 <td>5.8 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>3.6 percent</td>
-<td></td>
 <td>381.6 percent</td>
-<td></td>
 <td>12.6 percent</td>
-<td></td>
 <td>7.9 percent</td>
-<td></td>
 <td>5.9 percent</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
-<td>WORLD</td>
 <td></td>
-<td>1.9 percent</td>
 <td></td>
-<td>2.8 percent</td>
 <td></td>
-<td>2.7 percent</td>
 <td></td>
-<td>2.8 percent</td>
 <td></td>
-<td>32.3 percent</td>
 <td></td>
-<td>10.0 percent</td>
 <td></td>
-<td>6.7 percent</td>
-<td></td>
-<td>5.4 percent</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>WORLD</td>
+<td>1.9 percent</td>
+<td>2.8 percent</td>
+<td>2.7 percent</td>
+<td>2.8 percent</td>
+<td>32.3 percent</td>
+<td>10.0 percent</td>
+<td>6.7 percent</td>
+<td>5.4 percent</td>
+</tr>
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
@@ -2629,7 +2176,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="example-gtap-configuration-file" class="level3">
 <h3 class="anchored" data-anchor-id="example-gtap-configuration-file">4.3. Example GTAP configuration file</h3>
-<p>The configuration below is for the BAU Ecosystem Service adjustment run. See the code repository at github.com/jandrewjohnson/gtap_invest for all configuration files. These configuration files are called iteratively by the python code using a batch file that replaces the &lt;cmf&gt; tag with the name of the scenario being run.</p>
+<p>The configuration below is for the BAU Ecosystem Service adjustment run. See the code repository at <a href="github.com/jandrewjohnson/gtap_invest">github.com/jandrewjohnson/gtap_invest</a>for all configuration files. These configuration files are called iteratively by the python code using a batch file that replaces the &lt;cmf&gt; tag with the name of the scenario being run.</p>
 <p><code>start with mmnz = 200000000;&nbsp; ! Assign largest starting memory allocation (max is 2100000000)</code></p>
 <p><code>MA48 increase_MMNZ = veryfast; ! If largest memory is not enough, allow</code></p>
 <p><code>CPU = yes;</code></p>

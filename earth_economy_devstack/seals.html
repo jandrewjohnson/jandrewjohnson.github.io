@@ -130,10 +130,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../publications/index.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../teaching/index.html"> 
-<span class="menu-text">Teaching</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teaching" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teaching</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teaching">    
+        <li>
+    <a class="dropdown-item" href="../teaching/index.html">
+ <span class="dropdown-text">Overview</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/natural_resource_economics.html">
+ <span class="dropdown-text">Natural Resource Economics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/principles_of_microeconomics.html">
+ <span class="dropdown-text">Principles of Microeconomics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/big_data_ml_and_ai_for_economists.html">
+ <span class="dropdown-text">Big Data, Machine Learning and AI for Economists</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../research/index.html"> 
 <span class="menu-text">Research</span></a>
@@ -362,7 +381,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="first-run-walkthrough-tutorial" class="level2">
 <h2 class="anchored" data-anchor-id="first-run-walkthrough-tutorial">First run walkthrough tutorial</h2>
 <p>The simplest way to run SEALS is to clone the repository and then open run_test_seals.py in your preferred editor. Then, update the values in ENVIRONMENT SETTINGS near the top of run_test_seals.py for your local computer (ensuring this points to directories you have write-access for and is not a virtual/cloud directory).</p>
-<div id="99ab088d" class="cell" data-execution_count="1">
+<div id="b3e0e24f" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">### ------- ENVIRONMENT SETTINGS -------------------------------</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Users should only need to edit lines in this ENVIRONMENT SETTINGS section</span></span>
@@ -385,7 +404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The project name and the project dir will define the root directory where all files will be saved. This directory is given <code>hb.ProjectFlow()</code> to initalize the project (which will create the dirs). Once these are set, you should be able to run run_test_seals.py in your preferred way, ensuring that you are in the Conda environment discussed above. This could be achieved in VS Code by selecting the Conda environment in the bottom-right status bar and then selecting run. Alternatively, this could be done via the command line with the command <code>python run_test_seals.py</code> in the appropriate directory.</p>
 <p>When SEALS is run in this way, it will use the default values for a test run on a small country (Rawanda). All of these values are set (and documented) in the run file (run_test_seals.py) in the SET DEFAULT VARIABLES section. For your first run, it is recommended to use the defaults. When run, a configuration file will be written into your project’s input_dir named scenario_definitions.csv. This file is a table where each row is a “scenario” necessary to be defined for SEALS to run. In this minimal run, it must have 2 rows: one for the baseline condition (the starting LULC map) and one for a scenario of change that will indicate how much change of each LU class will happen in some coarse grid-cell or region/zone. Inspecting and/or modifying this file may give insights on how to customize a new run.</p>
-<div id="ab1fd219" class="cell" data-execution_count="2">
+<div id="509021fe" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">### ------- SET DEFAULT VARIABLES --------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the path to the scenario definitions file. This is a CSV file that defines the scenarios to run.</span></span>
@@ -411,7 +430,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This computing stack also uses hazelbean to automatically download needed data at run time. In the code block below, notice the absolute path assigned to p.base_data_dir. Hazelbean will look here for certain files that are necessary and will download them from a cloud bucket if they are not present. This also lets you use the same base data across different projects.</p>
 <p>In addition to defining a base_data_dir, you will need to For this to work, you need to also point SEALS to the correct data_credentials_path. If you don’t have a credentils file, email jajohns@umn.edu. The data are freely available but are very, very large (and thus expensive to host), so I limit access via credentials.</p>
-<div id="102abbf6" class="cell" data-execution_count="3">
+<div id="2a29584c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p.base_data_dir <span class="op">=</span> os.path.join(<span class="st">'G:/My Drive/Files/base_data'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p.data_credentials_path <span class="op">=</span> <span class="st">'..</span><span class="ch">\\</span><span class="st">api_key_credentials.json'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

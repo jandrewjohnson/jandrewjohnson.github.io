@@ -185,6 +185,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jandrewjohnson"> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
           </div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
 </div>
@@ -330,7 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="iterating-over-many-model-assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="iterating-over-many-model-assumptions">Iterating over many model assumptions</h2>
 <p>In many case, such as a standard GTAPPy run, we will iterate over different aggergations and scenarios (now renamed counterfactuals). This is done as expected with code like this:</p>
-<div id="7ee42242" class="cell" data-execution_count="1">
+<div id="6753c041" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> aggregation_label <span class="kw">in</span> p.aggregation_labels:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>     </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> experiment_label <span class="kw">in</span> p.experiment_labels:</span>
@@ -345,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            output_dir <span class="op">=</span> p.get_path(os.path.join(aggregation_label, experiment_label, <span class="bu">str</span>(ending_year)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>But sometimes, this becomes DEEPLY nested and confusing. SEALS implements an API that reads these nested layers from a CSV. This is defined more fully in the SEALS user guide.</p>
-<div id="ea3402bf" class="cell" data-execution_count="2">
+<div id="1d6f1c86" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, row <span class="kw">in</span> p.scenarios_df.iterrows():</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    seals_utils.assign_df_row_to_object_attributes(p, row)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -367,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="creating-scenarios-spreadsheets" class="level2">
 <h2 class="anchored" data-anchor-id="creating-scenarios-spreadsheets">Creating scenarios spreadsheets</h2>
 <p>Here. Explain why it writes the scenarios_csv FROM CODE rather than downloading it (keeps it up to date as code changes quickly). However, this gets convoluted when you also have to initialize the attributes before you write?!?</p>
-<div id="11c02258" class="cell" data-execution_count="3">
+<div id="79c60bee" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want to run SEALS with the run.py file in a different directory (ie in the project dir)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then you need to add the path to the seals directory to the system path.</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    custom_seals_path <span class="op">=</span> <span class="va">None</span></span>
@@ -423,7 +429,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Project flow requires a consistent format for tasks. The following is an example of a task that creates a correspondence file from gtap11 regions to gtapaez11 regions. The task itself defined as a function that takes a <code>p</code> object as an argument. This <code>p</code> object is a <code>ProjectFlow</code> object that contains all the project-level variables, manages folders and files, and manages tasks and parallelization. <code>p</code> also includes documentation, which will be written directly into the task directory.</p>
 <p>Also note that any project-level attribute defined in between the function start and the <code>if p.run_this:</code> component are the “project level variables” that are fair-game for use in other tasks. These paths are critical for high performance because they enable quick-skipping of completed tasks and determiniation of which parts of the task tree need rerunning.</p>
 <p>Tasks should be named as a noun (this breaks Python pep8 style) referencing what will be stored in the tasks output dir. This might feel awkward at first, but it means that the resultant file structure is easier to interpret by a non-EE outsider.</p>
-<div id="0cc6cf74" class="cell" data-execution_count="4">
+<div id="e7fa018f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gtap_aez_seals_correspondences(p):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p.current_task_documentation <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Create correspondence CSVs from ISO3 countries to GTAPv11 160</span></span>
@@ -455,27 +461,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Outside of a given function’s code, you can still refer to paths that were defined from within the functions code, but now (because you are outside the function) it is given a new reference. Using the example above, you could reference the same directory with <code>p.econ_lcovercom_dir</code> where the p attribute is named exactly as &lt;function_name&gt;_dir</li>
 </ol>
 <p>All of this setup enable another useful feature: automatic management of file generation, storage and downloading. This is done via the hazelbean function:</p>
-<div id="f0eadcde" class="cell" data-execution_count="5">
+<div id="0a6527e5" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>useful_path <span class="op">=</span> hb.get_path(relative_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This function will iteratively search multiple locations and return the most “useful” one. By default, the relative_path variable will first joined with the p.cur_dir. If the file exists, it returns it. If not, it checks the next location, which is p.input_dir, and then p.base_data_dir. If it doesn’t find it anywhere, it will attempt to download it from google cloud (NYI) and save it in the p.cur_dir. If it is not available to download on google cloud, then it treats the path as something we will be generating within the task, and thus, get_path returns the first option above, namely joining the relative_path with p.cur_dir.</p>
 <p>One important use-case that needs explaining is for tasks that generate files that will eventually be placed in the base_data_dir. The goal is to enable easy generation of it to the intermediate directory in the appropriate task_dir, but then have the ability to copy the files with the exact same relative path to the base_data_dir and have it still be found by p.get_path(). To do this, you will want to choose a path name relative to the tasks’ cur_dir that matches the desired directory relative to the base data dir. So, for example, we include <code>'gtappy', 'aggregation_mappings'</code> at the beginning of the relative path for in the intermediate directory in the appropriate task_dir, but then we also will want to copy the files with the exact same relative path to the base_data_dir and have it still be found by p.get_path(). To do this, you will want to choose a path name relative to the tasks’ cur_dir that matches that in the base_data_dir, for example <code>&lt;base_data_dir&gt;/'gtappy/aggregation_mappings/gadm_adm0.gpkg',</code></p>
-<div id="c4a0d0aa" class="cell" data-execution_count="6">
+<div id="89222ba1" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>template_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gadm_adm0.gpkg'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It can be hard deciding what counts as a base_data_generating task or not, but generally if it is a file that will not be used by other projects, you should not treat it as a base_data_generating task. Instead, you should just make it relative to the cur_dir (or wahtever makes sense), as below:</p>
-<div id="132ba9e0" class="cell" data-execution_count="7">
+<div id="e3fcc22a" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> p.get_path(os.path.join(aggregation_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> experiment_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> header <span class="op">+</span> <span class="st">'_stacked_time_series.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>One additional exception to the above is if you are calling get_path outside of a task/task_tree. One common example is in the run file before you build the task tree. In this case, the default_dirs will not make sense, and so you need to specify it manually as here:</p>
-<div id="a7790d01" class="cell" data-execution_count="8">
+<div id="52da2960" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p.countries_iso3_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'cartographic'</span>, <span class="st">'gadm'</span>, <span class="st">'gadm_adm0_10sec.gpkg'</span>), possible_dirs<span class="op">=</span>[p.input_dir, p.base_data_dir])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="validation-of-files" class="level2">
 <h2 class="anchored" data-anchor-id="validation-of-files">Validation of files</h2>
 <p>ProjectFlow is designed to calculate very fast while simultaneously validating that everything is approximately correct. It does this by checking for the existence of files (often combined with hb.get_path()). For example</p>
-<div id="36e9c0fd" class="cell" data-execution_count="9">
+<div id="7861bf13" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'gadm_r263_gtapv7_r251_r160_r50_regions.gpkg'</span>))     </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> hb.path_exists(p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path):         </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    hb.log(<span class="st">'Creating '</span> <span class="op">+</span> p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path)         </span>
@@ -485,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="eliminating-redundant-calculation-across-projects" class="level3">
 <h3 class="anchored" data-anchor-id="eliminating-redundant-calculation-across-projects">Eliminating redundant calculation across projects</h3>
 <p>If you have a time consuming task that, or example, writes to</p>
-<div id="ec979224" class="cell" data-execution_count="10">
+<div id="8f049f7a" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>big_file_path <span class="op">=</span> hb.get_path(<span class="st">'lulc'</span>, <span class="st">'esa'</span>, <span class="st">'seals7'</span>, <span class="st">'convolutions'</span>, <span class="st">'2017'</span>, <span class="st">'convolution_esa_seals7_2017_cropland_gaussian_5.tif'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In this example, suppose you needed to create this file via your create_convolutions() task or something. When you first do this, it obviously won’t exist yet, so get_path() will join that relative path in the p.cur_dir location. If you run the ProjectFlow again, it will see it’s there and then instantly skip recalcualting it.</p>
@@ -497,7 +503,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="python-tips-and-conventions" class="level3">
 <h3 class="anchored" data-anchor-id="python-tips-and-conventions">Python Tips and Conventions</h3>
 <p>For large files that take a long time to load, use a string-&gt;dataframe/dataset substitution as below. Make a LOCAL variable to contain the loaded object, and have that be assigned to the correct project-level path string. In subsequent usages, check type and if it’s still a string, then it hasn’t been loaded yet, so do that. I’m debating making it a project level variable trick</p>
-<div id="d1a62ebd" class="cell" data-execution_count="11">
+<div id="8b8d53e6" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gadm <span class="op">=</span> p.gadm_adm0_vector_input_path    </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Just load it on first pass</span></span>

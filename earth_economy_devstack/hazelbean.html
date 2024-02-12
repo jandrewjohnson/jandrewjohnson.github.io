@@ -185,6 +185,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jandrewjohnson"> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
           </div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
 </div>
@@ -337,7 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="quickstart" class="level2">
 <h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
 <p>Test that hazelbean imports correctly. Importing it will trigger compilation of the C files if they are not there.</p>
-<div id="da8be635" class="cell" data-execution_count="1">
+<div id="020ace9d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>From here, explore examples of the useful spatial, statistical and economic functions in the examples section of this documentation. A good starting example would be the <code>zonal_statistics</code> function.</p>
@@ -348,7 +354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="project-complexity-level-1-simple-question-answered-well" class="level2">
 <h2 class="anchored" data-anchor-id="project-complexity-level-1-simple-question-answered-well">Project complexity level 1: Simple question answered well</h2>
 <p>Here is an example script that you might write as an Earth-economy researcher. Suppose your adviser asks you “what is the total caloric yield on earth per hectare?” You might write a script like this:</p>
-<div id="cf8e180e" class="cell" data-execution_count="2">
+<div id="d288ae2b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gdal</span>
@@ -365,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="project-complexity-level-2-many-similar-questions.-creates-a-very-long-list." class="level2">
 <h2 class="anchored" data-anchor-id="project-complexity-level-2-many-similar-questions.-creates-a-very-long-list.">Project complexity level 2: Many similar questions. Creates a very long list.</h2>
 <p>This is where most reserach code goes to die, in my experience. Suppose your advisor now asks okay do this for the a bunch of different datasets on yield. The classic coder response is to make a longer script!</p>
-<div id="ec2f64f1" class="cell" data-execution_count="3">
+<div id="c3ecd1ea" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gdal</span>
@@ -407,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="project-complexity-level-3-starting-to-deal-with-performance-and-generalization." class="level2">
 <h2 class="anchored" data-anchor-id="project-complexity-level-3-starting-to-deal-with-performance-and-generalization.">Project complexity level 3: Starting to deal with performance and generalization.</h2>
 <p>Below is a real-life script I created in around 2017 to calculate something for Johnson et al.&nbsp;2016. Do not even attempt to run this, but just appreciate how awful it is. Please skim past it quickly to save me the personal embarassment!</p>
-<div id="59613fac" class="cell" data-fold="1" data-execution_count="4">
+<div id="c480eb9c" class="cell" data-fold="1" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import logging</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import os</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># import csv</span></span>
@@ -559,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>I start to deal with not recomputing things that have already been computed to save time, as in</li>
 </ol>
-<div id="65675b89" class="cell" data-execution_count="5">
+<div id="f0df776f" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>do_30s_resample <span class="op">=</span> <span class="va">False</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> do_30s_resample:</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">'do some stuff'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -567,7 +573,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>I start to generalize my code on the frequently used functions. For instance:</li>
 </ol>
-<div id="51dff9ef" class="cell" data-execution_count="6">
+<div id="f6834320" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import geoecon_utils.geoecon_utils as gu</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gu.save_array_as_geotiff()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

@@ -283,11 +283,11 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
+  <ul class="incremental">
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#quickstart-installation" id="toc-quickstart-installation" class="nav-link" data-scroll-target="#quickstart-installation">Quickstart Installation</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#install-git" id="toc-install-git" class="nav-link" data-scroll-target="#install-git">Install Git</a></li>
   <li><a href="#create-a-python-environment" id="toc-create-a-python-environment" class="nav-link" data-scroll-target="#create-a-python-environment">Create a python environment</a></li>
   <li><a href="#clone-the-earth-economy-devstack" id="toc-clone-the-earth-economy-devstack" class="nav-link" data-scroll-target="#clone-the-earth-economy-devstack">Clone the Earth Economy Devstack</a></li>
@@ -296,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#configure-vs-code" id="toc-configure-vs-code" class="nav-link" data-scroll-target="#configure-vs-code">Configure VS CODE</a></li>
   </ul></li>
   <li><a href="#step-by-step-installation" id="toc-step-by-step-installation" class="nav-link" data-scroll-target="#step-by-step-installation">Step by Step Installation</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#install-git-1" id="toc-install-git-1" class="nav-link" data-scroll-target="#install-git-1">Install Git</a></li>
   <li><a href="#create-a-python-environment-1" id="toc-create-a-python-environment-1" class="nav-link" data-scroll-target="#create-a-python-environment-1">Create a python environment</a></li>
   <li><a href="#clone-the-earth-economy-devstack-1" id="toc-clone-the-earth-economy-devstack-1" class="nav-link" data-scroll-target="#clone-the-earth-economy-devstack-1">Clone the Earth Economy Devstack</a></li>
@@ -320,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="installation" class="level1">
 <h1>Installation</h1>
 <p>The Earth Economy Devstack is a specific way of organizing files, VS Code workspaces, local development repositories and preconfigured launch configurations that let a user contribute to NatCap TEEMs projects. This document contains:</p>
-<ol type="1">
+<ol class="incremental" type="1">
 <li><p>A quickstark installation guide for installing the Earth Economy Devstack which assumes a basic understanding of the command line and Python.</p></li>
 <li><p>A detailed step-by-step installation guide of Python, Git, QGIS and other related software.</p></li>
 </ol>
@@ -329,55 +329,55 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="quickstart-installation">Quickstart Installation</h2>
 <section id="install-git" class="level3">
 <h3 class="anchored" data-anchor-id="install-git">Install Git</h3>
-<ul>
+<ul class="incremental">
 <li>Install and run the installer for your operating system at &lt;Git-scm.com/downloads&gt;</li>
 </ul>
 </section>
 <section id="create-a-python-environment" class="level3">
 <h3 class="anchored" data-anchor-id="create-a-python-environment">Create a python environment</h3>
-<ol type="1">
+<ol class="incremental" type="1">
 <li><p>Install Miniforge from <a href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3" class="uri">https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3</a> - Be sure to select the correct version for your operating system (Windows, Mac, Linux)</p>
-<ul>
+<ul class="incremental">
 <li>If you have an Apple “m1 or m2” chip (a relatively new apple chip, make sure you select the Apple Silicon option). - Install in <code>C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3</code> (PC) or <code>~/miniconda3</code> (Mac) - During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable” - If you get a “Windows Protected your PC”, click more info then Run Anyway.</li>
 </ul></li>
 <li><p>Open the Miniforge Prompt (PC only, search for it in the start menu) or just type “mamba init” in a new terminal/command line</p></li>
 <li><p>Create a new mamba environment with the following commands (putting your desired environment name in place of <code>&lt;env_name&gt;</code>):</p></li>
 </ol>
 <p><code>mamba create -n &lt;env_name&gt; -c conda-forge</code></p>
-<ol start="4" type="1">
+<ol class="incremental" start="4" type="1">
 <li>Activate the environment</li>
 </ol>
 <p><code>mamba activate &lt;env_name&gt;</code></p>
-<ol start="5" type="1">
+<ol class="incremental" start="5" type="1">
 <li>Install libraries using the following mamba command:</li>
 </ol>
 <p><code>mamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc conda numba intake more-itertools google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 gdown tqdm</code></p>
-<ul>
+<ul class="incremental">
 <li>If you don’t add mamba to your path, you can do this manually. On PC, you could use the command
-<ul>
+<ul class="incremental">
 <li><code>SETX PATH "%PATH%;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge;"</code></li>
 </ul></li>
 </ul>
 </section>
 <section id="clone-the-earth-economy-devstack" class="level3">
 <h3 class="anchored" data-anchor-id="clone-the-earth-economy-devstack">Clone the Earth Economy Devstack</h3>
-<ul>
+<ul class="incremental">
 <li>Create a directory for the Earth Economy Devstack at <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files</code> (PC) or <code>~/Files</code> (Mac)
-<ul>
+<ul class="incremental">
 <li>We add a Files directory to keep the root directory clean and to make it easier to find the Earth Economy Devstack in the file explorer.</li>
 </ul></li>
 <li>Open a terminal or command prompt and navigate to the directory you created</li>
 <li>Run the git clone command to clone the Earth Economy Devstack repository
-<ul>
+<ul class="incremental">
 <li><code>git clone https://github.com/jandrewjohnson/earth_economy_devstack</code></li>
 </ul></li>
 </ul>
 </section>
 <section id="install-visual-studio-code-vs-code" class="level3">
 <h3 class="anchored" data-anchor-id="install-visual-studio-code-vs-code">Install Visual Studio Code (VS Code)</h3>
-<ul>
+<ul class="incremental">
 <li>Install from &lt;code.visualstudio.com/download&gt;
-<ul>
+<ul class="incremental">
 <li>For PC, I recommend selecting the “User Installer”, 64-bit option for windows.</li>
 <li>Use the default install options with the exception of the two that start with “Add Open with Code” action…</li>
 </ul></li>
@@ -385,11 +385,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="open-the-earth-economy-devstack-in-vs-code-workspace" class="level3">
 <h3 class="anchored" data-anchor-id="open-the-earth-economy-devstack-in-vs-code-workspace">Open the Earth Economy Devstack in VS Code workspace</h3>
-<ul>
+<ul class="incremental">
 <li>Navigate to the directory where you cloned the Earth Economy Devstack
-<ul>
+<ul class="incremental">
 <li>In the repository, there is a file called <code>earth_economy_devstack.code-workspace</code>. Launch this.
-<ul>
+<ul class="incremental">
 <li>If configured correctly, the full path would be <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files\earth_economy_devstack\earth_economy_devstack.code-workspace</code> (PC) or <code>~/Files/earth_economy_devstack/earth_economy_devstack.code-workspace</code> (Mac)</li>
 </ul></li>
 </ul></li>
@@ -399,11 +399,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="configure-vs-code" class="level3">
 <h3 class="anchored" data-anchor-id="configure-vs-code">Configure VS CODE</h3>
-<ul>
+<ul class="incremental">
 <li>Install required extensions
-<ul>
+<ul class="incremental">
 <li>Install the Python extension in VS Code
-<ul>
+<ul class="incremental">
 <li>Click on the extensions icon in the left sidebar</li>
 <li>Search for Python and install the one by Microsoft</li>
 </ul></li>
@@ -411,7 +411,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Install GitGraph extension in VS Code</li>
 </ul></li>
 <li>Sign in to VS Code with your GitHub account
-<ul>
+<ul class="incremental">
 <li>Click on the account icon in the bottom left corner of the window and follow prompts</li>
 </ul></li>
 </ul>
@@ -421,28 +421,28 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="step-by-step-installation">Step by Step Installation</h2>
 <section id="install-git-1" class="level3">
 <h3 class="anchored" data-anchor-id="install-git-1">Install Git</h3>
-<ul>
+<ul class="incremental">
 <li>Get the git software
-<ul>
+<ul class="incremental">
 <li>Install and run the installer for your operating system at &lt;Git-scm.com/downloads&gt;</li>
 <li><img src="images/2024-02-02-10-18-28.png" class="img-fluid"></li>
 </ul></li>
 <li>Git vs.&nbsp;GitHub
-<ul>
+<ul class="incremental">
 <li>Github is a website that hosts code and connects a community of coders.</li>
 <li>Git is a “version control” software tool that records the history of files in a Git repository.</li>
 <li>Nearly every coder uses Git to push their repository of code to GitHub.</li>
 </ul></li>
 <li>Use the default options for everything
-<ul>
+<ul class="incremental">
 <li>Unless you REALLY know what you’re doing.</li>
 </ul></li>
 </ul>
 <section id="verify-git-installation" class="level4">
 <h4 class="anchored" data-anchor-id="verify-git-installation">Verify Git Installation</h4>
-<ul>
+<ul class="incremental">
 <li>Open up the command prompt and type <code>git</code> to test that it’s installed
-<ul>
+<ul class="incremental">
 <li>(PC) Search for <code>cmd</code> in the start menu</li>
 </ul></li>
 <li>This is the OG way of working on computers</li>
@@ -453,37 +453,37 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="create-a-python-environment-1" class="level3">
 <h3 class="anchored" data-anchor-id="create-a-python-environment-1">Create a python environment</h3>
-<ol type="1">
+<ol class="incremental" type="1">
 <li><p>Install Miniforge from <a href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3" class="uri">https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3</a> - Be sure to select the correct version for your operating system (Windows, Mac, Linux)</p>
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-32-25.png" class="img-fluid"></li>
 <li>If you have an Apple “m1 or m2” chip (a relatively new apple chip, make sure you select the Apple Silicon option).</li>
 <li>Install in <code>C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3</code> (PC) or <code>~/miniconda3</code> (Mac)
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-33-41.png" class="img-fluid"></li>
 </ul></li>
 <li>During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable”
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-34-43.png" class="img-fluid"></li>
 </ul></li>
 <li>If you get a “Windows Protected your PC”, click more info then Run Anyway.</li>
 </ul></li>
 <li><p>Open the Miniforge Prompt (PC only, search for it in the start menu) or just type “mamba init” in a new terminal/command line</p></li>
 </ol>
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-35-25.png" class="img-fluid"></li>
 <li>You’ll know it worked if you see (base) in front of your path
-<ul>
+<ul class="incremental">
 <li>Base is the default “environment” that you will use.</li>
 </ul></li>
 </ul>
-<ol start="3" type="1">
+<ol class="incremental" start="3" type="1">
 <li>Create a new mamba environment with the following commands (putting your desired environment name in place of <code>&lt;env_name&gt;</code>):</li>
 </ol>
 <p><code>mamba create -n &lt;env_name&gt; -c conda-forge</code></p>
 <pre><code>- When you have lots of projects, most people create multiple environments specific to each project. 
 - For now, we’re going to install everything to the base environment</code></pre>
-<ol start="4" type="1">
+<ol class="incremental" start="4" type="1">
 <li>Activate the environment</li>
 </ol>
 <p><code>mamba activate &lt;env_name&gt;</code></p>
@@ -491,21 +491,21 @@ ul.task-list li input[type="checkbox"] {
 - You can deactivate the environment with `conda deactivate`
 - ![](images/2024-02-02-10-39-21.png)
 - You can list all environments with `conda env list`</code></pre>
-<ol start="5" type="1">
+<ol class="incremental" start="5" type="1">
 <li>Install libraries using the following mamba command:</li>
 </ol>
 <p><code>mamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc conda numba intake more-itertools google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 gdown tqdm</code></p>
-<ul>
+<ul class="incremental">
 <li>If you don’t add mamba to your path, you can do this manually. On PC, you could use the command
-<ul>
+<ul class="incremental">
 <li><code>SETX PATH "%PATH%;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge;"</code></li>
 </ul></li>
 <li>This step may take a long time because you are downloading and installing hundreds of libraries
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-41-29.png" class="img-fluid"></li>
 </ul></li>
 <li>When you’re done, it should look like the image here.
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-41-40.png" class="img-fluid"></li>
 </ul></li>
 <li>Success! You now have a modern scientific computing environment (sometimes called a scientific computing stack) on your computer!</li>
@@ -513,21 +513,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="clone-the-earth-economy-devstack-1" class="level3">
 <h3 class="anchored" data-anchor-id="clone-the-earth-economy-devstack-1">Clone the Earth Economy Devstack</h3>
-<ul>
+<ul class="incremental">
 <li>Create a directory for the Earth Economy Devstack at <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files</code> (PC) or <code>~/Files</code> (Mac)
-<ul>
+<ul class="incremental">
 <li>We add a Files directory to keep the root directory clean and to make it easier to find the Earth Economy Devstack in the file explorer.</li>
 </ul></li>
 <li>Open a terminal or command prompt and navigate to the directory you created
-<ul>
+<ul class="incremental">
 <li>By default, your terminal will open in your user directory, so <code>C:\Users\&lt;YOUR_USERNAME&gt;</code></li>
 <li>You can navigate to the directory you created with the command <code>cd Files</code>
-<ul>
+<ul class="incremental">
 <li>See image below.</li>
 </ul></li>
 </ul></li>
 <li>Run the git clone command to clone the Earth Economy Devstack repository
-<ul>
+<ul class="incremental">
 <li><code>git clone https://github.com/jandrewjohnson/earth_economy_devstack</code></li>
 <li><img src="images/2024-02-02-10-47-53.png" class="img-fluid"></li>
 </ul></li>
@@ -535,15 +535,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="install-visual-studio-code-vs-code-1" class="level3">
 <h3 class="anchored" data-anchor-id="install-visual-studio-code-vs-code-1">Install Visual Studio Code (VS Code)</h3>
-<ul>
+<ul class="incremental">
 <li>Install from &lt;code.visualstudio.com/download&gt;
-<ul>
+<ul class="incremental">
 <li>For PC, I recommend selecting the “User Installer”, 64-bit option for windows.
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-48-50.png" class="img-fluid"></li>
 </ul></li>
 <li>Use the default install options with the exception of the two that start with “Add Open with Code” action…
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-49-13.png" class="img-fluid"></li>
 </ul></li>
 </ul></li>
@@ -552,23 +552,23 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="open-the-earth-economy-devstack-in-vs-code-workspace-1" class="level3">
 <h3 class="anchored" data-anchor-id="open-the-earth-economy-devstack-in-vs-code-workspace-1">Open the Earth Economy Devstack in VS Code workspace</h3>
-<ul>
+<ul class="incremental">
 <li>Navigate to the directory where you cloned the Earth Economy Devstack
-<ul>
+<ul class="incremental">
 <li>In the repository, there is a file called <code>earth_economy_devstack.code-workspace</code>. Launch this.
-<ul>
+<ul class="incremental">
 <li>If configured correctly, the full path would be <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files\earth_economy_devstack\earth_economy_devstack.code-workspace</code> (PC) or <code>~/Files/earth_economy_devstack/earth_economy_devstack.code-workspace</code> (Mac)</li>
 </ul></li>
 </ul></li>
 <li>The workspace file adds a bunch of different repositories to the workspace (which you will need to git clone in to where the workspace says they should be)
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-52-14.png" class="img-fluid"></li>
 </ul></li>
 <li>The workspace also sets up a bunch of launch configurations for debugging and running code using the respositories in your workspace
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-53-03.png" class="img-fluid"></li>
 <li>We’ll describe debugging more in future sections
-<ul>
+<ul class="incremental">
 <li>For now, just know that these launch configurations make sure you’re using the repositories that we’ve added to your workspace</li>
 </ul></li>
 </ul></li>
@@ -577,35 +577,35 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="configure-vs-code-1" class="level3">
 <h3 class="anchored" data-anchor-id="configure-vs-code-1">Configure VS CODE</h3>
-<ul>
+<ul class="incremental">
 <li>Sign in to VS Code with your GitHub account
-<ul>
+<ul class="incremental">
 <li>Click on the account icon in the bottom left corner of the window and follow prompts</li>
 </ul></li>
 <li>Install required extensions
-<ul>
+<ul class="incremental">
 <li>Install the Python extension
-<ul>
+<ul class="incremental">
 <li>Click on the extensions icon in the left sidebar</li>
 <li>Search for Python and install the one by Microsoft</li>
 <li><img src="images/2024-02-02-10-56-46.png" class="img-fluid"></li>
 </ul></li>
 <li>Install Quarto extension in VS Code
-<ul>
+<ul class="incremental">
 <li>We use Quarto to create reports and documents on .qmd, .md and .ipynb files
-<ul>
+<ul class="incremental">
 <li>You can edit in source mode:
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-58-06.png" class="img-fluid"></li>
 </ul></li>
 <li>Or you can press ctrl+shift+f4 to use the visual editor
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-10-59-17.png" class="img-fluid"></li>
 </ul></li>
 </ul></li>
 </ul></li>
 <li>Install Git Graph extension in VS Code
-<ul>
+<ul class="incremental">
 <li>Once installed, click the Git Graph button on the bottom-left status bar to see a visual representation of your git history</li>
 <li><img src="images/2024-02-02-11-00-52.png" class="img-fluid"></li>
 </ul></li>
@@ -614,17 +614,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="organize-directories-for-the-devstack" class="level3">
 <h3 class="anchored" data-anchor-id="organize-directories-for-the-devstack">Organize Directories for the devstack</h3>
-<ul>
+<ul class="incremental">
 <li>The Earth Economy Devstack organizes repositories in a specific way, described here.
-<ul>
+<ul class="incremental">
 <li>Recall that our workspace links to e.g.&nbsp;the hazelbean_dev repository, but it currently points to a directory that doesn’t yet exist.
-<ul>
+<ul class="incremental">
 <li>In our Files directory, create a directory named <code>hazelbean</code> (not <code>hazelbean_dev</code> as that will be the repository’s name)
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-21-00.png" class="img-fluid"></li>
 </ul></li>
 <li>Below, we will use git to clone the <code>hazelbean_dev</code> into this directory we just created
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-22-30.png" class="img-fluid"></li>
 </ul></li>
 </ul></li>
@@ -633,45 +633,45 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="clone-the-required-repositories" class="level3">
 <h3 class="anchored" data-anchor-id="clone-the-required-repositories">Clone the required repositories</h3>
-<ul>
+<ul class="incremental">
 <li>Instead of using the command line, we will use Git via VS Code’s “Command Pallate”
-<ul>
+<ul class="incremental">
 <li>The Command Pallate is accessed via <ctrl-shift-p></ctrl-shift-p></li>
 <li>It is a search bar that you can use to run commands in VS Code</li>
 </ul></li>
 <li>Once you’ve opened the Command Pallate, type “git clone” and it will search for the command
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-06-51.png" class="img-fluid"></li>
 </ul></li>
 <li>Once you select the command, it will prompt you if you want to write in your Repo’s GitHub URL manually, or you can use VS Code to search the different repositories you have access to
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-08-06.png" class="img-fluid"></li>
 </ul></li>
 <li>Searching via GitHub found, for instance, NatCapTEEMs/gep repo
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-08-54.png" class="img-fluid"></li>
 </ul></li>
 <li>Once you select that, it will ask you what local directory you want to clone the repository to.
-<ul>
+<ul class="incremental">
 <li>By default it assumes you want to clone it to your user directory as below
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-10-18.png" class="img-fluid"></li>
 </ul></li>
 <li>We instead want to clone it to the <code>hazelbean</code> directory we created earlier, which will put a new folder <code>hazelbean_dev</code> in that directory</li>
 <li>To do this, navigate to the hazelbean directory and select it
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-26-55.png" class="img-fluid"></li>
 </ul></li>
 </ul></li>
 <li>After you’ve cloned a repository, you can now access it in the file explorer
-<ul>
+<ul class="incremental">
 <li><img src="images/2024-02-02-11-27-57.png" class="img-fluid"></li>
 </ul></li>
 </ul>
 </section>
 <section id="repeat-the-cloning-approach-with-all-the-repos-you-need" class="level3">
 <h3 class="anchored" data-anchor-id="repeat-the-cloning-approach-with-all-the-repos-you-need">Repeat the cloning approach with all the repos you need</h3>
-<ul>
+<ul class="incremental">
 <li>If you are a member of NatCap TEEMs or the JohnsonPolaskyLab, you should have access to these repositories via our GitHub organization</li>
 <li>If you’re not a member, you will still be able to clone all of the public repositories (which are all documented in various journal articles)</li>
 </ul>

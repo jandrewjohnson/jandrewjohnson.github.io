@@ -190,28 +190,28 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
+  <ul class="incremental">
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1. Introduction</a></li>
   <li><a href="#gtap-invest-model-summary" id="toc-gtap-invest-model-summary" class="nav-link" data-scroll-target="#gtap-invest-model-summary">2. GTAP-InVEST Model Summary</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#overall-model-structure" id="toc-overall-model-structure" class="nav-link" data-scroll-target="#overall-model-structure">2.1. Overall model structure</a></li>
   <li><a href="#input-assumptions" id="toc-input-assumptions" class="nav-link" data-scroll-target="#input-assumptions">2.2. Input Assumptions</a></li>
   <li><a href="#gtap-aez-economic-methods" id="toc-gtap-aez-economic-methods" class="nav-link" data-scroll-target="#gtap-aez-economic-methods">2.3. GTAP-AEZ economic methods</a></li>
   <li><a href="#seals-downscaling-methods" id="toc-seals-downscaling-methods" class="nav-link" data-scroll-target="#seals-downscaling-methods">2.4. SEALS downscaling methods</a></li>
   </ul></li>
   <li><a href="#scenarios-and-policy-specification" id="toc-scenarios-and-policy-specification" class="nav-link" data-scroll-target="#scenarios-and-policy-specification">3. Scenarios and Policy specification</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#bau-scenarios" id="toc-bau-scenarios" class="nav-link" data-scroll-target="#bau-scenarios">3.1. BAU scenarios</a></li>
   </ul></li>
   <li><a href="#gtap-model-details" id="toc-gtap-model-details" class="nav-link" data-scroll-target="#gtap-model-details">4. GTAP model details</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#productivity-growth-from-agricultural-rd" id="toc-productivity-growth-from-agricultural-rd" class="nav-link" data-scroll-target="#productivity-growth-from-agricultural-rd">4.1. Productivity growth from agricultural R&amp;D</a></li>
   <li><a href="#extending-gtap-to-include-a-physical-representation-of-land-via-gtap-aez" id="toc-extending-gtap-to-include-a-physical-representation-of-land-via-gtap-aez" class="nav-link" data-scroll-target="#extending-gtap-to-include-a-physical-representation-of-land-via-gtap-aez">4.2. Extending GTAP to include a physical representation of land via GTAP-AEZ</a></li>
   <li><a href="#example-gtap-configuration-file" id="toc-example-gtap-configuration-file" class="nav-link" data-scroll-target="#example-gtap-configuration-file">4.3. Example GTAP configuration file</a></li>
   </ul></li>
   <li><a href="#invest-model-details" id="toc-invest-model-details" class="nav-link" data-scroll-target="#invest-model-details">5. InVEST model details</a></li>
   <li><a href="#connecting-invest-outputs-to-gtap-inputs" id="toc-connecting-invest-outputs-to-gtap-inputs" class="nav-link" data-scroll-target="#connecting-invest-outputs-to-gtap-inputs">6. Connecting InVEST outputs to GTAP inputs</a>
-  <ul class="collapse">
+  <ul class="incremental collapse">
   <li><a href="#how-region-aez-aggregated-shocks-are-inputted-into-gtap" id="toc-how-region-aez-aggregated-shocks-are-inputted-into-gtap" class="nav-link" data-scroll-target="#how-region-aez-aggregated-shocks-are-inputted-into-gtap">6.1. How Region-AEZ aggregated shocks are inputted into GTAP</a></li>
   <li><a href="#carbon-storage-and-timber-provision" id="toc-carbon-storage-and-timber-provision" class="nav-link" data-scroll-target="#carbon-storage-and-timber-provision">6.2. Carbon Storage and Timber provision</a></li>
   <li><a href="#marine-fisheries" id="toc-marine-fisheries" class="nav-link" data-scroll-target="#marine-fisheries">6.3. Marine Fisheries</a></li>
@@ -808,7 +808,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="calibration" class="level4">
 <h4 class="anchored" data-anchor-id="calibration">2.4.3. Calibration</h4>
 <p>A key component in SEALS is that it downscales according to observed relationships present in time-series input data. SEALS uses a spatial allocation approach that has been calibrated on the ESACCI 1992-2015 time series using an iterative Gaussian L1-loss function minimization approach. The approach is documented in Figure S.2.4.3.1. as per the following algorithm:</p>
-<ol type="1">
+<ol class="incremental" type="1">
 <li><p>Define a baseline condition (Panel A, using the year 2000 for this example).</p></li>
 <li><p>Define a projection year in the set of observed years after the baseline year (2010), shown in Panel B, and calculate the net-change between the two years for each coarse resolution (30km) grid-cell. This defines the amount of change in each LULC class that our allocation algorithm will predict.</p></li>
 <li><p>Allocate the net change of each LULC class using only the baseline map and a spatial allocation algorithm, S(p1), where p1 is the parameter set used in the allocation and is initially set to an arbitrary value.</p></li>
@@ -2318,11 +2318,11 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="images/paste-20.png" class="img-fluid"></p>
 <p>We solve the system of equations in the GTAP model (documented extensively in the GTAP user resources) for equilibrium values of prices and quantities where supply equals demand in all markets and all other regions and sectors can be affected by the change. This interconnection of markets shows one of the important advances captured by using a general equilibrium approach: changes in one component of the model will change equilibrium production and input usage, leading to different overall levels of change in the economy depending on exactly which sector in which region is affected.</p>
 <p>For the pollination shock, the key parameter then is . To identify this parameter, we applied the following algorithm to process outputs from the InVEST Pollinator Sufficiency model</p>
-<ol type="1">
+<ol class="incremental" type="1">
 <li>Calculate the total value in 2014 USD of crop production on each 10 arcsecond grid-cell.
-<ol type="1">
+<ol class="incremental" type="1">
 <li>For each grid-cell and for each agricultural production activity , multiply the production tonnage (Monfreda et al.&nbsp;2008) by the price per ton of that crop, specific to the country the in which the grid-cell is located. These prices are produced from the FAOSTAT database, on which we applied the following missing-data procedure:
-<ol type="1">
+<ol class="incremental" type="1">
 <li>If a price was not available for a crop in a given country for the year 2000, use the 10-year moving average.</li>
 <li>If 1.b.i cannot be calculated because of missing data, use the continental average price (or its moving average if needed).</li>
 <li>If 1.b.ii cannot be calculated due to missing data, use the global average price.</li>

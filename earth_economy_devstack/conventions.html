@@ -317,7 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
+  <ul class="incremental">
   <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link active" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
   <li><a href="#id-index-etc.-in-the-context-of-vector-data" id="toc-id-index-etc.-in-the-context-of-vector-data" class="nav-link" data-scroll-target="#id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</a></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
@@ -418,12 +418,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If defined exactly right, 2 dimensional correspondence files will work with <code>Hazelbean</code> via</p>
 <p><code>seals_utils.set_derived_attributes(p)</code></p>
 <p>and</p>
-<div id="b3e8b696" class="cell" data-execution_count="1">
+<div id="58f97fed" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)}`</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># return a very useful dictionary for various reclassification tasks:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1ea972a8" class="cell" data-execution_count="2">
+<div id="f101ff61" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>return_dict <span class="op">=</span> {} return_dict[<span class="st">'dst_to_src_reclassification_dict'</span>] <span class="op">=</span> dst_to_src_reclassification_dict  <span class="co"># Dict of one-to-many keys to lists of what each dst_key should be mapped to from each src_key. Useful when aggrigating multiple layers to a aggregated dest type </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] <span class="op">=</span> src_to_dst_reclassification_dict <span class="co"># Useful when going to a specific value. </span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_to_src_labels_dict'</span>] <span class="op">=</span> dst_to_src_labels_dict <span class="co"># Dictionary of lists of labels that map to each dst label </span></span>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_labels'</span>], return_dict[<span class="st">'dst_ids'</span>])} <span class="co"># one-to-one dictionary of dst labels to ids}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Among other possibilities, this could be used for reclassifying LULC geotiffs via</p>
-<div id="dd6396a2" class="cell" data-execution_count="3">
+<div id="5e10d03d" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="correspondences-with-geometries" class="level3">
 <h3 class="anchored" data-anchor-id="correspondences-with-geometries">Correspondences with geometries</h3>
-<div id="2eec0e5f" class="cell" data-execution_count="4">
+<div id="895c668d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The rules for naming correspondences are a little different when adding geometry to the data. Because}     </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # only 1 geometry can be assigned per file, and becasue membership of aggregated regions and their     </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # members can get confusing, each correspondence file keeps all the labels but then is also saved along     </span></span>
@@ -461,7 +461,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="more-on-naming-conventions" class="level3">
 <h3 class="anchored" data-anchor-id="more-on-naming-conventions">More on naming Conventions</h3>
 <p>The names of project-level variables are carefully defined. For example, in <code>gtapv7_r251_r160_correspondence_input_path</code>,</p>
-<ul>
+<ul class="incremental">
 <li>The <code>input</code> when put right before the word path implies it is a raw asset we obtained from an external source but haven’t processed it yet. This means that it can be a non-compliant XLSX file. Aslo, path implies that it is a string type that points to a location in a storage device.</li>
 <li>In this name, we see two other structures. First, the <code>gtapv7</code> label indicates the “domain” of the correspondence defined in all of the following dimensions (until another domain label). Above, this means that it is the 251 regions, as defined by the gtapv7 domain, mapped to the 160 regions in the same domain.</li>
 </ul>
@@ -469,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Appart from correspondence files, we also have <strong>labels</strong> files, such as gtapv7_r251_labels_path. Labels files are for a single set/variable/dimension but map together the synonymous categorizers. Specifically, it must have an id, label, and name, all filled out for every entry. It can optionally have others like description.</p>
 <p>In the filename gtapv7_r251_labels_path we extract from the input_path and write a EE-compliant labels table for the gtapv7 r251 set. In the filename <code>gtap11_gtapaez11_region_correspondence_path</code>, we use these regions and then connect it to the gtapaez11 labels. We can infer also that it is from a mapping labeled gtap11 to gtapaez11 and that the variable in question is the regions while the word correspondence then indicates this is a many-to-one mapping file.</p>
 <p>Note that the file path says “regions” while the column label in the CSV says “region”.</p>
-<div id="5e475d1b" class="cell" data-execution_count="5">
+<div id="866077c3" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -478,84 +478,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="variable-and-scenario-naming-conventions" class="level2">
 <h2 class="anchored" data-anchor-id="variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</h2>
 <p>To keep track of the MANY different filetypes, data processes, variables, scenarios, policies etc, please follow exactly the specifications below.</p>
-<ul>
+<ul class="incremental">
 <li><p>The word label refers to a relatively short string (preferably 8 characters long or less) with no spaces, underscores or punctuation (but may have hyphens). This is case-sensitive, but try to avoid capitalization.</p></li>
 <li><p>The word short_label refers to a label that is strictly less or equal to 8 characters to ensure compatibility with HAR files.</p></li>
 <li><p>The word name refers to a longer string that describes a specific label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary.</p></li>
 <li><p>The words index, indices or id refers to numerical data that describes a label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary. If both are used, index/indices refer to a unique, ordered list of ints while an id/ids refer are unique but not necessarily ordered.</p></li>
 <li><p>The word class refers to LULC class. Consider renaming this to lc-class?</p></li>
 <li><p>Scenarios are defined in the following nested structure:</p>
-<ul>
+<ul class="incremental">
 <li><p>Label (with no hyphens) for Exogenous Assumptions (e.g., which SSP, which GDP, which population). Typically this will be fully defined by the SSP.</p></li>
 <li><p>Label (with no hyphens) for Climate Assumption (which RCP)</p></li>
 <li><p>Label (can have hyphens) for which model is used (e.g., magpie, luh2-message). Only model is allowed to have hyphens (because they are used for multistep scenario processing of counterfactuals)</p></li>
 <li><p>Label for Counterfactual. This often represent policy Assumptions/Definition and can include BAU, which is a special counterfactual against which other policies are compared. Different counterfactuals correspond to different shockfiles in the econ model or different LUC projection priorities, etc.</p>
-<ul>
+<ul class="incremental">
 <li><p>Counterfactuals may have multiple processing steps, which will be denoted by appending a hyphen and exactly 4 chars to the end of the base counterfactual label.</p>
-<ul>
+<ul class="incremental">
 <li>IFor example, a run excludes consideration of ES, insert “-noes”, at the end of the policy_name if it does include ES, postpend nothing (as this will be the one that is referenced by default)</li>
 </ul></li>
 </ul></li>
 <li><p>Year</p>
-<ul>
+<ul class="incremental">
 <li><p>When the variable is singular, it must be an int. If it is plural, as is ints in a list. However, when either is stored in a dataframe, always type always type check as follows:</p>
-<ul>
+<ul class="incremental">
 <li><p>If singular, do str(value), int(value) or float(value) as appropriate when reading from the df into a python variable.</p></li>
 <li><p>If plural, assume the df value is a space-delimited string that needs to be split, e.g.&nbsp;as [int(i) for i in value.split(’ ‘)], or’ ’.join(values) if going into the DF</p></li>
 </ul></li>
 <li><p>Three types of years exist, including</p>
-<ul>
+<ul class="incremental">
 <li>p.base_years, (which recall will always be a list even if there is a single entry because the variable name is plural)</li>
 </ul></li>
 </ul></li>
 </ul></li>
 <li><p>Together, the labels above mean that the scenarios can be represented by directories as follows:</p>
-<ul>
+<ul class="incremental">
 <li><code>ssp2/rcp45/luh2-message/bau/filename_2050.tif</code>
-<ul>
+<ul class="incremental">
 <li>Note, the last layer of the hierarchy will be included as a the suffix of the filename start rather than as a directory (also see below for filename conventions)</li>
 </ul></li>
 </ul></li>
 <li><p>For filenames, there are two possible conventions:</p>
-<ul>
+<ul class="incremental">
 <li><p>Implied: This means that the directory structure above defines all the labels with the exception of year (which is postpended to the filename label) and the current variable name (such as lulc) which appears at the front of the filename.</p>
-<ul>
+<ul class="incremental">
 <li>e.g., <code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif</code></li>
 </ul></li>
 <li><p>Explicit: Even if a file is in a directory which implies its labels, explicit file naming will always include each label (and the variable label stays in front of the filename), so the above example is:</p>
-<ul>
+<ul class="incremental">
 <li><p><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
 <li><p>And if there are no ES considered, it would be <code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
 </ul></li>
 </ul></li>
 <li><p>Because labels have no spaces or underscores, it is possible to convert the nested structure above to a single string, as in <code>filename_ssp2_rcp45_policyname_year.tif</code>.</p></li>
 <li><p>Filetypes that supported in this computation environment include</p>
-<ul>
+<ul class="incremental">
 <li><p>Netcdf with the above listed dimensions in the same order</p></li>
 <li><p>A set of geotiffs embedded in directories. Each label gets a directory level expect for year, which by convention, will ALWAYS be the last 4 characters of a filename before the extension (with an underscore before it).</p></li>
 <li><p>A spreadsheet linkable to a geographic representation (e.g., a shapefile or a geopackage) in vertical format</p></li>
 </ul></li>
 <li><p>Also we will create a set of tables to analyze results</p>
-<ul>
+<ul class="incremental">
 <li><p>These will define Regions (<code>shp</code>) for quick result plotting</p></li>
 <li><p>Specifically, we will have a full vertically stacked CSV of results, then for each Report Archetype we would output 1 minimal info CSV and the corresponding Figure.</p></li>
 </ul></li>
 <li><p>Miscellaneous:</p>
-<ul>
+<ul class="incremental">
 <li>base_years is correct, never baseline_years (due to confusion between baseline and bau)</li>
 </ul></li>
 <li><p>Scenario types</p>
-<ul>
+<ul class="incremental">
 <li>Three scenario_types are supported: baseline, bau and policy
-<ul>
+<ul class="incremental">
 <li>Baseline assumes the year has data existing from observations (rather than modelled) and that these years are defined in p.years (and identically defined in <code>p.base_years</code>).
-<ul>
+<ul class="incremental">
 <li>One exception is when eg GTAP is used to update the base year from 2017 to 2023, and then policies are applied on 2023.</li>
 </ul></li>
 <li>BAU and policy scenarios assume the results are modelled and that their years are defined in p.years (but not <code>p.base_years</code>)</li>
 </ul></li>
 <li>Clarify what is the naming difference between src dst versus input output. Is the former only for file paths or can it also be e.g.&nbsp;array. OR does this have to do with if it is a function return.
-<ul>
+<ul class="incremental">
 <li>Proposed answer: src/dst is a pointer/reference to a thing and Input/Output is the thing itself. Esp useful for paths.</li>
 <li>Similarly, _path and _dir imply the string is a reference, so src_path and src_dir are common.</li>
 <li>You might often see e.g.&nbsp;<code>input_array = hb.as_array(src_path)</code>, illustrating this difference.</li>

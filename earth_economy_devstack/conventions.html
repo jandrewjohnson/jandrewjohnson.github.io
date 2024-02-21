@@ -418,12 +418,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If defined exactly right, 2 dimensional correspondence files will work with <code>Hazelbean</code> via</p>
 <p><code>seals_utils.set_derived_attributes(p)</code></p>
 <p>and</p>
-<div id="b027e8c1" class="cell" data-execution_count="1">
+<div id="b3e8b696" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)}`</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># return a very useful dictionary for various reclassification tasks:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c394cf6e" class="cell" data-execution_count="2">
+<div id="1ea972a8" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>return_dict <span class="op">=</span> {} return_dict[<span class="st">'dst_to_src_reclassification_dict'</span>] <span class="op">=</span> dst_to_src_reclassification_dict  <span class="co"># Dict of one-to-many keys to lists of what each dst_key should be mapped to from each src_key. Useful when aggrigating multiple layers to a aggregated dest type </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] <span class="op">=</span> src_to_dst_reclassification_dict <span class="co"># Useful when going to a specific value. </span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_to_src_labels_dict'</span>] <span class="op">=</span> dst_to_src_labels_dict <span class="co"># Dictionary of lists of labels that map to each dst label </span></span>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_labels'</span>], return_dict[<span class="st">'dst_ids'</span>])} <span class="co"># one-to-one dictionary of dst labels to ids}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Among other possibilities, this could be used for reclassifying LULC geotiffs via</p>
-<div id="14f14526" class="cell" data-execution_count="3">
+<div id="dd6396a2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="correspondences-with-geometries" class="level3">
 <h3 class="anchored" data-anchor-id="correspondences-with-geometries">Correspondences with geometries</h3>
-<div id="33726a6f" class="cell" data-execution_count="4">
+<div id="2eec0e5f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The rules for naming correspondences are a little different when adding geometry to the data. Because}     </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # only 1 geometry can be assigned per file, and becasue membership of aggregated regions and their     </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # members can get confusing, each correspondence file keeps all the labels but then is also saved along     </span></span>
@@ -469,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Appart from correspondence files, we also have <strong>labels</strong> files, such as gtapv7_r251_labels_path. Labels files are for a single set/variable/dimension but map together the synonymous categorizers. Specifically, it must have an id, label, and name, all filled out for every entry. It can optionally have others like description.</p>
 <p>In the filename gtapv7_r251_labels_path we extract from the input_path and write a EE-compliant labels table for the gtapv7 r251 set. In the filename <code>gtap11_gtapaez11_region_correspondence_path</code>, we use these regions and then connect it to the gtapaez11 labels. We can infer also that it is from a mapping labeled gtap11 to gtapaez11 and that the variable in question is the regions while the word correspondence then indicates this is a many-to-one mapping file.</p>
 <p>Note that the file path says “regions” while the column label in the CSV says “region”.</p>
-<div id="ae4e3903" class="cell" data-execution_count="5">
+<div id="5e475d1b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

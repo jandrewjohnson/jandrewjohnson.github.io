@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -99,6 +106,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -107,12 +141,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17_financial_markets.html"><span class="chapter-title">17. Financial Markets</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17_financial_markets.html"><span class="chapter-title">17. Financial Markets</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -122,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Open Principles of Microeconomics</a> 
@@ -265,12 +299,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./a3_present_discounted_value.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Present Discounted Value</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a4_generating_supply_and_demand_curves.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Economics Books Figure</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -289,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">17. Financial Markets</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-chapter-17" class="quarto-section-identifier"><span class="chapter-title">17. Financial Markets</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -302,9 +341,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p><img src="media/17-introduction-to-financial-markets_rId20.jpeg" id="fig-17_1" style="width:6.5in;height:3.58333in"></p>
+
+<div id="fig-17_1" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.5833333333333335in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-introduction-to-financial-markets_rId20.jpeg" id="fig-17_1" style="width:6.5in;height:3.58333in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.1
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.1 Building Home Equity Many people choose to purchase their home rather than rent. This chapter explores how the global financial crisis has influenced home ownership. (Credit: “red sold sign” by Diana Parkhouse/Flickr Creative Commons, CC BY 2.0)</p>
 <section id="chapter-objectives" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="chapter-objectives">Chapter Objectives</h4>
@@ -326,11 +376,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This chapter will explain why people purchase houses (other than as a place to live), why they buy other types of financial assets, and why businesses sell those financial assets in the first place. The chapter will also give us insight into why financial markets and assets go through boom and bust cycles like the one we described here.</p>
 <p>When a firm needs to buy new equipment or build a new facility, it often must go to the financial market to raise funds. Usually firms will add capacity during an economic expansion when profits are on the rise and consumer demand is high. Business investment is one of the critical ingredients needed to sustain economic growth. Even in the sluggish 2009 economy, U.S. firms invested $1.4 trillion in new equipment and structures, in the hope that these investments would generate profits in the years ahead.</p>
 <p>Between the end of the recession in 2009 through the second quarter 2013, profits for the S&amp;P 500 companies grew by 9.7% despite the weak economy, with cost cutting and reductions in input costs driving much of that amount, according to the <em>Wall Street Journal</em>. <a href="#fig-17_2">Figure 17.2</a> shows corporate profits after taxes (adjusted for inventory and capital consumption). Despite the steep decline in quarterly net profit in 2008, profits have recovered and surpassed pre-recession levels.</p>
-<p><img src="media/17-introduction-to-financial-markets_rId25.jpeg" id="fig-17_2" style="width:4.88in;height:2.8in"></p>
+<div id="fig-17_2" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.8in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-introduction-to-financial-markets_rId25.jpeg" id="fig-17_2" style="width:4.88in;height:2.8in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.2
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.2 Corporate Profits After Tax (Adjusted for Inventory and Capital Consumption) Prior to 2008, corporate profits after tax more often than not increased each year. There was a significant drop in profits during 2008 and into 2009. The profit trend has since continued to increase each year, though at a less steady or consistent rate. (Source: Federal Reserve Economic Data (FRED) https://research.stlouisfed.org/fred2/series/CPATAX)</p>
 <p>Many firms, from huge companies like General Motors to startup firms writing computer software, do not have the financial resources within the firm to make all the desired investments. These firms need financial capital from outside investors, and they are willing to pay interest for the opportunity to obtain a rate of return on the investment of that financial capital.</p>
 <p>On the other side of the financial capital market, financial capital suppliers, like households, wish to use their savings in a way that will provide a return. Individuals cannot, however, take the few thousand dollars that they save in any given year, write a letter to General Motors or some other firm, and negotiate to invest their money with that firm. Financial capital markets bridge this gap: that is, they find ways to take the inflow of funds from many separate financial capital suppliers and transform it into the funds of financial capital demanders desire. Such financial markets include stocks, bonds, bank loans, and other financial investments.</p>
-<p>See <a href="#sec-chapter-17"><span>Chapter&nbsp;17</span></a>.</p>
+<p>See <a href="#sec-chapter-17" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-17</span></a>.</p>
 <p>Corporate Profits After Tax (Adjusted for Inventory and Capital Consumption)</p>
 </section>
 </section>
@@ -391,7 +450,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="how-firms-choose-between-financial-capital-sources" class="level4">
 <h4 class="anchored" data-anchor-id="how-firms-choose-between-financial-capital-sources">How Firms Choose between Financial Capital Sources</h4>
-<p>There are clear patterns in how businesses raise financial capital. We can explain these patterns in terms of imperfect information, which as we discussed in <a href="16_information_and_risk.html"><span>Chapter&nbsp;16</span></a>, is a situation where buyers and sellers in a market do not both have full and equal information. Those who are actually running a firm will almost always have more information about whether the firm is likely to earn profits in the future than outside investors who provide financial capital.</p>
+<p>There are clear patterns in how businesses raise financial capital. We can explain these patterns in terms of imperfect information, which as we discussed in <a href="#sec-chapter-16" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-16</span></a>, is a situation where buyers and sellers in a market do not both have full and equal information. Those who are actually running a firm will almost always have more information about whether the firm is likely to earn profits in the future than outside investors who provide financial capital.</p>
 <p>Any young startup firm is a risk. Some startup firms are only a little more than an idea on paper. The firm’s founders inevitably have better information than anyone else about how hard they are willing to work, and whether the firm is likely to succeed. When the founders invested their own money into the firm, they demonstrate a belief in its prospects. At this early stage, angel investors and venture capitalists try to overcome the imperfect information, at least in part, by knowing the managers and their business plan personally and by giving them advice.</p>
 <p>Accurate information is sometimes not available because corporate governance, the name economists give to the institutions that are supposed to watch over top executives, fails, as the following Clear It Up feature on Lehman Brothers shows.</p>
 </section>
@@ -428,26 +487,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="bank-accounts">Bank Accounts</h4>
 <p>An intermediary is one who stands between two other parties. For example, a person who arranges a blind date between two other people is one kind of intermediary. In financial capital markets, banks are an example of a financial intermediary—that is, an institution that operates between a saver who deposits funds in a bank and a borrower who receives a loan from that bank. When a bank serves as a financial intermediary, unlike the situation with a couple on a blind date, the saver and the borrower never meet. In fact, it is not even possible to make direct connections between those who deposit funds in banks and those who borrow from banks, because all deposited funds end up in one big pool, which the financial institution then lends out.</p>
 <p><a href="#fig-17_3">Figure 17.3</a> illustrates the position of banks as a financial intermediary, with a pattern of deposits flowing into a bank and loans flowing out, and then repayment of the loans flowing back to the bank, with interest payments for the original savers.</p>
-<p><img src="media/17-2-how-households-supply-financial-capital_rId29.jpeg" id="fig-17_3" style="width:4.88in;height:2.35in"></p>
+<div id="fig-17_3" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.35in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-2-how-households-supply-financial-capital_rId29.jpeg" id="fig-17_3" style="width:4.88in;height:2.35in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.3
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.3 Banks as Financial Intermediaries Banks are a financial intermediary because they stand between savers and borrowers. Savers place deposits with banks, and then receive interest payments and withdraw money. Borrowers receive loans from banks, and repay the loans with interest.</p>
 <p>Banks offer a range of accounts to serve different needs. A checking account typically pays little or no interest, but it facilitates transactions by giving you easy access to your money, either by writing a check or by using a debit card (that is, a card which works like a credit card, except that purchases are immediately deducted from your checking account rather than billed separately through a credit card company). A savings account typically pays some interest rate, but getting the money typically requires you to make a trip to the bank or an automatic teller machine (or you can access the funds electronically). The lines between checking and savings accounts have blurred in the last couple of decades, as many banks offer checking accounts that will pay an interest rate similar to a savings account if you keep a certain minimum amount in the account, or conversely, offer savings accounts that allow you to write at least a few checks per month.</p>
 <p>Another way to deposit savings at a bank is to use a certificate of deposit (CD). With a CD, you agree to deposit a certain amount of money, often measured in thousands of dollars, in the account for a stated period of time, typically ranging from a few months to several years. In exchange, the bank agrees to pay a higher interest rate than for a regular savings account. While you can withdraw the money before the allotted time, as the advertisements for CDs always warn, there is “a substantial penalty for early withdrawal.”</p>
 <p><a href="#fig-17_4">Figure 17.4</a> shows the annual rate of interest paid on a six-month, one-year, and five-year CD since 1984, as reported by Bankrate.com. The interest rates that savings accounts pay are typically a little lower than the CD rate, because financial investors need to receive a slightly higher rate of interest as compensation for promising to leave deposits untouched for a period of time in a CD, and thus forfeiting some liquidity.</p>
-<p><img src="media/17-2-how-households-supply-financial-capital_rId36.jpeg" id="fig-17_4" style="width:4.88333in;height:2.65833in"></p>
+<div id="fig-17_4" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.658333333333333in" width="4.883333333333334in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-2-how-households-supply-financial-capital_rId36.jpeg" id="fig-17_4" style="width:4.88333in;height:2.65833in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.4
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.4 Interest Rates on Six-Month, One-Year, and Five-Year Certificates of Deposit The interest rates on certificates of deposit have fluctuated over time. The high interest rates of the early 1980s are indicative of the relatively high inflation rate in the United States at that time. Interest rates fluctuate with the business cycle, typically increasing during expansions and decreasing during a recession. Note the steep decline in CD rates since 2008, the beginning of the Great Recession.</p>
 <p>The great advantages of bank accounts are that financial investors have very easy access to their money, and also money in bank accounts is extremely safe. In part, this safety arises because a bank account offers more security than keeping a few thousand dollars in the toe of a sock in your underwear drawer. In addition, the Federal Deposit Insurance Corporation (FDIC) protects the savings of the average person. Every bank is required by law to pay a fee to the FDIC, based on the size of its deposits. Then, if a bank should go bankrupt and not be able to repay depositors, the FDIC guarantees that all customers will receive their deposits back up to $250,000.</p>
 <p>The bottom line on bank accounts looks like this: low risk means low rate of return but high liquidity.</p>
 </section>
 <section id="bonds" class="level4">
 <h4 class="anchored" data-anchor-id="bonds">Bonds</h4>
-<p>An investor who buys a bond expects to receive a rate of return. However, bonds vary in the rates of return that they offer, according to the riskiness of the borrower. We always can divide an interest rate into three components (as we explained in <a href="02_choice_with_scarcity.html"><span>Chapter&nbsp;2</span></a>): compensation for delaying consumption, an adjustment for an inflationary rise in the overall level of prices, and a risk premium that takes the borrower’s riskiness into account.</p>
+<p>An investor who buys a bond expects to receive a rate of return. However, bonds vary in the rates of return that they offer, according to the riskiness of the borrower. We always can divide an interest rate into three components (as we explained in <a href="#sec-chapter-2" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-2</span></a>): compensation for delaying consumption, an adjustment for an inflationary rise in the overall level of prices, and a risk premium that takes the borrower’s riskiness into account.</p>
 <p>The U.S. government is an extremely safe borrower, so when the U.S. government issues Treasury bonds, it can pay a relatively low interest rate. Firms that appear to be safe borrowers, perhaps because of their sheer size or because they have consistently earned profits over time, will pay a higher interest rate than the U.S. government. Firms that appear to be riskier borrowers, perhaps because they are still growing or their businesses appear shaky, will pay the highest interest rates when they issue bonds. We call bonds that offer high interest rates to compensate for their relatively high chance of default high-yield bonds or junk bonds. A number of today’s well-known firms issued junk bonds in the 1980s when they were starting to grow, including Turner Broadcasting and Microsoft.</p>
 </section>
 <section id="link-it-up" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="link-it-up">Link It Up</h4>
 <p>Visit this <a href="https://www.treasurydirect.gov/marketable-securities/treasury-bonds/">website</a> to read about Treasury bonds.</p>
 <p>A bond issued by the U.S. government or a large corporation may seem to be relatively low risk: after all, the bond issuer has promised to make certain payments over time, and except for rare bankruptcy cases, these payments will occur. If a corporate bond issuer fails to make the payments that it owes to its bondholders, the bondholders can require that the company declare bankruptcy, sell off its assets, and pay them as much as it can. Even in the case of junk bonds, a wise investor can reduce the risk by purchasing bonds from a wide range of different companies since, even if a few firms go broke and do not pay, they are not all likely to go bankrupt.</p>
-<p>As we noted before, bonds carry an interest rate risk. For example, imagine you decide to buy a 10-year bond for $1,000 that would pay an annual interest rate of 8%. Soon after you buy the bond, interest rates on bonds rise, so that now similar companies are paying an annual rate of 12%. Anyone who buys a $1,000 bond now can receive annual payments of $120 per year, but since your bond was issued at an interest rate of 8%, you have tied up $1,000 and receive payments of only $80 per year. In the meaningful sense of opportunity cost, you are missing out on the higher payments that you could have received. Furthermore, you can calculate the amount you should be willing to pay now for future payments. To place a present discounted value on a future payment, decide what you would need in the present to equal a certain amount in the future. This calculation will require an interest rate. For example, if the interest rate is 25%, then a payment of $125 a year from now will have a present discounted value of $100—that is, you could take $100 in the present and have $125 in the future. (We discuss this further in the <span class="quarto-unresolved-ref">?sec-appendix-c</span>.)</p>
+<p>As we noted before, bonds carry an interest rate risk. For example, imagine you decide to buy a 10-year bond for $1,000 that would pay an annual interest rate of 8%. Soon after you buy the bond, interest rates on bonds rise, so that now similar companies are paying an annual rate of 12%. Anyone who buys a $1,000 bond now can receive annual payments of $120 per year, but since your bond was issued at an interest rate of 8%, you have tied up $1,000 and receive payments of only $80 per year. In the meaningful sense of opportunity cost, you are missing out on the higher payments that you could have received. Furthermore, you can calculate the amount you should be willing to pay now for future payments. To place a present discounted value on a future payment, decide what you would need in the present to equal a certain amount in the future. This calculation will require an interest rate. For example, if the interest rate is 25%, then a payment of $125 a year from now will have a present discounted value of $100—that is, you could take $100 in the present and have $125 in the future. (We discuss this further in the <a href="#sec-appendix-c" class="quarto-xref"><span class="quarto-unresolved-ref">sec-appendix-c</span></a>.)</p>
 <p>In financial terms, a bond has several parts. A bond is basically an “I owe you” note that an investor receives in exchange for capital (money). The bond has a face value. This is the amount the borrower agrees to pay the investor at maturity. The bond has a coupon rate or interest rate, which is usually semi-annual, but can be paid at different times throughout the year. (Bonds used to be paper documents with coupons that investors clipped and turned in to the bank to receive interest.) The bond has a maturity date when the borrower will pay back its face value as well as its last interest payment. Combining the bond’s face value, interest rate, and maturity date, and market interest rates, allows a buyer to compute a bond’s present value, which is the most that a buyer would be willing to pay for a given bond. This may or may not be the same as the face value.</p>
 <p>The bond yield measures the rate of return a bond is expected to pay over time. Investors can buy bonds when they are issued and they can buy and sell them during their lifetimes. When buying a bond that has been around for a few years, investors should know that the interest rate printed on a bond is often not the same as the bond yield, even on new bonds. Read the next Work It Out feature to see how this happens.</p>
 </section>
@@ -466,7 +543,16 @@ Annual payment: $80 per year</li>
 <li>Consider that the investor will receive the $1,000 face value, plus $80 for the last year’s interest payment. The yield on the bond will be ($1080 – $964)/$964 = 12%. The yield, or total return, means interest payments, plus capital gains. Note that the interest or coupon rate of 8% did not change. When interest rates rise, bonds previously issued at lower interest rates will sell for less than face value. Conversely, when interest rates fall, bonds previously issued at higher interest rates will sell for more than face value.</li>
 </ol>
 <p><a href="#fig-17_5">Figure 17.5</a> shows bond yield for two kinds of bonds: 10-year Treasury bonds (which are officially called “notes”) and corporate bonds issued by firms that have been given an AAA rating as relatively safe borrowers by Moody’s, an independent firm that publishes such ratings. Even though corporate bonds pay a higher interest rate, because firms are riskier borrowers than the federal government, the rates tend to rise and fall together. Treasury bonds typically pay more than bank accounts, and corporate bonds typically pay a higher interest rate than Treasury bonds.</p>
-<p><img src="media/17-2-how-households-supply-financial-capital_rId56.jpeg" id="fig-17_5" style="width:4.88333in;height:2.46667in"></p>
+<div id="fig-17_5" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.466666666666667in" width="4.883333333333334in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-2-how-households-supply-financial-capital_rId56.jpeg" id="fig-17_5" style="width:4.88333in;height:2.46667in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.5
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.5 Interest Rates for Corporate Bonds and Ten-Year U.S. Treasury Bonds The interest rates for corporate bonds and U.S. Treasury bonds (officially “notes”) rise and fall together, depending on conditions for borrowers and lenders in financial markets for borrowing. The corporate bonds always pay a higher interest rate, to make up for the higher risk they have of defaulting compared with the U.S. government.</p>
 <p>The bottom line for bonds: rate of return—low to moderate, depending on the borrower's risk; risk—low to moderate, depending on whether interest rates in the economy change substantially after the bond is issued; liquidity—moderate, because the investor needs to sell the bond before the investor regains the cash.</p>
 </section>
@@ -475,10 +561,14 @@ Annual payment: $80 per year</li>
 <h4 class="anchored" data-anchor-id="stocks">Stocks</h4>
 <p>As we stated earlier, the rate of return on a financial investment in a share of stock can come in two forms: as dividends paid by the firm and as a capital gain achieved by selling the stock for more than you paid. The range of possible returns from buying stock is mind-bending. Firms can decide to pay dividends or not. A stock price can rise to a multiple of its original price or sink all the way to zero. Even in short periods of time, well-established companies can see large movements in their stock prices. For example, on July 1, 2011, Netflix stock peaked at $295 per share; one year later, on July 30, 2012, it was at $53.91 per share; in 2022, it had recovered to $199. When Facebook went public, its shares of stock sold for around $40 per share, but in 2022, they were selling for slightly over $212.</p>
 <p>We will discuss the reasons why stock prices fall and rise so abruptly below, but first you need to know how we measure stock market performance. There are a number of different ways to measure the overall performance of the stock market, based on averaging different subsets of companies' stock prices. Perhaps the best-known stock market measure is the Dow Jones Industrial Average, which is based on 30 large U.S. companies' stock prices. Another stock market performance gauge, the Standard &amp; Poor’s 500, follows the stock prices of the 500 largest U.S. companies. The Wilshire 5000 tracks the stock prices of essentially all U.S. companies that have stock the public can buy and sell.</p>
-<p>Other stock market measures focus on where stocks are traded. For example, the New York Stock Exchange monitors the performance of stocks that are traded on that exchange in New York City. The Nasdaq stock market includes about 3,600 stocks, with a concentration of technology stocks. <a href="#tbl-table_17_1">Table&nbsp;<span>17.1</span></a> lists some of the most commonly cited measures of U.S. and international stock markets.</p>
-<div id="tbl-table_17_1" class="anchored">
+<p>Other stock market measures focus on where stocks are traded. For example, the New York Stock Exchange monitors the performance of stocks that are traded on that exchange in New York City. The Nasdaq stock market includes about 3,600 stocks, with a concentration of technology stocks. <a href="#tbl-table_17_1" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_17_1</span></a> lists some of the most commonly cited measures of U.S. and international stock markets.</p>
+<div id="tbl-table_17_1" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_17_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;17.1: Some Stock Market Measures
+</figcaption>
+<div aria-describedby="tbl-table_17_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;17.1: Some Stock Market Measures</caption>
 <thead>
 <tr class="header">
 <th>Measure of the Stock Market</th>
@@ -521,14 +611,29 @@ Annual payment: $80 per year</li>
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>The trend in the stock market is generally up over time, but with some large dips along the way. <a href="#fig-17_6">Figure 17.6</a> shows the path of the Standard &amp; Poor’s 500 index (which is measured on the left-hand vertical axis) and the Dow Jones Index (which is measured on the right-hand vertical axis). Broad stock market measures, like the ones we list here, tend to move together. The S&amp;P 500 Index is the weighted average market capitalization of the firms selected to be in the index. The Dow Jones Industrial Average is the price weighted average of 30 industrial stocks tracked on the New York Stock Exchange.</p>
 <p>When the Dow Jones average rises from 5,000 to 10,000, you know that the average price of the stocks in that index has roughly doubled. <a href="#fig-17_6">Figure 17.6</a> shows that stock prices did not rise much in the 1970s, but then started a steady climb in the 1980s. From 2000 to 2013, stock prices bounced up and down, but ended up at about the same level.</p>
-<p><img src="media/17-2-how-households-supply-financial-capital_rId63.jpeg" id="fig-17_6" style="width:4.88333in;height:5.425in"></p>
+<div id="fig-17_6" class="quarto-figure quarto-figure-center quarto-float anchored" height="5.425in" width="4.883333333333334in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-2-how-households-supply-financial-capital_rId63.jpeg" id="fig-17_6" style="width:4.88333in;height:5.425in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.6
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.6 The Dow Jones Industrial Index and the Standard &amp; Poor’s 500, 1965–2021 Stock prices rose dramatically from the 1980s up to about 2000. From 2000 to 2013, stock prices bounced up and down, but ended up at about the same level. Since 2009, both indexes have for the most part increased.</p>
-<p><a href="#tbl-table_17_2">Table&nbsp;<span>17.2</span></a> shows the total annual rate of return an investor would have received from buying the stocks in the S&amp;P 500 index over recent decades. The total return here includes both dividends paid by these companies and also capital gains arising from increases in the stock value. (For technical reasons related to how we calculate the numbers, the dividends and capital gains do not add exactly to the total return.) From the 1950s to the 1980s, the average firm paid annual dividends equal to about 4% of its stock value. Since the 1990s, dividends have dropped and now often provide a return closer to 1% to 2%. In the 1960s and 1970s, the gap between percent earned on capital gains and dividends was much closer than it has been since the 1980s. In the 1980s and 1990s, capital gains were far higher than dividends. In the 2000s, dividends remained low and, while stock prices fluctuated, they ended the decade roughly where they had started. In the 2010s, dividends remained low and stock prices increased, and this continued at the beginning of the 2020s.</p>
-<div id="tbl-table_17_2" class="anchored">
+<p><a href="#tbl-table_17_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_17_2</span></a> shows the total annual rate of return an investor would have received from buying the stocks in the S&amp;P 500 index over recent decades. The total return here includes both dividends paid by these companies and also capital gains arising from increases in the stock value. (For technical reasons related to how we calculate the numbers, the dividends and capital gains do not add exactly to the total return.) From the 1950s to the 1980s, the average firm paid annual dividends equal to about 4% of its stock value. Since the 1990s, dividends have dropped and now often provide a return closer to 1% to 2%. In the 1960s and 1970s, the gap between percent earned on capital gains and dividends was much closer than it has been since the 1980s. In the 1980s and 1990s, capital gains were far higher than dividends. In the 2000s, dividends remained low and, while stock prices fluctuated, they ended the decade roughly where they had started. In the 2010s, dividends remained low and stock prices increased, and this continued at the beginning of the 2020s.</p>
+<div id="tbl-table_17_2" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_17_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;17.2: Annual Returns on S&amp;P 500 Stocks, 1950–2021
+</figcaption>
+<div aria-describedby="tbl-table_17_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;17.2: Annual Returns on S&amp;P 500 Stocks, 1950–2021</caption>
 <thead>
 <tr class="header">
 <th>Period</th>
@@ -595,6 +700,8 @@ Annual payment: $80 per year</li>
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>The overall pattern is that stocks as a group have provided a high rate of return over extended periods of time, but this return comes with risks. The market value of individual companies can rise and fall substantially, both over short time periods and over the long run. During extended periods of time like the 1970s or the first decade of the 2000s, the overall stock market return can be quite modest. The stock market can sometimes fall sharply, as it did in 2008.</p>
 <p>The bottom line on investing in stocks is that the rate of return over time will be high, but the risks are also high, especially in the short run. Liquidity is also high since one can sell stock in publicly held companies readily for spendable money.</p>
 </section>
@@ -620,7 +727,16 @@ Annual payment: $80 per year</li>
 <section id="link-it-up-2" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="link-it-up-2">Link It Up</h4>
 <p>Visit this <a href="https://www.youtube.com/watch?v=FzrBurlJUNk">website</a> to watch the trailer for <em>Inside Job</em>, a movie that explores the modern financial crisis.</p>
-<p><img src="media/17-2-how-households-supply-financial-capital_rId78.jpeg" id="fig-17_7" style="width:4.875in;height:2.44167in"></p>
+<div id="fig-17_7" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.441666666666667in" width="4.875in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-17_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/17-2-how-households-supply-financial-capital_rId78.jpeg" id="fig-17_7" style="width:4.875in;height:2.44167in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-17_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.7
+</figcaption>
+</figure>
+</div>
 <p>Figure 17.7 The Median Average Sales Price for New Single-Family Homes, 1990–2015 The median price is the price where half of sales prices are higher and half are lower. The median sales price for a new one-family home was $122,900 in 1990. It rose as high as $248,000 in 2007, before falling to $232,000 in 2008. In 2015, the median sales price was $294,000. Of course, this national figure conceals many local differences, like the areas where housing prices are higher or lower, or how housing prices have risen or fallen at certain times. (Source: U.S. Census)</p>
 <p>Investors can also put money into other tangible assets such as gold, silver, and other precious metals, or in duller commodities like sugar, cocoa, coffee, orange juice, oil, and natural gas. The return on these investments derives from the saver’s hope of buying low, selling high, and receiving a capital gain. Investing in, say, gold or coffee offers relatively little in the way of nonfinancial benefits to the user (unless the investor likes to caress gold or gaze upon a warehouse full of coffee). Typically, investors in these commodities never even see the physical good. Instead, they sign a contract that takes ownership of a certain quantity of these commodities, which are stored in a warehouse, and later they sell the ownership to someone else. As one example, from 1981 to 2005, the gold prices generally fluctuated between about $300 and $500 per ounce, but then rose sharply to over $1,100 per ounce by early 2010. In January 2017, prices were hovering around $1,191 per ounce, and they have since increased, reaching over $1,900 by early 2022.</p>
 <p>A final area of tangible assets consists of “collectibles” like paintings, fine wine, jewelry, antiques, or even baseball cards. Most collectibles provide returns both in the form of services or of a potentially higher selling price in the future. You can use paintings by hanging them on the wall; jewelry by wearing it; baseball cards by displaying them. You can also hope to sell them someday for more than you paid for them. However, the evidence on prices of collectibles, while scanty, is that while they may go through periods where prices skyrocket for a time, you should not expect to make a higher-than-average rate of return over a sustained period of time from investing in this way.</p>
@@ -638,10 +754,14 @@ Annual payment: $80 per year</li>
 </section>
 <section id="the-tradeoffs-between-return-and-risk" class="level4">
 <h4 class="anchored" data-anchor-id="the-tradeoffs-between-return-and-risk">The Tradeoffs between Return and Risk</h4>
-<p>The discussion of financial investments has emphasized the expected rate of return, the risk, and the liquidity of each investment. <a href="#tbl-table_17_3">Table&nbsp;<span>17.3</span></a> summarizes these characteristics.</p>
-<div id="tbl-table_17_3" class="anchored">
+<p>The discussion of financial investments has emphasized the expected rate of return, the risk, and the liquidity of each investment. <a href="#tbl-table_17_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_17_3</span></a> summarizes these characteristics.</p>
+<div id="tbl-table_17_3" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_17_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;17.3: Key Characteristics of Financial Investments
+</figcaption>
+<div aria-describedby="tbl-table_17_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;17.3: Key Characteristics of Financial Investments</caption>
 <colgroup>
 <col style="width: 31%">
 <col style="width: 20%">
@@ -714,6 +834,8 @@ Annual payment: $80 per year</li>
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>The household investment choices listed here display a tradeoff between the expected return and the degree of risk involved. Bank accounts have very low risk and very low returns; bonds have higher risk but higher returns; and stocks are riskiest of all but have the potential for still higher returns. In effect, the higher average return compensates for the higher degree of risk. If risky assets like stocks did not also offer a higher average return, then few investors would want them.</p>
 <p>This tradeoff between return and risk complicates the task of any financial investor: Is it better to invest safely or to take a risk and go for the high return? Ultimately, choices about risk and return will be based on personal preferences. However, it is often useful to examine risk and return in the context of different time frames.</p>
 <p>The high returns of stock market investments refer to a high average return that we can expect over a period of several years or decades. The high risk of such investments refers to the fact that in shorter time frames, from months to a few years, the rate of return may fluctuate a great deal. Thus, a person near retirement age, who already owns a house, may prefer reduced risk and certainty about retirement income. For young workers, just starting to make a reasonably profitable living, it may make sense to put most of their savings for retirement in mutual funds. Mutual funds are able to take advantage of their buying and selling size and thereby reduce transaction costs for investors. Stocks are risky in the short term, to be sure, but when the worker can look forward to several decades during which stock market ups and downs can even out, stocks will typically pay a much higher return over that extended period than will bonds or bank accounts. Thus, one must consider tradeoffs between risk and return in the context of where the investor is in life.</p>
@@ -770,7 +892,7 @@ Annual payment: $80 per year</li>
 <p>Step 6. To find the compound interest, we determine the difference between the future value and the present value of the principal. This is accomplished as follows:</p>
 <p><span class="math inline">\(\text{Future~Value} = \text{Principal~} \times \ {(\text{1\ +\ interest~rate})}^{\text{time}}\)</span></p>
 <p><span class="math inline">\(\text{Compound\ interest} = \text{Future\ Value}–\text{Present\ Valve}\)</span></p>
-<p>Step 7. Apply this formula to our three-year scenario. Follow the calculations in <a href="#tbl-table_17_4">Table&nbsp;<span>17.4</span></a></p>
+<p>Step 7. Apply this formula to our three-year scenario. Follow the calculations in <a href="#tbl-table_17_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_17_4</span></a></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -823,9 +945,13 @@ Annual payment: $80 per year</li>
 </tr>
 </tbody>
 </table>
-<div id="tbl-table_17_4" class="anchored">
+<div id="tbl-table_17_4" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_17_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;17.4: Step 7
+</figcaption>
+<div aria-describedby="tbl-table_17_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;17.4: Step 7</caption>
 <thead>
 <tr class="header">
 <th>Year 3</th>
@@ -855,6 +981,8 @@ Annual payment: $80 per year</li>
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
 </div>
 <p>Step 8. Note that, after three years, the total is $115.76. Therefore the total compound interest is $15.76. This is $0.76 more than we obtained with simple interest. While this may not seem like much, keep in mind that we were only working with $100 and over a relatively short time period. Compound interest can make a huge difference with larger sums of money and over longer periods of time.</p>
 <p>Obtaining additional education and saving money early in life obviously will not make you rich overnight. Additional education typically means deferring earning income and living as a student for more years. Saving money often requires choices like driving an older or less expensive car, living in a smaller apartment or buying a smaller house, and making other day-to-day sacrifices. For most people, the tradeoffs for achieving substantial personal wealth will require effort, patience, and sacrifice.</p>
@@ -1017,10 +1145,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1030,8 +1157,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1044,6 +1180,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1087,6 +1342,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1112,6 +1368,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1173,12 +1455,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./16_information_and_risk.html" class="pagination-link">
+      <a href="./16_information_and_risk.html" class="pagination-link  aria-label=" &lt;span="" information="" and="" risk&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">16. Information and Risk</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./18_public_economy.html" class="pagination-link">
+      <a href="./18_public_economy.html" class="pagination-link" aria-label="<span class='chapter-number'>18</span>&nbsp; <span class='chapter-title'>18. Public Economy</span>">
         <span class="nav-page-text"><span class="chapter-title">18. Public Economy</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2536,6 +2818,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-1351"><a href="#cb1-1351" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+
 
 
 

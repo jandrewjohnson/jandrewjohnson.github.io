@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -99,6 +106,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -107,12 +141,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_monopoly.html"><span class="chapter-title">9. Monopoly</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09_monopoly.html"><span class="chapter-title">9. Monopoly</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -122,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Open Principles of Microeconomics</a> 
@@ -265,12 +299,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./a3_present_discounted_value.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Present Discounted Value</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a4_generating_supply_and_demand_curves.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Economics Books Figure</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -288,7 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">9. Monopoly</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-chapter-9" class="quarto-section-identifier"><span class="chapter-title">9. Monopoly</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -301,9 +340,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p><img src="media/9-introduction-to-a-monopoly_rId20.jpeg" id="fig-9_1" style="width:6.5in;height:3.90833in"></p>
+
+<div id="fig-9_1" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.908333333333333in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-introduction-to-a-monopoly_rId20.jpeg" id="fig-9_1" style="width:6.5in;height:3.90833in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.1
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.1 Political Power from a Cotton Monopoly In the mid-nineteenth century, the United States, specifically the Southern states, had a near monopoly in the cotton that they supplied to Great Britain. These states attempted to leverage this economic power into political power—trying to sway Great Britain to formally recognize the Confederate States of America. (Credit: modification of "cotton!" by ashley/Flickr, CC BY 2.0)</p>
 <section id="chapter-objectives" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="chapter-objectives">Chapter Objectives</h4>
@@ -322,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Many of the opening case studies have focused on current events. This one steps into the past to observe how monopoly, or near monopolies, have helped shape history. In spring 1773, the East India Company, a firm that, in its time, was designated “too big to fail,” was experiencing financial difficulties. To help shore up the failing firm, the British Parliament authorized the Tea Act. The act continued the tax on teas and made the East India Company the sole legal supplier of tea to the American colonies. By November, the citizens of Boston had had enough. They refused to permit the unloading of tea, citing their main complaint: “No taxation without representation.” Several newspapers, including <em>The Massachusetts Gazette</em>, warned arriving tea-bearing ships, “We are prepared, and shall not fail to pay them an unwelcome visit by The Mohawks.”</p>
 <p>Step forward in time to 1860—the eve of the American Civil War—to another near monopoly supplier of historical significance: the U.S. cotton industry. At that time, the Southern states provided the majority of the cotton Britain imported. The South, wanting to secede from the Union, hoped to leverage Britain’s high dependency on its cotton into formal diplomatic recognition of the Confederate States of America.</p>
 <p>This leads us to this chapter's topic: a firm that controls all (or nearly all) of the supply of a good or service—a monopoly. How do monopoly firms behave in the marketplace? Do they have “power?” Does this power potentially have unintended consequences? We’ll return to this case at the end of the chapter to see how the tea and cotton monopolies influenced U.S. history.</p>
-<p>Many believe that top executives at firms are the strongest supporters of market competition, but this belief is far from the truth. Think about it this way: If you very much wanted to win an Olympic gold medal, would you rather be far better than everyone else, or locked in competition with many athletes just as good as you? Similarly, if you would like to attain a very high level of profits, would you rather manage a business with little or no competition, or struggle against many tough competitors who are trying to sell to your customers? By now, you might have read <a href="08_perfect_competition.html"><span>Chapter&nbsp;8</span></a>. In this chapter, we explore the opposite extreme: monopoly.</p>
+<p>Many believe that top executives at firms are the strongest supporters of market competition, but this belief is far from the truth. Think about it this way: If you very much wanted to win an Olympic gold medal, would you rather be far better than everyone else, or locked in competition with many athletes just as good as you? Similarly, if you would like to attain a very high level of profits, would you rather manage a business with little or no competition, or struggle against many tough competitors who are trying to sell to your customers? By now, you might have read <a href="#sec-chapter-8" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-8</span></a>. In this chapter, we explore the opposite extreme: monopoly.</p>
 <p>If perfect competition is a market where firms have no market power and they simply respond to the market price, monopoly is a market with no competition at all, and firms have a great deal of market power. In the case of monopoly, one firm produces all of the output in a market. Since a monopoly faces no significant competition, it can charge any price it wishes, subject to the demand curve. While a monopoly, by definition, refers to a single firm, in practice people often use the term to describe a market in which one firm merely has a very high market share. This tends to be the definition that the U.S. Department of Justice uses.</p>
 <p>Even though there are very few true monopolies in existence, we do deal with some of those few every day, often without realizing it: The U.S. Postal Service, your electric, and garbage collection companies are a few examples. Some new drugs are produced by only one pharmaceutical firm—and no close substitutes for that drug may exist.</p>
 <p>From the mid-1990s until 2004, the U.S. Department of Justice prosecuted the Microsoft Corporation for including Internet Explorer as the default web browser with its operating system. The Justice Department’s argument was that, since Microsoft possessed an extremely high market share in the industry for operating systems, the inclusion of a free web browser constituted unfair competition to other browsers, such as Netscape Navigator. Since nearly everyone was using Windows, including Internet Explorer eliminated the incentive for consumers to explore other browsers and made it impossible for competitors to gain a foothold in the market. In 2013, the Windows system ran on more than 90% of the most commonly sold personal computers. In 2015, a U.S. federal court tossed out antitrust charges that Google had an agreement with mobile device makers to set Google as the default search engine.</p>
@@ -341,15 +391,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Analyze the importance of trademarks and patents in promoting innovation</li>
 <li>Identify examples of predatory pricing</li>
 </ul>
-<p>Because of the lack of competition, monopolies tend to earn significant economic profits. These profits should attract vigorous competition as we described in <a href="08_perfect_competition.html"><span>Chapter&nbsp;8</span></a>, and yet, because of one particular characteristic of monopoly, they do not. Barriers to entry are the legal, technological, or market forces that discourage or prevent potential competitors from entering a market. Barriers to entry can range from the simple and easily surmountable, such as the cost of renting retail space, to the extremely restrictive. For example, there are a finite number of radio frequencies available for broadcasting. Once an entrepreneur or firm has purchased the rights to all of them, no new competitors can enter the market.</p>
+<p>Because of the lack of competition, monopolies tend to earn significant economic profits. These profits should attract vigorous competition as we described in <a href="#sec-chapter-8" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-8</span></a>, and yet, because of one particular characteristic of monopoly, they do not. Barriers to entry are the legal, technological, or market forces that discourage or prevent potential competitors from entering a market. Barriers to entry can range from the simple and easily surmountable, such as the cost of renting retail space, to the extremely restrictive. For example, there are a finite number of radio frequencies available for broadcasting. Once an entrepreneur or firm has purchased the rights to all of them, no new competitors can enter the market.</p>
 <p>In some cases, barriers to entry may lead to monopoly. In other cases, they may limit competition to a few firms. Barriers may block entry even if the firm or firms currently in the market are earning profits. Thus, in markets with significant barriers to entry, it is <em>not</em> necessarily true that abnormally high profits will attract new firms, and that this entry of new firms will eventually cause the price to decline so that surviving firms earn only a normal level of profit in the long run.</p>
 <p>There are five types of monopoly, based on the types of barriers to entry they exploit.</p>
 </section>
 <section id="natural-monopoly" class="level4">
 <h4 class="anchored" data-anchor-id="natural-monopoly">Natural Monopoly</h4>
-<p>Economies of scale can combine with the size of the market to limit competition. (We introduced this theme in <a href="07_production_and_costs.html"><span>Chapter&nbsp;7</span></a>). <a href="#fig-9_2">Figure 9.2</a> presents a long-run average cost curve for the airplane manufacturing industry. It shows economies of scale up to an output of 8,000 planes per year and a price of P<sub>0</sub>, then constant returns to scale from 8,000 to 20,000 planes per year, and diseconomies of scale at a quantity of production greater than 20,000 planes per year.</p>
+<p>Economies of scale can combine with the size of the market to limit competition. (We introduced this theme in <a href="#sec-chapter-7" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-7</span></a>). <a href="#fig-9_2">Figure 9.2</a> presents a long-run average cost curve for the airplane manufacturing industry. It shows economies of scale up to an output of 8,000 planes per year and a price of P<sub>0</sub>, then constant returns to scale from 8,000 to 20,000 planes per year, and diseconomies of scale at a quantity of production greater than 20,000 planes per year.</p>
 <p>Now consider the market demand curve in the diagram, which intersects the long-run average cost (LRAC) curve at an output level of 5,000 planes per year and at a price P<sub>1</sub>, which is higher than P<sub>0</sub>. In this situation, the market has room for only one producer. If a second firm attempts to enter the market at a smaller size, say by producing a quantity of 4,000 planes, then its average costs will be higher than those of the existing firm, and it will be unable to compete. If the second firm attempts to enter the market at a larger size, like 8,000 planes per year, then it could produce at a lower average cost—but it could not sell all 8,000 planes that it produced because of insufficient demand in the market.</p>
-<p><img src="media/9-1-how-monopolies-form-barriers-to-entry_rId26.jpeg" id="fig-9_2" style="width:4.88in;height:3.325in"></p>
+<div id="fig-9_2" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.325in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-1-how-monopolies-form-barriers-to-entry_rId26.jpeg" id="fig-9_2" style="width:4.88in;height:3.325in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.2
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.2 Economies of Scale and Natural Monopoly In this market, the demand curve intersects the long-run average cost (LRAC) curve at its downward-sloping part. A natural monopoly occurs when the quantity demanded is less than the minimum quantity it takes to be at the bottom of the long-run average cost curve.</p>
 <p>Economists call this situation, when economies of scale are large relative to the quantity demanded in the market, a natural monopoly. Natural monopolies often arise in industries where the marginal cost of adding an additional customer is very low, once the fixed costs of the overall system are in place. This results in situations where there are substantial economies of scale. For example, once a water company lays the main water pipes through a neighborhood, the marginal cost of providing water service to another home is fairly low. Once the electric company installs lines in a new subdivision, the marginal cost of providing additional electrical service to one more home is minimal. It would be costly and duplicative for a second water company to enter the market and invest in a whole second set of main water pipes, or for a second electricity company to enter the market and invest in a whole new set of electrical wires. These industries offer an example where, because of economies of scale, one producer can serve the entire market more efficiently than a number of smaller producers that would need to make duplicate physical capital investments.</p>
 <p>A natural monopoly can also arise in smaller local markets for products that are difficult to transport. For example, cement production exhibits economies of scale, and the quantity of cement demanded in a local area may not be much larger than what a single plant can produce. Moreover, the costs of transporting cement over land are high, and so a cement plant in an area without access to water transportation may be a natural monopoly.</p>
@@ -388,10 +447,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="summing-up-barriers-to-entry" class="level4">
 <h4 class="anchored" data-anchor-id="summing-up-barriers-to-entry">Summing Up Barriers to Entry</h4>
-<p><a href="#tbl-table_9_1">Table&nbsp;<span>9.1</span></a> lists the barriers to entry that we have discussed. This list is not exhaustive, since firms have proved to be highly creative in inventing business practices that discourage competition. When barriers to entry exist, perfect competition is no longer a reasonable description of how an industry works. When barriers to entry are high enough, monopoly can result.</p>
-<div id="tbl-table_9_1" class="anchored">
+<p><a href="#tbl-table_9_1" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_1</span></a> lists the barriers to entry that we have discussed. This list is not exhaustive, since firms have proved to be highly creative in inventing business practices that discourage competition. When barriers to entry exist, perfect competition is no longer a reasonable description of how an industry works. When barriers to entry are high enough, monopoly can result.</p>
+<div id="tbl-table_9_1" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_9_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.1: Barriers to Entry
+</figcaption>
+<div aria-describedby="tbl-table_9_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;9.1: Barriers to Entry</caption>
 <colgroup>
 <col style="width: 22%">
 <col style="width: 41%">
@@ -433,6 +496,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 </section>
 <section id="how-a-profit-maximizing-monopoly-chooses-output-and-price" class="level3">
@@ -451,7 +516,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="demand-curves-perceived-by-a-perfectly-competitive-firm-and-by-a-monopoly" class="level4">
 <h4 class="anchored" data-anchor-id="demand-curves-perceived-by-a-perfectly-competitive-firm-and-by-a-monopoly">Demand Curves Perceived by a Perfectly Competitive Firm and by a Monopoly</h4>
 <p>A perfectly competitive firm acts as a price taker, so we calculate total revenue taking the given market price and multiplying it by the quantity of output that the firm chooses. The demand curve <em>as it is perceived by a perfectly competitive firm</em> appears in <a href="#fig-9_3">Figure 9.3</a> (a). The flat perceived demand curve means that, from the viewpoint of the perfectly competitive firm, it could sell either a relatively low quantity like Ql or a relatively high quantity like Qh at the market price P.</p>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId23.jpeg" id="fig-9_3" style="width:6.5in;height:2.575in"></p>
+<div id="fig-9_3" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.575in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId23.jpeg" id="fig-9_3" style="width:6.5in;height:2.575in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.3
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.3 The Perceived Demand Curve for a Perfect Competitor and a Monopolist (a) A perfectly competitive firm perceives the demand curve that it faces to be flat. The flat shape means that the firm can sell either a low quantity (Ql) or a high quantity (Qh) at exactly the same price (P). (b) A monopolist perceives the demand curve that it faces to be the same as the market demand curve, which for most goods is downward-sloping. Thus, if the monopolist chooses a high level of output (Qh), it can charge only a relatively low price (PI). Conversely, if the monopolist chooses a low level of output (Ql), it can then charge a higher price (Ph). The challenge for the monopolist is to choose the combination of price and quantity that maximizes profits.</p>
 </section>
 <section id="clear-it-up" class="level4 Heading3Grey">
@@ -475,12 +549,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="total-cost-and-total-revenue-for-a-monopolist" class="level4">
 <h4 class="anchored" data-anchor-id="total-cost-and-total-revenue-for-a-monopolist">Total Cost and Total Revenue for a Monopolist</h4>
-<p>We can illustrate profits for a monopolist with a graph of total revenues and total costs, with the example of the hypothetical HealthPill firm in <a href="#fig-9_4">Figure 9.4</a>. The total cost curve has its typical shape that we learned about in <a href="07_production_and_costs.html"><span>Chapter&nbsp;7</span></a>, and that we used in <a href="08_perfect_competition.html"><span>Chapter&nbsp;8</span></a>; that is, total costs rise and the curve grows steeper as output increases, as the final column of <a href="#tbl-table_9_2">Table&nbsp;<span>9.2</span></a> shows.</p>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId32.jpeg" id="fig-9_4" style="width:4.88in;height:2.52in"></p>
+<p>We can illustrate profits for a monopolist with a graph of total revenues and total costs, with the example of the hypothetical HealthPill firm in <a href="#fig-9_4">Figure 9.4</a>. The total cost curve has its typical shape that we learned about in <a href="#sec-chapter-7" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-7</span></a>, and that we used in <a href="#sec-chapter-8" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-8</span></a>; that is, total costs rise and the curve grows steeper as output increases, as the final column of <a href="#tbl-table_9_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_2</span></a> shows.</p>
+<div id="fig-9_4" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.52in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId32.jpeg" id="fig-9_4" style="width:4.88in;height:2.52in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.4
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.4 Total Revenue and Total Cost for the HealthPill Monopoly Total revenue for the monopoly firm called HealthPill first rises, then falls. Low levels of output bring in relatively little total revenue, because the quantity is low. High levels of output bring in relatively less revenue, because the high quantity pushes down the market price. The total cost curve is upward-sloping. Profits will be highest at the quantity of output where total revenue is most above total cost. The profit-maximizing level of output is not the same as the revenue-maximizing level of output, which should make sense, because profits take costs into account and revenues do not.</p>
-<div id="tbl-table_9_2" class="anchored">
+<div id="tbl-table_9_2" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_9_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.2: Total Costs and Total Revenues of HealthPill
+</figcaption>
+<div aria-describedby="tbl-table_9_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;9.2: Total Costs and Total Revenues of HealthPill</caption>
 <colgroup>
 <col style="width: 24%">
 <col style="width: 24%">
@@ -551,19 +638,34 @@ TC</th>
 </tbody>
 </table>
 </div>
-<p>Total revenue, though, is different. Since a monopolist faces a downward sloping demand curve, the only way it can sell more output is by reducing its price. Selling more output raises revenue, but lowering price reduces it. Thus, the shape of total revenue isn’t clear. Let’s explore this using the data in <a href="#tbl-table_9_2">Table&nbsp;<span>9.2</span></a>, which shows quantities along the demand curve and the price at each quantity demanded, and then calculates total revenue by multiplying price times quantity at each level of output. (In this example, we give the output as 1, 2, 3, 4, and so on, for the sake of simplicity. If you prefer a dash of greater realism, you can imagine that the pharmaceutical company measures these output levels and the corresponding prices per 1,000 or 10,000 pills.) As the figure illustrates, total revenue for a monopolist has the shape of a hill, first rising, next flattening out, and then falling. In this example, total revenue is highest at a quantity of 6 or 7.</p>
+</figure>
+</div>
+<p>Total revenue, though, is different. Since a monopolist faces a downward sloping demand curve, the only way it can sell more output is by reducing its price. Selling more output raises revenue, but lowering price reduces it. Thus, the shape of total revenue isn’t clear. Let’s explore this using the data in <a href="#tbl-table_9_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_2</span></a>, which shows quantities along the demand curve and the price at each quantity demanded, and then calculates total revenue by multiplying price times quantity at each level of output. (In this example, we give the output as 1, 2, 3, 4, and so on, for the sake of simplicity. If you prefer a dash of greater realism, you can imagine that the pharmaceutical company measures these output levels and the corresponding prices per 1,000 or 10,000 pills.) As the figure illustrates, total revenue for a monopolist has the shape of a hill, first rising, next flattening out, and then falling. In this example, total revenue is highest at a quantity of 6 or 7.</p>
 <p>However, the monopolist is not seeking to maximize revenue, but instead to earn the highest possible profit. In the HealthPill example in <a href="#fig-9_4">Figure 9.4</a>, the highest profit will occur at the quantity where total revenue is the farthest above total cost. This looks to be somewhere in the middle of the graph, but where exactly? It is easier to see the profit maximizing level of output by using the marginal approach, to which we turn next.</p>
 </section>
 <section id="marginal-revenue-and-marginal-cost-for-a-monopolist" class="level4">
 <h4 class="anchored" data-anchor-id="marginal-revenue-and-marginal-cost-for-a-monopolist">Marginal Revenue and Marginal Cost for a Monopolist</h4>
 <p>In the real world, a monopolist often does not have enough information to analyze its entire total revenues or total costs curves. After all, the firm does not know exactly what would happen if it were to alter production dramatically. However, a monopolist often has fairly reliable information about how changing output by small or moderate amounts will affect its marginal revenues and marginal costs, because it has had experience with such changes over time and because modest changes are easier to extrapolate from current experience. A monopolist can use information on marginal revenue and marginal cost to seek out the profit-maximizing combination of quantity and price.</p>
-<p><a href="#tbl-table_9_3">Table&nbsp;<span>9.3</span></a> expands <a href="#tbl-table_9_2">Table&nbsp;<span>9.2</span></a> using the figures on total costs and total revenues from the HealthPill example to calculate marginal revenue and marginal cost. This monopoly faces typical upward-sloping marginal cost and downward-sloping marginal revenue curves, as <a href="#fig-9_5">Figure 9.5</a> shows.</p>
+<p><a href="#tbl-table_9_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_3</span></a> expands <a href="#tbl-table_9_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_2</span></a> using the figures on total costs and total revenues from the HealthPill example to calculate marginal revenue and marginal cost. This monopoly faces typical upward-sloping marginal cost and downward-sloping marginal revenue curves, as <a href="#fig-9_5">Figure 9.5</a> shows.</p>
 <p>Notice that marginal revenue is zero at a quantity of 7, and turns negative at quantities higher than 7. It may seem counterintuitive that marginal revenue could ever be zero or negative: after all, doesn't an increase in quantity sold not always mean more revenue? For a perfect competitor, each additional unit sold brought a positive marginal revenue, because marginal revenue was equal to the given market price. However, a monopolist can sell a larger quantity and see a decline in total revenue. When a monopolist increases sales by one unit, it gains some marginal revenue from selling that extra unit, but also loses some marginal revenue because it must now sell every other unit at a lower price. As the quantity sold becomes higher, at some point the drop in price is proportionally more than the increase in greater quantity of sales, causing a situation where more sales bring in less revenue. In other words, marginal revenue is negative.</p>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId40.jpeg" id="fig-9_5" style="width:4.88in;height:2.225in"></p>
+<div id="fig-9_5" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.2249989063867015in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId40.jpeg" id="fig-9_5" style="width:4.88in;height:2.225in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.5
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.5 Marginal Revenue and Marginal Cost for the HealthPill Monopoly For a monopoly like HealthPill, marginal revenue decreases as it sells additional units of output. The marginal cost curve is upward-sloping. The profit-maximizing choice for the monopoly will be to produce at the quantity where marginal revenue is equal to marginal cost: that is, MR = MC. If the monopoly produces a lower quantity, then MR &gt; MC at those levels of output, and the firm can make higher profits by expanding output. If the firm produces at a greater quantity, then MC &gt; MR, and the firm can make higher profits by reducing its quantity of output.</p>
-<div id="tbl-table_9_3" class="anchored">
+<div id="tbl-table_9_3" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_9_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.3: Costs and Revenues of HealthPill
+</figcaption>
+<div aria-describedby="tbl-table_9_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;9.3: Costs and Revenues of HealthPill</caption>
 <colgroup>
 <col style="width: 20%">
 <col style="width: 19%">
@@ -645,6 +747,8 @@ TC</th>
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>A monopolist can determine its profit-maximizing price and quantity by analyzing the marginal revenue and marginal costs of producing an extra unit. If the marginal revenue exceeds the marginal cost, then the firm should produce the extra unit.</p>
 <p>For example, at an output of 4 in <a href="#fig-9_5">Figure 9.5</a>, marginal revenue is 600 and marginal cost is 250, so producing this unit will clearly add to overall profits. At an output of 5, marginal revenue is 400 and marginal cost is 400, so producing this unit still means overall profits are unchanged. However, expanding output from 5 to 6 would involve a marginal revenue of 200 and a marginal cost of 850, so that sixth unit would actually reduce profits. Thus, the monopoly can tell from the marginal revenue and marginal cost that of the choices in the table, the profit-maximizing level of output is 5.</p>
 <p>The monopoly could seek out the profit-maximizing level of output by increasing quantity by a small amount, calculating marginal revenue and marginal cost, and then either increasing output as long as marginal revenue exceeds marginal cost or reducing output if marginal cost exceeds marginal revenue. This process works without any need to calculate total revenue and total cost. Thus, a profit-maximizing monopoly should follow the rule of producing up to the quantity where marginal revenue is equal to marginal cost—that is, MR = MC. This quantity is easy to identify graphically, where MR and MC intersect.</p>
@@ -656,7 +760,7 @@ TC</th>
 <p>If you find it counterintuitive that producing where marginal revenue equals marginal cost will maximize profits, working through the numbers will help.</p>
 <p>Step 1. Remember, we define marginal cost as the change in total cost from producing a small amount of additional output.</p>
 <p><span class="math inline">\(\text{MC} = \frac{\text{change~in~total~cost}}{\text{change~in~quantity~produced}}\)</span></p>
-<p>Step 2. Note that in <a href="#tbl-table_9_3">Table&nbsp;<span>9.3</span></a>, as output increases from 1 to 2 units, total cost increases from $500 to $775. As a result, the marginal cost of the second unit will be:</p>
+<p>Step 2. Note that in <a href="#tbl-table_9_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_3</span></a>, as output increases from 1 to 2 units, total cost increases from $500 to $775. As a result, the marginal cost of the second unit will be:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathrm{MC} &amp; =\frac{\$ 775-\$ 500}{1} \\
@@ -667,16 +771,20 @@ TC</th>
 <p><span class="math display">\[
 \mathrm{MR}=\frac{\text { change in total revenue }}{\text { change in quantity sold }}
 \]</span></p>
-<p>Step 4. Note that in <a href="#tbl-table_9_3">Table&nbsp;<span>9.3</span></a>, as output increases from 1 to 2 units, total revenue increases from $1200 to $2200. As a result, the marginal revenue of the second unit will be:</p>
+<p>Step 4. Note that in <a href="#tbl-table_9_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_3</span></a>, as output increases from 1 to 2 units, total revenue increases from $1200 to $2200. As a result, the marginal revenue of the second unit will be:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathrm{MR} &amp; =\frac{\$ 2200-\$ 1200}{1} \\
 &amp; =\$ 1000
 \end{aligned}
 \]</span></p>
-<div id="tbl-table_9_4" class="anchored">
+<div id="tbl-table_9_4" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_9_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.4: Marginal Revenue, Marginal Cost, Marginal and Total Profit
+</figcaption>
+<div aria-describedby="tbl-table_9_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;9.4: Marginal Revenue, Marginal Cost, Marginal and Total Profit</caption>
 <colgroup>
 <col style="width: 20%">
 <col style="width: 19%">
@@ -758,16 +866,22 @@ TC</th>
 </tbody>
 </table>
 </div>
-<p><a href="#tbl-table_9_4">Table&nbsp;<span>9.4</span></a> repeats the marginal cost and marginal revenue data from <a href="#tbl-table_9_4">Table&nbsp;<span>9.4</span></a>, and adds two more columns: Marginal profit is the profitability of each additional unit sold. We define it as marginal revenue minus marginal cost. Finally, total profit is the sum of marginal profits. As long as marginal profit is positive, producing more output will increase total profits. When marginal profit turns negative, producing more output will decrease total profits. Total profit is maximized where marginal revenue equals marginal cost. In this example, maximum profit occurs at 5 units of output.</p>
+</figure>
+</div>
+<p><a href="#tbl-table_9_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_4</span></a> repeats the marginal cost and marginal revenue data from <a href="#tbl-table_9_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_4</span></a>, and adds two more columns: Marginal profit is the profitability of each additional unit sold. We define it as marginal revenue minus marginal cost. Finally, total profit is the sum of marginal profits. As long as marginal profit is positive, producing more output will increase total profits. When marginal profit turns negative, producing more output will decrease total profits. Total profit is maximized where marginal revenue equals marginal cost. In this example, maximum profit occurs at 5 units of output.</p>
 <p>A perfectly competitive firm will also find its profit-maximizing level of output where MR = MC. The key difference with a perfectly competitive firm is that in the case of perfect competition, marginal revenue is equal to price (MR = P), while for a monopolist, marginal revenue is not equal to the price, because changes in quantity of output affect the price.</p>
 </section>
 </section>
 <section id="illustrating-monopoly-profits" class="level4">
 <h4 class="anchored" data-anchor-id="illustrating-monopoly-profits">Illustrating Monopoly Profits</h4>
-<p>It is straightforward to calculate profits of given numbers for total revenue and total cost. However, the size of monopoly profits can also be illustrated graphically with <a href="#fig-9_6">Figure 9.6</a>, which takes the marginal cost and marginal revenue curves from the previous exhibit and adds an average cost curve and the monopolist’s perceived demand curve. <a href="#tbl-table_9_5">Table&nbsp;<span>9.5</span></a> shows the data for these curves.</p>
-<div id="tbl-table_9_5" class="anchored">
+<p>It is straightforward to calculate profits of given numbers for total revenue and total cost. However, the size of monopoly profits can also be illustrated graphically with <a href="#fig-9_6">Figure 9.6</a>, which takes the marginal cost and marginal revenue curves from the previous exhibit and adds an average cost curve and the monopolist’s perceived demand curve. <a href="#tbl-table_9_5" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_9_5</span></a> shows the data for these curves.</p>
+<div id="tbl-table_9_5" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_9_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.5: Demand, Marginal Revenue, Marginal Cost, and Average Cost for HealthPill
+</figcaption>
+<div aria-describedby="tbl-table_9_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;9.5: Demand, Marginal Revenue, Marginal Cost, and Average Cost for HealthPill</caption>
 <colgroup>
 <col style="width: 20%">
 <col style="width: 19%">
@@ -849,7 +963,18 @@ TC</th>
 </tbody>
 </table>
 </div>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId55.jpeg" id="fig-9_6" style="width:4.88in;height:3.02in"></p>
+</figure>
+</div>
+<div id="fig-9_6" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.02in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId55.jpeg" id="fig-9_6" style="width:4.88in;height:3.02in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.6
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.6 Illustrating Profits at the HealthPill Monopoly This figure begins with the same marginal revenue and marginal cost curves from the HealthPill monopoly from <a href="#fig-9_5">Figure 9.5</a>. It then adds an average cost curve and the demand curve that the monopolist faces. The HealthPill firm first chooses the quantity where MR = MC. In this example, the quantity is 5. The monopolist then decides what price to charge by looking at the demand curve it faces. The large box, with quantity on the horizontal axis and demand (which shows the price) on the vertical axis, shows total revenue for the firm. The lighter-shaded box, which is quantity on the horizontal axis and average cost of production on the vertical axis shows the firm's total costs. The large total revenue box minus the smaller total cost box leaves the darkly shaded box that shows total profits. Since the price charged is above average cost, the firm is earning positive profits.</p>
 <p><a href="#fig-9_7">Figure 9.7</a> illustrates the three-step process where a monopolist: selects the profit-maximizing quantity to produce; decides what price to charge; determines total revenue, total cost, and profit.</p>
 <p><strong>Step 1: The Monopolist Determines Its Profit-Maximizing Level of Output</strong></p>
@@ -858,7 +983,16 @@ TC</th>
 <p>The monopolist will charge what the market is willing to pay. A dotted line drawn straight up from the profit-maximizing quantity to the demand curve shows the profit-maximizing price which, in <a href="#fig-9_6">Figure 9.6</a>, is $800. This price is above the average cost curve, which shows that the firm is earning profits.</p>
 <p><strong>Step 3: Calculate Total Revenue, Total Cost, and Profit</strong></p>
 <p>Total revenue is the overall shaded box, where the width of the box is the quantity sold and the height is the price. In <a href="#fig-9_6">Figure 9.6</a>, this is 5 x $800 = $4000. In <a href="#fig-9_6">Figure 9.6</a>, the bottom part of the shaded box, which is shaded more lightly, shows total costs; that is, quantity on the horizontal axis multiplied by average cost on the vertical axis or 5 x $330 = $1650. The larger box of total revenues minus the smaller box of total costs will equal profits, which the darkly shaded box shows. Using the numbers gives $4000 - $1650 = $2350. In a perfectly competitive market, the forces of entry would erode this profit in the long run. However, a monopolist is protected by barriers to entry. In fact, one obvious sign of a possible monopoly is when a firm earns profits year after year, while doing more or less the same thing, without ever seeing increased competition eroding those profits.</p>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId58.jpeg" id="fig-9_7" style="width:4.145in;height:2.605in"></p>
+<div id="fig-9_7" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.605in" width="4.145in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId58.jpeg" id="fig-9_7" style="width:4.145in;height:2.605in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.7
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.7 How a Profit-Maximizing Monopoly Decides Price In Step 1, the monopoly chooses the profit-maximizing level of output Q<sub>1</sub>, by choosing the quantity where MR = MC. In Step 2, the monopoly decides how much to charge for output level Q<sub>1</sub> by drawing a line straight up from Q<sub>1</sub> to point R on its perceived demand curve. Thus, the monopoly will charge a price (P<sub>1</sub>). In Step 3, the monopoly identifies its profit. Total revenue will be Q<sub>1</sub> multiplied by P<sub>1</sub>. Total cost will be Q<sub>1</sub> multiplied by the average cost of producing Q<sub>1</sub>, which point S shows on the average cost curve to be P<sub>2</sub>. Profits will be the total revenue rectangle minus the total cost rectangle, which the shaded zone in the figure shows.</p>
 </section>
 <section id="clear-it-up-2" class="level4 Heading3Grey">
@@ -867,7 +1001,16 @@ TC</th>
 <h5 class="Heading4Grey anchored" data-anchor-id="why-is-a-monopolists-marginal-revenue-always-less-than-the-price">Why is a monopolist’s marginal revenue always less than the price?</h5>
 <p>The marginal revenue curve for a monopolist always lies beneath the market demand curve. To understand why, think about increasing the quantity along the demand curve by one unit, so that you take one step down the demand curve to a slightly higher quantity but a slightly lower price. A demand curve is not sequential: It is not that first we sell Q<sub>1</sub> at a higher price, and then we sell Q<sub>2</sub> at a lower price. Rather, a demand curve is conditional: If we charge the higher price, we would sell Q<sub>1</sub>. If, instead, we charge a lower price (on all the units that we sell), we would sell Q<sub>2</sub>.</p>
 <p>When we think about increasing the quantity sold by one unit, marginal revenue is affected in two ways. First, we sell one additional unit at the new market price. Second, all the previous units, which we sold at the higher price, now sell for less. Because of the lower price on all units sold, the marginal revenue of selling a unit is less than the price of that unit—and the marginal revenue curve is below the demand curve. <em>Tip</em>: For a straight-line demand curve, MR and demand have the same vertical intercept. As output increases, marginal revenue decreases twice as fast as demand, so that the horizontal intercept of MR is halfway to the horizontal intercept of demand. You can see this in the <a href="#fig-9_8">Figure 9.8</a>.</p>
-<p><img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId61.jpeg" id="fig-9_8" style="width:3.25in;height:2.365in"></p>
+<div id="fig-9_8" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.365in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9_8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/9-2-how-a-profit-maximizing-monopoly-chooses-output-and-price_rId61.jpeg" id="fig-9_8" style="width:3.25in;height:2.365in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-9_8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.8
+</figcaption>
+</figure>
+</div>
 <p>Figure 9.8 The Monopolist’s Marginal Revenue Curve versus Demand Curve Because the market demand curve is conditional, the marginal revenue curve for a monopolist lies beneath the demand curve.</p>
 </section>
 </section>
@@ -1026,10 +1169,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1039,8 +1181,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1053,6 +1204,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1096,6 +1366,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1121,6 +1392,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1182,12 +1479,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./08_perfect_competition.html" class="pagination-link">
+      <a href="./08_perfect_competition.html" class="pagination-link  aria-label=" &lt;span="" perfect="" competition&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">8. Perfect Competition</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./10_market_spectrum.html" class="pagination-link">
+      <a href="./10_market_spectrum.html" class="pagination-link" aria-label="<span class='chapter-number'>10</span>&nbsp; <span class='chapter-title'>10. Market Spectrum</span>">
         <span class="nav-page-text"><span class="chapter-title">10. Market Spectrum</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2182,6 +2479,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-988"><a href="#cb1-988" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+
 
 
 

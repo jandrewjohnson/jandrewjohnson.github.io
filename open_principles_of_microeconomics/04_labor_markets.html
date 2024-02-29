@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -105,12 +112,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_labor_markets.html"><span class="chapter-title">4. Labor Markets</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04_labor_markets.html"><span class="chapter-title">4. Labor Markets</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -120,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Open Principles of Microeconomics</a> 
@@ -263,12 +270,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./a3_present_discounted_value.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Present Discounted Value</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a4_generating_supply_and_demand_curves.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Economics Books Figure</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -287,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">4. Labor Markets</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-chapter-4" class="quarto-section-identifier"><span class="chapter-title">4. Labor Markets</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -300,9 +312,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p><img src="media/4-introduction-to-labor-and-financial-markets_rId20.jpeg" id="fig-4_1" style="width:6.5in;height:3.93333in"></p>
+
+<div id="fig-4_1" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.933333333333333in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-introduction-to-labor-and-financial-markets_rId20.jpeg" id="fig-4_1" style="width:6.5in;height:3.93333in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.1 People often think of demand and supply in relation to goods, but labor markets, such as the nursing profession, can also apply to this analysis. (Credit: modification of "Hospital do Subúrbio" by Jaques Wagner Governador/Flickr Creative Commons, CC BY 2.0)</p>
 <section id="chapter-objectives" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="chapter-objectives">Chapter Objectives</h4>
@@ -342,12 +365,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="equilibrium-in-the-labor-market" class="level4">
 <h4 class="anchored" data-anchor-id="equilibrium-in-the-labor-market">Equilibrium in the Labor Market</h4>
-<p>In 2020, nearly 41,000 registered nurses worked in the Minneapolis-St. Paul-Bloomington, Minnesota-Wisconsin metropolitan area, according to the BLS. They worked for a variety of employers: hospitals, doctors’ offices, schools, health clinics, and nursing homes. <a href="#fig-4_2">Figure 4.2</a> illustrates how demand and supply determine equilibrium in this labor market. The demand and supply schedules in <a href="#tbl-table_4_1">Table&nbsp;<span>4.1</span></a> list the quantity supplied and quantity demanded of nurses at different salaries.</p>
-<p><img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId24.jpeg" id="fig-4_2" style="width:4.88in;height:2.68in"></p>
+<p>In 2020, nearly 41,000 registered nurses worked in the Minneapolis-St. Paul-Bloomington, Minnesota-Wisconsin metropolitan area, according to the BLS. They worked for a variety of employers: hospitals, doctors’ offices, schools, health clinics, and nursing homes. <a href="#fig-4_2">Figure 4.2</a> illustrates how demand and supply determine equilibrium in this labor market. The demand and supply schedules in <a href="#tbl-table_4_1" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_4_1</span></a> list the quantity supplied and quantity demanded of nurses at different salaries.</p>
+<div id="fig-4_2" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.68in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId24.jpeg" id="fig-4_2" style="width:4.88in;height:2.68in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.2 Labor Market Example: Demand and Supply for Nurses in Minneapolis-St.&nbsp;Paul-Bloomington The demand curve (D) of those employers who want to hire nurses intersects with the supply curve (S) of those who are qualified and willing to work as nurses at the equilibrium point (E). The equilibrium salary is $85,000 and the equilibrium quantity is 41,000 nurses. At an above-equilibrium salary of $90,000, quantity supplied increases to 45,000, but the quantity of nurses demanded at the higher pay declines to 40,000. At this above-equilibrium salary, an excess supply or surplus of nurses would exist. At a below-equilibrium salary of $75,000, quantity supplied declines to 34,000, while the quantity demanded at the lower wage increases to 47,000 nurses. At this below-equilibrium salary, excess demand or a shortage exists.</p>
-<div id="tbl-table_4_1" class="anchored">
+<div id="tbl-table_4_1" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_4_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: Demand and Supply of Nurses in Minneapolis-St. Paul-Bloomington
+</figcaption>
+<div aria-describedby="tbl-table_4_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;4.1: Demand and Supply of Nurses in Minneapolis-St. Paul-Bloomington</caption>
 <thead>
 <tr class="header">
 <th>Annual Salary</th>
@@ -389,6 +425,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>The horizontal axis shows the quantity of nurses hired. In this example we measure labor by number of workers, but another common way to measure the quantity of labor is by the number of hours worked. The vertical axis shows the price for nurses’ labor—that is, how much they are paid. In the real world, this “price” would be total labor compensation: salary plus benefits. It is not obvious, but benefits are a significant part (as high as 30 percent) of labor compensation. In this example we measure the price of labor by salary on an annual basis, although in other cases we could measure the price of labor by monthly or weekly pay, or even the wage paid per hour. As the salary for nurses rises, the quantity demanded will fall. Some hospitals and nursing homes may reduce the number of nurses they hire, or they may lay off some of their existing nurses, rather than pay them higher salaries. Employers who face higher nurses’ salaries may also try to replace some nursing functions by investing in physical equipment, like computer monitoring and diagnostic systems to monitor patients, or by using lower-paid health care aides to reduce the number of nurses they need.</p>
 <p>As the salary for nurses rises, the quantity supplied will rise. If nurses’ salaries in Minneapolis-St.&nbsp;Paul-Bloomington are higher than in other cities, more nurses will move to Minneapolis-St.&nbsp;Paul-Bloomington to find jobs, more people will be willing to train as nurses, and those currently trained as nurses will be more likely to pursue nursing as a full-time job. In other words, there will be more nurses looking for jobs in the area.</p>
 <p>At equilibrium, the quantity supplied and the quantity demanded are equal. Thus, every employer who wants to hire a nurse at this equilibrium wage can find a willing worker, and every nurse who wants to work at this equilibrium salary can find a job. In <a href="#fig-4_2">Figure 4.2</a>, the supply curve (S) and demand curve (D) intersect at the equilibrium point (E). The equilibrium quantity of nurses in the Minneapolis-St.&nbsp;Paul-Bloomington area is 41,000, and the equilibrium salary is $86,000 per year. This example simplifies the nursing market by focusing on the “average” nurse. In reality, of course, the market for nurses actually comprises many smaller markets, like markets for nurses with varying degrees of experience and credentials. Many markets contain closely related products that differ in quality. For instance, even a simple product like gasoline comes in regular, premium, and super-premium, each with a different price. Even in such cases, discussing the average price of gasoline, like the average salary for nurses, can still be useful because it reflects what is happening in most of the submarkets.</p>
@@ -404,10 +442,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The demand for pharmacists is dependent on the demand for prescription drugs.</li>
 <li>The demand for attorneys is dependent on the demand for legal services.</li>
 </ul>
-<p>As the demand for the goods and services increases, the demand for labor will increase, or shift to the right, to meet employers’ production requirements. As the demand for the goods and services decreases, the demand for labor will decrease, or shift to the left. <a href="#tbl-table_4_2">Table&nbsp;<span>4.2</span></a> shows that in addition to the derived demand for labor, demand can also increase or decrease (shift) in response to several factors.</p>
-<div id="tbl-table_4_2" class="anchored">
+<p>As the demand for the goods and services increases, the demand for labor will increase, or shift to the right, to meet employers’ production requirements. As the demand for the goods and services decreases, the demand for labor will decrease, or shift to the left. <a href="#tbl-table_4_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_4_2</span></a> shows that in addition to the derived demand for labor, demand can also increase or decrease (shift) in response to several factors.</p>
+<div id="tbl-table_4_2" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_4_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.2: Factors That Can Shift Demand
+</figcaption>
+<div aria-describedby="tbl-table_4_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;4.2: Factors That Can Shift Demand</caption>
 <colgroup>
 <col style="width: 45%">
 <col style="width: 54%">
@@ -446,6 +488,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 <section id="link-it-up" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="link-it-up">Link It Up</h4>
@@ -453,10 +497,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="shifts-in-labor-supply" class="level4">
 <h4 class="anchored" data-anchor-id="shifts-in-labor-supply">Shifts in Labor Supply</h4>
-<p>The supply of labor is upward-sloping and adheres to the law of supply: The higher the price, the greater the quantity supplied and the lower the price, the less quantity supplied. The supply curve models the tradeoff between supplying labor into the market or using time in leisure activities at every given price level. The higher the wage, the more labor is willing to work and forego leisure activities. <a href="#tbl-table_4_3">Table&nbsp;<span>4.3</span></a> lists some of the factors that will cause the supply to increase or decrease.</p>
-<div id="tbl-table_4_3" class="anchored">
+<p>The supply of labor is upward-sloping and adheres to the law of supply: The higher the price, the greater the quantity supplied and the lower the price, the less quantity supplied. The supply curve models the tradeoff between supplying labor into the market or using time in leisure activities at every given price level. The higher the wage, the more labor is willing to work and forego leisure activities. <a href="#tbl-table_4_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_4_3</span></a> lists some of the factors that will cause the supply to increase or decrease.</p>
+<div id="tbl-table_4_3" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_4_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.3: Factors that Can Shift Supply
+</figcaption>
+<div aria-describedby="tbl-table_4_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;4.3: Factors that Can Shift Supply</caption>
 <colgroup>
 <col style="width: 45%">
 <col style="width: 54%">
@@ -483,13 +531,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>A change in salary will lead to a movement along labor demand or labor supply curves, but it will not shift those curves. However, other events like those we have outlined here will cause either the demand or the supply of labor to shift, and thus will move the labor market to a new equilibrium salary and quantity.</p>
 </section>
 <section id="technology-and-wage-inequality-the-four-step-process" class="level4">
 <h4 class="anchored" data-anchor-id="technology-and-wage-inequality-the-four-step-process">Technology and Wage Inequality: The Four-Step Process</h4>
-<p>Economic events can change the equilibrium salary (or wage) and quantity of labor. Consider how the wave of new information technologies, like computer and telecommunications networks, has affected low-skill and high-skill workers in the U.S. economy. From the perspective of employers who demand labor, these new technologies are often a substitute for low-skill laborers like file clerks who used to keep file cabinets full of paper records of transactions. However, the same new technologies are a complement to high-skill workers like managers, who benefit from the technological advances by having the ability to monitor more information, communicate more easily, and juggle a wider array of responsibilities. How will the new technologies affect the wages of high-skill and low-skill workers? For this question, the four-step process of analyzing how shifts in supply or demand affect a market (introduced in <a href="03_demand_and_supply.html"><span>Chapter&nbsp;3</span></a>) works in this way:</p>
+<p>Economic events can change the equilibrium salary (or wage) and quantity of labor. Consider how the wave of new information technologies, like computer and telecommunications networks, has affected low-skill and high-skill workers in the U.S. economy. From the perspective of employers who demand labor, these new technologies are often a substitute for low-skill laborers like file clerks who used to keep file cabinets full of paper records of transactions. However, the same new technologies are a complement to high-skill workers like managers, who benefit from the technological advances by having the ability to monitor more information, communicate more easily, and juggle a wider array of responsibilities. How will the new technologies affect the wages of high-skill and low-skill workers? For this question, the four-step process of analyzing how shifts in supply or demand affect a market (introduced in <a href="#sec-chapter-3" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-3</span></a>) works in this way:</p>
 <p>Step 1. What did the markets for low-skill labor and high-skill labor look like before the arrival of the new technologies? In <a href="#CNX_Econ_C04_009">Figure 4.3</a> (a) and <a href="#fig-4_3">Figure 4.3</a> (b), S<sub>0</sub> is the original supply curve for labor and D<sub>0</sub> is the original demand curve for labor in each market. In each graph, the original point of equilibrium, E<sub>0</sub>, occurs at the price W<sub>0</sub> and the quantity Q<sub>0</sub>.</p>
-<p><img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId39.jpeg" id="fig-4_3" style="width:6.5in;height:2.855in"></p>
+<div id="fig-4_3" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.855in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId39.jpeg" id="fig-4_3" style="width:6.5in;height:2.855in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.3 Technology and Wages: Applying Demand and Supply (a) The demand for low-skill labor shifts to the left when technology can do the job previously done by these workers. (b) New technologies can also increase the demand for high-skill labor in fields such as information technology and network administration.</p>
 <p>Step 2. Does the new technology affect the supply of labor from households or the demand for labor from firms? The technology change described here affects demand for labor by firms that hire workers.</p>
 <p>Step 3. Will the new technology increase or decrease demand? Based on the description earlier, as the substitute for low-skill labor becomes available, demand for low-skill labor will shift to the left, from D<sub>0</sub> to D<sub>1</sub>. As the technology complement for high-skill labor becomes cheaper, demand for high-skill labor will shift to the right, from D<sub>0</sub> to D<sub>1</sub>.</p>
@@ -505,12 +564,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In contrast to goods and services markets, price ceilings are rare in labor markets, because rules that prevent people from earning income are not politically popular. There is one exception: boards of trustees or stockholders, as an example, propose limits on the high incomes of top business executives.</p>
 <p>The labor market, however, presents some prominent examples of price floors, which are an attempt to increase the wages of low-paid workers. The U.S. government sets a minimum wage, a price floor that makes it illegal for an employer to pay employees less than a certain hourly rate. In mid-2009, the U.S. minimum wage was raised to $7.25 per hour. Local political movements in a number of U.S. cities have pushed for a higher minimum wage, which they call a living wage. Promoters of living wage laws maintain that the minimum wage is too low to ensure a reasonable standard of living. They base this conclusion on the calculation that, if you work 40 hours a week at a minimum wage of $7.25 per hour for 50 weeks a year, your annual income is $14,500, which is less than the official U.S. government definition of what it means for a family to be in poverty. (A family with two adults earning minimum wage and two young children will find it more cost efficient for one parent to provide childcare while the other works for income. Thus the family income would be $14,500, which is significantly lower than the federal poverty line for a family of four, which was $26,500 in 2021.)</p>
 <p>Supporters of the living wage argue that full-time workers should be assured a high enough wage so that they can afford the essentials of life: food, clothing, shelter, and healthcare. Since Baltimore passed the first living wage law in 1994, several dozen cities enacted similar laws in the late 1990s and the 2000s. The living wage ordinances do not apply to all employers, but they have specified that all employees of the city or employees of firms that the city hires be paid at least a certain wage that is usually a few dollars per hour above the U.S. minimum wage.</p>
-<p><a href="#fig-4_4">Figure 4.4</a> illustrates the situation of a city considering a living wage law. For simplicity, we assume that there is no federal minimum wage. The wage appears on the vertical axis, because the wage is the price in the labor market. Before the passage of the living wage law, the equilibrium wage is $10 per hour and the city hires 1,200 workers at this wage. However, a group of concerned citizens persuades the city council to enact a living wage law requiring employers to pay no less than $12 per hour. In response to the higher wage, 1,600 workers look for jobs with the city. At this higher wage, the city, as an employer, is willing to hire only 700 workers. At the price floor, the quantity supplied exceeds the quantity demanded, and a surplus of labor exists in this market. For workers who continue to have a job at a higher salary, life has improved. For those who were willing to work at the old wage rate but lost their jobs with the wage increase, life has not improved. <a href="#tbl-table_4_4">Table&nbsp;<span>4.4</span></a> shows the differences in supply and demand at different wages.</p>
-<p><img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId48.jpeg" id="fig-4_4" style="width:3.25in;height:2.49in"></p>
+<p><a href="#fig-4_4">Figure 4.4</a> illustrates the situation of a city considering a living wage law. For simplicity, we assume that there is no federal minimum wage. The wage appears on the vertical axis, because the wage is the price in the labor market. Before the passage of the living wage law, the equilibrium wage is $10 per hour and the city hires 1,200 workers at this wage. However, a group of concerned citizens persuades the city council to enact a living wage law requiring employers to pay no less than $12 per hour. In response to the higher wage, 1,600 workers look for jobs with the city. At this higher wage, the city, as an employer, is willing to hire only 700 workers. At the price floor, the quantity supplied exceeds the quantity demanded, and a surplus of labor exists in this market. For workers who continue to have a job at a higher salary, life has improved. For those who were willing to work at the old wage rate but lost their jobs with the wage increase, life has not improved. <a href="#tbl-table_4_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_4_4</span></a> shows the differences in supply and demand at different wages.</p>
+<div id="fig-4_4" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.49in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-1-demand-and-supply-at-work-in-labor-markets_rId48.jpeg" id="fig-4_4" style="width:3.25in;height:2.49in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.4 A Living Wage: Example of a Price Floor The original equilibrium in this labor market is a wage of $10/hour and a quantity of 1,200 workers, shown at point E. Imposing a wage floor at $12/hour leads to an excess supply of labor. At that wage, the quantity of labor supplied is 1,600 and the quantity of labor demanded is only 700.</p>
-<div id="tbl-table_4_4" class="anchored">
+<div id="tbl-table_4_4" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_4_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.4: Living Wage: Example of a Price Floor
+</figcaption>
+<div aria-describedby="tbl-table_4_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;4.4: Living Wage: Example of a Price Floor</caption>
 <thead>
 <tr class="header">
 <th>Wage</th>
@@ -557,6 +629,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 <section id="the-minimum-wage-as-an-example-of-a-price-floor" class="level4">
 <h4 class="anchored" data-anchor-id="the-minimum-wage-as-an-example-of-a-price-floor">The Minimum Wage as an Example of a Price Floor</h4>
@@ -572,7 +646,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Because of the law of demand, a higher required wage will reduce the amount of low-skill employment either in terms of employees or in terms of work hours. Although there is controversy over the numbers, let’s say for the sake of the argument that a 10% rise in the minimum wage will reduce the employment of low-skill workers by 2%. Does this outcome mean that raising the minimum wage by 10% is bad public policy? Not necessarily.</p>
 <p>If 98% of those receiving the minimum wage have a pay increase of 10%, but 2% of those receiving the minimum wage lose their jobs, are the gains for society as a whole greater than the losses? The answer is not clear, because job losses, even for a small group, may cause more pain than modest income gains for others. For one thing, we need to consider which minimum wage workers are losing their jobs. If the 2% of minimum wage workers who lose their jobs are struggling to support families, that is one thing. If those who lose their job are high school students picking up spending money over summer vacation, that is something else.</p>
 <p>Another complexity is that many minimum wage workers do not work full-time for an entire year. Imagine a minimum wage worker who holds different part-time jobs for a few months at a time, with bouts of unemployment in between. The worker in this situation receives the 10% raise in the minimum wage when working, but also ends up working 2% fewer hours during the year because the higher minimum wage reduces how much employers want people to work. Overall, this worker’s income would rise because the 10% pay raise would more than offset the 2% fewer hours worked.</p>
-<p>Of course, these arguments do not prove that raising the minimum wage is necessarily a good idea either. There may well be other, better public policy options for helping low-wage workers. (The <span class="quarto-unresolved-ref">?sec-chapter-15</span> discusses some possibilities.) The lesson from this maze of minimum wage arguments is that complex social problems rarely have simple answers. Even those who agree on how a proposed economic policy affects quantity demanded and quantity supplied may still disagree on whether the policy is a good idea.</p>
+<p>Of course, these arguments do not prove that raising the minimum wage is necessarily a good idea either. There may well be other, better public policy options for helping low-wage workers. (The <a href="#sec-chapter-15" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-15</span></a> discusses some possibilities.) The lesson from this maze of minimum wage arguments is that complex social problems rarely have simple answers. Even those who agree on how a proposed economic policy affects quantity demanded and quantity supplied may still disagree on whether the policy is a good idea.</p>
 </section>
 </section>
 </section>
@@ -588,19 +662,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Explain the role of price ceilings and usury laws in the U.S.</li>
 </ul>
 <p>United States' households, institutions, and domestic businesses saved almost $1.3 trillion in 2015. Where did that savings go and how was it used? Some of the savings ended up in banks, which in turn loaned the money to individuals or businesses that wanted to borrow money. Some was invested in private companies or loaned to government agencies that wanted to borrow money to raise funds for purposes like building roads or mass transit. Some firms reinvested their savings in their own businesses.</p>
-<p>In this section, we will determine how the demand and supply model links those who wish to supply financial capital (i.e., savings) with those who demand financial capital (i.e., borrowing). Those who save money (or make financial investments, which is the same thing), whether individuals or businesses, are on the supply side of the financial market. Those who borrow money are on the demand side of the financial market. For a more detailed treatment of the different kinds of financial investments like bank accounts, stocks and bonds, see <span class="quarto-unresolved-ref">?sec-chapter-17</span>.</p>
+<p>In this section, we will determine how the demand and supply model links those who wish to supply financial capital (i.e., savings) with those who demand financial capital (i.e., borrowing). Those who save money (or make financial investments, which is the same thing), whether individuals or businesses, are on the supply side of the financial market. Those who borrow money are on the demand side of the financial market. For a more detailed treatment of the different kinds of financial investments like bank accounts, stocks and bonds, see <a href="#sec-chapter-17" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-17</span></a>.</p>
 </section>
 <section id="who-demands-and-who-supplies-in-financial-markets" class="level4">
 <h4 class="anchored" data-anchor-id="who-demands-and-who-supplies-in-financial-markets">Who Demands and Who Supplies in Financial Markets?</h4>
 <p>In any market, the price is what suppliers receive and what demanders pay. In financial markets, those who supply financial capital through saving expect to receive a rate of return, while those who demand financial capital by receiving funds expect to pay a rate of return. This rate of return can come in a variety of forms, depending on the type of investment.</p>
 <p>The simplest example of a rate of return is the interest rate. For example, when you supply money into a savings account at a bank, you receive interest on your deposit. The interest the bank pays you as a percent of your deposits is the interest rate. Similarly, if you demand a loan to buy a car or a computer, you will need to pay interest on the money you borrow.</p>
 <p>Let’s consider the market for borrowing money with credit cards. In 2021, almost 200 million Americans were cardholders. Credit cards allow you to borrow money from the card's issuer, and pay back the borrowed amount plus interest, although most allow you a period of time in which you can repay the loan without paying interest. A typical credit card interest rate ranges from 12% to 18% per year. In May 2021, Americans had about $807 billion outstanding in credit card debts. As of 2021, just over 45% of American families carried some credit card debt. Let’s say that, on average, the annual interest rate for credit card borrowing is 15% per year. Thus, Americans pay tens of billions of dollars every year in interest on their credit cards—plus basic fees for the credit card or fees for late payments.</p>
-<p><a href="#fig-4_5">Figure 4.5</a> illustrates demand and supply in the financial market for credit cards. The horizontal axis of the financial market shows the quantity of money loaned or borrowed in this market. The vertical or price axis shows the rate of return, which in the case of credit card borrowing we can measure with an interest rate. <a href="#tbl-table_4_5">Table&nbsp;<span>4.5</span></a> shows the quantity of financial capital that consumers demand at various interest rates and the quantity that credit card firms (often banks) are willing to supply.</p>
-<p><img src="media/4-2-demand-and-supply-in-financial-markets_rId25.jpeg" id="fig-4_5" style="width:4.88in;height:2.53in"></p>
+<p><a href="#fig-4_5">Figure 4.5</a> illustrates demand and supply in the financial market for credit cards. The horizontal axis of the financial market shows the quantity of money loaned or borrowed in this market. The vertical or price axis shows the rate of return, which in the case of credit card borrowing we can measure with an interest rate. <a href="#tbl-table_4_5" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_4_5</span></a> shows the quantity of financial capital that consumers demand at various interest rates and the quantity that credit card firms (often banks) are willing to supply.</p>
+<div id="fig-4_5" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.53in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-2-demand-and-supply-in-financial-markets_rId25.jpeg" id="fig-4_5" style="width:4.88in;height:2.53in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.5
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.5 Demand and Supply for Borrowing Money with Credit Cards In this market for credit card borrowing, the demand curve (D) for borrowing financial capital intersects the supply curve (S) for lending financial capital at equilibrium E. At the equilibrium, the interest rate (the “price” in this market) is 15% and the quantity of financial capital loaned and borrowed is $600 billion. The equilibrium price is where the quantity demanded and the quantity supplied are equal. At an above-equilibrium interest rate like 21%, the quantity of financial capital supplied would increase to $750 billion, but the quantity demanded would decrease to $480 billion. At a below-equilibrium interest rate like 13%, the quantity of financial capital demanded would increase to $700 billion, but the quantity of financial capital supplied would decrease to $510 billion.</p>
-<div id="tbl-table_4_5" class="anchored">
+<div id="tbl-table_4_5" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_4_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.5: Demand and Supply for Borrowing Money with Credit Cards
+</figcaption>
+<div aria-describedby="tbl-table_4_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;4.5: Demand and Supply for Borrowing Money with Credit Cards</caption>
 <colgroup>
 <col style="width: 12%">
 <col style="width: 44%">
@@ -647,6 +734,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>The laws of demand and supply continue to apply in the financial markets. According to the law of demand, a higher rate of return (that is, a higher price) will decrease the quantity demanded. As the interest rate rises, consumers will reduce the quantity that they borrow. According to the law of supply, a higher price increases the quantity supplied. Consequently, as the interest rate paid on credit card borrowing rises, more firms will be eager to issue credit cards and to encourage customers to use them. Conversely, if the interest rate on credit cards falls, the quantity of financial capital supplied in the credit card market will decrease and the quantity demanded will increase.</p>
 </section>
 <section id="equilibrium-in-financial-markets" class="level4">
@@ -675,11 +764,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h5 class="Heading4Grey anchored" data-anchor-id="the-effect-of-growing-u.s.-debt">The Effect of Growing U.S. Debt</h5>
 <p>Imagine that foreign investors viewed the U.S. economy as a less desirable place to put their money because of fears about the growth of the U.S. public debt. Using the four-step process for analyzing how changes in supply and demand affect equilibrium outcomes, how would increased U.S. public debt affect the equilibrium price and quantity for capital in U.S. financial markets?</p>
 <p>Step 1. Draw a diagram showing demand and supply for financial capital that represents the original scenario in which foreign investors are pouring money into the U.S. economy. <a href="#fig-4_6">Figure 4.6</a> shows a demand curve, D, and a supply curve, S, where the supply of capital includes the funds arriving from foreign investors. The original equilibrium E<sub>0</sub> occurs at interest rate R<sub>0</sub> and quantity of financial investment Q<sub>0</sub>.</p>
-<p><img src="media/4-2-demand-and-supply-in-financial-markets_rId37.jpeg" id="fig-4_6" style="width:3.25in;height:2.535in"></p>
+<div id="fig-4_6" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.535in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-2-demand-and-supply-in-financial-markets_rId37.jpeg" id="fig-4_6" style="width:3.25in;height:2.535in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.6
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.6 The United States as a Global Borrower Before U.S. Debt Uncertainty The graph shows the demand for financial capital from and supply of financial capital into the U.S. financial markets by the foreign sector before the increase in uncertainty regarding U.S. public debt. The original equilibrium (E<sub>0</sub>) occurs at an equilibrium rate of return (R<sub>0</sub>) and the equilibrium quantity is at Q<sub>0</sub>.</p>
 <p>Step 2. Will the diminished confidence in the U.S. economy as a place to invest affect demand or supply of financial capital? Yes, it will affect supply. Many foreign investors look to the U.S. financial markets to store their money in safe financial vehicles with low risk and stable returns. Diminished confidence means U.S. financial assets will be seen as more risky.</p>
 <p>Step 3. Will supply increase or decrease? When the enthusiasm of foreign investors’ for investing their money in the U.S. economy diminishes, the supply of financial capital shifts to the left. <a href="#fig-4_7">Figure 4.7</a> shows the supply curve shift from S<sub>0</sub> to S<sub>1</sub>.</p>
-<p><img src="media/4-2-demand-and-supply-in-financial-markets_rId40.jpeg" id="fig-4_7" style="width:3.25in;height:2.535in"></p>
+<div id="fig-4_7" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.535in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-2-demand-and-supply-in-financial-markets_rId40.jpeg" id="fig-4_7" style="width:3.25in;height:2.535in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.7
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.7 The United States as a Global Borrower Before and After U.S. Debt Uncertainty The graph shows the demand for financial capital and supply of financial capital into the U.S. financial markets by the foreign sector before and after the increase in uncertainty regarding U.S. public debt. The original equilibrium (E<sub>0</sub>) occurs at an equilibrium rate of return (R<sub>0</sub>) and the equilibrium quantity is at Q<sub>0</sub>.</p>
 <p>Step 4. Thus, foreign investors’ diminished enthusiasm leads to a new equilibrium, E<sub>1</sub>, which occurs at the higher interest rate, R<sub>1</sub>, and the lower quantity of financial investment, Q<sub>1</sub>. In short, U.S. borrowers will have to pay more interest on their borrowing.</p>
 <p>The economy has experienced an enormous inflow of foreign capital. According to the U.S. Bureau of Economic Analysis, by the third quarter of 2021, U.S. investors had accumulated $34.45 trillion of foreign assets, but foreign investors owned a total of $50.53 trillion of U.S. assets. If foreign investors were to pull their money out of the U.S. economy and invest elsewhere in the world, the result could be a significantly lower quantity of financial investment in the United States, available only at a higher interest rate. This reduced inflow of foreign financial investment could impose hardship on U.S. consumers and firms interested in borrowing.</p>
@@ -690,7 +797,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="price-ceilings-in-financial-markets-usury-laws">Price Ceilings in Financial Markets: Usury Laws</h4>
 <p>As we noted earlier, about 200 million Americans own credit cards, and their interest payments and fees total tens of billions of dollars each year. It is little wonder that political pressures sometimes arise for setting limits on the interest rates or fees that credit card companies charge. The firms that issue credit cards, including banks, oil companies, phone companies, and retail stores, respond that the higher interest rates are necessary to cover the losses created by those who borrow on their credit cards and who do not repay on time or at all. These companies also point out that cardholders can avoid paying interest if they pay their bills on time.</p>
 <p>Consider the credit card market as <a href="#fig-4_8">Figure 4.8</a> illustrates. In this financial market, the vertical axis shows the interest rate (which is the price in the financial market). Demanders in the credit card market are households and businesses. Suppliers are the companies that issue credit cards. This figure does not use specific numbers, which would be hypothetical in any case, but instead focuses on the underlying economic relationships. Imagine a law imposes a price ceiling that holds the interest rate charged on credit cards at the rate Rc, which lies below the interest rate R<sub>0</sub> that would otherwise have prevailed in the market. The horizontal dashed line at interest rate R<sub>c</sub> in <a href="#fig-4_8">Figure 4.8</a> shows the price ceiling. The demand and supply model predicts that at the lower price ceiling interest rate, the quantity demanded of credit card debt will increase from its original level of Q<sub>0</sub> to Qd; however, the quantity supplied of credit card debt will decrease from the original Q<sub>0</sub> to Qs. At the price ceiling (Rc), quantity demanded will exceed quantity supplied. Consequently, a number of people who want to have credit cards and are willing to pay the prevailing interest rate will find that companies are unwilling to issue cards to them. The result will be a credit shortage.</p>
-<p><img src="media/4-2-demand-and-supply-in-financial-markets_rId46.jpeg" id="fig-4_8" style="width:3.25in;height:2.52in"></p>
+<div id="fig-4_8" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.52in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-2-demand-and-supply-in-financial-markets_rId46.jpeg" id="fig-4_8" style="width:3.25in;height:2.52in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.8
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.8 Credit Card Interest Rates: Another Price Ceiling Example The original intersection of demand D and supply S occurs at equilibrium E<sub>0</sub>. However, a price ceiling is set at the interest rate Rc, below the equilibrium interest rate R<sub>0</sub>, and so the interest rate cannot adjust upward to the equilibrium. At the price ceiling, the quantity demanded, Qd, exceeds the quantity supplied, Qs. There is excess demand, also called a shortage.</p>
 <p>Many states do have usury laws, which impose an upper limit on the interest rate that lenders can charge. However, in many cases these upper limits are well above the market interest rate. For example, if the interest rate is not allowed to rise above 30% per year, it can still fluctuate below that level according to market forces. A price ceiling that is set at a relatively high level is nonbinding, and it will have no practical effect unless the equilibrium price soars high enough to exceed the price ceiling.</p>
 </section>
@@ -710,11 +826,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="Heading3Grey anchored" data-anchor-id="clear-it-up">Clear It Up</h4>
 <section id="why-are-demand-and-supply-curves-important" class="level5 Heading4Grey">
 <h5 class="Heading4Grey anchored" data-anchor-id="why-are-demand-and-supply-curves-important">Why are demand and supply curves important?</h5>
-<p>The demand and supply model is the second fundamental diagram for this course. (The opportunity set model that we introduced in the <a href="02_choice_with_scarcity.html"><span>Chapter&nbsp;2</span></a> was the first.) Just as it would be foolish to try to learn the arithmetic of long division by memorizing every possible combination of numbers that can be divided by each other, it would be foolish to try to memorize every specific example of demand and supply in this chapter, this textbook, or this course. Demand and supply is not primarily a list of examples. It is a model to analyze prices and quantities. Even though demand and supply diagrams have many labels, they are fundamentally the same in their logic. Your goal should be to understand the underlying model so you can use it to analyze <em>any</em> market.</p>
+<p>The demand and supply model is the second fundamental diagram for this course. (The opportunity set model that we introduced in the <a href="#sec-chapter-2" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-2</span></a> was the first.) Just as it would be foolish to try to learn the arithmetic of long division by memorizing every possible combination of numbers that can be divided by each other, it would be foolish to try to memorize every specific example of demand and supply in this chapter, this textbook, or this course. Demand and supply is not primarily a list of examples. It is a model to analyze prices and quantities. Even though demand and supply diagrams have many labels, they are fundamentally the same in their logic. Your goal should be to understand the underlying model so you can use it to analyze <em>any</em> market.</p>
 <p><a href="#fig-4_9">Figure 4.9</a> displays a generic demand and supply curve. The horizontal axis shows the different measures of quantity: a quantity of a good or service, or a quantity of labor for a given job, or a quantity of financial capital. The vertical axis shows a measure of price: the price of a good or service, the wage in the labor market, or the rate of return (like the interest rate) in the financial market.</p>
 <p>The demand and supply model can explain the existing levels of prices, wages, and rates of return. To carry out such an analysis, think about the quantity that will be demanded at each price and the quantity that will be supplied at each price—that is, think about the shape of the demand and supply curves—and how these forces will combine to produce equilibrium.</p>
 <p>We can also use demand and supply to explain how economic events will cause changes in prices, wages, and rates of return. There are only four possibilities: the change in any single event may cause the demand curve to shift right or to shift left, or it may cause the supply curve to shift right or to shift left. The key to analyzing the effect of an economic event on equilibrium prices and quantities is to determine which of these four possibilities occurred. The way to do this correctly is to think back to the list of factors that shift the demand and supply curves. Note that if more than one variable is changing at the same time, the overall impact will depend on the degree of the shifts. When there are multiple variables, economists isolate each change and analyze it independently.</p>
-<p><img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId24.jpeg" id="fig-4_9" style="width:3.25in;height:2.785in"></p>
+<div id="fig-4_9" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.785in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId24.jpeg" id="fig-4_9" style="width:3.25in;height:2.785in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.9
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.9 Demand and Supply Curves The figure displays a generic demand and supply curve. The horizontal axis shows the different measures of quantity: a quantity of a good or service, a quantity of labor for a given job, or a quantity of financial capital. The vertical axis shows a measure of price: the price of a good or service, the wage in the labor market, or the rate of return (like the interest rate) in the financial market. We can use the demand and supply curves explain how economic events will cause changes in prices, wages, and rates of return.</p>
 <p>An increase in the price of some product signals consumers that there is a shortage; therefore, they may want to economize on buying this product. For example, if you are thinking about taking a plane trip to Hawaii, but the ticket turns out to be expensive during the week you intend to go, you might consider other weeks when the ticket might be cheaper. The price could be high because you were planning to travel during a holiday when demand for traveling is high. Maybe the cost of an input like jet fuel increased or the airline has raised the price temporarily to see how many people are willing to pay it. Perhaps all of these factors are present at the same time. You do not need to analyze the market and break down the price change into its underlying factors. You just have to look at the ticket price and decide whether and when to fly.</p>
 <p>In the same way, price changes provide useful information to producers. Imagine the situation of a farmer who grows oats and learns that the price of oats has risen. The higher price could be due to an increase in demand caused by a new scientific study proclaiming that eating oats is especially healthful. Perhaps the price of a substitute grain, like corn, has risen, and people have responded by buying more oats. The oat farmer does not need to know the details. The farmer only needs to know that the price of oats has risen and that it will be profitable to expand production as a result.</p>
@@ -727,10 +852,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="baby-boomers-come-of-age" class="level5 Heading4Grey">
 <h5 class="Heading4Grey anchored" data-anchor-id="baby-boomers-come-of-age">Baby Boomers Come of Age</h5>
 <p>The theory of supply and demand can explain what happens in the labor markets and suggests that the demand for nurses will increase as healthcare needs of baby boomers increase, as <a href="#fig-4_10">Figure 4.10</a> shows. The impact of that increase will result in an average salary higher than the $75,330 earned in 2020 referenced in the first part of this case. The new equilibrium (E<sub>1</sub>) will be at the new equilibrium price (Pe<sub>1</sub>).Equilibrium quantity will also increase from Qe<sub>0</sub> to Qe<sub>1</sub>.</p>
-<p><img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId29.jpeg" id="fig-4_10" style="width:3.25in;height:2.535in"></p>
+<div id="fig-4_10" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.535in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId29.jpeg" id="fig-4_10" style="width:3.25in;height:2.535in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.10
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.10 Impact of Increasing Demand for Nurses 2020–2030 In 2020, the median salary for nurses was $75,330. As demand for services increases, the demand curve shifts to the right (from D<sub>0</sub> to D<sub>1</sub>) and the equilibrium quantity of nurses increases from Qe<sub>0</sub> to Qe<sub>1</sub>. The equilibrium salary increases from Pe<sub>0</sub> to Pe<sub>1</sub>.</p>
 <p>Suppose that as the demand for nurses increases, the supply shrinks due to an increasing number of nurses entering retirement and increases in the tuition of nursing degrees. The leftward shift of the supply curve in <a href="#fig-4_11">Figure 4.11</a> captures the impact of a decreasing supply of nurses. The shifts in the two curves result in higher salaries for nurses, but the overall impact on the quantity of nurses is uncertain, as it depends on the relative shifts of supply and demand.</p>
-<p><img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId32.jpeg" id="fig-4_11" style="width:3.25in;height:2.535in"></p>
+<div id="fig-4_11" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.535in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4_11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/4-3-the-market-system-as-an-efficient-mechanism-for-information_rId32.jpeg" id="fig-4_11" style="width:3.25in;height:2.535in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-4_11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.11
+</figcaption>
+</figure>
+</div>
 <p>Figure 4.11 Impact of Decreasing Supply of Nurses between 2020 and 2030 The increase in demand for nurses shown in <a href="#fig-4_10">Figure 4.10</a> leads to both higher prices and higher quantities demanded. As nurses retire from the work force, the supply of nurses decreases, causing a leftward shift in the supply curve and higher salaries for nurses at Pe<sub>2</sub>. The net effect on the equilibrium quantity of nurses is uncertain, which in this representation is less than Qe<sub>1</sub>, but more than the initial Qe<sub>0</sub>.</p>
 <p>While we do not know if the number of nurses will increase or decrease relative to their initial employment, we know they will have higher salaries.</p>
 
@@ -872,10 +1015,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -885,8 +1027,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -899,6 +1050,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -942,6 +1212,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -967,6 +1238,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1028,12 +1325,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03_demand_and_supply.html" class="pagination-link">
+      <a href="./03_demand_and_supply.html" class="pagination-link  aria-label=" &lt;span="" demand="" and="" supply&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">3. Demand and Supply</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05_elasticity.html" class="pagination-link">
+      <a href="./05_elasticity.html" class="pagination-link" aria-label="<span class='chapter-number'>5</span>&nbsp; <span class='chapter-title'>5. Elasticity</span>">
         <span class="nav-page-text"><span class="chapter-title">5. Elasticity</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2049,6 +2346,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-1009"><a href="#cb1-1009" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+
 
 
 

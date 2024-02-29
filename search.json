@@ -318,6 +318,16 @@
     ]
   },
   {
+    "objectID": "earth_economy_devstack/conventions.html#setting-the-environment",
+    "href": "earth_economy_devstack/conventions.html#setting-the-environment",
+    "title": "Conventions",
+    "section": "Setting the environment",
+    "text": "Setting the environment\n\nWhat does this mean?\n\nLet’s find the executable we installed with Mamba\n\n\nWhen we set the interpretter/environment in VS Code, we are essentially telling it to look for this python.exe file in this exact folder.\n\nTo get the path, we can right click on the file and select “Copy Path”\n\n\n\n\nWhy might you need the actual path?\n\nOn the command line, when we call python this_script.py sometimes it will fail to find (or find the right) python executable to call. We could have been explicit by calling C:\\Users\\jajohns\\mambaforge\\envs\\env2023a\\python.exe this_script.py instead.\nAdditionally, when you are publishing Quarto Books or Jupyter Notebooks, you might want to set the path explicitly\n\nFor example, to publish the EE Devstack, I have a line in the quarto.yml file like this:\nyaml     execute:         engine: python         python: C:\\Users\\jajohns\\mambaforge\\envs\\env2023a\\python.exe",
+    "crumbs": [
+      "Conventions"
+    ]
+  },
+  {
     "objectID": "earth_economy_devstack/gtappy.html",
     "href": "earth_economy_devstack/gtappy.html",
     "title": "GTAPPy",

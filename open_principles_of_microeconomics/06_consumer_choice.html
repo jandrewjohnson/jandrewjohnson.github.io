@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -99,6 +106,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -107,12 +141,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_consumer_choice.html"><span class="chapter-title">6. Consumer Choice</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06_consumer_choice.html"><span class="chapter-title">6. Consumer Choice</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -122,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Open Principles of Microeconomics</a> 
@@ -265,12 +299,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./a3_present_discounted_value.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Present Discounted Value</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./a4_generating_supply_and_demand_curves.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Economics Books Figure</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -289,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">6. Consumer Choice</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-chapter-6" class="quarto-section-identifier"><span class="chapter-title">6. Consumer Choice</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -302,9 +341,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p><img src="media/6-introduction-to-consumer-choices_rId20.jpeg" id="fig-6_1" style="width:6.5in;height:3.7in"></p>
+
+<div id="fig-6_1" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.6999989063867016in" width="6.5in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-introduction-to-consumer-choices_rId20.jpeg" id="fig-6_1" style="width:6.5in;height:3.7in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.1 Investment Choices We generally view higher education as a good investment, if one can afford it, regardless of the state of the economy. (Credit: modification of “Commencement” by roanokecollege/Flickr, CC BY 2.0)</p>
 <section id="chapter-objectives" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="chapter-objectives">Chapter Objectives</h4>
@@ -327,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Microeconomics seeks to understand the behavior of individual economic agents such as individuals and businesses. Economists believe that we can analyze individuals’ decisions, such as what goods and services to buy, as choices we make within certain budget constraints. Generally, consumers are trying to get the most for their limited budget. In economic terms they are trying to maximize total utility, or satisfaction, given their budget constraint.</p>
 <p>Everyone has their own personal tastes and preferences. The French say: <em>Chacun à son goût</em>, or “Each to his own taste.” An old Latin saying states, <em>De gustibus non est disputandum</em> or “There’s no disputing about taste.” If people base their decisions on their own tastes and personal preferences, however, then how can economists hope to analyze the choices consumers make?</p>
 <p>An economic explanation for why people make different choices begins with accepting the proverbial wisdom that tastes are a matter of personal preference. However, economists also believe that the choices people make are influenced by their incomes, by the prices of goods and services they consume, and by factors like where they live. This chapter introduces the economic theory of how consumers make choices about what goods and services to buy with their limited income.</p>
-<p>The analysis in this chapter will build on the budget constraint that we introduced in the <a href="02_choice_with_scarcity.html"><span>Chapter&nbsp;2</span></a> chapter. This chapter will also illustrate how economic theory provides a tool to systematically look at the full range of possible consumption choices to predict how consumption responds to changes in prices or incomes. After reading this chapter, consult <span class="quarto-unresolved-ref">?sec-appendix-b</span> to learn more about representing utility and choice through indifference curves.</p>
+<p>The analysis in this chapter will build on the budget constraint that we introduced in the <a href="#sec-chapter-2" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-2</span></a> chapter. This chapter will also illustrate how economic theory provides a tool to systematically look at the full range of possible consumption choices to predict how consumption responds to changes in prices or incomes. After reading this chapter, consult <a href="#sec-appendix-b" class="quarto-xref"><span class="quarto-unresolved-ref">sec-appendix-b</span></a> to learn more about representing utility and choice through indifference curves.</p>
 </section>
 </section>
 </section>
@@ -341,10 +391,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Propose decisions that maximize utility</li>
 <li>Explain marginal utility and the significance of diminishing marginal utility</li>
 </ul>
-<p>Information on the consumption choices of Americans is available from the Consumer Expenditure Survey carried out by the U.S. Bureau of Labor Statistics. <a href="#tbl-table_6_1">Table&nbsp;<span>6.1</span></a> shows spending patterns for the average U.S. household. The first row shows income and, after taxes and personal savings are subtracted, it shows that, in 2015, the average U.S. household spent $48,109 on consumption. The table then breaks down consumption into various categories. The average U.S. household spent roughly one-third of its consumption on shelter and other housing expenses, another one-third on food and vehicle expenses, and the rest on a variety of items, as shown. These patterns will vary for specific households by differing levels of family income, by geography, and by preferences.</p>
-<div id="tbl-table_6_1" class="anchored">
+<p>Information on the consumption choices of Americans is available from the Consumer Expenditure Survey carried out by the U.S. Bureau of Labor Statistics. <a href="#tbl-table_6_1" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_1</span></a> shows spending patterns for the average U.S. household. The first row shows income and, after taxes and personal savings are subtracted, it shows that, in 2015, the average U.S. household spent $48,109 on consumption. The table then breaks down consumption into various categories. The average U.S. household spent roughly one-third of its consumption on shelter and other housing expenses, another one-third on food and vehicle expenses, and the rest on a variety of items, as shown. These patterns will vary for specific households by differing levels of family income, by geography, and by preferences.</p>
+<div id="tbl-table_6_1" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_6_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.1: U.S. Consumption Choices in 2015 (Source:http://www.bls.gov/cex/csxann13.pdf)
+</figcaption>
+<div aria-describedby="tbl-table_6_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;6.1: U.S. Consumption Choices in 2015 (Source:http://www.bls.gov/cex/csxann13.pdf)</caption>
 <colgroup>
 <col style="width: 47%">
 <col style="width: 53%">
@@ -403,23 +457,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 <section id="total-utility-and-diminishing-marginal-utility" class="level4">
 <h4 class="anchored" data-anchor-id="total-utility-and-diminishing-marginal-utility">Total Utility and Diminishing Marginal Utility</h4>
 <p>To understand how a household will make its choices, economists look at what consumers can afford, as shown in a budget constraint (or budget line), and the total utility or satisfaction derived from those choices. In a budget constraint line, the quantity of one good is on the horizontal axis and the quantity of the other good on the vertical axis. The budget constraint line shows the various combinations of two goods that are affordable given consumer income. Consider José's situation, shown in <a href="#fig-6_2">Figure 6.2</a>. José likes to collect T-shirts and watch movies.</p>
 <p>In <a href="#fig-6_2">Figure 6.2</a> we show the quantity of T-shirts on the horizontal axis while we show the quantity of movies on the vertical axis. If José had unlimited income or goods were free, then he could consume without limit. However, José, like all of us, faces a budget constraint. José has a total of $56 to spend. The price of T-shirts is $14 and the price of movies is $7. Notice that the vertical intercept of the budget constraint line is at eight movies and zero T-shirts ($56/$7=8). The horizontal intercept of the budget constraint is four, where José spends of all of his money on T-shirts and no movies ($56/14=4). The slope of the budget constraint line is rise/run or –8/4=–2. The specific choices along the budget constraint line show the combinations of affordable T-shirts and movies.</p>
-<p><img src="media/6-1-consumption-choices_rId26.jpeg" id="fig-6_2" style="width:4.88in;height:2.505in"></p>
+<div id="fig-6_2" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.505in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-1-consumption-choices_rId26.jpeg" id="fig-6_2" style="width:4.88in;height:2.505in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.2 A Choice between Consumption Goods José has income of $56. Movies cost $7 and T-shirts cost $14. The points on the budget constraint line show the combinations of affordable movies and T-shirts.</p>
 <p>José wishes to choose the combination that will provide him with the greatest utility, which is the term economists use to describe a person’s level of satisfaction or happiness with their choices.</p>
-<p>Let’s begin with an assumption, which we will discuss in more detail later, that José can measure his own utility with something called <em>utils</em>. (It is important to note that you cannot make comparisons between the utils of individuals. If one person gets 20 utils from a cup of coffee and another gets 10 utils, this does not mean than the first person gets more enjoyment from the coffee than the other or that they enjoy the coffee twice as much. The reason why is that utils are subjective to an individual. The way one person measures utils is not the same as the way someone else does.) <a href="#tbl-table_6_2">Table&nbsp;<span>6.2</span></a> shows how José’s utility is connected with his T-shirt or movie consumption. The first column of the table shows the quantity of T-shirts consumed. The second column shows the total utility, or total amount of satisfaction, that José receives from consuming that number of T-shirts. The most common pattern of total utility, in this example, is that consuming additional goods leads to greater total utility, but at a decreasing rate. The third column shows marginal utility, which is the additional utility provided by one additional unit of consumption. This equation for marginal utility is:</p>
+<p>Let’s begin with an assumption, which we will discuss in more detail later, that José can measure his own utility with something called <em>utils</em>. (It is important to note that you cannot make comparisons between the utils of individuals. If one person gets 20 utils from a cup of coffee and another gets 10 utils, this does not mean than the first person gets more enjoyment from the coffee than the other or that they enjoy the coffee twice as much. The reason why is that utils are subjective to an individual. The way one person measures utils is not the same as the way someone else does.) <a href="#tbl-table_6_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_2</span></a> shows how José’s utility is connected with his T-shirt or movie consumption. The first column of the table shows the quantity of T-shirts consumed. The second column shows the total utility, or total amount of satisfaction, that José receives from consuming that number of T-shirts. The most common pattern of total utility, in this example, is that consuming additional goods leads to greater total utility, but at a decreasing rate. The third column shows marginal utility, which is the additional utility provided by one additional unit of consumption. This equation for marginal utility is:</p>
 <p><span class="math display">\[
 \mathrm{MU}=\frac{\text { change in total utility }}{\text { change in quantity }}
 \]</span></p>
-<p>Notice that marginal utility diminishes as additional units are consumed, which means that each subsequent unit of a good consumed provides less <em>additional</em> utility. For example, the first T-shirt José picks is his favorite and it gives him an addition of 22 utils. The fourth T-shirt is just something to wear when all his other clothes are in the wash and yields only 18 additional utils. This is an example of the law of diminishing marginal utility, which holds that the additional utility decreases with each unit added. Diminishing marginal utility is another example of the more general law of diminishing returns we learned earlier in <a href="02_choice_with_scarcity.html"><span>Chapter&nbsp;2</span></a>.</p>
-<p>The rest of <a href="#tbl-table_6_2">Table&nbsp;<span>6.2</span></a> shows the quantity of movies that José attends, and his total and marginal utility from seeing each movie. Total utility follows the expected pattern: it increases as the number of movies that José watches rises. Marginal utility also follows the expected pattern: each additional movie brings a smaller gain in utility than the previous one. The first movie José attends is the one he wanted to see the most, and thus provides him with the highest level of utility or satisfaction. The fifth movie he attends is just to kill time. Notice that total utility is also the sum of the marginal utilities. Read the next Work It Out feature for instructions on how to calculate total utility.</p>
-<div id="tbl-table_6_2" class="anchored">
+<p>Notice that marginal utility diminishes as additional units are consumed, which means that each subsequent unit of a good consumed provides less <em>additional</em> utility. For example, the first T-shirt José picks is his favorite and it gives him an addition of 22 utils. The fourth T-shirt is just something to wear when all his other clothes are in the wash and yields only 18 additional utils. This is an example of the law of diminishing marginal utility, which holds that the additional utility decreases with each unit added. Diminishing marginal utility is another example of the more general law of diminishing returns we learned earlier in <a href="#sec-chapter-2" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-2</span></a>.</p>
+<p>The rest of <a href="#tbl-table_6_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_2</span></a> shows the quantity of movies that José attends, and his total and marginal utility from seeing each movie. Total utility follows the expected pattern: it increases as the number of movies that José watches rises. Marginal utility also follows the expected pattern: each additional movie brings a smaller gain in utility than the previous one. The first movie José attends is the one he wanted to see the most, and thus provides him with the highest level of utility or satisfaction. The fifth movie he attends is just to kill time. Notice that total utility is also the sum of the marginal utilities. Read the next Work It Out feature for instructions on how to calculate total utility.</p>
+<div id="tbl-table_6_2" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_6_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.2: Total and Marginal Utility
+</figcaption>
+<div aria-describedby="tbl-table_6_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;6.2: Total and Marginal Utility</caption>
 <colgroup>
 <col style="width: 20%">
 <col style="width: 13%">
@@ -506,10 +575,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
-<p><a href="#tbl-table_6_3">Table&nbsp;<span>6.3</span></a> looks at each point on the budget constraint in <a href="#fig-6_2">Figure 6.2</a>, and adds up José’s total utility for five possible combinations of T-shirts and movies.</p>
-<div id="tbl-table_6_3" class="anchored">
+</figure>
+</div>
+<p><a href="#tbl-table_6_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_3</span></a> looks at each point on the budget constraint in <a href="#fig-6_2">Figure 6.2</a>, and adds up José’s total utility for five possible combinations of T-shirts and movies.</p>
+<div id="tbl-table_6_3" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_6_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.3: Finding the Choice with the Highest Utility
+</figcaption>
+<div aria-describedby="tbl-table_6_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;6.3: Finding the Choice with the Highest Utility</caption>
 <thead>
 <tr class="header">
 <th>Point</th>
@@ -552,6 +627,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 <section id="work-it-out" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="work-it-out">Work It Out</h4>
@@ -559,19 +636,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h5 class="Heading4Grey anchored" data-anchor-id="calculating-total-utility">Calculating Total Utility</h5>
 <p>Let’s look at how José makes his decision in more detail.</p>
 <p>Step 1. Observe that, at point Q (for example), José consumes three T-shirts and two movies.</p>
-<p>Step 2. Look at <a href="#tbl-table_6_3">Table&nbsp;<span>6.3</span></a>. You can see from the fourth row/second column that three T-shirts are worth 63 utils. Similarly, the second row/fifth column shows that two movies are worth 31 utils.</p>
+<p>Step 2. Look at <a href="#tbl-table_6_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_3</span></a>. You can see from the fourth row/second column that three T-shirts are worth 63 utils. Similarly, the second row/fifth column shows that two movies are worth 31 utils.</p>
 <p>Step 3. From this information, you can calculate that point Q has a total utility of 94 (63 + 31).</p>
-<p>Step 4. You can repeat the same calculations for each point on <a href="#tbl-table_6_3">Table&nbsp;<span>6.3</span></a>, in which the total utility numbers are shown in the last column.</p>
+<p>Step 4. You can repeat the same calculations for each point on <a href="#tbl-table_6_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_3</span></a>, in which the total utility numbers are shown in the last column.</p>
 <p>For José, the highest total utility for all possible combinations of goods occurs at point S, with a total utility of 103 from consuming one T-shirt and six movies.</p>
 </section>
 </section>
 <section id="choosing-with-marginal-utility" class="level4">
 <h4 class="anchored" data-anchor-id="choosing-with-marginal-utility">Choosing with Marginal Utility</h4>
 <p>Most people approach their utility-maximizing combination of choices in a step-by-step way. This approach is based on looking at the tradeoffs, measured in terms of marginal utility, of consuming less of one good and more of another.</p>
-<p>For example, say that José starts off thinking about spending all his money on T-shirts and choosing point P, which corresponds to four T-shirts and no movies, as <a href="#fig-6_2">Figure 6.2</a> illustrates. José chooses this starting point randomly as he has to start somewhere. Then he considers giving up the last T-shirt, the one that provides him the least marginal utility, and using the money he saves to buy two movies instead. <a href="#tbl-table_6_4">Table&nbsp;<span>6.4</span></a> tracks the step-by-step series of decisions José needs to make (<em>Key</em>: T-shirts are $14, movies are $7, and income is $56). The following Work It Out feature explains how marginal utility can affect decision making.</p>
-<div id="tbl-table_6_4" class="anchored">
+<p>For example, say that José starts off thinking about spending all his money on T-shirts and choosing point P, which corresponds to four T-shirts and no movies, as <a href="#fig-6_2">Figure 6.2</a> illustrates. José chooses this starting point randomly as he has to start somewhere. Then he considers giving up the last T-shirt, the one that provides him the least marginal utility, and using the money he saves to buy two movies instead. <a href="#tbl-table_6_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_4</span></a> tracks the step-by-step series of decisions José needs to make (<em>Key</em>: T-shirts are $14, movies are $7, and income is $56). The following Work It Out feature explains how marginal utility can affect decision making.</p>
+<div id="tbl-table_6_4" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_6_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.4: A Step-by-Step Approach to Maximizing Utility
+</figcaption>
+<div aria-describedby="tbl-table_6_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;6.4: A Step-by-Step Approach to Maximizing Utility</caption>
 <colgroup>
 <col style="width: 3%">
 <col style="width: 16%">
@@ -627,27 +708,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 <section id="work-it-out-1" class="level4 Heading3Grey">
 <h4 class="Heading3Grey anchored" data-anchor-id="work-it-out-1">Work It Out</h4>
 <section id="decision-making-by-comparing-marginal-utility" class="level5 Heading4Grey">
 <h5 class="Heading4Grey anchored" data-anchor-id="decision-making-by-comparing-marginal-utility">Decision Making by Comparing Marginal Utility</h5>
 <p>José could use the following thought process (if he thought in utils) to make his decision regarding how many T-shirts and movies to purchase:</p>
-<p>Step 1. From <a href="#tbl-table_6_2">Table&nbsp;<span>6.2</span></a>, José can see that the marginal utility of the fourth T-shirt is 18. If José gives up the fourth T-shirt, then he loses 18 utils.</p>
+<p>Step 1. From <a href="#tbl-table_6_2" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_2</span></a>, José can see that the marginal utility of the fourth T-shirt is 18. If José gives up the fourth T-shirt, then he loses 18 utils.</p>
 <p>Step 2. Giving up the fourth T-shirt, however, frees up $14 (the price of a T-shirt), allowing José to buy the first two movies (at $7 each).</p>
 <p>Step 3. José knows that the marginal utility of the first movie is 16 and the marginal utility of the second movie is 15. Thus, if José moves from point P to point Q, he gives up 18 utils (from the T-shirt), but gains 31 utils (from the movies).</p>
-<p>Step 4. Gaining 31 utils and losing 18 utils is a net gain of 13. This is just another way of saying that the total utility at Q (94 according to the last column in <a href="#tbl-table_6_3">Table&nbsp;<span>6.3</span></a>) is 13 more than the total utility at P (81).</p>
+<p>Step 4. Gaining 31 utils and losing 18 utils is a net gain of 13. This is just another way of saying that the total utility at Q (94 according to the last column in <a href="#tbl-table_6_3" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_3</span></a>) is 13 more than the total utility at P (81).</p>
 <p>Step 5. Thus, for José, it makes sense to give up the fourth T-shirt in order to buy two movies.</p>
 <p>José clearly prefers point Q to point P. Now repeat this step-by-step process of decision making with marginal utilities. José thinks about giving up the third T-shirt and surrendering a marginal utility of 20, in exchange for purchasing two more movies that promise a combined marginal utility of 27. José prefers point R to point Q. What if José thinks about going beyond R to point S? Giving up the second T-shirt means a marginal utility loss of 21, and the marginal utility gain from the fifth and sixth movies would combine to make a marginal utility gain of 23, so José prefers point S to R.</p>
 <p>However, if José seeks to go beyond point S to point T, he finds that the loss of marginal utility from giving up the first T-shirt is 22, while the marginal utility gain from the last two movies is only a total of 19. If José were to choose point T, his utility would fall to 100. Through these stages of thinking about marginal tradeoffs, José again concludes that S, with one T-shirt and six movies, is the choice that will provide him with the highest level of total utility. This step-by-step approach will reach the same conclusion regardless of José’s starting point.</p>
-<p>We can develop a more systematic way of using this approach by focusing on satisfaction per dollar. If an item costing $5 yields 10 utils, then it’s worth 2 utils per dollar spent. Marginal utility per dollar is the amount of additional utility José receives divided by the product's price. <a href="#tbl-table_6_5">Table&nbsp;<span>6.5</span></a> shows the marginal utility per dollar for José's T shirts and movies.</p>
+<p>We can develop a more systematic way of using this approach by focusing on satisfaction per dollar. If an item costing $5 yields 10 utils, then it’s worth 2 utils per dollar spent. Marginal utility per dollar is the amount of additional utility José receives divided by the product's price. <a href="#tbl-table_6_5" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_5</span></a> shows the marginal utility per dollar for José's T shirts and movies.</p>
 <p><span class="math display">\[
 \text { marginal utility per dollar }=\frac{\text { marginal utility }}{\text { price }}
 \]</span></p>
 <p>If José wants to maximize the utility he gets from his limited budget, he will always purchase the item with the greatest marginal utility per dollar of expenditure (assuming he can afford it with his remaining budget). José starts with no purchases. If he purchases a T-shirt, the marginal utility per dollar spent will be 1.6. If he purchases a movie, the marginal utility per dollar spent will be 2.3. Therefore, José’s first purchase will be the movie. Why? Because it gives him the highest marginal utility per dollar and is affordable. Next, José will purchase another movie. Why? Because the marginal utility of the next movie (2.14) is greater than the marginal utility of the next T-shirt (1.6). Note that when José has no T- shirts, the next one is the first one. José will continue to purchase the next good with the highest marginal utility per dollar until he exhausts his budget. He will continue purchasing movies because they give him a greater "bang for the buck" until the sixth movie which gives the same marginal utility per dollar as the first T-shirt purchase. José has just enough budget to purchase both. So in total, José will purchase six movies and one T-shirt.</p>
-<div id="tbl-table_6_5" class="anchored">
+<div id="tbl-table_6_5" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-table_6_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.5: Marginal Utility per Dollar
+</figcaption>
+<div aria-describedby="tbl-table_6_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;6.5: Marginal Utility per Dollar</caption>
 <colgroup>
 <col style="width: 13%">
 <col style="width: 8%">
@@ -744,6 +831,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 </section>
 </section>
 <section id="a-rule-for-maximizing-utility" class="level4">
@@ -771,7 +860,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Step 1. If we traded a dollar more of movies for a dollar more of T-shirts, the marginal utility gained from T-shirts would exactly offset the marginal utility lost from fewer movies. In other words, the net gain would be zero.</p>
 <p>Step 2. Products, however, usually cost more than a dollar, so we cannot trade a dollar’s worth of movies. The best we can do is trade two movies for another T-shirt, since in this example T-shirts cost twice what a movie does.</p>
 <p>Step 3. If we trade two movies for one T-shirt, we would end up at point R (two T-shirts and four movies).</p>
-<p>Step 4. Choice 4 in <a href="#tbl-table_6_4">Table&nbsp;<span>6.4</span></a> shows that if we move to point R, we would gain 21 utils from one more T-shirt, but lose 23 utils from two fewer movies, so we would end up with less total utility at point R.</p>
+<p>Step 4. Choice 4 in <a href="#tbl-table_6_4" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-table_6_4</span></a> shows that if we move to point R, we would gain 21 utils from one more T-shirt, but lose 23 utils from two fewer movies, so we would end up with less total utility at point R.</p>
 <p>In short, the general rule shows us the utility-maximizing choice, which is called the consumer equilibrium.</p>
 <p>There is another equivalent way to think about this. We can also express the general rule as <em>the ratio of the prices of the two goods should be equal to the ratio of the marginal utilities.</em> When we divide the price of good 1 by the price of good 2, at the utility-maximizing point this will equal the marginal utility of good 1 divided by the marginal utility of good 2.</p>
 <p><span class="math display">\[
@@ -803,17 +892,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="how-changes-in-income-affect-consumer-choices" class="level4">
 <h4 class="anchored" data-anchor-id="how-changes-in-income-affect-consumer-choices">How Changes in Income Affect Consumer Choices</h4>
 <p>Let’s begin with a concrete example illustrating how changes in income level affect consumer choices. <a href="#fig-6_3">Figure 6.3</a> shows a budget constraint that represents Kimberly’s choice between concert tickets at $50 each and getting away overnight to a bed-and-breakfast for $200 per night. Kimberly has $1,000 per year to spend between these two choices. After thinking about her total utility and marginal utility and applying the decision rule that the ratio of the marginal utilities to the prices should be equal between the two products, Kimberly chooses point M, with eight concerts and three overnight getaways as her utility-maximizing choice.</p>
-<p><img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId23.jpeg" id="fig-6_3" style="width:3.25in;height:2.535in"></p>
+<div id="fig-6_3" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.535in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId23.jpeg" id="fig-6_3" style="width:3.25in;height:2.535in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.3 How a Change in Income Affects Consumption Choices The utility-maximizing choice on the original budget constraint is M. The dashed horizontal and vertical lines extending through point M allow you to see at a glance whether the quantity consumed of goods on the new budget constraint is higher or lower than on the original budget constraint. On the new budget constraint, Kimberly will make a choice like N if both goods are normal goods. If overnight stays is an inferior good, Kimberly will make a choice like P. If concert tickets are an inferior good, Kimberly will make a choice like Q.</p>
 <p>Now, assume that the income Kimberly has to spend on these two items rises to $2,000 per year, causing her budget constraint to shift out to the right. How does this rise in income alter her utility-maximizing choice? Kimberly will again consider the utility and marginal utility that she receives from concert tickets and overnight getaways and seek her utility-maximizing choice on the new budget line, but how will her new choice relate to her original choice?</p>
 <p>We can replace the possible choices along the new budget constraint into three groups, which the dashed horizontal and vertical lines that pass through the original choice M in the figure divide. All choices on the upper left of the new budget constraint that are to the left of the vertical dashed line, like choice P with two overnight stays and 32 concert tickets, involve less of the good on the horizontal axis but much more of the good on the vertical axis. All choices to the right of the vertical dashed line and above the horizontal dashed line—like choice N with five overnight getaways and 20 concert tickets—have more consumption of both goods. Finally, all choices that are to the right of the vertical dashed line but below the horizontal dashed line, like choice Q with four concerts and nine overnight getaways, involve less of the good on the vertical axis but much more of the good on the horizontal axis.</p>
-<p>All of these choices are theoretically possible, depending on Kimberly’s personal preferences as expressed through the total and marginal utility she would receive from consuming these two goods. When income rises, the most common reaction is to purchase more of both goods, like choice N, which is to the upper right relative to Kimberly’s original choice M, although exactly how much more of each good will vary according to personal taste. Conversely, when income falls, the most typical reaction is to purchase less of both goods. As we defined in <a href="03_demand_and_supply.html"><span>Chapter&nbsp;3</span></a> and again in <a href="05_elasticity.html"><span>Chapter&nbsp;5</span></a>, we call goods and services normal goods when a rise in income leads to a rise in the quantity consumed of that good and a fall in income leads to a fall in quantity consumed.</p>
+<p>All of these choices are theoretically possible, depending on Kimberly’s personal preferences as expressed through the total and marginal utility she would receive from consuming these two goods. When income rises, the most common reaction is to purchase more of both goods, like choice N, which is to the upper right relative to Kimberly’s original choice M, although exactly how much more of each good will vary according to personal taste. Conversely, when income falls, the most typical reaction is to purchase less of both goods. As we defined in <a href="#sec-chapter-3" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-3</span></a> and again in <a href="#sec-chapter-5" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-5</span></a>, we call goods and services normal goods when a rise in income leads to a rise in the quantity consumed of that good and a fall in income leads to a fall in quantity consumed.</p>
 <p>However, depending on Kimberly’s preferences, a rise in income could cause consumption of one good to increase while consumption of the other good declines. A choice like P means that a rise in income caused her quantity consumed of overnight stays to decline, while a choice like Q would mean that a rise in income caused her quantity of concerts to decline. Goods where demand declines as income rises (or conversely, where the demand rises as income falls) are called “inferior goods.” An inferior good occurs when people trim back on a good as income rises, because they can now afford the more expensive choices that they prefer. For example, a higher-income household might eat fewer hamburgers or be less likely to buy a used car, and instead eat more steak and buy a new car.</p>
 </section>
 <section id="how-price-changes-affect-consumer-choices" class="level4">
 <h4 class="anchored" data-anchor-id="how-price-changes-affect-consumer-choices">How Price Changes Affect Consumer Choices</h4>
 <p>For analyzing the possible effect of a change in price on consumption, let’s again use a concrete example. <a href="#fig-6_4">Figure 6.4</a> represents Sergei's consumer choice, who chooses between purchasing baseball bats and cameras. A price increase for baseball bats would have no effect on the ability to purchase cameras, but it would reduce the number of bats Sergei could afford to buy. Thus a price increase for baseball bats, the good on the horizontal axis, causes the budget constraint to rotate inward, as if on a hinge, from the vertical axis. As in the previous section, the point labeled M represents the originally preferred point on the original budget constraint, which Sergei has chosen after contemplating his total utility and marginal utility and the tradeoffs involved along the budget constraint. In this example, the units along the horizontal and vertical axes are not numbered, so the discussion must focus on whether Sergei will consume more or less of certain goods, not on numerical amounts.</p>
-<p><img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId33.jpeg" id="fig-6_4" style="width:4.88in;height:2.295in"></p>
+<div id="fig-6_4" class="quarto-figure quarto-figure-center quarto-float anchored" height="2.295in" width="4.88in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId33.jpeg" id="fig-6_4" style="width:4.88in;height:2.295in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.4 How a Change in Price Affects Consumption Choices The original utility-maximizing choice is M. When the price rises, the budget constraint rotates clockwise. The dashed lines make it possible to see at a glance whether the new consumption choice involves less of both goods, or less of one good and more of the other. The new possible choices would be fewer baseball bats and more cameras, like point H, or less of both goods, as at point J. Choice K would mean that the higher price of bats led to exactly the same quantity of bat consumption, but fewer cameras. Theoretically possible, but unlikely in the real world, we rule out choices like L because they would mean that a higher price for baseball bats means a greater consumption of baseball bats.</p>
 <p>After the price increase, Sergei will make a choice along the new budget constraint. Again, we can divide his choices into three segments by the dashed vertical and horizontal lines. In the upper left portion of the new budget constraint, at a choice like H, Sergei consumes more cameras and fewer bats. In the central portion of the new budget constraint, at a choice like J, he consumes less of both goods. At the right-hand end, at a choice like L, he consumes more bats but fewer cameras.</p>
 <p>The typical response to higher prices is that a person chooses to consume less of the product with the higher price. This occurs for two reasons, and both effects can occur simultaneously. The substitution effect occurs when a price changes and consumers have an incentive to consume less of the good with a relatively higher price and more of the good with a relatively lower price. The income effect is that a higher price means, in effect, the buying power of income has been reduced (even though actual income has not changed), which leads to buying less of the good (when the good is normal). In this example, the higher price for baseball bats would cause Sergei to buy fewer bats for both reasons. Exactly how much will a higher price for bats cause Sergei's bat consumption to fall? <a href="#fig-6_4">Figure 6.4</a> suggests a range of possibilities. Sergei might react to a higher price for baseball bats by purchasing the same quantity of bats, but cutting his camera consumption. This choice is the point K on the new budget constraint, straight below the original choice M. Alternatively, Sergei might react by dramatically reducing his bat purchases and instead buy more cameras.</p>
@@ -827,13 +934,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-foundations-of-demand-curves" class="level4">
 <h4 class="anchored" data-anchor-id="the-foundations-of-demand-curves">The Foundations of Demand Curves</h4>
 <p>Changes in the price of a good lead the budget constraint to rotate. A rotation in the budget constraint means that when individuals are seeking their highest utility, the quantity that is demanded of that good will change. In this way, the logical foundations of demand curves—which show a connection between prices and quantity demanded—are based on the underlying idea of individuals seeking utility. <a href="#fig-6_5">Figure 6.5</a> (a) shows a budget constraint with a choice between housing and “everything else.” (Putting “everything else” on the vertical axis can be a useful approach in some cases, especially when the focus of the analysis is on one particular good.) We label the preferred choice on the original budget constraint that provides the highest possible utility M<sub>0</sub>. The other three budget constraints represent successively higher prices for housing of P<sub>1</sub>, P<sub>2</sub>, and P<sub>3</sub>. As the budget constraint rotates in, and in, and in again, we label the utility-maximizing choices M<sub>1</sub>, M<sub>2</sub>, and M<sub>3</sub>, and the quantity demanded of housing falls from Q<sub>0</sub> to Q<sub>1</sub> to Q<sub>2</sub> to Q<sub>3</sub>.</p>
-<p><img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId42.jpeg" id="fig-6_5" style="width:3.25in;height:5.085in"></p>
+<div id="fig-6_5" class="quarto-figure quarto-figure-center quarto-float anchored" height="5.085in" width="3.25in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-2-how-changes-in-income-and-prices-affect-consumption-choices_rId42.jpeg" id="fig-6_5" style="width:3.25in;height:5.085in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.5
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.5 The Foundations of a Demand Curve: An Example of Housing (a) As the price increases from P<sub>0</sub> to P<sub>1</sub> to P<sub>2</sub> to P<sub>3</sub>, the budget constraint on the upper part of the diagram rotates clockwise. The utility-maximizing choice changes from M<sub>0</sub> to M<sub>1</sub> to M<sub>2</sub> to M<sub>3</sub>. As a result, the quantity demanded of housing shifts from Q<sub>0</sub> to Q<sub>1</sub> to Q<sub>2</sub> to Q<sub>3</sub>, <em>ceteris paribus</em>. (b) The demand curve graphs each combination of the price of housing and the quantity of housing demanded, <em>ceteris paribus</em>. The quantities of housing are the same at the points on both (a) and (b). Thus, the original price of housing (P<sub>0</sub>) and the original quantity of housing (Q<sub>0</sub>) appear on the demand curve as point E<sub>0</sub>. The higher price of housing (P<sub>1</sub>) and the corresponding lower quantity demanded of housing (Q<sub>1</sub>) appear on the demand curve as point E<sub>1</sub>.</p>
 <p>Thus, as the price of housing rises, the budget constraint rotates clockwise and the quantity consumed of housing falls, <em>ceteris paribus</em> (meaning, with all other things being the same). We graph this relationship—the price of housing rising from P<sub>0</sub> to P<sub>1</sub> to P<sub>2</sub> to P<sub>3</sub>, while the quantity of housing demanded falls from Q<sub>0</sub> to Q<sub>1</sub> to Q<sub>2</sub> to Q<sub>3</sub>—on the demand curve in <a href="#fig-6_5">Figure 6.5</a> (b). The vertical dashed lines stretching between the top and bottom of <a href="#fig-6_5">Figure 6.5</a> show that the quantity of housing demanded at each point is the same in both (a) and (b). We ultimately determine the shape of a demand curve by the underlying choices about maximizing utility subject to a budget constraint. While economists may not be able to measure “utils,” they can certainly measure price and quantity demanded.</p>
 </section>
 <section id="applications-in-government-and-business" class="level4">
 <h4 class="anchored" data-anchor-id="applications-in-government-and-business">Applications in Government and Business</h4>
-<p>The budget constraint framework for making utility-maximizing choices offers a reminder that people can react to a change in price or income in a range of different ways. For example, in the winter months of 2005, costs for heating homes increased significantly in many parts of the country as prices for natural gas and electricity soared, due in large part to the disruption caused by Hurricanes Katrina and Rita. Some people reacted by reducing the quantity demanded of energy; for example, by turning down the thermostats in their homes by a few degrees and wearing a heavier sweater inside. Even so, many home heating bills rose, so people adjusted their consumption in other ways, too. As you learned in <a href="05_elasticity.html"><span>Chapter&nbsp;5</span></a>, the short run demand for home heating is generally inelastic. Each household cut back on what it valued least on the margin. For some it might have been some dinners out, or a vacation, or postponing buying a new refrigerator or a new car. Sharply higher energy prices can have effects beyond the energy market, leading to a widespread reduction in purchasing throughout the rest of the economy.</p>
+<p>The budget constraint framework for making utility-maximizing choices offers a reminder that people can react to a change in price or income in a range of different ways. For example, in the winter months of 2005, costs for heating homes increased significantly in many parts of the country as prices for natural gas and electricity soared, due in large part to the disruption caused by Hurricanes Katrina and Rita. Some people reacted by reducing the quantity demanded of energy; for example, by turning down the thermostats in their homes by a few degrees and wearing a heavier sweater inside. Even so, many home heating bills rose, so people adjusted their consumption in other ways, too. As you learned in <a href="#sec-chapter-5" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chapter-5</span></a>, the short run demand for home heating is generally inelastic. Each household cut back on what it valued least on the margin. For some it might have been some dinners out, or a vacation, or postponing buying a new refrigerator or a new car. Sharply higher energy prices can have effects beyond the energy market, leading to a widespread reduction in purchasing throughout the rest of the economy.</p>
 <p>A similar issue arises when the government imposes taxes on certain products, such as on gasoline, cigarettes, and alcohol. Say that a tax on alcohol leads to a higher price at the liquor store. The higher price of alcohol causes the budget constraint to pivot left, and alcoholic beverage consumption is likely to decrease. However, people may also react to the higher price of alcoholic beverages by cutting back on other purchases. For example, they might cut back on snacks at restaurants like chicken wings and nachos. It would be unwise to assume that the liquor industry is the only one affected by the tax on alcoholic beverages. Read the next Clear It Up to learn about how who controls the household income influences buying decisions.</p>
 </section>
 <section id="the-unifying-power-of-the-utility-maximizing-budget-set-framework" class="level4">
@@ -879,7 +995,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In what category did consumers worldwide increase their spending during the Great Recession? Higher education. According to the United Nations Educational, Scientific, and Cultural Organization (UNESCO), enrollment in colleges and universities rose one-third in China and almost two-thirds in Saudi Arabia, nearly doubled in Pakistan, tripled in Uganda, and surged by three million—18 percent—in the United States. Why were consumers willing to spend on education during lean times? Both individuals and countries view higher education as the way to prosperity. Many feel that increased earnings are a significant benefit of attending college.</p>
 <p>U.S. Bureau of Labor Statistics data from May 2012 supports this view, as <a href="#fig-6_6">Figure 6.6</a> shows. They show a positive correlation between earnings and education. The data also indicate that unemployment rates fall with higher levels of education and training.</p>
 <p>Why spend the money to go to college during recession? Because if you are unemployed (or underemployed, working fewer hours than you would like), the opportunity cost of your time is low. If you’re unemployed, you don’t have to give up work hours and income by going to college.</p>
-<p><img src="media/6-3-behavioral-economics-an-alternative-framework-for-consumer-choice_rId25.jpeg" id="fig-6_6" style="width:6.36in;height:3.275in"></p>
+<div id="fig-6_6" class="quarto-figure quarto-figure-center quarto-float anchored" height="3.275in" width="6.36in">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/6-3-behavioral-economics-an-alternative-framework-for-consumer-choice_rId25.jpeg" id="fig-6_6" style="width:6.36in;height:3.275in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-6_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.6
+</figcaption>
+</figure>
+</div>
 <p>Figure 6.6 The Impact of Education on Earnings and Unemployment Rates, 2012 Those with the highest degrees in 2012 had substantially lower unemployment rates; whereas, those with the least formal education suffered from the highest unemployment rates. The national median average weekly income was $815, and the nation unemployment average in 2012 was 6.8%. (Source: U.S. Bureau of Labor Statistics, May 22, 2013)</p>
 
 
@@ -1020,10 +1145,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1033,8 +1157,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1047,6 +1180,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1090,6 +1342,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1115,6 +1368,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1176,12 +1455,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./05_elasticity.html" class="pagination-link">
+      <a href="./05_elasticity.html" class="pagination-link  aria-label=" &lt;span="" elasticity&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">5. Elasticity</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./07_production_and_costs.html" class="pagination-link">
+      <a href="./07_production_and_costs.html" class="pagination-link" aria-label="<span class='chapter-number'>7</span>&nbsp; <span class='chapter-title'>7. Production and Costs</span>">
         <span class="nav-page-text"><span class="chapter-title">7. Production and Costs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2130,6 +2409,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-942"><a href="#cb1-942" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
+
 
 
 

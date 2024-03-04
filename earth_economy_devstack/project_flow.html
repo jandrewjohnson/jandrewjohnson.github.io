@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/hazelbean.html">Hazelbean</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/hazelbean.qmd">Hazelbean</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/hazelbean.html" class="sidebar-item-text sidebar-link">
+            <a href="../earth_economy_devstack/hazelbean.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hazelbean</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/hazelbean.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/hazelbean.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -311,7 +311,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#iterating-over-many-model-assumptions" id="toc-iterating-over-many-model-assumptions" class="nav-link active" data-scroll-target="#iterating-over-many-model-assumptions">Iterating over many model assumptions</a></li>
+  <li><a href="#project-flow" id="toc-project-flow" class="nav-link active" data-scroll-target="#project-flow">Project Flow</a>
+  <ul class="incremental collapse">
+  <li><a href="#starter-code" id="toc-starter-code" class="nav-link" data-scroll-target="#starter-code">Starter code</a></li>
+  <li><a href="#step-1-substitute-in-a-few-pre-built-hazelbean-functions" id="toc-step-1-substitute-in-a-few-pre-built-hazelbean-functions" class="nav-link" data-scroll-target="#step-1-substitute-in-a-few-pre-built-hazelbean-functions">Step 1: Substitute in a few pre-built Hazelbean functions</a></li>
+  </ul></li>
+  <li><a href="#start-here-copy-above-with-hb.as_array-but-actually-redo-it-with-a-skinned-version-of-hb.read_raster." id="toc-start-here-copy-above-with-hb.as_array-but-actually-redo-it-with-a-skinned-version-of-hb.read_raster." class="nav-link" data-scroll-target="#start-here-copy-above-with-hb.as_array-but-actually-redo-it-with-a-skinned-version-of-hb.read_raster.">START HERE, copy above with hb.as_array() but actually redo it with a skinned version of hb.read_raster….()</a>
+  <ul class="incremental collapse">
+  <li><a href="#iterating-over-many-model-assumptions" id="toc-iterating-over-many-model-assumptions" class="nav-link" data-scroll-target="#iterating-over-many-model-assumptions">Iterating over many model assumptions</a></li>
   <li><a href="#creating-scenarios-spreadsheets" id="toc-creating-scenarios-spreadsheets" class="nav-link" data-scroll-target="#creating-scenarios-spreadsheets">Creating scenarios spreadsheets</a></li>
   <li><a href="#task-format" id="toc-task-format" class="nav-link" data-scroll-target="#task-format">Task Format</a></li>
   <li><a href="#automatic-directory-organization-via-tasks" id="toc-automatic-directory-organization-via-tasks" class="nav-link" data-scroll-target="#automatic-directory-organization-via-tasks">Automatic Directory Organization via Tasks</a></li>
@@ -320,142 +327,195 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#eliminating-redundant-calculation-across-projects" id="toc-eliminating-redundant-calculation-across-projects" class="nav-link" data-scroll-target="#eliminating-redundant-calculation-across-projects">Eliminating redundant calculation across projects</a></li>
   <li><a href="#python-tips-and-conventions" id="toc-python-tips-and-conventions" class="nav-link" data-scroll-target="#python-tips-and-conventions">Python Tips and Conventions</a></li>
   </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/hazelbean.html">Hazelbean</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">ProjectFlow</h1>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
+<section id="project-flow" class="level1">
+<h1>Project Flow</h1>
+<p>Project Flow is intended to allow a user to flow easily past the different stages of software complexity. A common situation for an academic or a research software engineer (RES) to find themselves in is that they wrote a quick script to answer a specific quesiton, but it turned out to be useful in other context. This can lead to a the script grows and grows until complexity hurts its usefulness. A software developer would then think “oops, I should really make this modular.” ProjectFlow provides several modalities useful to researchers ranging from simple drop-in solution to complex scripting framework. To do this, ProjectFlow manages folders and defines a tree of tasks that can easily be run in parallel where needed and keeping track of task-dependencies. ProjectFlow borrows heavily in concept (though not in code) from the task_graph library produced by Rich Sharp but adds a predefined file structure suited to research and exploration tasks.</p>
+<p>Project Flow is intended to flow easily from the situation where you have coded a script that grows and grows until you think “oops, I should really make this modular.” Thus, it has several modalities useful to researchers ranging from simple drop-in solution to complex scripting framework. Similar to the <a href="TODOO">Stages of Complexity</a> page, we will introduce progressively more complex usages, starting with the simples examples and working towards distributed parallelization on complex task-trees. If you would like to skip the stages and go straight to a full-functioning example, go to <a href="TODOO">Standard ProjectFlow run file</a>.</p>
+<section id="starter-code" class="level2">
+<h2 class="anchored" data-anchor-id="starter-code">Starter code</h2>
+<p>We will use the third level of complexity from the previous example as the launching point for how to use ProjectFlow. The code below adds a few additional steps we will work with.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gdal</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> raster_to_array(raster_input_path):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> gdal.Open(yield_per_hectare_raster_path_1)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Reading "</span> <span class="op">+</span> raster_input_path <span class="op">+</span><span class="st">'. This might take a while!'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    array <span class="op">=</span> ds.ReadAsArray()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> array</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the raster</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>raster_input_path <span class="op">=</span> <span class="st">'data/yield.tif'</span> <span class="co"># TODOO[make all these actually point to data in hazelbean]</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>array <span class="op">=</span> raster_to_array(raster_input_path)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Set no data values equal to zero</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 1 (creates new array)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>array_ndv_fix <span class="op">=</span> np.where(array <span class="op">==</span> <span class="op">-</span><span class="dv">9999</span>, <span class="dv">0</span>, array)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 2 (inplace)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>array[array <span class="op">==</span> <span class="op">-</span><span class="dv">9999</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum the raster</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span> <span class="op">=</span> np.<span class="bu">sum</span>(array_ndv_fix)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the average value on &gt;0 cells</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">## First create a binary map of where there is positive value</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>non_zero <span class="op">=</span> np.where(array_ndv_fix <span class="op">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Count those</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>n_non_zero <span class="op">=</span> np.<span class="bu">sum</span>(non_zero)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">## Calculate the average</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> <span class="bu">sum</span> <span class="op">/</span> n_non_zero</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">## Write the value to a file</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(output_path, rw) <span class="im">as</span> f: <span class="co"># TODOO[fix my no copilot typo]</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Write here.'</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sums of layers: '</span> <span class="op">+</span> <span class="bu">str</span>(mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="step-1-substitute-in-a-few-pre-built-hazelbean-functions" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-substitute-in-a-few-pre-built-hazelbean-functions">Step 1: Substitute in a few pre-built Hazelbean functions</h2>
+</section>
+</section>
+<section id="start-here-copy-above-with-hb.as_array-but-actually-redo-it-with-a-skinned-version-of-hb.read_raster." class="level1">
+<h1>START HERE, copy above with hb.as_array() but actually redo it with a skinned version of hb.read_raster….()</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(<span class="vs">r'C:\Files\Research\cge\gtap_invest\projects\feedback_policies_and_tipping_points'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In a multi-file setup, in the run.py you will need to import different scripts, such as main.py i.e.:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> visualizations.main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The script file mainpy can have whatever code, but in particular can include “task” functions. A task function, shown below, takes only p as an agrument and returns p (potentially modified). It also must have a conditional (if p.run_this:) to specify what always runs (and is assumed to run trivially fast, i.e., to specify file paths) just by nature of having it in the task tree and what is run only conditionally (based on the task.run attribute, or optionally based on satisfying a completed function.)</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> example_task_function(p):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Fast function that creates several tiny geotiffs of gaussian-like kernels for later use in ffn_convolve."""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.run_this:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> computationally_intensive_loop:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Important Non-Obvious Note</strong></p>
+<p>Importing the script will define function(s) to add “tasks”, which take the ProjectFlow object as an argument and returns it after potential modification.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_all_tasks_to_task_tree(p):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p.generated_kernels_task <span class="op">=</span> p.add_task(example_task_function)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="iterating-over-many-model-assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="iterating-over-many-model-assumptions">Iterating over many model assumptions</h2>
 <p>In many case, such as a standard GTAPPy run, we will iterate over different aggergations and scenarios (now renamed counterfactuals). This is done as expected with code like this:</p>
-<div id="4a4be6ff" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> aggregation_label <span class="kw">in</span> p.aggregation_labels:</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> experiment_label <span class="kw">in</span> p.experiment_labels:</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> n_years_counter, ending_year <span class="kw">in</span> <span class="bu">enumerate</span>(p.years):</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> n_years_counter <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.base_year</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.years[n_years_counter <span class="op">-</span> <span class="dv">1</span>]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            output_dir <span class="op">=</span> p.get_path(os.path.join(aggregation_label, experiment_label, <span class="bu">str</span>(ending_year)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> aggregation_label <span class="kw">in</span> p.aggregation_labels:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> experiment_label <span class="kw">in</span> p.experiment_labels:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> n_years_counter, ending_year <span class="kw">in</span> <span class="bu">enumerate</span>(p.years):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> n_years_counter <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.base_year</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.years[n_years_counter <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            output_dir <span class="op">=</span> p.get_path(os.path.join(aggregation_label, experiment_label, <span class="bu">str</span>(ending_year)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>But sometimes, this becomes DEEPLY nested and confusing. SEALS implements an API that reads these nested layers from a CSV. This is defined more fully in the SEALS user guide.</p>
-<div id="eabb8603" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, row <span class="kw">in</span> p.scenarios_df.iterrows():</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    seals_utils.assign_df_row_to_object_attributes(p, row)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.scenario_type <span class="op">!=</span> <span class="st">'baseline'</span>:</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                            </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> n_years_counter, ending_year <span class="kw">in</span> <span class="bu">enumerate</span>(p.years):</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> n_years_counter <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.base_year</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.years[n_years_counter <span class="op">-</span> <span class="dv">1</span>]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            current_run_dirs <span class="op">=</span> os.path.join(p.exogenous_label, p.climate_label, p.model_label, p.counterfactual_label)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            output_dir <span class="op">=</span> p.get_path(current_run_dirs, <span class="bu">str</span>(ending_year))</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            expected_sl4_path <span class="op">=</span> os.path.join(output_dir, p.counterfactual_label <span class="op">+</span> <span class="st">'_Y'</span> <span class="op">+</span> <span class="bu">str</span>(ending_year) <span class="op">+</span> <span class="st">'.sl4'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, row <span class="kw">in</span> p.scenarios_df.iterrows():</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    seals_utils.assign_df_row_to_object_attributes(p, row)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.scenario_type <span class="op">!=</span> <span class="st">'baseline'</span>:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                            </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> n_years_counter, ending_year <span class="kw">in</span> <span class="bu">enumerate</span>(p.years):</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> n_years_counter <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.base_year</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                starting_year <span class="op">=</span> p.years[n_years_counter <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            current_run_dirs <span class="op">=</span> os.path.join(p.exogenous_label, p.climate_label, p.model_label, p.counterfactual_label)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            output_dir <span class="op">=</span> p.get_path(current_run_dirs, <span class="bu">str</span>(ending_year))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            expected_sl4_path <span class="op">=</span> os.path.join(output_dir, p.counterfactual_label <span class="op">+</span> <span class="st">'_Y'</span> <span class="op">+</span> <span class="bu">str</span>(ending_year) <span class="op">+</span> <span class="st">'.sl4'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In this scenarios_df, which was loaded from scenarios_csv_path, there are multiple nested for loops implied, for <code>p.exogenous_label, p.climate_label, p.model_label, p.counterfactual_label</code>, each row has a unique value that would have been iterated over with the for loop above. Now, however, we are iterating just over scenario_df rows. Within each row pass, a project-level attribute is assigned via <code>seals_utils.assign_df_row_to_object_attributes(p, row)</code>. This is used instead of the nested for loop.</p>
 </section>
 <section id="creating-scenarios-spreadsheets" class="level2">
 <h2 class="anchored" data-anchor-id="creating-scenarios-spreadsheets">Creating scenarios spreadsheets</h2>
 <p>Here. Explain why it writes the scenarios_csv FROM CODE rather than downloading it (keeps it up to date as code changes quickly). However, this gets convoluted when you also have to initialize the attributes before you write?!?</p>
-<div id="1d69d6ba" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want to run SEALS with the run.py file in a different directory (ie in the project dir)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then you need to add the path to the seals directory to the system path.</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    custom_seals_path <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> custom_seals_path <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># G:/My Drive/Files/Research/seals/seals_dev/seals</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        sys.path.insert(<span class="dv">0</span>, custom_seals_path)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SEALS will run based on the scenarios defined in a scenario_definitions.csv</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you have not run SEALS before, SEALS will generate it in your project's input_dir.</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A useful way to get started is to to run SEALS on the test data without modification</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and then edit the scenario_definitions.csv to your project needs.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Some of the other test files use different scenario definition csvs </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to illustrate the technique. If you point to one of these </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (or any one CSV that already exists), SEALS will not generate a new one.</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The avalable example files in the default_inputs include:</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># - test_three_scenario_defininitions.csv</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># - test_scenario_defininitions_multi_coeffs.csvs</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions.csv'</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set defaults and generate the scenario_definitions.csv if it doesn't exist.</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> hb.path_exists(p.scenario_definitions_path):</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># There are several possibilities for what you might want to set as the default.</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Choose accordingly by uncommenting your desired one. The set of</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># supported options are</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_dynamic_default (primary one)</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_dynamic_many_year_default</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_default # Deprecated</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        gtap_invest_utils.set_attributes_to_dynamic_gtap_default(p) <span class="co"># Default option</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># # Optional overrides for us in intitla scenarios</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># p.aoi = 'RWA'</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># gtap_invest_utils.set_attributes_to_dynamic_default(p)</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Once the attributes are set, generate the scenarios csv and put it in the input_dir.</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        gtap_invest_utils.generate_gtap_invest_scenarios_csv_and_put_in_input_dir(p)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        p.scenarios_df <span class="op">=</span> pd.read_csv(p.scenario_definitions_path)</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read in the scenarios csv and assign the first row to the attributes of this object (in order to setup additional </span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># project attributes like the resolutions of the fine scale and coarse scale data)</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        p.scenarios_df <span class="op">=</span> pd.read_csv(p.scenario_definitions_path)</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Because we've only read the scenarios file, set the attributes</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to what is in the first row.</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> index, row <span class="kw">in</span> p.scenarios_df.iterrows():</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            seals_utils.assign_df_row_to_object_attributes(p, row)</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span> <span class="co"># Just get first for initialization.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want to run SEALS with the run.py file in a different directory (ie in the project dir)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then you need to add the path to the seals directory to the system path.</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    custom_seals_path <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> custom_seals_path <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># G:/My Drive/Files/Research/seals/seals_dev/seals</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        sys.path.insert(<span class="dv">0</span>, custom_seals_path)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SEALS will run based on the scenarios defined in a scenario_definitions.csv</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you have not run SEALS before, SEALS will generate it in your project's input_dir.</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A useful way to get started is to to run SEALS on the test data without modification</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and then edit the scenario_definitions.csv to your project needs.</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Some of the other test files use different scenario definition csvs </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to illustrate the technique. If you point to one of these </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (or any one CSV that already exists), SEALS will not generate a new one.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The avalable example files in the default_inputs include:</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># - test_three_scenario_defininitions.csv</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># - test_scenario_defininitions_multi_coeffs.csvs</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions.csv'</span>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set defaults and generate the scenario_definitions.csv if it doesn't exist.</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> hb.path_exists(p.scenario_definitions_path):</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># There are several possibilities for what you might want to set as the default.</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Choose accordingly by uncommenting your desired one. The set of</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># supported options are</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_dynamic_default (primary one)</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_dynamic_many_year_default</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># - set_attributes_to_default # Deprecated</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        gtap_invest_utils.set_attributes_to_dynamic_gtap_default(p) <span class="co"># Default option</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># # Optional overrides for us in intitla scenarios</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># p.aoi = 'RWA'</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># gtap_invest_utils.set_attributes_to_dynamic_default(p)</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Once the attributes are set, generate the scenarios csv and put it in the input_dir.</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        gtap_invest_utils.generate_gtap_invest_scenarios_csv_and_put_in_input_dir(p)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        p.scenarios_df <span class="op">=</span> pd.read_csv(p.scenario_definitions_path)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Read in the scenarios csv and assign the first row to the attributes of this object (in order to setup additional </span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># project attributes like the resolutions of the fine scale and coarse scale data)</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>        p.scenarios_df <span class="op">=</span> pd.read_csv(p.scenario_definitions_path)</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Because we've only read the scenarios file, set the attributes</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to what is in the first row.</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> index, row <span class="kw">in</span> p.scenarios_df.iterrows():</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            seals_utils.assign_df_row_to_object_attributes(p, row)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span> <span class="co"># Just get first for initialization.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="task-format" class="level2">
 <h2 class="anchored" data-anchor-id="task-format">Task Format</h2>
 <p>Project flow requires a consistent format for tasks. The following is an example of a task that creates a correspondence file from gtap11 regions to gtapaez11 regions. The task itself defined as a function that takes a <code>p</code> object as an argument. This <code>p</code> object is a <code>ProjectFlow</code> object that contains all the project-level variables, manages folders and files, and manages tasks and parallelization. <code>p</code> also includes documentation, which will be written directly into the task directory.</p>
 <p>Also note that any project-level attribute defined in between the function start and the <code>if p.run_this:</code> component are the “project level variables” that are fair-game for use in other tasks. These paths are critical for high performance because they enable quick-skipping of completed tasks and determiniation of which parts of the task tree need rerunning.</p>
 <p>Tasks should be named as a noun (this breaks Python pep8 style) referencing what will be stored in the tasks output dir. This might feel awkward at first, but it means that the resultant file structure is easier to interpret by a non-EE outsider.</p>
-<div id="7d66c22c" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gtap_aez_seals_correspondences(p):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p.current_task_documentation <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Create correspondence CSVs from ISO3 countries to GTAPv11 160</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    regions, and then to gtapaezv11 50ish regions, also put the classification</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">    for seals simplification and luh.  </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)    </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.run_this:</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logic here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gtap_aez_seals_correspondences(p):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    p.current_task_documentation <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">    Create correspondence CSVs from ISO3 countries to GTAPv11 160</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">    regions, and then to gtapaezv11 50ish regions, also put the classification</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">    for seals simplification and luh.  </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)    </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.run_this:</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">"logic here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="automatic-directory-organization-via-tasks" class="level2">
 <h2 class="anchored" data-anchor-id="automatic-directory-organization-via-tasks">Automatic Directory Organization via Tasks</h2>
@@ -473,39 +533,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Outside of a given function’s code, you can still refer to paths that were defined from within the functions code, but now (because you are outside the function) it is given a new reference. Using the example above, you could reference the same directory with <code>p.econ_lcovercom_dir</code> where the p attribute is named exactly as &lt;function_name&gt;_dir</li>
 </ol>
 <p>All of this setup enable another useful feature: automatic management of file generation, storage and downloading. This is done via the hazelbean function:</p>
-<div id="74df3b66" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>useful_path <span class="op">=</span> hb.get_path(relative_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>useful_path <span class="op">=</span> hb.get_path(relative_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This function will iteratively search multiple locations and return the most “useful” one. By default, the relative_path variable will first joined with the p.cur_dir. If the file exists, it returns it. If not, it checks the next location, which is p.input_dir, and then p.base_data_dir. If it doesn’t find it anywhere, it will attempt to download it from google cloud (NYI) and save it in the p.cur_dir. If it is not available to download on google cloud, then it treats the path as something we will be generating within the task, and thus, get_path returns the first option above, namely joining the relative_path with p.cur_dir.</p>
 <p>One important use-case that needs explaining is for tasks that generate files that will eventually be placed in the base_data_dir. The goal is to enable easy generation of it to the intermediate directory in the appropriate task_dir, but then have the ability to copy the files with the exact same relative path to the base_data_dir and have it still be found by p.get_path(). To do this, you will want to choose a path name relative to the tasks’ cur_dir that matches the desired directory relative to the base data dir. So, for example, we include <code>'gtappy', 'aggregation_mappings'</code> at the beginning of the relative path for in the intermediate directory in the appropriate task_dir, but then we also will want to copy the files with the exact same relative path to the base_data_dir and have it still be found by p.get_path(). To do this, you will want to choose a path name relative to the tasks’ cur_dir that matches that in the base_data_dir, for example <code>&lt;base_data_dir&gt;/'gtappy/aggregation_mappings/gadm_adm0.gpkg',</code></p>
-<div id="573e0304" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>template_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gadm_adm0.gpkg'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>template_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gadm_adm0.gpkg'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>It can be hard deciding what counts as a base_data_generating task or not, but generally if it is a file that will not be used by other projects, you should not treat it as a base_data_generating task. Instead, you should just make it relative to the cur_dir (or wahtever makes sense), as below:</p>
-<div id="1610aabe" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> p.get_path(os.path.join(aggregation_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> experiment_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> header <span class="op">+</span> <span class="st">'_stacked_time_series.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> p.get_path(os.path.join(aggregation_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> experiment_label <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> header <span class="op">+</span> <span class="st">'_stacked_time_series.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>One additional exception to the above is if you are calling get_path outside of a task/task_tree. One common example is in the run file before you build the task tree. In this case, the default_dirs will not make sense, and so you need to specify it manually as here:</p>
-<div id="ba75f348" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p.countries_iso3_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'cartographic'</span>, <span class="st">'gadm'</span>, <span class="st">'gadm_adm0_10sec.gpkg'</span>), possible_dirs<span class="op">=</span>[p.input_dir, p.base_data_dir])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p.countries_iso3_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'cartographic'</span>, <span class="st">'gadm'</span>, <span class="st">'gadm_adm0_10sec.gpkg'</span>), possible_dirs<span class="op">=</span>[p.input_dir, p.base_data_dir])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="validation-of-files" class="level2">
 <h2 class="anchored" data-anchor-id="validation-of-files">Validation of files</h2>
 <p>ProjectFlow is designed to calculate very fast while simultaneously validating that everything is approximately correct. It does this by checking for the existence of files (often combined with hb.get_path()). For example</p>
-<div id="302fa243" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'gadm_r263_gtapv7_r251_r160_r50_regions.gpkg'</span>))     </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> hb.path_exists(p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path):         </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    hb.log(<span class="st">'Creating '</span> <span class="op">+</span> p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path)         </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"computationally expensive thing here."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'gadm_r263_gtapv7_r251_r160_r50_regions.gpkg'</span>))     </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> hb.path_exists(p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path):         </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    hb.log(<span class="st">'Creating '</span> <span class="op">+</span> p.gadm_r263_gtapv7_r251_r160_r50_correspondence_vector_path)         </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"computationally expensive thing here."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>ProjectFlow very carefully defines whether or not you should run something based on the existence of specific paths. Usually this is just checking for each written path and only executing the code if it’s missing, but in some cases where lots of files are created, it’s possible to take the shortcut of just checking for the existence of the last-created path.</p>
 <section id="eliminating-redundant-calculation-across-projects" class="level3">
 <h3 class="anchored" data-anchor-id="eliminating-redundant-calculation-across-projects">Eliminating redundant calculation across projects</h3>
 <p>If you have a time consuming task that, or example, writes to</p>
-<div id="7f239e9f" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>big_file_path <span class="op">=</span> hb.get_path(<span class="st">'lulc'</span>, <span class="st">'esa'</span>, <span class="st">'seals7'</span>, <span class="st">'convolutions'</span>, <span class="st">'2017'</span>, <span class="st">'convolution_esa_seals7_2017_cropland_gaussian_5.tif'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>big_file_path <span class="op">=</span> hb.get_path(<span class="st">'lulc'</span>, <span class="st">'esa'</span>, <span class="st">'seals7'</span>, <span class="st">'convolutions'</span>, <span class="st">'2017'</span>, <span class="st">'convolution_esa_seals7_2017_cropland_gaussian_5.tif'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In this example, suppose you needed to create this file via your create_convolutions() task or something. When you first do this, it obviously won’t exist yet, so get_path() will join that relative path in the p.cur_dir location. If you run the ProjectFlow again, it will see it’s there and then instantly skip recalcualting it.</p>
 <p>In addition to the 5 repos plus the EE repo, there is a managed base data set stored in teh same location</p>
 <p><img src="images/paste-25.png" class="img-fluid"></p>
@@ -515,15 +569,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="python-tips-and-conventions" class="level3">
 <h3 class="anchored" data-anchor-id="python-tips-and-conventions">Python Tips and Conventions</h3>
 <p>For large files that take a long time to load, use a string-&gt;dataframe/dataset substitution as below. Make a LOCAL variable to contain the loaded object, and have that be assigned to the correct project-level path string. In subsequent usages, check type and if it’s still a string, then it hasn’t been loaded yet, so do that. I’m debating making it a project level variable trick</p>
-<div id="b4cb21b7" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gadm <span class="op">=</span> p.gadm_adm0_vector_input_path    </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Just load it on first pass</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">type</span>(gadm) <span class="kw">is</span> <span class="bu">str</span>:</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    gadm <span class="op">=</span> hb.read_vector(p.gadm_adm0_vector_input_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gadm <span class="op">=</span> p.gadm_adm0_vector_input_path    </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Just load it on first pass</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">type</span>(gadm) <span class="kw">is</span> <span class="bu">str</span>:</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    gadm <span class="op">=</span> hb.read_vector(p.gadm_adm0_vector_input_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 </section>
 </section>
 

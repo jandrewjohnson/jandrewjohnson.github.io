@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/hazelbean.html" class="sidebar-item-text sidebar-link">
+            <a href="../earth_economy_devstack/hazelbean.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hazelbean</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/hazelbean.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/hazelbean.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -311,7 +311,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link active" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
+  <li><a href="#conventions" id="toc-conventions" class="nav-link active" data-scroll-target="#conventions">Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
   <li><a href="#id-index-etc.-in-the-context-of-vector-data" id="toc-id-index-etc.-in-the-context-of-vector-data" class="nav-link" data-scroll-target="#id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</a></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
   <li><a href="#correspondences" id="toc-correspondences" class="nav-link" data-scroll-target="#correspondences">Correspondences</a></li>
@@ -319,6 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#correspondences-with-geometries" id="toc-correspondences-with-geometries" class="nav-link" data-scroll-target="#correspondences-with-geometries">Correspondences with geometries</a></li>
   <li><a href="#more-on-naming-conventions" id="toc-more-on-naming-conventions" class="nav-link" data-scroll-target="#more-on-naming-conventions">More on naming Conventions</a></li>
   <li><a href="#variable-and-scenario-naming-conventions" id="toc-variable-and-scenario-naming-conventions" class="nav-link" data-scroll-target="#variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</a></li>
+  </ul></li>
   <li><a href="#python-tricks" id="toc-python-tricks" class="nav-link" data-scroll-target="#python-tricks">Python tricks</a>
   <ul class="incremental collapse">
   <li><a href="#setting-the-environment" id="toc-setting-the-environment" class="nav-link" data-scroll-target="#setting-the-environment">Setting the environment</a></li>
@@ -329,25 +332,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Conventions</h1>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
+<section id="conventions" class="level1">
+<h1>Conventions</h1>
 <section id="id-index-label-name-description" class="level3">
 <h3 class="anchored" data-anchor-id="id-index-label-name-description">Id, index, label, name, description</h3>
 <p>In programming, <code>id</code> and <code>index</code> are two different concepts that are used in different contexts.</p>
@@ -415,28 +404,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If defined exactly right, 2 dimensional correspondence files will work with <code>Hazelbean</code> via</p>
 <p><code>seals_utils.set_derived_attributes(p)</code></p>
 <p>and</p>
-<div id="9eac27ca" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)}`</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># return a very useful dictionary for various reclassification tasks:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="c44db120" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>return_dict <span class="op">=</span> {} return_dict[<span class="st">'dst_to_src_reclassification_dict'</span>] <span class="op">=</span> dst_to_src_reclassification_dict  <span class="co"># Dict of one-to-many keys to lists of what each dst_key should be mapped to from each src_key. Useful when aggrigating multiple layers to a aggregated dest type </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] <span class="op">=</span> src_to_dst_reclassification_dict <span class="co"># Useful when going to a specific value. </span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_to_src_labels_dict'</span>] <span class="op">=</span> dst_to_src_labels_dict <span class="co"># Dictionary of lists of labels that map to each dst label </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(src_ids) <span class="co"># Unique set of src_ids r</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_ids) <span class="co"># Unique set of dst_ids </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(src_labels) <span class="co"># Unique set of src_labels </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_labels) <span class="co"># Unique set of dst_labels </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_ids'</span>], return_dict[<span class="st">'src_labels'</span>])} <span class="co"># one-to-one dictionary of src ids to labels </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_ids'</span>], return_dict[<span class="st">'dst_labels'</span>])} <span class="co"># one-to-one dictionary of dst ids to labels </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_labels'</span>], return_dict[<span class="st">'src_ids'</span>])} <span class="co"># one-to-one dictionary of src labels to ids </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_labels'</span>], return_dict[<span class="st">'dst_ids'</span>])} <span class="co"># one-to-one dictionary of dst labels to ids}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)}`</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># return a very useful dictionary for various reclassification tasks:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>return_dict <span class="op">=</span> {} return_dict[<span class="st">'dst_to_src_reclassification_dict'</span>] <span class="op">=</span> dst_to_src_reclassification_dict  <span class="co"># Dict of one-to-many keys to lists of what each dst_key should be mapped to from each src_key. Useful when aggrigating multiple layers to a aggregated dest type </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] <span class="op">=</span> src_to_dst_reclassification_dict <span class="co"># Useful when going to a specific value. </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_to_src_labels_dict'</span>] <span class="op">=</span> dst_to_src_labels_dict <span class="co"># Dictionary of lists of labels that map to each dst label </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(src_ids) <span class="co"># Unique set of src_ids r</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_ids) <span class="co"># Unique set of dst_ids </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(src_labels) <span class="co"># Unique set of src_labels </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_labels) <span class="co"># Unique set of dst_labels </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_ids'</span>], return_dict[<span class="st">'src_labels'</span>])} <span class="co"># one-to-one dictionary of src ids to labels </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_ids'</span>], return_dict[<span class="st">'dst_labels'</span>])} <span class="co"># one-to-one dictionary of dst ids to labels </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_labels'</span>], return_dict[<span class="st">'src_ids'</span>])} <span class="co"># one-to-one dictionary of src labels to ids </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_labels'</span>], return_dict[<span class="st">'dst_ids'</span>])} <span class="co"># one-to-one dictionary of dst labels to ids}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Among other possibilities, this could be used for reclassifying LULC geotiffs via</p>
-<div id="4d445fac" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="combined-ids" class="level3">
 <h3 class="anchored" data-anchor-id="combined-ids">Combined ids</h3>
@@ -446,14 +432,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="correspondences-with-geometries" class="level3">
 <h3 class="anchored" data-anchor-id="correspondences-with-geometries">Correspondences with geometries</h3>
-<div id="e7fe1dce" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The rules for naming correspondences are a little different when adding geometry to the data. Because}     </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # only 1 geometry can be assigned per file, and becasue membership of aggregated regions and their     </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # members can get confusing, each correspondence file keeps all the labels but then is also saved along     </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># # with a geometry file that drops the other labels (and the word correspondence in the filename).     </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p.ee_r264_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))     </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p.ee_r264_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264.gpkg'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The rules for naming correspondences are a little different when adding geometry to the data. Because}     </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # only 1 geometry can be assigned per file, and becasue membership of aggregated regions and their     </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># # members can get confusing, each correspondence file keeps all the labels but then is also saved along     </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # with a geometry file that drops the other labels (and the word correspondence in the filename).     </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p.ee_r264_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))     </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p.ee_r264_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264.gpkg'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="more-on-naming-conventions" class="level3">
 <h3 class="anchored" data-anchor-id="more-on-naming-conventions">More on naming Conventions</h3>
@@ -466,11 +451,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Appart from correspondence files, we also have <strong>labels</strong> files, such as gtapv7_r251_labels_path. Labels files are for a single set/variable/dimension but map together the synonymous categorizers. Specifically, it must have an id, label, and name, all filled out for every entry. It can optionally have others like description.</p>
 <p>In the filename gtapv7_r251_labels_path we extract from the input_path and write a EE-compliant labels table for the gtapv7 r251 set. In the filename <code>gtap11_gtapaez11_region_correspondence_path</code>, we use these regions and then connect it to the gtapaez11 labels. We can infer also that it is from a mapping labeled gtap11 to gtapaez11 and that the variable in question is the regions while the word correspondence then indicates this is a many-to-one mapping file.</p>
 <p>Note that the file path says “regions” while the column label in the CSV says “region”.</p>
-<div id="d2b65f81" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="variable-and-scenario-naming-conventions" class="level2">
 <h2 class="anchored" data-anchor-id="variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</h2>
@@ -559,6 +543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul></li>
 </ul>
+</section>
 </section>
 <section id="python-tricks" class="level1">
 <h1>Python tricks</h1>

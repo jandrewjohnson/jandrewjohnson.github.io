@@ -369,7 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#first-run-walkthrough-tutorial" id="toc-first-run-walkthrough-tutorial" class="nav-link active" data-scroll-target="#first-run-walkthrough-tutorial">First run walkthrough tutorial</a>
+  <li><a href="#first-seals-run-walkthrough" id="toc-first-seals-run-walkthrough" class="nav-link active" data-scroll-target="#first-seals-run-walkthrough">First SEALS run walkthrough</a>
   <ul class="incremental collapse">
   <li><a href="#running-the-model" id="toc-running-the-model" class="nav-link" data-scroll-target="#running-the-model">Running the model</a></li>
   </ul></li>
@@ -382,12 +382,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="first-run-walkthrough-tutorial" class="level1">
-<h1>First run walkthrough tutorial</h1>
-<p>If you haven’t already, make sure you have followed all of the steps in the <a href="docs/installation.qmd">installation</a> page.</p>
-<p>In particular, you will have to Clone the SEALS and Hazelbean repositories in the correct location (as described here)</p>
-<p>https://justinandrewjohnson.com/earth_economy_devstack/seals.html#release-notes</p>
-<p>SEALS relies heavily on the <a href="docs/project_flow.html">Project Flow</a> component of Hazelbean. ProjectFlow defines a tree of tasks that can easily be run in parallel where needed and keeping track of task-dependencies.</p>
+<section id="first-seals-run-walkthrough" class="level1">
+<h1>First SEALS run walkthrough</h1>
+<ul class="incremental">
+<li><p>Make sure you have followed all of the steps in the <a href="../earth_economy_devstack/installation.html">installation</a> page.</p>
+<ul class="incremental">
+<li>In particular, Clone the SEALS and Hazelbean repositories in the correct location
+<ul class="incremental">
+<li><a href="installation.html#clone-the-required-repositories">Described here</a> and <a href="../earth_economy_devstack/installation.html#clone-the-required-repositories">here</a></li>
+</ul></li>
+<li>You will know you’ve got them installed correctly if your VS Code Explorer tab shows the repositories without an error message
+<ul class="incremental">
+<li>Like this:
+<ul class="incremental">
+<li><img src="images/paste-45.png" class="img-fluid" width="201"></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>SEALS relies heavily on the <a href="project_flow.html">Project Flow</a> component of Hazelbean. ProjectFlow defines a tree of tasks that can easily be run in parallel where needed and keeping track of task-dependencies.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">### ------- ENVIRONMENT SETTINGS -------------------------------</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>

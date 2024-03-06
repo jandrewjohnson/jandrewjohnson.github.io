@@ -164,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">MESH</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../earth_economy_devstack/seals.html">
+    <a class="dropdown-item" href="../earth_economy_devstack/seals.qmd">
  <span class="dropdown-text">SEALS</span></a>
   </li>  
     </ul>
@@ -261,12 +261,41 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">GTAP-InVEST</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals.html" class="sidebar-item-text sidebar-link">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SEALS</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_quickstart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quickstart</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_walkthrough.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Walkthrough</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/methods.html" class="sidebar-item-text sidebar-link">
@@ -318,7 +347,15 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="global-invest" class="level1">
 <h1>Global InVEST</h1>
-<p>NYI</p>
+<p>The standard version of <a href="https://naturalcapitalproject.stanford.edu/software/invest">InVEST</a>, provided by the Natural Capital Project, is a set of tools for quantifying the values of natural capital in clear, credible, and practical ways. InVEST enables decision-makers to assess the trade-offs associated with alternative management choices and to identify the policies and practices that can best balance human needs with environmental sustainability. InVEST is designed to be accessible to a broad audience, including conservation organizations, governments, development banks, academics, and the private sector.</p>
+<p>The InVEST software comprises an easy-to-use <a href="https://naturalcapitalproject.stanford.edu/software/invest">graphical interface version</a> as well as direct access to the <a href="https://github.com/natcap/invest">Python library</a> for advanced users. Typical InVEST applications looked at individual watersheds or small administrative regions. Starting with<a href="https://www.science.org/doi/full/10.1126/science.aaw3372">Chaplin-Kramer et al.&nbsp;(2019</a>), however, a series of global applications of InVEST have developed. These applications have sometimes used the standard InVEST Python library, but in most cases, custom versions were created to enable calculation of the models globally (which was challenging for both computation and data reasons). The term <strong>Global InVEST</strong> refers informally to the multiple code repositories behind these applications. Although the code-base for Global InVEST is still fragmented, we are working to organize and standardize these models.</p>
+<p>The three main sources for Global InVEST is</p>
+<ul class="incremental">
+<li>Nature’s Contributions to People: <a href="https://www.science.org/doi/full/10.1126/science.aaw3372">Chaplin-Kramer et al.&nbsp;(2019)</a></li>
+<li>GTAP-InVEST: <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">Johnson et al.&nbsp;(2023)</a></li>
+<li>Nature’s Frontiers: <a href="https://www.worldbank.org/en/publication/natures-frontiers">Damania et al.&nbsp;(2023)</a></li>
+</ul>
+<p><img src="images/paste-44.png" class="img-fluid"></p>
 
 
 </section>

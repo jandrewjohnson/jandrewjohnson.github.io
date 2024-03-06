@@ -371,6 +371,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#first-seals-run-walkthrough" id="toc-first-seals-run-walkthrough" class="nav-link active" data-scroll-target="#first-seals-run-walkthrough">First SEALS run walkthrough</a>
   <ul class="incremental collapse">
+  <li><a href="#getting-set-up" id="toc-getting-set-up" class="nav-link" data-scroll-target="#getting-set-up">Getting set up</a></li>
+  <li><a href="#explore-the-seals-code" id="toc-explore-the-seals-code" class="nav-link" data-scroll-target="#explore-the-seals-code">Explore the SEALS code</a></li>
+  <li><a href="#run-files" id="toc-run-files" class="nav-link" data-scroll-target="#run-files">Run files</a></li>
+  <li><a href="#setting-up-the-run-file" id="toc-setting-up-the-run-file" class="nav-link" data-scroll-target="#setting-up-the-run-file">Setting up the run file</a></li>
   <li><a href="#running-the-model" id="toc-running-the-model" class="nav-link" data-scroll-target="#running-the-model">Running the model</a></li>
   </ul></li>
   </ul>
@@ -384,8 +388,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="first-seals-run-walkthrough" class="level1">
 <h1>First SEALS run walkthrough</h1>
+<section id="getting-set-up" class="level2">
+<h2 class="anchored" data-anchor-id="getting-set-up">Getting set up</h2>
 <ul class="incremental">
-<li><p>Make sure you have followed all of the steps in the <a href="../earth_economy_devstack/installation.html">installation</a> page.</p>
+<li>Make sure you have followed all of the steps in the <a href="../earth_economy_devstack/installation.html">installation</a> page.
 <ul class="incremental">
 <li>In particular, Clone the SEALS and Hazelbean repositories in the correct location
 <ul class="incremental">
@@ -393,34 +399,91 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li>You will know you’ve got them installed correctly if your VS Code Explorer tab shows the repositories without an error message
 <ul class="incremental">
-<li>Like this:
+<li>As pictured</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><img src="images/paste-45.png" class="img-fluid" width="201"></p>
+</section>
+<section id="explore-the-seals-code" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-seals-code">Explore the SEALS code</h2>
 <ul class="incremental">
-<li><img src="images/paste-45.png" class="img-fluid" width="201"></li>
+<li>In the VS Code Explorer tab, navigate to your seals_dev directory
+<ul class="incremental">
+<li>Quick note about file organization
+<ul class="incremental">
+<li>The rool of seals_dev contains more than just the seals library, such as directories for scripts, images, etc.</li>
+<li>The library itself is in the seals subdirectory <code>seals_dev/seals</code> which may seem redundant but is necessary for the way Python imports work.</li>
+<li>If you inspect the seals directory, you will see an <code>__init__.py</code> file. This make Python able to import the directory as a package.</li>
+</ul></li>
+<li>You will also see a <code>seals_main.py</code> file. This is where most of the actual logic of seals is.</li>
+</ul></li>
+</ul>
+<p><img src="images/2024-03-06-04-41-48.png" class="img-fluid"></p>
+</section>
+<section id="run-files" class="level2">
+<h2 class="anchored" data-anchor-id="run-files">Run files</h2>
+<ul class="incremental">
+<li>One does not simply run a <code>main.py</code> (fig1)
+<ul class="incremental">
+<li>Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
+<li>Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
+</ul></li>
+<li>We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
+</ul>
+<p><img src="images/2024-03-06-04-53-49.png" class="img-fluid"></p>
+<p><img src="images/2024-03-06-04-56-59.png" class="img-fluid"></p>
+</section>
+<section id="setting-up-the-run-file" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-the-run-file">Setting up the run file</h2>
+<ul class="incremental">
+<li>The run file begins with standard python imports</li>
+<li>Then in the <code>if __name__ == '__main__':</code> block, we define the project directory and initialize the project flow object
+<ul class="incremental">
+<li>The reason for putting it in this block is so that you don’t accidentally run the code when you import the file in another script</li>
+</ul></li>
+<li>SEALS (and the EE Devstack) assumes (or softly requires) that you put all code and data somewhere relative to the user’s home directory <code>os.path.expanduser('~')</code>
+<ul class="incremental">
+<li>Can put it in suddirectories with <code>extra_dirs = ['Files', 'seals', 'projects']</code></li>
+</ul></li>
+<li>If you followed the EE method, you will have already created the <code>seals</code> directory at <code>&lt;user_dir&gt;/Files/seals</code>
+<ul class="incremental">
+<li>In the <code>seals</code> directory, your code is in <code>seals_dev</code></li>
+<li>In the <code>seals</code> directory, you also will have a <code>projects</code> direcotry
+<ul class="incremental">
+<li>This is created automatically if its not there</li>
+<li>All data and outputs will be saved in this directory
+<ul class="incremental">
+<li>As a best practice, you should not save data in the <code>seals_dev</code> directory</li>
 </ul></li>
 </ul></li>
 </ul></li>
 </ul>
-<p>SEALS relies heavily on the <a href="project_flow.html">Project Flow</a> component of Hazelbean. ProjectFlow defines a tree of tasks that can easily be run in parallel where needed and keeping track of task-dependencies.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">### ------- ENVIRONMENT SETTINGS -------------------------------</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Users should only need to edit lines in this ENVIRONMENT SETTINGS section</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Everything is relative to these (or the source code dir).</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Specifically,</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. ensure that the project_dir makes sense for your machine</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. ensure that the base_data_dir makes sense for your machine</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. ensure that the data_credentials_path points to a valid credentials file</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. ensure that the input_bucket_name points to a cloud bucket you have access to</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A ProjectFlow object is created from the Hazelbean library to organize directories and enable parallel processing.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># project-level variables are assigned as attributes to the p object (such as in p.base_data_dir = ... below)</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The only agrument for a project flow object is where the project directory is relative to the current_working_directory.</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    script_dir <span class="op">=</span> os.path.dirname(os.path.realpath(<span class="va">__file__</span>))</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    project_name <span class="op">=</span> <span class="st">'test_seals_project'</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    project_dir <span class="op">=</span> os.path.join(user_dir,  <span class="st">'seals'</span>, <span class="st">'projects'</span>, project_name)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_dir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_utils</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_initialize_project</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> seals_utils <span class="im">import</span> download_google_cloud_blob</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>main <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">### ------- ENVIRONMENT SETTINGS -------------------------------</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Users should only need to edit lines in this ENVIRONMENT SETTINGS section</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A ProjectFlow object is created from the Hazelbean library to organize directories and enable parallel processing.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># project-level variables are assigned as attributes to the p object (such as in p.base_data_dir = ... below)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The only agrument for a project flow object is where the project directory is relative to the current_working_directory.</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This organization, defined with extra dirs relative to the user_dir is the EE-spec.</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>)        </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    extra_dirs <span class="op">=</span> [<span class="st">'Files'</span>, <span class="st">'seals'</span>, <span class="st">'projects'</span>]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The project_name is used to name the project directory below. Also note that</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ProjectFlow only calculates tasks that haven't been done yet, so adding </span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># a new project_name will give a fresh directory and ensure all parts</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># are run.</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    project_name <span class="op">=</span> <span class="st">'test_standard'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The project name and the project dir will define the root directory where all files will be saved. This directory is given <code>hb.ProjectFlow()</code> to initalize the project (which will create the dirs). Once these are set, you should be able to run run_test_seals.py in your preferred way, ensuring that you are in the Conda environment discussed above. This could be achieved in VS Code by selecting the Conda environment in the bottom-right status bar and then selecting run. Alternatively, this could be done via the command line with the command <code>python run_test_seals.py</code> in the appropriate directory.</p>
 <p>When SEALS is run in this way, it will use the default values for a test run on a small country (Rawanda). All of these values are set (and documented) in the run file (run_test_seals.py) in the SET DEFAULT VARIABLES section. For your first run, it is recommended to use the defaults. When run, a configuration file will be written into your project’s input_dir named scenario_definitions.csv. This file is a table where each row is a “scenario” necessary to be defined for SEALS to run. In this minimal run, it must have 2 rows: one for the baseline condition (the starting LULC map) and one for a scenario of change that will indicate how much change of each LU class will happen in some coarse grid-cell or region/zone. Inspecting and/or modifying this file may give insights on how to customize a new run.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -453,6 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p.data_credentials_path <span class="op">=</span> <span class="st">'..</span><span class="ch">\\</span><span class="st">api_key_credentials.json'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>NOTE THAT the final directory has to be named base_data to match the naming convention on the google cloud bucket.</p>
+</section>
 <section id="running-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-model">Running the model</h2>
 <p>After doing the above steps, you should be ready to run <code>run_test_seals.py</code>. Upon starting, SEALS will report the “task tree” of steps that it will compute in the ProjectFlow environment. To understand SEALS in more depth, inspect each of the functions that define these tasks for more documention in the code.</p>

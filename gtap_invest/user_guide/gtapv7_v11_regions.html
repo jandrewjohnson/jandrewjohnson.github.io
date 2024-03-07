@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Justin Andrew Johnson - GTAP-InVEST User Guide</title>
+<title>Justin Andrew Johnson</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -190,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../gtap_invest/user_guide/index.html">GTAP-InVEST User Guide</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../gtap_invest/user_guide/gtapv7_v11_regions.html">Regions in v11:</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -204,7 +204,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../gtap_invest/user_guide/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../gtap_invest/user_guide/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAP-InVEST User Guide</span></a>
   </div>
 </li>
@@ -240,7 +240,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../gtap_invest/user_guide/gtapv7_v11_regions.html" class="sidebar-item-text sidebar-link">
+  <a href="../../gtap_invest/user_guide/gtapv7_v11_regions.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Regions in v11:</span></a>
   </div>
 </li>
@@ -266,36 +266,995 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1. Introduction</a></li>
+  <li><a href="#regions-in-v11" id="toc-regions-in-v11" class="nav-link active" data-scroll-target="#regions-in-v11">Regions in v11:</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">GTAP-InVEST User Guide</h1>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
-<p>This is the User Guide for GTAP-InVEST, a new earth-economy model introduced in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">“Investing in nature can improve equity and economic returns” (Johnson et al.&nbsp;2023, PNAS)</a>. The content here originally derived from the supplemental information document included with PNAS article. However, development on the model is progressing rapidly, so please refer to this document, which will remain up-to-date. For additional details, please see the GTAP-InVEST Github repository (<a href="https://github.com/jandrewjohnson/gtap_invest">github.com/jandrewjohnson/gtap_invest</a>). All code and results of the model are available and licensed under a permissive open-source license. Full results may be downloaded at <a href="gtap_invest/results">justinandrewjohnson.com/gtap_invest/results</a>.</p>
-<p><img src="images/2024-03-05-04-03-49.png" class="img-fluid"></p>
+<section id="regions-in-v11" class="level1">
+<h1>Regions in v11:</h1>
+<p>Aggregate string: v11_r160_labels</p>
+<table class="table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>gtapv7_r160_id</td>
+<td>gtapv7_r160_label</td>
+<td>gtapv7_r160_name</td>
+<td>gtapv7_r160_description</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>aus</td>
+<td>Australia</td>
+<td>Australia</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>nzl</td>
+<td>New Zealand</td>
+<td>New Zealand</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>xoc</td>
+<td>Rest of Oceania</td>
+<td>Rest of Oceania</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>chn</td>
+<td>China</td>
+<td>China</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>hkg</td>
+<td>China, Hong Kong SAR</td>
+<td>China, Hong Kong SAR</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>jpn</td>
+<td>Japan</td>
+<td>Japan</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>kor</td>
+<td>Republic of Korea</td>
+<td>Republic of Korea</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>mng</td>
+<td>Mongolia</td>
+<td>Mongolia</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>twn</td>
+<td>Taiwan Province of China</td>
+<td>Taiwan Province of China</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>xea</td>
+<td>Rest of East Asia</td>
+<td>Rest of East Asia</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>brn</td>
+<td>Brunei Darussalam</td>
+<td>Brunei Darussalam</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>khm</td>
+<td>Cambodia</td>
+<td>Cambodia</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>idn</td>
+<td>Indonesia</td>
+<td>Indonesia</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>lao</td>
+<td>Lao People’s Democratic Republic</td>
+<td>Lao People’s Democratic Republic</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>mys</td>
+<td>Malaysia</td>
+<td>Malaysia</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>phl</td>
+<td>Philippines</td>
+<td>Philippines</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>sgp</td>
+<td>Singapore</td>
+<td>Singapore</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td>tha</td>
+<td>Thailand</td>
+<td>Thailand</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>vnm</td>
+<td>Viet Nam</td>
+<td>Viet Nam</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>xse</td>
+<td>Rest of Southeast Asia</td>
+<td>Rest of Southeast Asia</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>afg</td>
+<td>Afghanistan</td>
+<td>Afghanistan</td>
+</tr>
+<tr class="odd">
+<td>22</td>
+<td>bgd</td>
+<td>Bangladesh</td>
+<td>Bangladesh</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>ind</td>
+<td>India</td>
+<td>India</td>
+</tr>
+<tr class="odd">
+<td>24</td>
+<td>npl</td>
+<td>Nepal</td>
+<td>Nepal</td>
+</tr>
+<tr class="even">
+<td>25</td>
+<td>pak</td>
+<td>Pakistan</td>
+<td>Pakistan</td>
+</tr>
+<tr class="odd">
+<td>26</td>
+<td>lka</td>
+<td>Sri Lanka</td>
+<td>Sri Lanka</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>xsa</td>
+<td>Rest of South Asia</td>
+<td>Rest of South Asia</td>
+</tr>
+<tr class="odd">
+<td>28</td>
+<td>can</td>
+<td>Canada</td>
+<td>Canada</td>
+</tr>
+<tr class="even">
+<td>29</td>
+<td>usa</td>
+<td>United States of America</td>
+<td>United States of America</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td>mex</td>
+<td>Mexico</td>
+<td>Mexico</td>
+</tr>
+<tr class="even">
+<td>31</td>
+<td>xna</td>
+<td>Rest of North America</td>
+<td>Rest of North America</td>
+</tr>
+<tr class="odd">
+<td>32</td>
+<td>arg</td>
+<td>Argentina</td>
+<td>Argentina</td>
+</tr>
+<tr class="even">
+<td>33</td>
+<td>bol</td>
+<td>Bolivia (Plurinational State of)</td>
+<td>Bolivia (Plurinational State of)</td>
+</tr>
+<tr class="odd">
+<td>34</td>
+<td>bra</td>
+<td>Brazil</td>
+<td>Brazil</td>
+</tr>
+<tr class="even">
+<td>35</td>
+<td>chl</td>
+<td>Chile</td>
+<td>Chile</td>
+</tr>
+<tr class="odd">
+<td>36</td>
+<td>col</td>
+<td>Colombia</td>
+<td>Colombia</td>
+</tr>
+<tr class="even">
+<td>37</td>
+<td>ecu</td>
+<td>Ecuador</td>
+<td>Ecuador</td>
+</tr>
+<tr class="odd">
+<td>38</td>
+<td>pry</td>
+<td>Paraguay</td>
+<td>Paraguay</td>
+</tr>
+<tr class="even">
+<td>39</td>
+<td>per</td>
+<td>Peru</td>
+<td>Peru</td>
+</tr>
+<tr class="odd">
+<td>40</td>
+<td>ury</td>
+<td>Uruguay</td>
+<td>Uruguay</td>
+</tr>
+<tr class="even">
+<td>41</td>
+<td>ven</td>
+<td>Venezuela (Bolivarian Republic of)</td>
+<td>Venezuela (Bolivarian Republic of)</td>
+</tr>
+<tr class="odd">
+<td>42</td>
+<td>xsm</td>
+<td>Rest of South America</td>
+<td>Rest of South America</td>
+</tr>
+<tr class="even">
+<td>43</td>
+<td>cri</td>
+<td>Costa Rica</td>
+<td>Costa Rica</td>
+</tr>
+<tr class="odd">
+<td>44</td>
+<td>gtm</td>
+<td>Guatemala</td>
+<td>Guatemala</td>
+</tr>
+<tr class="even">
+<td>45</td>
+<td>hnd</td>
+<td>Honduras</td>
+<td>Honduras</td>
+</tr>
+<tr class="odd">
+<td>46</td>
+<td>nic</td>
+<td>Nicaragua</td>
+<td>Nicaragua</td>
+</tr>
+<tr class="even">
+<td>47</td>
+<td>pan</td>
+<td>Panama</td>
+<td>Panama</td>
+</tr>
+<tr class="odd">
+<td>48</td>
+<td>slv</td>
+<td>El Salvador</td>
+<td>El Salvador</td>
+</tr>
+<tr class="even">
+<td>49</td>
+<td>xca</td>
+<td>Rest of Central America</td>
+<td>Rest of Central America</td>
+</tr>
+<tr class="odd">
+<td>50</td>
+<td>dom</td>
+<td>Dominican Republic</td>
+<td>Dominican Republic</td>
+</tr>
+<tr class="even">
+<td>51</td>
+<td>hti</td>
+<td>Haiti</td>
+<td>Haiti</td>
+</tr>
+<tr class="odd">
+<td>52</td>
+<td>jam</td>
+<td>Jamaica</td>
+<td>Jamaica</td>
+</tr>
+<tr class="even">
+<td>53</td>
+<td>pri</td>
+<td>Puerto Rico</td>
+<td>Puerto Rico</td>
+</tr>
+<tr class="odd">
+<td>54</td>
+<td>tto</td>
+<td>Trinidad and Tobago</td>
+<td>Trinidad and Tobago</td>
+</tr>
+<tr class="even">
+<td>55</td>
+<td>xcb</td>
+<td>Caribbean</td>
+<td>Caribbean</td>
+</tr>
+<tr class="odd">
+<td>56</td>
+<td>aut</td>
+<td>Austria</td>
+<td>Austria</td>
+</tr>
+<tr class="even">
+<td>57</td>
+<td>bel</td>
+<td>Belgium</td>
+<td>Belgium</td>
+</tr>
+<tr class="odd">
+<td>58</td>
+<td>bgr</td>
+<td>Bulgaria</td>
+<td>Bulgaria</td>
+</tr>
+<tr class="even">
+<td>59</td>
+<td>hrv</td>
+<td>Croatia</td>
+<td>Croatia</td>
+</tr>
+<tr class="odd">
+<td>60</td>
+<td>cyp</td>
+<td>Cyprus</td>
+<td>Cyprus</td>
+</tr>
+<tr class="even">
+<td>61</td>
+<td>cze</td>
+<td>Czechia</td>
+<td>Czechia</td>
+</tr>
+<tr class="odd">
+<td>62</td>
+<td>dnk</td>
+<td>Denmark</td>
+<td>Denmark</td>
+</tr>
+<tr class="even">
+<td>63</td>
+<td>est</td>
+<td>Estonia</td>
+<td>Estonia</td>
+</tr>
+<tr class="odd">
+<td>64</td>
+<td>fin</td>
+<td>Finland</td>
+<td>Finland</td>
+</tr>
+<tr class="even">
+<td>65</td>
+<td>fra</td>
+<td>France</td>
+<td>France</td>
+</tr>
+<tr class="odd">
+<td>66</td>
+<td>deu</td>
+<td>Germany</td>
+<td>Germany</td>
+</tr>
+<tr class="even">
+<td>67</td>
+<td>grc</td>
+<td>Greece</td>
+<td>Greece</td>
+</tr>
+<tr class="odd">
+<td>68</td>
+<td>hun</td>
+<td>Hungary</td>
+<td>Hungary</td>
+</tr>
+<tr class="even">
+<td>69</td>
+<td>irl</td>
+<td>Ireland</td>
+<td>Ireland</td>
+</tr>
+<tr class="odd">
+<td>70</td>
+<td>ita</td>
+<td>Italy</td>
+<td>Italy</td>
+</tr>
+<tr class="even">
+<td>71</td>
+<td>lva</td>
+<td>Latvia</td>
+<td>Latvia</td>
+</tr>
+<tr class="odd">
+<td>72</td>
+<td>ltu</td>
+<td>Lithuania</td>
+<td>Lithuania</td>
+</tr>
+<tr class="even">
+<td>73</td>
+<td>lux</td>
+<td>Luxembourg</td>
+<td>Luxembourg</td>
+</tr>
+<tr class="odd">
+<td>74</td>
+<td>mlt</td>
+<td>Malta</td>
+<td>Malta</td>
+</tr>
+<tr class="even">
+<td>75</td>
+<td>nld</td>
+<td>Netherlands</td>
+<td>Netherlands</td>
+</tr>
+<tr class="odd">
+<td>76</td>
+<td>pol</td>
+<td>Poland</td>
+<td>Poland</td>
+</tr>
+<tr class="even">
+<td>77</td>
+<td>prt</td>
+<td>Portugal</td>
+<td>Portugal</td>
+</tr>
+<tr class="odd">
+<td>78</td>
+<td>rou</td>
+<td>Romania</td>
+<td>Romania</td>
+</tr>
+<tr class="even">
+<td>79</td>
+<td>svk</td>
+<td>Slovakia</td>
+<td>Slovakia</td>
+</tr>
+<tr class="odd">
+<td>80</td>
+<td>svn</td>
+<td>Slovenia</td>
+<td>Slovenia</td>
+</tr>
+<tr class="even">
+<td>81</td>
+<td>esp</td>
+<td>Spain</td>
+<td>Spain</td>
+</tr>
+<tr class="odd">
+<td>82</td>
+<td>swe</td>
+<td>Sweden</td>
+<td>Sweden</td>
+</tr>
+<tr class="even">
+<td>83</td>
+<td>gbr</td>
+<td>United Kingdom of Great Britain and Northern Ireland</td>
+<td>United Kingdom of Great Britain and Northern Ireland</td>
+</tr>
+<tr class="odd">
+<td>84</td>
+<td>che</td>
+<td>Switzerland</td>
+<td>Switzerland</td>
+</tr>
+<tr class="even">
+<td>85</td>
+<td>nor</td>
+<td>Norway</td>
+<td>Norway</td>
+</tr>
+<tr class="odd">
+<td>86</td>
+<td>xef</td>
+<td>Rest of EFTA</td>
+<td>Rest of EFTA</td>
+</tr>
+<tr class="even">
+<td>87</td>
+<td>alb</td>
+<td>Albania</td>
+<td>Albania</td>
+</tr>
+<tr class="odd">
+<td>88</td>
+<td>srb</td>
+<td>Serbia</td>
+<td>Serbia</td>
+</tr>
+<tr class="even">
+<td>89</td>
+<td>blr</td>
+<td>Belarus</td>
+<td>Belarus</td>
+</tr>
+<tr class="odd">
+<td>90</td>
+<td>rus</td>
+<td>Russian Federation</td>
+<td>Russian Federation</td>
+</tr>
+<tr class="even">
+<td>91</td>
+<td>ukr</td>
+<td>Ukraine</td>
+<td>Ukraine</td>
+</tr>
+<tr class="odd">
+<td>92</td>
+<td>xee</td>
+<td>Rest of Eastern Europe</td>
+<td>Rest of Eastern Europe</td>
+</tr>
+<tr class="even">
+<td>93</td>
+<td>xer</td>
+<td>Rest of Europe</td>
+<td>Rest of Europe</td>
+</tr>
+<tr class="odd">
+<td>94</td>
+<td>kaz</td>
+<td>Kazakhstan</td>
+<td>Kazakhstan</td>
+</tr>
+<tr class="even">
+<td>95</td>
+<td>kgz</td>
+<td>Kyrgyzstan</td>
+<td>Kyrgyzstan</td>
+</tr>
+<tr class="odd">
+<td>96</td>
+<td>tjk</td>
+<td>Tajikistan</td>
+<td>Tajikistan</td>
+</tr>
+<tr class="even">
+<td>97</td>
+<td>uzb</td>
+<td>Uzbekistan</td>
+<td>Uzbekistan</td>
+</tr>
+<tr class="odd">
+<td>98</td>
+<td>xsu</td>
+<td>Rest of Former Soviet Union</td>
+<td>Rest of Former Soviet Union</td>
+</tr>
+<tr class="even">
+<td>99</td>
+<td>arm</td>
+<td>Armenia</td>
+<td>Armenia</td>
+</tr>
+<tr class="odd">
+<td>100</td>
+<td>aze</td>
+<td>Azerbaijan</td>
+<td>Azerbaijan</td>
+</tr>
+<tr class="even">
+<td>101</td>
+<td>geo</td>
+<td>Georgia</td>
+<td>Georgia</td>
+</tr>
+<tr class="odd">
+<td>102</td>
+<td>bhr</td>
+<td>Bahrain</td>
+<td>Bahrain</td>
+</tr>
+<tr class="even">
+<td>103</td>
+<td>irn</td>
+<td>Iran (Islamic Republic of)</td>
+<td>Iran (Islamic Republic of)</td>
+</tr>
+<tr class="odd">
+<td>104</td>
+<td>irq</td>
+<td>Iraq</td>
+<td>Iraq</td>
+</tr>
+<tr class="even">
+<td>105</td>
+<td>isr</td>
+<td>Israel</td>
+<td>Israel</td>
+</tr>
+<tr class="odd">
+<td>106</td>
+<td>jor</td>
+<td>Jordan</td>
+<td>Jordan</td>
+</tr>
+<tr class="even">
+<td>107</td>
+<td>kwt</td>
+<td>Kuwait</td>
+<td>Kuwait</td>
+</tr>
+<tr class="odd">
+<td>108</td>
+<td>lbn</td>
+<td>Lebanon</td>
+<td>Lebanon</td>
+</tr>
+<tr class="even">
+<td>109</td>
+<td>omn</td>
+<td>Oman</td>
+<td>Oman</td>
+</tr>
+<tr class="odd">
+<td>110</td>
+<td>pse</td>
+<td>Palestine</td>
+<td>Palestine</td>
+</tr>
+<tr class="even">
+<td>111</td>
+<td>qat</td>
+<td>Qatar</td>
+<td>Qatar</td>
+</tr>
+<tr class="odd">
+<td>112</td>
+<td>sau</td>
+<td>Saudi Arabia</td>
+<td>Saudi Arabia</td>
+</tr>
+<tr class="even">
+<td>113</td>
+<td>syr</td>
+<td>Syrian Arab Republic</td>
+<td>Syrian Arab Republic</td>
+</tr>
+<tr class="odd">
+<td>114</td>
+<td>tur</td>
+<td>Turkey</td>
+<td>TÃ¼rkiye</td>
+</tr>
+<tr class="even">
+<td>115</td>
+<td>are</td>
+<td>United Arab Emirates</td>
+<td>United Arab Emirates</td>
+</tr>
+<tr class="odd">
+<td>116</td>
+<td>xws</td>
+<td>Rest of Western Asia</td>
+<td>Rest of Western Asia</td>
+</tr>
+<tr class="even">
+<td>117</td>
+<td>dza</td>
+<td>Algeria</td>
+<td>Algeria</td>
+</tr>
+<tr class="odd">
+<td>118</td>
+<td>egy</td>
+<td>Egypt</td>
+<td>Egypt</td>
+</tr>
+<tr class="even">
+<td>119</td>
+<td>mar</td>
+<td>Morocco</td>
+<td>Morocco</td>
+</tr>
+<tr class="odd">
+<td>120</td>
+<td>tun</td>
+<td>Tunisia</td>
+<td>Tunisia</td>
+</tr>
+<tr class="even">
+<td>121</td>
+<td>xnf</td>
+<td>Rest of North Africa</td>
+<td>Rest of North Africa</td>
+</tr>
+<tr class="odd">
+<td>122</td>
+<td>ben</td>
+<td>Benin</td>
+<td>Benin</td>
+</tr>
+<tr class="even">
+<td>123</td>
+<td>bfa</td>
+<td>Burkina Faso</td>
+<td>Burkina Faso</td>
+</tr>
+<tr class="odd">
+<td>124</td>
+<td>cmr</td>
+<td>Cameroon</td>
+<td>Cameroon</td>
+</tr>
+<tr class="even">
+<td>125</td>
+<td>civ</td>
+<td>Cote d’lvoire</td>
+<td>CÃ´te d’lvoire</td>
+</tr>
+<tr class="odd">
+<td>126</td>
+<td>gha</td>
+<td>Ghana</td>
+<td>Ghana</td>
+</tr>
+<tr class="even">
+<td>127</td>
+<td>gin</td>
+<td>Guinea</td>
+<td>Guinea</td>
+</tr>
+<tr class="odd">
+<td>128</td>
+<td>mli</td>
+<td>Mali</td>
+<td>Mali</td>
+</tr>
+<tr class="even">
+<td>129</td>
+<td>ner</td>
+<td>Niger</td>
+<td>Niger</td>
+</tr>
+<tr class="odd">
+<td>130</td>
+<td>nga</td>
+<td>Nigeria</td>
+<td>Nigeria</td>
+</tr>
+<tr class="even">
+<td>131</td>
+<td>sen</td>
+<td>Senegal</td>
+<td>Senegal</td>
+</tr>
+<tr class="odd">
+<td>132</td>
+<td>tgo</td>
+<td>Togo</td>
+<td>Togo</td>
+</tr>
+<tr class="even">
+<td>133</td>
+<td>xwf</td>
+<td>Rest of Western Africa</td>
+<td>Rest of Western Africa</td>
+</tr>
+<tr class="odd">
+<td>134</td>
+<td>caf</td>
+<td>Central African Republic</td>
+<td>Central African Republic</td>
+</tr>
+<tr class="even">
+<td>135</td>
+<td>tcd</td>
+<td>Chad</td>
+<td>Chad</td>
+</tr>
+<tr class="odd">
+<td>136</td>
+<td>cog</td>
+<td>Congo</td>
+<td>Congo</td>
+</tr>
+<tr class="even">
+<td>137</td>
+<td>cod</td>
+<td>Democratic Republic of the Congo</td>
+<td>Democratic Republic of the Congo</td>
+</tr>
+<tr class="odd">
+<td>138</td>
+<td>gnq</td>
+<td>Equatorial Guinea</td>
+<td>Equatorial Guinea</td>
+</tr>
+<tr class="even">
+<td>139</td>
+<td>gab</td>
+<td>Gabon</td>
+<td>Gabon</td>
+</tr>
+<tr class="odd">
+<td>140</td>
+<td>xac</td>
+<td>South-Central Africa</td>
+<td>South-Central Africa</td>
+</tr>
+<tr class="even">
+<td>141</td>
+<td>com</td>
+<td>Comoros</td>
+<td>Comoros</td>
+</tr>
+<tr class="odd">
+<td>142</td>
+<td>eth</td>
+<td>Ethiopia</td>
+<td>Ethiopia</td>
+</tr>
+<tr class="even">
+<td>143</td>
+<td>ken</td>
+<td>Kenya</td>
+<td>Kenya</td>
+</tr>
+<tr class="odd">
+<td>144</td>
+<td>mdg</td>
+<td>Madagascar</td>
+<td>Madagascar</td>
+</tr>
+<tr class="even">
+<td>145</td>
+<td>mwi</td>
+<td>Malawi</td>
+<td>Malawi</td>
+</tr>
+<tr class="odd">
+<td>146</td>
+<td>mus</td>
+<td>Mauritius</td>
+<td>Mauritius</td>
+</tr>
+<tr class="even">
+<td>147</td>
+<td>moz</td>
+<td>Mozambique</td>
+<td>Mozambique</td>
+</tr>
+<tr class="odd">
+<td>148</td>
+<td>rwa</td>
+<td>Rwanda</td>
+<td>Rwanda</td>
+</tr>
+<tr class="even">
+<td>149</td>
+<td>sdn</td>
+<td>Sudan</td>
+<td>Sudan</td>
+</tr>
+<tr class="odd">
+<td>150</td>
+<td>tza</td>
+<td>United Republic of Tanzania</td>
+<td>United Republic of Tanzania</td>
+</tr>
+<tr class="even">
+<td>151</td>
+<td>uga</td>
+<td>Uganda</td>
+<td>Uganda</td>
+</tr>
+<tr class="odd">
+<td>152</td>
+<td>zmb</td>
+<td>Zambia</td>
+<td>Zambia</td>
+</tr>
+<tr class="even">
+<td>153</td>
+<td>zwe</td>
+<td>Zimbabwe</td>
+<td>Zimbabwe</td>
+</tr>
+<tr class="odd">
+<td>154</td>
+<td>xec</td>
+<td>Rest of Eastern Africa</td>
+<td>Rest of Eastern Africa</td>
+</tr>
+<tr class="even">
+<td>155</td>
+<td>bwa</td>
+<td>Botswana</td>
+<td>Botswana</td>
+</tr>
+<tr class="odd">
+<td>156</td>
+<td>swz</td>
+<td>Eswatini</td>
+<td>Eswatini</td>
+</tr>
+<tr class="even">
+<td>157</td>
+<td>nam</td>
+<td>Namibia</td>
+<td>Namibia</td>
+</tr>
+<tr class="odd">
+<td>158</td>
+<td>zaf</td>
+<td>South Africa</td>
+<td>South Africa</td>
+</tr>
+<tr class="even">
+<td>159</td>
+<td>xsc</td>
+<td>Rest of Southern African Customs Union</td>
+<td>Rest of Southern African Customs Union</td>
+</tr>
+<tr class="odd">
+<td>160</td>
+<td>xtw</td>
+<td>Rest of the World</td>
+<td>Rest of the World</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>

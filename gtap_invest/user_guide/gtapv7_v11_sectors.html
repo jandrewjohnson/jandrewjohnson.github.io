@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Justin Andrew Johnson - GTAP-InVEST User Guide</title>
+<title>Justin Andrew Johnson</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -190,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../gtap_invest/user_guide/index.html">GTAP-InVEST User Guide</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../gtap_invest/user_guide/gtapv7_v11_sectors.html">Sectors in v11</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -204,7 +204,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../gtap_invest/user_guide/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../gtap_invest/user_guide/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAP-InVEST User Guide</span></a>
   </div>
 </li>
@@ -246,7 +246,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../gtap_invest/user_guide/gtapv7_v11_sectors.html" class="sidebar-item-text sidebar-link">
+  <a href="../../gtap_invest/user_guide/gtapv7_v11_sectors.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Sectors in v11</span></a>
   </div>
 </li>
@@ -266,36 +266,427 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1. Introduction</a></li>
+  <li><a href="#sectors-in-v11" id="toc-sectors-in-v11" class="nav-link active" data-scroll-target="#sectors-in-v11">Sectors in v11</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">GTAP-InVEST User Guide</h1>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
-<p>This is the User Guide for GTAP-InVEST, a new earth-economy model introduced in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">“Investing in nature can improve equity and economic returns” (Johnson et al.&nbsp;2023, PNAS)</a>. The content here originally derived from the supplemental information document included with PNAS article. However, development on the model is progressing rapidly, so please refer to this document, which will remain up-to-date. For additional details, please see the GTAP-InVEST Github repository (<a href="https://github.com/jandrewjohnson/gtap_invest">github.com/jandrewjohnson/gtap_invest</a>). All code and results of the model are available and licensed under a permissive open-source license. Full results may be downloaded at <a href="gtap_invest/results">justinandrewjohnson.com/gtap_invest/results</a>.</p>
-<p><img src="images/2024-03-05-04-03-49.png" class="img-fluid"></p>
+<section id="sectors-in-v11" class="level1">
+<h1>Sectors in v11</h1>
+<p><a href="https://www.gtap.agecon.purdue.edu/databases/contribute/detailedsector.asp">Description (Detailed Sector Breakdown)</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 21%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>id</th>
+<th>label</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>pdr</td>
+<td>Paddy rice</td>
+<td>Rice: seed, paddy (not husked)</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>wht</td>
+<td>Wheat</td>
+<td>Wheat: seed, other</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>gro</td>
+<td>Cereal grains nec</td>
+<td>Other Grains: maize (corn), sorghum, barley, rye, oats, millets, other cereals</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>v_f</td>
+<td>Vegetables, fruit, nuts</td>
+<td>Veg &amp; Fruit: vegetables, fruit and nuts, edible roots and tubers, pulses</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>osd</td>
+<td>Oil seeds</td>
+<td>Oil Seeds: oil seeds and oleaginous fruit</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>c_b</td>
+<td>Sugar cane, sugar beet</td>
+<td>Cane &amp; Beet: sugar crops</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>pfb</td>
+<td>Plant-based fibers</td>
+<td>Fibres crops</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>ocr</td>
+<td>Crops nec</td>
+<td>Other Crops: stimulant; spice and aromatic crops; forage products; plants and parts of plants used primarily in perfumery, pharmacy, or for insecticidal, fungicidal or similar purposes; beet seeds (excluding sugar beet seeds) and seeds of forage plants; natural rubber in primary forms or in plates, sheets or strip, living plants; cut flowers and flower buds; flower seeds, unmanufactured tobacco; other raw vegetable materials nec</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>ctl</td>
+<td>Bovine cattle, sheep and goats, horses</td>
+<td>Cattle: bovine animals, live, other ruminants, horses and other equines, bovine semen</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>oap</td>
+<td>Animal products nec</td>
+<td>Other Animal Products: swine; poultry; other live animals; eggs of hens or other birds in shell, fresh; reproductive materials of animals; natural honey; snails, fresh, chilled, frozen, dried, salted or in brine, except sea snails; edible products of animal origin n.e.c.; hides, skins and furskins, raw; insect waxes and spermaceti, whether or not refined or coloured</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>rmk</td>
+<td>Raw milk</td>
+<td>Raw milk</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>wol</td>
+<td>Wool, silk-worm cocoons</td>
+<td>Wool: wool, silk, and other raw animal materials used in textile</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>frs</td>
+<td>Forestry</td>
+<td>Forestry: forestry, logging and related service activities</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>fsh</td>
+<td>Fishing</td>
+<td>Fishing: hunting, trapping and game propagation including related service activities, fishing, fish farms; service activities incidental to fishing</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>coa</td>
+<td>Coal</td>
+<td>Coal: mining and agglomeration of hard coal, lignite and peat</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>oil</td>
+<td>Oil</td>
+<td>Oil: extraction of crude petroleum, service activities incidental to oil and gas extraction excluding surveying (part)</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>gas</td>
+<td>Gas</td>
+<td>Gas: extraction of natural gas, service activities incidental to oil and gas extraction excluding surveying (part)</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td>oxt</td>
+<td>Other Extraction (formerly omn Minerals nec)</td>
+<td>Other Mining Extraction (formerly omn): mining of metal ores; other mining and quarrying</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td>cmt</td>
+<td>Bovine meat products</td>
+<td>Cattle Meat: fresh or chilled; meat of buffalo, fresh or chilled; meat of sheep, fresh or chilled; meat of goat, fresh or chilled; meat of camels and camelids, fresh or chilled; meat of horses and other equines, fresh or chilled; other meat of mammals, fresh or chilled; meat of mammals, frozen; edible offal of mammals, fresh, chilled or frozen</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>omt</td>
+<td>Meat products nec</td>
+<td>Other Meat: meat of pigs, fresh or chilled; meat of rabbits and hares, fresh or chilled; meat of poultry, fresh or chilled; meat of poultry, frozen; edible offal of poultry, fresh, chilled or frozen; other meat and edible offal, fresh, chilled or frozen; preserves and preparations of meat, meat offal or blood; flours, meals and pellets of meat or meat offal, inedible; greaves</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>vol</td>
+<td>Vegetable oils and fats</td>
+<td>Vegetable Oils: margarine and similar preparations; cotton linters; oil-cake and other residues resulting from the extraction of vegetable fats or oils; flours and meals of oil seeds or oleaginous fruits, except those of mustard; vegetable waxes, except triglycerides; degras; residues resulting from the treatment of fatty substances or animal or vegetable waxes; animal fats</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>mil</td>
+<td>Dairy products</td>
+<td>Milk: dairy products</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>pcr</td>
+<td>Processed rice</td>
+<td>Processed Rice: semi- or wholly milled, or husked</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>sgr</td>
+<td>Sugar</td>
+<td>Sugar and molasses</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>ofd</td>
+<td>Food products nec</td>
+<td>Other Food: prepared and preserved fish, crustaceans, molluscs and other aquatic invertebrates; prepared and preserved vegetables, pulses and potatoes; prepared and preserved fruits and nuts; wheat and meslin flour; other cereal flours; groats, meal and pellets of wheat and other cereals; other cereal grain products (including corn flakes); other vegetable flours and meals; mixes and doughs for the preparation of bakers’ wares; starches and starch products; sugars and sugar syrups n.e.c.; preparations used in animal feeding; lucerne (alfalfa) meal and pellets; bakery products; cocoa, chocolate and sugar confectionery; macaroni, noodles, couscous and similar farinaceous products; food products n.e.c.</td>
+</tr>
+<tr class="even">
+<td>26</td>
+<td>b_t</td>
+<td>Beverages and tobacco products</td>
+<td>Beverages and Tobacco products</td>
+</tr>
+<tr class="odd">
+<td>27</td>
+<td>tex</td>
+<td>Textiles</td>
+<td>Manufacture of textiles</td>
+</tr>
+<tr class="even">
+<td>28</td>
+<td>wap</td>
+<td>Wearing apparel</td>
+<td>Manufacture of wearing apparel</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>lea</td>
+<td>Leather products</td>
+<td>Manufacture of leather and related products</td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td>lum</td>
+<td>Wood products</td>
+<td>Lumber: manufacture of wood and of products of wood and cork, except furniture; manufacture of articles of straw and plaiting materials</td>
+</tr>
+<tr class="odd">
+<td>31</td>
+<td>ppp</td>
+<td>Paper products, publishing</td>
+<td>Paper &amp; Paper Products: includes printing and reproduction of recorded media</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>p_c</td>
+<td>Petroleum, coal products</td>
+<td>Petroleum &amp; Coke: manufacture of coke and refined petroleum products</td>
+</tr>
+<tr class="odd">
+<td>33</td>
+<td>chm</td>
+<td>Chemical products</td>
+<td>Manufacture of chemicals and chemical products</td>
+</tr>
+<tr class="even">
+<td>34</td>
+<td>bph</td>
+<td>Basic pharmaceutical products</td>
+<td>Manufacture of pharmaceuticals, medicinal chemical and botanical products</td>
+</tr>
+<tr class="odd">
+<td>35</td>
+<td>rpp</td>
+<td>Rubber and plastic products</td>
+<td>Manufacture of rubber and plastics products</td>
+</tr>
+<tr class="even">
+<td>36</td>
+<td>nmm</td>
+<td>Mineral products nec</td>
+<td>Manufacture of other non-metallic mineral products</td>
+</tr>
+<tr class="odd">
+<td>37</td>
+<td>i_s</td>
+<td>Ferrous metals</td>
+<td>Iron &amp; Steel: basic production and casting</td>
+</tr>
+<tr class="even">
+<td>38</td>
+<td>nfm</td>
+<td>Metals nec</td>
+<td>Non-Ferrous Metals: production and casting of copper, aluminium, zinc, lead, gold, and silver</td>
+</tr>
+<tr class="odd">
+<td>39</td>
+<td>fmp</td>
+<td>Metal products</td>
+<td>Manufacture of fabricated metal products, except machinery and equipment</td>
+</tr>
+<tr class="even">
+<td>40</td>
+<td>ele</td>
+<td>Computer, electronic and optical products</td>
+<td>Manufacture of computer, electronic and optical products</td>
+</tr>
+<tr class="odd">
+<td>41</td>
+<td>eeq</td>
+<td>Electrical equipment</td>
+<td>Manufacture of electrical equipment</td>
+</tr>
+<tr class="even">
+<td>42</td>
+<td>ome</td>
+<td>Machinery and equipment nec</td>
+<td>Manufacture of machinery and equipment n.e.c.</td>
+</tr>
+<tr class="odd">
+<td>43</td>
+<td>mvh</td>
+<td>Motor vehicles and parts</td>
+<td>Manufacture of motor vehicles, trailers and semi-trailers</td>
+</tr>
+<tr class="even">
+<td>44</td>
+<td>otn</td>
+<td>Transport equipment nec</td>
+<td>Manufacture of other transport equipment</td>
+</tr>
+<tr class="odd">
+<td>45</td>
+<td>omf</td>
+<td>Manufactures nec</td>
+<td>Other Manufacturing: includes furniture</td>
+</tr>
+<tr class="even">
+<td>46</td>
+<td>ely</td>
+<td>Electricity</td>
+<td>Electricity; steam and air conditioning supply</td>
+</tr>
+<tr class="odd">
+<td>47</td>
+<td>gdt</td>
+<td>Gas manufacture, distribution</td>
+<td>Gas manufacture, distribution</td>
+</tr>
+<tr class="even">
+<td>48</td>
+<td>wtr</td>
+<td>Water</td>
+<td>Water supply; sewerage, waste management and remediation activities</td>
+</tr>
+<tr class="odd">
+<td>49</td>
+<td>cns</td>
+<td>Construction</td>
+<td>Construction: building houses factories offices and roads</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td>trd</td>
+<td>Trade</td>
+<td>Wholesale and retail trade; repair of motor vehicles and motorcycles</td>
+</tr>
+<tr class="odd">
+<td>51</td>
+<td>afs</td>
+<td>Accommodation, Food and service activities</td>
+<td>Accommodation, Food and service activities</td>
+</tr>
+<tr class="even">
+<td>52</td>
+<td>otp</td>
+<td>Transport nec</td>
+<td>Land transport and transport via pipelines</td>
+</tr>
+<tr class="odd">
+<td>53</td>
+<td>wtp</td>
+<td>Water transport</td>
+<td>Water transport</td>
+</tr>
+<tr class="even">
+<td>54</td>
+<td>atp</td>
+<td>Air transport</td>
+<td>Air transport</td>
+</tr>
+<tr class="odd">
+<td>55</td>
+<td>whs</td>
+<td>Warehousing and support activities</td>
+<td>Warehousing and support activities</td>
+</tr>
+<tr class="even">
+<td>56</td>
+<td>cmn</td>
+<td>Communication</td>
+<td>Information and communication</td>
+</tr>
+<tr class="odd">
+<td>57</td>
+<td>ofi</td>
+<td>Financial services nec</td>
+<td>Other Financial Intermediation: includes auxiliary activities but not insurance and pension funding</td>
+</tr>
+<tr class="even">
+<td>58</td>
+<td>ins</td>
+<td>Insurance (formerly isr)</td>
+<td>Insurance (formerly isr): includes pension funding, except compulsory social security</td>
+</tr>
+<tr class="odd">
+<td>59</td>
+<td>rsa</td>
+<td>Real estate activities</td>
+<td>Real estate activities</td>
+</tr>
+<tr class="even">
+<td>60</td>
+<td>obs</td>
+<td>Business services nec</td>
+<td>Other Business Services nec</td>
+</tr>
+<tr class="odd">
+<td>61</td>
+<td>ros</td>
+<td>Recreational and other services</td>
+<td>Recreation &amp; Other Services: recreational, cultural and sporting activities, other service activities; private households with employed persons (servants)</td>
+</tr>
+<tr class="even">
+<td>62</td>
+<td>osg</td>
+<td>Public Administration and defense</td>
+<td>Other Services (Government): public administration and defense; compulsory social security, activities of membership organizations n.e.c., extra-territorial organizations and bodies</td>
+</tr>
+<tr class="odd">
+<td>63</td>
+<td>edu</td>
+<td>Education</td>
+<td>Education</td>
+</tr>
+<tr class="even">
+<td>64</td>
+<td>hht</td>
+<td>Human health and social work activities</td>
+<td>Human health and social work</td>
+</tr>
+<tr class="odd">
+<td>65</td>
+<td>dwe</td>
+<td>Dwellings</td>
+<td>Dwellings: ownership of dwellings (imputed rents of houses occupied by owners)</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>

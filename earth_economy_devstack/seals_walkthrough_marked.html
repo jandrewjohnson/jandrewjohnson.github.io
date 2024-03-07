@@ -403,14 +403,8 @@
 <ul>
 <li class="fragment">Make sure you have followed all of the steps in the <a href="../earth_economy_devstack/installation.html">installation</a> page.
 <ul>
-<li class="fragment">In particular, Clone the SEALS and Hazelbean repositories in the correct location
-<ul>
-<li class="fragment"><a href="installation.html#clone-the-required-repositories">Described here</a> and <a href="../earth_economy_devstack/installation.html#clone-the-required-repositories">here</a></li>
-</ul></li>
-<li class="fragment">You will know you’ve got them installed correctly if your VS Code Explorer tab shows the repositories without an error message
-<ul>
-<li class="fragment">As pictured</li>
-</ul></li>
+<li class="fragment">In particular, Clone the SEALS and Hazelbean repositories in the correct location, as <a href="installation.html#clone-the-required-repositories">described here</a></li>
+<li class="fragment">You will know you’ve got them installed correctly if your VS Code Explorer tab shows the repositories without an error message (Figure 1)</li>
 </ul></li>
 </ul>
 <p><img data-src="images/paste-45.png" width="201"></p>
@@ -420,11 +414,11 @@
 <h2>Explore the SEALS code</h2>
 <div class="r-fit-text">
 <ul>
-<li class="fragment">In the VS Code Explorer tab, navigate to your seals_dev directory
+<li class="fragment">In the VS Code Explorer tab, navigate to your seals_dev directory (Figure 1)
 <ul>
 <li class="fragment">Quick note about file organization
 <ul>
-<li class="fragment">The rool of seals_dev contains more than just the seals library, such as directories for scripts, images, etc.</li>
+<li class="fragment">The root directory of seals_dev contains more than just the seals library, such as directories for scripts, images, etc.</li>
 <li class="fragment">The library itself is in the seals subdirectory <code>seals_dev/seals</code> which may seem redundant but is necessary for the way Python imports work.</li>
 <li class="fragment">If you inspect the seals directory, you will see an <code>__init__.py</code> file. This make Python able to import the directory as a package.</li>
 </ul></li>
@@ -440,10 +434,10 @@
 <div class="column" style="width:70%;">
 <div class="r-fit-text">
 <ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
+<li class="fragment">One does not simply run a <code>main.py</code> (Figure 1)
 <ul>
 <li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
+<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (Figure 2)</li>
 </ul></li>
 <li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
 </ul>
@@ -451,686 +445,6 @@
 </div><div class="column" style="width:30%;">
 <p><img data-src="images/2024-03-06-04-53-49.png"></p>
 <p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</section>
-<section id="run-files-1" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-2" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-3" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-4" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-5" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-6" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-7" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-8" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-9" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="run-files-10" class="slide level2">
-<h2>Run files</h2>
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<div class="columns">
-<div class="column" style="width:70%;">
-<div class="r-fit-text">
-<ul>
-<li class="fragment">One does not simply run a <code>main.py</code> (fig1)
-<ul>
-<li class="fragment">Instead, we’re going to have a “run file” that sets up the code and then runs the <code>seals_main.py</code> file</li>
-<li class="fragment">Open up the <code>run_test_standard.py</code> file in the seals directory (fig2)</li>
-</ul></li>
-<li class="fragment">We will setup this file and then finally run it (in debug mode via the launch configs in the earth_economy_devstack repository)</li>
-</ul>
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-
-</div>
-</div><div class="column" style="width:30%;">
-
-</div>
-</div>
-<div class="column" style="width:30%;">
-<p><img data-src="images/2024-03-06-04-53-49.png"></p>
-<p><img data-src="images/2024-03-06-04-56-59.png"></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -1143,6 +457,23 @@
 <ul>
 <li class="fragment">The reason for putting it in this block is so that you don’t accidentally run the code when you import the file in another script</li>
 </ul></li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> os, sys</span>
+<span id="cb1-2"><a></a><span class="im">import</span> seals_utils</span>
+<span id="cb1-3"><a></a><span class="im">import</span> seals_initialize_project</span>
+<span id="cb1-4"><a></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb1-5"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a></a><span class="im">from</span> seals_utils <span class="im">import</span> download_google_cloud_blob</span>
+<span id="cb1-7"><a></a></span>
+<span id="cb1-8"><a></a>main <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb1-9"><a></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb1-10"><a></a>    content <span class="op">=</span> <span class="st">"here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="project-directory-structure" class="slide level2">
+<h2>Project directory structure</h2>
+<div class="r-fit-text">
+<ul>
 <li class="fragment">SEALS (and the EE Devstack) assumes (or softly requires) that you put all code and data somewhere relative to the user’s home directory <code>os.path.expanduser('~')</code>
 <ul>
 <li class="fragment">Can put it in suddirectories with <code>extra_dirs = ['Files', 'seals', 'projects']</code></li>
@@ -1160,44 +491,129 @@
 </ul></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> os, sys</span>
-<span id="cb1-2"><a></a><span class="im">import</span> seals_utils</span>
-<span id="cb1-3"><a></a><span class="im">import</span> seals_initialize_project</span>
-<span id="cb1-4"><a></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
-<span id="cb1-5"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-6"><a></a><span class="im">from</span> seals_utils <span class="im">import</span> download_google_cloud_blob</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a>main <span class="op">=</span> <span class="st">''</span></span>
-<span id="cb1-9"><a></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb1-10"><a></a>:::</span>
-<span id="cb1-11"><a></a></span>
-<span id="cb1-12"><a></a></span>
-<span id="cb1-13"><a></a></span>
-<span id="cb1-14"><a></a></span>
-<span id="cb1-15"><a></a></span>
-<span id="cb1-16"><a></a><span class="co"># on the attributes set above and saved to the location in scenarios_definitions_path.</span></span>
-<span id="cb1-17"><a></a>p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions.csv'</span>)</span>
-<span id="cb1-18"><a></a></span>
-<span id="cb1-19"><a></a></span>
-<span id="cb1-20"><a></a></span>
-<span id="cb1-21"><a></a><span class="co"># and will be written to a CSV file in your project's input dir.</span></span>
-<span id="cb1-22"><a></a></span>
-<span id="cb1-23"><a></a></span>
-<span id="cb1-24"><a></a><span class="co"># and will be written to a scenarios csv in your project's input_dir for later use/editing/expansion.</span></span>
-<span id="cb1-25"><a></a></span>
-<span id="cb1-26"><a></a><span class="co"># String that uniquely identifies the scenario. Will be referenced by other scenarios for comparison.</span></span>
-<span id="cb1-27"><a></a>p.scenario_label <span class="op">=</span> <span class="st">'ssp2_rcp45_luh2-globio_bau'</span></span>
-<span id="cb1-28"><a></a></span>
-<span id="cb1-29"><a></a></span>
-<span id="cb1-30"><a></a><span class="co"># as what the scenario should be compared against. I.e., Policy minus BAU.</span></span>
-<span id="cb1-31"><a></a>p.scenario_type <span class="op">=</span> <span class="st">'bau'</span></span>
-<span id="cb1-32"><a></a>::: r<span class="op">-</span>fit<span class="op">-</span>text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This computing stack also uses hazelbean to automatically download needed data at run time. In the code block below, notice the absolute path assigned to p.base_data_dir. Hazelbean will look here for certain files that are necessary and will download them from a cloud bucket if they are not present. This also lets you use the same base data across different projects.</p>
-<p>In addition to defining a base_data_dir, you will need to For this to work, you need to also point SEALS to the correct data_credentials_path. If you don’t have a credentils file, email jajohns@umn.edu. The data are freely available but are very, very large (and thus expensive to host), so I limit access via credentials.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a></span>
-<span id="cb2-2"><a></a>p.base_data_dir <span class="op">=</span> os.path.join(<span class="st">'G:/My Drive/Files/base_data'</span>)</span>
-<span id="cb2-3"><a></a></span>
-<span id="cb2-4"><a></a>p.data_credentials_path <span class="op">=</span> <span class="st">'..</span><span class="ch">\\</span><span class="st">api_key_credentials.json'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="project-name" class="slide level2">
+<h2>Project name</h2>
+<ul>
+<li class="fragment">Set the project name
+<ul>
+<li class="fragment">This is where your new files will be written</li>
+</ul></li>
+<li class="fragment">The next line defines the project dir with the above information</li>
+</ul>
+</section>
+<section id="create-projectflow-object" class="slide level2">
+<h2>Create ProjectFlow object</h2>
+<div class="r-fit-text">
+<ul>
+<li class="fragment">Create a ProjectFlow object with the project_dir as the only argument
+<ul>
+<li class="fragment">Python is an object-oriented programming langage
+<ul>
+<li class="fragment">The hb.ProjectFlow() defines a <code>class</code>, which is like a recipe for an object</li>
+<li class="fragment">When we call it, it generates on <code>object</code> of that class, which we assign to the variable <code>p</code></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="using-objects" class="slide level2">
+<h2>Using Objects</h2>
+<div class="r-fit-text">
+<ul>
+<li class="fragment">The <code>p</code> object we created will organize input variables (called attributes when assigned to an object)
+<ul>
+<li class="fragment">Like this: <code>p.attribute_name = 'ItsName</code></li>
+</ul></li>
+<li class="fragment">The <code>p</code> object also has functions tied specificially to it (called methods when assigned to an object)
+<ul>
+<li class="fragment">Such as: <code>p.validate_name()</code></li>
+<li class="fragment">Methods operate on the object that defined it
+<ul>
+<li class="fragment">So <code>validate_name()</code> is specifically looking at the <code>p</code> object, often doing something to the <code>p</code> object, like fixing value of <code>p.attribute_name</code></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="default-variables" class="title-slide slide level1 center">
+<h1>Default Variables</h1>
+
+</section>
+<section id="inspect-default-variables" class="slide level2">
+<h2>Inspect default variables</h2>
+<div class="r-fit-text">
+<ul>
+<li class="fragment">The default variables might not need to be modified from their default values
+<ul>
+<li class="fragment">But we need to understand them to get what SEALS is doing</li>
+</ul></li>
+<li class="fragment">Below, we set the attribute for where the <code>scenario_definitions</code> csv should be stored
+<ul>
+<li class="fragment">Note that we never defined <code>p.input_dir</code>. It was based on the <code>project_dir</code> when we created <code>p</code></li>
+</ul></li>
+<li class="fragment">The <code>scenario_definitions</code> file specifies what defines the many different scenarios you want to run
+<ul>
+<li class="fragment">Each row will be one scenario</li>
+<li class="fragment">Each time the model runs a new scenario, it will update its attributes based on this row</li>
+</ul></li>
+<li class="fragment">If you haven’t run SEALS yet, you won’t have a <code>scenario_defintions</code> file, so it will create a default one on the first run</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section id="important-note-if-you-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-such-as-p.scenario_label-below" class="title-slide slide level1 center">
+<h1>IMPORTANT NOTE: If you set a scenario_definitions_path, then the attributes set in this file (such as p.scenario_label below)</h1>
+
+</section>
+
+<section id="will-be-overwritten.-conversely-if-you-dont-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-will-be-used" class="title-slide slide level1 center">
+<h1>will be overwritten. Conversely, if you don’t set a scenario_definitions_path, then the attributes set in this file will be used</h1>
+
+</section>
+
+<section id="and-will-be-written-to-a-csv-file-in-your-projects-input-dir." class="title-slide slide level1 center">
+<h1>and will be written to a CSV file in your project’s input dir.</h1>
+
+</section>
+
+<section id="if-you-did-not-set-a-p.scenarios_definitions_path-the-following-default-variables-will-be-used" class="title-slide slide level1 center">
+<h1>If you did not set a p.scenarios_definitions_path, the following default variables will be used</h1>
+
+</section>
+
+<section id="and-will-be-written-to-a-scenarios-csv-in-your-projects-input_dir-for-later-useeditingexpansion." class="title-slide slide level1 center">
+<h1>and will be written to a scenarios csv in your project’s input_dir for later use/editing/expansion.</h1>
+
+</section>
+
+<section id="string-that-uniquely-identifies-the-scenario.-will-be-referenced-by-other-scenarios-for-comparison." class="title-slide slide level1 center">
+<h1>String that uniquely identifies the scenario. Will be referenced by other scenarios for comparison.</h1>
+<p>p.scenario_label = ‘ssp2_rcp45_luh2-globio_bau’</p>
+</section>
+
+<section id="scenario-type-determines-if-it-is-historical-baseline-or-future-anything-else-as-well" class="title-slide slide level1 center">
+<h1>Scenario type determines if it is historical (baseline) or future (anything else) as well</h1>
+
+</section>
+
+<section>
+<section id="as-what-the-scenario-should-be-compared-against.-i.e.-policy-minus-bau." class="title-slide slide level1 center">
+<h1>as what the scenario should be compared against. I.e., Policy minus BAU.</h1>
+<div class="r-fit-text">
+<p>p.scenario_type = ‘bau’</p>
+<pre><code>
+This computing stack also uses hazelbean to automatically download needed data at run time. In the code block below, notice the absolute path assigned to p.base_data_dir. Hazelbean will look here for certain files that are necessary and will download them from a cloud bucket if they are not present. This also lets you use the same base data across different projects.
+
+In addition to defining a base_data_dir, you will need to For this to work, you need to also point SEALS to the correct data_credentials_path. If you don't have a credentils file, email jajohns\@umn.edu. The data are freely available but are very, very large (and thus expensive to host), so I limit access via credentials.
+
+``` python
+
+p.base_data_dir = os.path.join('G:/My Drive/Files/base_data')
+
+p.data_credentials_path = '..\\api_key_credentials.json'</code></pre>
 <p>NOTE THAT the final directory has to be named base_data to match the naming convention on the google cloud bucket.</p>
 </div>
 </section>

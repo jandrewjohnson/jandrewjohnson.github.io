@@ -345,10 +345,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#install-visual-studio-code-vs-code" id="toc-install-visual-studio-code-vs-code" class="nav-link" data-scroll-target="#install-visual-studio-code-vs-code">Install Visual Studio Code (VS Code)</a></li>
   <li><a href="#open-the-earth-economy-devstack-in-vs-code-workspace" id="toc-open-the-earth-economy-devstack-in-vs-code-workspace" class="nav-link" data-scroll-target="#open-the-earth-economy-devstack-in-vs-code-workspace">Open the Earth Economy Devstack in VS Code workspace</a></li>
   <li><a href="#configure-vs-code" id="toc-configure-vs-code" class="nav-link" data-scroll-target="#configure-vs-code">Configure VS CODE</a></li>
+  <li><a href="#get-the-other-required-repositories-and-put-them-in-the-right-directory" id="toc-get-the-other-required-repositories-and-put-them-in-the-right-directory" class="nav-link" data-scroll-target="#get-the-other-required-repositories-and-put-them-in-the-right-directory">Get the other required repositories and put them in the right directory</a></li>
   </ul></li>
   <li><a href="#step-by-step-installation" id="toc-step-by-step-installation" class="nav-link" data-scroll-target="#step-by-step-installation">Step by Step Installation</a>
   <ul class="incremental collapse">
   <li><a href="#install-git-1" id="toc-install-git-1" class="nav-link" data-scroll-target="#install-git-1">Install Git</a></li>
+  <li><a href="#configure-windows-explorer-optional" id="toc-configure-windows-explorer-optional" class="nav-link" data-scroll-target="#configure-windows-explorer-optional">Configure Windows Explorer (optional)</a></li>
   <li><a href="#create-a-python-environment-1" id="toc-create-a-python-environment-1" class="nav-link" data-scroll-target="#create-a-python-environment-1">Create a python environment</a></li>
   <li><a href="#clone-the-earth-economy-devstack-1" id="toc-clone-the-earth-economy-devstack-1" class="nav-link" data-scroll-target="#clone-the-earth-economy-devstack-1">Clone the Earth Economy Devstack</a></li>
   <li><a href="#install-visual-studio-code-vs-code-1" id="toc-install-visual-studio-code-vs-code-1" class="nav-link" data-scroll-target="#install-visual-studio-code-vs-code-1">Install Visual Studio Code (VS Code)</a></li>
@@ -381,7 +383,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="install-git" class="level3">
 <h3 class="anchored" data-anchor-id="install-git">Install Git</h3>
 <ul class="incremental">
-<li>Install and run the installer for your operating system at &lt;Git-scm.com/downloads&gt;</li>
+<li>Install and run the installer for your operating system at <a href="https://Git-scm.com/downloads" class="uri">https://Git-scm.com/downloads</a></li>
 </ul>
 </section>
 <section id="create-a-python-environment" class="level3">
@@ -413,14 +415,18 @@ ul.task-list li input[type="checkbox"] {
 <section id="clone-the-earth-economy-devstack" class="level3">
 <h3 class="anchored" data-anchor-id="clone-the-earth-economy-devstack">Clone the Earth Economy Devstack</h3>
 <ul class="incremental">
-<li>Create a directory for the Earth Economy Devstack at <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files</code> (PC) or <code>~/Files</code> (Mac)
+<li>Clone the Earth Economy devstack into the correct location
+<ul class="incremental">
+<li>Create a directory for called “Files” at <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files</code> (PC) or <code>~/Files</code> (Mac)
 <ul class="incremental">
 <li>We add a Files directory to keep the root directory clean and to make it easier to find the Earth Economy Devstack in the file explorer.</li>
 </ul></li>
-<li>Open a terminal or command prompt and navigate to the directory you created</li>
+</ul></li>
+<li>Open a terminal or command prompt and navigate to the Files directory you created</li>
 <li>Run the git clone command to clone the Earth Economy Devstack repository
 <ul class="incremental">
 <li><code>git clone https://github.com/jandrewjohnson/earth_economy_devstack</code></li>
+<li>This will add a new folder <code>C:\Users\&lt;YOUR_USERNAME&gt;\Files\earth_economy_devstack</code></li>
 </ul></li>
 </ul>
 </section>
@@ -445,7 +451,7 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul></li>
 <li>The workspace file adds a bunch of different repositories to the workspace (which you will need to git clone in to where the workspace says they should be)</li>
-<li>The workspace also sets up a bunch of launch configurations for debugging and running code using the respositories in your workspace</li>
+<li>The workspace also sets up a bunch of launch configurations for debugging and running code using the repositories in your workspace</li>
 </ul>
 </section>
 <section id="configure-vs-code" class="level3">
@@ -458,12 +464,38 @@ ul.task-list li input[type="checkbox"] {
 <li>Click on the extensions icon in the left sidebar</li>
 <li>Search for Python and install the one by Microsoft</li>
 </ul></li>
-<li>Install Quarto extension in VS Code</li>
+<li>Install Quarto extension in VS Code
+<ul class="incremental">
+<li>For the documentation, I recommend installing the Quarto CLI <a href="https://quarto.org/docs/get-started" class="uri">https://quarto.org/docs/get-started</a></li>
+</ul></li>
 <li>Install GitGraph extension in VS Code</li>
 </ul></li>
 <li>Sign in to VS Code with your GitHub account
 <ul class="incremental">
 <li>Click on the account icon in the bottom left corner of the window and follow prompts</li>
+</ul></li>
+</ul>
+</section>
+<section id="get-the-other-required-repositories-and-put-them-in-the-right-directory" class="level3">
+<h3 class="anchored" data-anchor-id="get-the-other-required-repositories-and-put-them-in-the-right-directory">Get the other required repositories and put them in the right directory</h3>
+<ul class="incremental">
+<li>The Earth Economy Devstack organizes repositories in a specific way, based in the <code>Files</code> directory discussed above
+<ul class="incremental">
+<li>This ensures, among other things, that the Debug Launch configurations in the <code>.vscode</code> directory will use locally cloned repositories</li>
+</ul></li>
+<li>For each new repository you want to add, for example Hazelbean, create a new directory in <code>Files</code> called <code>hazelbean</code>
+<ul class="incremental">
+<li>In this new directory, Git clone the hazelbean_dev repo, which will create a directory <code>hazelbean_dev</code> inside <code>hazelbean</code></li>
+</ul></li>
+<li>This process works (assuming you have permissions) for:
+<ul class="incremental">
+<li><a href="https://github.com/jandrewjohnson/hazelbean_dev" class="uri">https://github.com/jandrewjohnson/hazelbean_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/seals_beta" class="uri">https://github.com/jandrewjohnson/seals_beta</a></li>
+<li><a href="https://github.com/jandrewjohnson/seals" class="uri">https://github.com/jandrewjohnson/seals</a></li>
+<li><a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="uri">https://github.com/jandrewjohnson/gtap_invest_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/global_invest_dev" class="uri">https://github.com/jandrewjohnson/global_invest_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a></li>
 </ul></li>
 </ul>
 </section>
@@ -488,6 +520,11 @@ ul.task-list li input[type="checkbox"] {
 <ul class="incremental">
 <li>Unless you REALLY know what you’re doing.</li>
 </ul></li>
+<li>Configure your user name via the command prompt with the following commands
+<ul class="incremental">
+<li><code>git config --global user.name "John Doe"</code></li>
+<li><code>git config --global user.email johndoe@example.com</code></li>
+</ul></li>
 </ul>
 <section id="verify-git-installation" class="level4">
 <h4 class="anchored" data-anchor-id="verify-git-installation">Verify Git Installation</h4>
@@ -501,6 +538,16 @@ ul.task-list li input[type="checkbox"] {
 <li>All version control tasks can be done via git commands here, but we will be using VS Code instead</li>
 </ul>
 </section>
+</section>
+<section id="configure-windows-explorer-optional" class="level3">
+<h3 class="anchored" data-anchor-id="configure-windows-explorer-optional">Configure Windows Explorer (optional)</h3>
+<ul class="incremental">
+<li>Make hidden folders visible</li>
+<li>Make sure file extensions are visible
+<ul class="incremental">
+<li><img src="images/paste-47.png" class="img-fluid"></li>
+</ul></li>
+</ul>
 </section>
 <section id="create-a-python-environment-1" class="level3">
 <h3 class="anchored" data-anchor-id="create-a-python-environment-1">Create a python environment</h3>
@@ -645,6 +692,7 @@ ul.task-list li input[type="checkbox"] {
 <ul class="incremental">
 <li>We use Quarto to create reports and documents on .qmd, .md and .ipynb files
 <ul class="incremental">
+<li>Install the Quarto CLI <a href="https://quarto.org/docs/get-started" class="uri">https://quarto.org/docs/get-started</a></li>
 <li>You can edit in source mode:
 <ul class="incremental">
 <li><img src="images/2024-02-02-10-58-06.png" class="img-fluid"></li>

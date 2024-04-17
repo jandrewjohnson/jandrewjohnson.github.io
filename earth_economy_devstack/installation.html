@@ -294,6 +294,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Walkthrough</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_magpie_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Magpie Tutorial</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -346,6 +352,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#open-the-earth-economy-devstack-in-vs-code-workspace" id="toc-open-the-earth-economy-devstack-in-vs-code-workspace" class="nav-link" data-scroll-target="#open-the-earth-economy-devstack-in-vs-code-workspace">Open the Earth Economy Devstack in VS Code workspace</a></li>
   <li><a href="#configure-vs-code" id="toc-configure-vs-code" class="nav-link" data-scroll-target="#configure-vs-code">Configure VS CODE</a></li>
   <li><a href="#get-the-other-required-repositories-and-put-them-in-the-right-directory" id="toc-get-the-other-required-repositories-and-put-them-in-the-right-directory" class="nav-link" data-scroll-target="#get-the-other-required-repositories-and-put-them-in-the-right-directory">Get the other required repositories and put them in the right directory</a></li>
+  <li><a href="#optional-cython-installation-steps" id="toc-optional-cython-installation-steps" class="nav-link" data-scroll-target="#optional-cython-installation-steps">Optional Cython Installation steps</a></li>
   </ul></li>
   <li><a href="#step-by-step-installation" id="toc-step-by-step-installation" class="nav-link" data-scroll-target="#step-by-step-installation">Step by Step Installation</a>
   <ul class="incremental collapse">
@@ -404,7 +411,7 @@ ul.task-list li input[type="checkbox"] {
 <ol class="incremental" start="5" type="1">
 <li>Install libraries using the following mamba command:</li>
 </ol>
-<p><code>mamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc conda numba intake more-itertools google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 gdown tqdm sympy gekko</code></p>
+<p><code>mamba install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc conda numba intake more-itertools google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 gdown tqdm sympy gekko python-pptx</code></p>
 <ul class="incremental">
 <li>If you don’t add mamba to your path, you can do this manually. On PC, you could use the command
 <ul class="incremental">
@@ -498,6 +505,23 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a></li>
 </ul></li>
 </ul>
+</section>
+<section id="optional-cython-installation-steps" class="level3">
+<h3 class="anchored" data-anchor-id="optional-cython-installation-steps">Optional Cython Installation steps</h3>
+<p>If you run any part of the code that uses compiled C++ code (mostly SEALS and the optimized raster functions in Hazelbean), then you will need to have a C++ compiler on your system.</p>
+<section id="windows-cython-installation" class="level4">
+<h4 class="anchored" data-anchor-id="windows-cython-installation">Windows Cython Installation</h4>
+<p>You could go to <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="uri">https://visualstudio.microsoft.com/visual-cpp-build-tools/</a> and select download build tools.</p>
+<p><img src="images/paste-48.png" class="img-fluid"></p>
+<p>However, the following command line in the preferred way. Enter the following command in the Terminal:</p>
+<p><code>winget install Microsoft.VisualStudio.2022.BuildTools --force --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</code></p>
+<p>This will launch the build-tools installer (you could do this manually via the MS website if you want, but this ensures you get the right tools).</p>
+<p><img src="images/paste-50.png" class="img-fluid"></p>
+</section>
+<section id="mac-cython-installation" class="level4">
+<h4 class="anchored" data-anchor-id="mac-cython-installation">Mac Cython Installation</h4>
+<p>Xcode Command Line Tools: macOS users can install these tools by running xcode-select –install in the Terminal. This command downloads and installs the Xcode Command Line Tools, which includes gcc and clang, the compilers needed to compile C/C++ code on macOS. This is somewhat analogous to the Visual Studio Build Tools on Windows.</p>
+</section>
 </section>
 </section>
 <section id="step-by-step-installation" class="level2">

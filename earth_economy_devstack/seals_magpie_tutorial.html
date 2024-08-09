@@ -414,13 +414,17 @@ ul.task-list li input[type="checkbox"] {
 <p>The default mapping in SEALS is stored under <code>base_data\seals\default_inputs\esa_seals7_correspondence.csv</code>. For MAgPIE-SEALS couplings, however, it is recommended to use a mapping that classifies “crop_natural_mosaic” as “othernat” and “natural_crop_mosaic” as “forest” to better align the total cropland extent of the ESA map with the cropland initialisation in MAgPIE. That there is an overestimation of the cropland extent in the ESA CCI data is a well-know issue. Thus, the lines in <code>esa_seals7_correspondence.csv</code></p>
 <pre><code>6,,30,2,crop_natural_mosaic,cropland
 7,,40,2,natural_crop_mosaic,cropland</code></pre>
-<p>are changes to</p>
+<p>are changed to</p>
 <pre><code>6,,30,2,crop_natural_mosaic,othernat
 7,,40,2,natural_crop_mosaic,forest</code></pre>
 <p>in <code>esa_seals7_correspondence_mosaic-natural.csv</code>.</p>
 <p>Next, we set the path to the mapping between MAgPIE land use types to SEALS land cover types, as defined above</p>
 <p><img src="images/magpie_scenario_definitions4.png" class="img-fluid"></p>
-<p>An finally we define the set of regressors used during downscaling, as well as the base land-cover data <code>base_year_lulc_path</code>. This must be the same year as defined in the <code>Baseline</code> case.</p>
+<p>We also specify a set of regressors used during downscaling. Tables of trained model coefficients used by SEALS can be found under <code>base_data/seals/default_inputs</code>. Here we can also align some model constraints between MAgPIE and SEALS. If, for example, compliance with currently implemented land policies such as protected areas is assumed in MAgPIE, these constraints also need to be reflected during the downscaling. We here therefore add an additional multiplicative regressor that precludes expansion of agricultural land (cropland and grassland) in legally protected areas as reported by the WDPA database, which is in line with the assumption in MAgPIE.</p>
+<p><img src="images/magpie_regressors.png" class="img-fluid"></p>
+<p>Similarly, the same functionality can also be used to specify policy scenarios, such as the expansion of protected areas in line with the 30x30 goal of the Global Biodiversity Framework. The <code>seals/static_regressors/magpie_30by30.tif</code> contains both currently protected areas from the WDPA database and areas that might be protected under a global 30x30 protection scenario.</p>
+<p><img src="images/magpie_regressors_30by30.png" class="img-fluid"></p>
+<p>Finally, the path to the regressor used during the downscaling must also be added to the <code>scenario_definitions.csv</code> file, while the base land-cover data <code>base_year_lulc_path</code> must refer to the same year as defined in the <code>Baseline</code> case.</p>
 <p><img src="images/magpie_scenario_definitions5.png" class="img-fluid"></p>
 <p>Save the <code>scenario_definitions_tutorial.csv</code> under <code>./input</code> in your SEALS project folder and don’t forget to add it to your SEALS run file and you are good to go.</p>
 <p><img src="images/magpie_scenario_definitions6.png" class="img-fluid"></p>

@@ -381,24 +381,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#explore-the-seals-code" id="toc-explore-the-seals-code" class="nav-link" data-scroll-target="#explore-the-seals-code">Explore the SEALS code</a></li>
   <li><a href="#run-files" id="toc-run-files" class="nav-link" data-scroll-target="#run-files">Run files</a></li>
   <li><a href="#setting-up-the-run-file" id="toc-setting-up-the-run-file" class="nav-link" data-scroll-target="#setting-up-the-run-file">Setting up the run file</a></li>
-  <li><a href="#project-directory-structure" id="toc-project-directory-structure" class="nav-link" data-scroll-target="#project-directory-structure">Project directory structure</a></li>
-  <li><a href="#project-name" id="toc-project-name" class="nav-link" data-scroll-target="#project-name">Project name</a></li>
-  <li><a href="#create-projectflow-object" id="toc-create-projectflow-object" class="nav-link" data-scroll-target="#create-projectflow-object">Create ProjectFlow object</a></li>
+  <li><a href="#directories-and-project-name" id="toc-directories-and-project-name" class="nav-link" data-scroll-target="#directories-and-project-name">Directories and project name</a></li>
   <li><a href="#using-objects" id="toc-using-objects" class="nav-link" data-scroll-target="#using-objects">Using Objects</a></li>
   </ul></li>
-  <li><a href="#default-variables" id="toc-default-variables" class="nav-link" data-scroll-target="#default-variables">Default Variables</a>
+  <li><a href="#scenario-definitions" id="toc-scenario-definitions" class="nav-link" data-scroll-target="#scenario-definitions">Scenario Definitions</a>
   <ul class="incremental collapse">
-  <li><a href="#inspect-default-variables" id="toc-inspect-default-variables" class="nav-link" data-scroll-target="#inspect-default-variables">Inspect default variables</a></li>
-  </ul></li>
-  <li><a href="#important-note-if-you-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-such-as-p.scenario_label-below" id="toc-important-note-if-you-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-such-as-p.scenario_label-below" class="nav-link" data-scroll-target="#important-note-if-you-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-such-as-p.scenario_label-below">IMPORTANT NOTE: If you set a scenario_definitions_path, then the attributes set in this file (such as p.scenario_label below)</a></li>
-  <li><a href="#will-be-overwritten.-conversely-if-you-dont-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-will-be-used" id="toc-will-be-overwritten.-conversely-if-you-dont-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-will-be-used" class="nav-link" data-scroll-target="#will-be-overwritten.-conversely-if-you-dont-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-will-be-used">will be overwritten. Conversely, if you don’t set a scenario_definitions_path, then the attributes set in this file will be used</a></li>
-  <li><a href="#and-will-be-written-to-a-csv-file-in-your-projects-input-dir." id="toc-and-will-be-written-to-a-csv-file-in-your-projects-input-dir." class="nav-link" data-scroll-target="#and-will-be-written-to-a-csv-file-in-your-projects-input-dir.">and will be written to a CSV file in your project’s input dir.</a></li>
-  <li><a href="#if-you-did-not-set-a-p.scenarios_definitions_path-the-following-default-variables-will-be-used" id="toc-if-you-did-not-set-a-p.scenarios_definitions_path-the-following-default-variables-will-be-used" class="nav-link" data-scroll-target="#if-you-did-not-set-a-p.scenarios_definitions_path-the-following-default-variables-will-be-used">If you did not set a p.scenarios_definitions_path, the following default variables will be used</a></li>
-  <li><a href="#and-will-be-written-to-a-scenarios-csv-in-your-projects-input_dir-for-later-useeditingexpansion." id="toc-and-will-be-written-to-a-scenarios-csv-in-your-projects-input_dir-for-later-useeditingexpansion." class="nav-link" data-scroll-target="#and-will-be-written-to-a-scenarios-csv-in-your-projects-input_dir-for-later-useeditingexpansion.">and will be written to a scenarios csv in your project’s input_dir for later use/editing/expansion.</a></li>
-  <li><a href="#string-that-uniquely-identifies-the-scenario.-will-be-referenced-by-other-scenarios-for-comparison." id="toc-string-that-uniquely-identifies-the-scenario.-will-be-referenced-by-other-scenarios-for-comparison." class="nav-link" data-scroll-target="#string-that-uniquely-identifies-the-scenario.-will-be-referenced-by-other-scenarios-for-comparison.">String that uniquely identifies the scenario. Will be referenced by other scenarios for comparison.</a></li>
-  <li><a href="#scenario-type-determines-if-it-is-historical-baseline-or-future-anything-else-as-well" id="toc-scenario-type-determines-if-it-is-historical-baseline-or-future-anything-else-as-well" class="nav-link" data-scroll-target="#scenario-type-determines-if-it-is-historical-baseline-or-future-anything-else-as-well">Scenario type determines if it is historical (baseline) or future (anything else) as well</a></li>
-  <li><a href="#as-what-the-scenario-should-be-compared-against.-i.e.-policy-minus-bau." id="toc-as-what-the-scenario-should-be-compared-against.-i.e.-policy-minus-bau." class="nav-link" data-scroll-target="#as-what-the-scenario-should-be-compared-against.-i.e.-policy-minus-bau.">as what the scenario should be compared against. I.e., Policy minus BAU.</a>
-  <ul class="incremental collapse">
+  <li><a href="#scenario-definitions-csv" id="toc-scenario-definitions-csv" class="nav-link" data-scroll-target="#scenario-definitions-csv">Scenario definitions CSV</a></li>
+  <li><a href="#scenario-types" id="toc-scenario-types" class="nav-link" data-scroll-target="#scenario-types">Scenario types</a></li>
+  <li><a href="#automatically-downloading-data" id="toc-automatically-downloading-data" class="nav-link" data-scroll-target="#automatically-downloading-data">Automatically downloading data</a></li>
   <li><a href="#running-the-model" id="toc-running-the-model" class="nav-link" data-scroll-target="#running-the-model">Running the model</a></li>
   </ul></li>
   </ul>
@@ -460,73 +450,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul class="incremental">
 <li>The reason for putting it in this block is so that you don’t accidentally run the code when you import the file in another script</li>
 </ul></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, sys</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_utils</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_initialize_project</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> seals_utils <span class="im">import</span> download_google_cloud_blob</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>main <span class="op">=</span> <span class="st">''</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    content <span class="op">=</span> <span class="st">"here"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="project-directory-structure" class="level2">
-<h2 class="anchored" data-anchor-id="project-directory-structure">Project directory structure</h2>
-<ul class="incremental">
-<li>SEALS (and the EE Devstack) assumes (or softly requires) that you put all code and data somewhere relative to the user’s home directory <code>os.path.expanduser('~')</code>
-<ul class="incremental">
-<li>Can put it in suddirectories with <code>extra_dirs = ['Files', 'seals', 'projects']</code></li>
-</ul></li>
-<li>If you followed the EE method, you will have already created the <code>seals</code> directory at <code>&lt;user_dir&gt;/Files/seals</code>
-<ul class="incremental">
-<li>In the <code>seals</code> directory, your code is in <code>seals_dev</code></li>
-<li>In the <code>seals</code> directory, you also will have a <code>projects</code> direcotry
-<ul class="incremental">
-<li>This is created automatically if its not there</li>
-<li>All data and outputs will be saved in this directory
-<ul class="incremental">
-<li>As a best practice, you should not save data in the <code>seals_dev</code> directory</li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">### ------- ENVIRONMENT SETTINGS -------------------------------</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Users should only need to edit lines in this ENVIRONMENT SETTINGS section</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A ProjectFlow object is created from the Hazelbean library to organize directories and enable parallel processing.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># project-level variables are assigned as attributes to the p object (such as in p.base_data_dir = ... below)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The only agrument for a project flow object is where the project directory is relative to the current_working_directory.</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This organization, defined with extra dirs relative to the user_dir is the EE-spec.</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>)        </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    extra_dirs <span class="op">=</span> [<span class="st">'Files'</span>, <span class="st">'seals'</span>, <span class="st">'projects'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="project-name" class="level2">
-<h2 class="anchored" data-anchor-id="project-name">Project name</h2>
-<ul class="incremental">
-<li>Set the project name
-<ul class="incremental">
-<li>This is where your new files will be written</li>
-</ul></li>
-<li>The next line defines the project dir with the above information</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The project_name is used to name the project directory below. Also note that</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ProjectFlow only calculates tasks that haven't been done yet, so adding </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># a new project_name will give a fresh directory and ensure all parts</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># are run.</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    project_name <span class="op">=</span> <span class="st">'test_standard'</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The project-dir is where everything will be stored, in particular in an input, intermediate, or output dir</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># IMPORTANT </span><span class="al">NOTE</span><span class="co">: This should not be in a cloud-synced directory (e.g. dropbox, google drive, etc.), which</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># will either make the run fail or cause it to be very slow. The recommended place is (as coded above)</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># somewhere in the users's home directory.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    project_dir <span class="op">=</span> os.path.join(user_dir, os.sep.join(extra_dirs), project_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="create-projectflow-object" class="level2">
-<h2 class="anchored" data-anchor-id="create-projectflow-object">Create ProjectFlow object</h2>
-<ul class="incremental">
-<li>Create a ProjectFlow object with the project_dir as the only argument
+<li>This file then creates a ProjectFlow objected, assigned to the variable p.
 <ul class="incremental">
 <li>Python is an object-oriented programming langage
 <ul class="incremental">
@@ -535,15 +459,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the ProjectFlow Object</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_dir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_utils</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seals_initialize_project</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>main <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a ProjectFlow Object to organize directories and enable parallel processing.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="directories-and-project-name" class="level2">
+<h2 class="anchored" data-anchor-id="directories-and-project-name">Directories and project name</h2>
+<ul class="incremental">
+<li>SEALS (and the EE Devstack) assumes (or softly requires) that you put all code and data somewhere relative to the user’s home directory <code>os.path.expanduser('~')</code>
+<ul class="incremental">
+<li>Can put it in sub-directories with <code>extra_dirs = ['Files', 'seals', 'projects']</code></li>
+</ul></li>
+<li>If you followed the EE method, you will have already created the <code>seals</code> directory at <code>&lt;user_dir&gt;/Files/seals</code>
+<ul class="incremental">
+<li>In the <code>seals</code> directory, your code is in <code>seals_dev</code></li>
+<li>In the <code>seals</code> directory, you also will have a <code>projects</code> directory
+<ul class="incremental">
+<li>This is created automatically if its not there</li>
+<li>All data and outputs will be saved in this directory
+<ul class="incremental">
+<li>As a best practice, you should not save data in the <code>seals_dev</code> directory</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Given the directory structure above, p.project_name will also be use</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign project-level attributes to the p object (such as in p.base_data_dir = ... below)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># including where the project_dir and base_data are located.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The project_name is used to name the project directory below. If the directory exists, each task will not recreate</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># files that already exist. </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p.user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>)        </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p.extra_dirs <span class="op">=</span> [<span class="st">'Files'</span>, <span class="st">'seals'</span>, <span class="st">'projects'</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> <span class="st">'test_examples'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> p.project_name <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> hb.pretty_time() <span class="co"># If don't you want to recreate everything each time, comment out this line.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Based on the paths above, set the project_dir. All files will be created in this directory.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>p.project_dir <span class="op">=</span> os.path.join(p.user_dir, os.sep.join(p.extra_dirs), p.project_name)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>p.set_project_dir(p.project_dir) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="using-objects" class="level2">
 <h2 class="anchored" data-anchor-id="using-objects">Using Objects</h2>
 <ul class="incremental">
 <li>The <code>p</code> object we created will organize input variables (called attributes when assigned to an object)
 <ul class="incremental">
-<li>Like this: <code>p.attribute_name = 'ItsName</code></li>
+<li>Like this: <code>p.attribute_name = 'ItsName'</code></li>
 </ul></li>
 <li>The <code>p</code> object also has functions tied specificially to it (called methods when assigned to an object)
 <ul class="incremental">
@@ -556,71 +523,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="default-variables" class="level1">
-<h1>Default Variables</h1>
-<section id="inspect-default-variables" class="level2">
-<h2 class="anchored" data-anchor-id="inspect-default-variables">Inspect default variables</h2>
+<section id="scenario-definitions" class="level1">
+<h1>Scenario Definitions</h1>
+<section id="scenario-definitions-csv" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-definitions-csv">Scenario definitions CSV</h2>
 <ul class="incremental">
-<li>The default variables might not need to be modified from their default values
-<ul class="incremental">
-<li>But we need to understand them to get what SEALS is doing</li>
-</ul></li>
-<li>Below, we set the attribute for where the <code>scenario_definitions</code> csv should be stored
-<ul class="incremental">
-<li>Note that we never defined <code>p.input_dir</code>. It was based on the <code>project_dir</code> when we created <code>p</code></li>
-</ul></li>
 <li>The <code>scenario_definitions</code> file specifies what defines the many different scenarios you want to run
 <ul class="incremental">
 <li>Each row will be one scenario</li>
 <li>Each time the model runs a new scenario, it will update its attributes based on this row</li>
 </ul></li>
-<li>If you haven’t run SEALS yet, you won’t have a <code>scenario_defintions</code> file, so it will create a default one on the first run</li>
+<li>If you haven’t run SEALS yet, you won’t have a <code>scenario_defintions</code> file, so it will download the default one on the first run</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">'test_standard_scenarios.csv'</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, p.scenario_definitions_filename)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    seals_initialize_project.initialize_scenario_definitions(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+<section id="scenario-types" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-types">Scenario types</h2>
+<ul class="incremental">
+<li>Scenario type determines if it is historical (baseline) or future (anything else) as well as what the scenario should be compared against. I.e., Policy minus BAU.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p.scenario_type <span class="op">=</span> <span class="st">'bau'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="important-note-if-you-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-such-as-p.scenario_label-below" class="level1">
-<h1>IMPORTANT NOTE: If you set a scenario_definitions_path, then the attributes set in this file (such as p.scenario_label below)</h1>
+<section id="automatically-downloading-data" class="level2">
+<h2 class="anchored" data-anchor-id="automatically-downloading-data">Automatically downloading data</h2>
+<ul class="incremental">
+<li>This computing stack also uses hazelbean to automatically download needed data at run time.
+<ul class="incremental">
+<li>In the code block below, we set p.base_data_dir to a location where we want to store lots of very large files.</li>
+<li>Hazelbean will look here for certain files that are necessary and will download them from a cloud bucket if they are not present. T</li>
+<li>This also lets you use the same base data across different projects.</li>
+</ul></li>
+<li>The final directory has to be named base_data to match the naming convention on the google cloud bucket.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p.base_data_dir <span class="op">=</span> os.path.join(<span class="st">'Files/base_data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="will-be-overwritten.-conversely-if-you-dont-set-a-scenario_definitions_path-then-the-attributes-set-in-this-file-will-be-used" class="level1">
-<h1>will be overwritten. Conversely, if you don’t set a scenario_definitions_path, then the attributes set in this file will be used</h1>
-</section>
-<section id="and-will-be-written-to-a-csv-file-in-your-projects-input-dir." class="level1">
-<h1>and will be written to a CSV file in your project’s input dir.</h1>
-</section>
-<section id="if-you-did-not-set-a-p.scenarios_definitions_path-the-following-default-variables-will-be-used" class="level1">
-<h1>If you did not set a p.scenarios_definitions_path, the following default variables will be used</h1>
-</section>
-<section id="and-will-be-written-to-a-scenarios-csv-in-your-projects-input_dir-for-later-useeditingexpansion." class="level1">
-<h1>and will be written to a scenarios csv in your project’s input_dir for later use/editing/expansion.</h1>
-</section>
-<section id="string-that-uniquely-identifies-the-scenario.-will-be-referenced-by-other-scenarios-for-comparison." class="level1">
-<h1>String that uniquely identifies the scenario. Will be referenced by other scenarios for comparison.</h1>
-<p>p.scenario_label = ‘ssp2_rcp45_luh2-globio_bau’</p>
-</section>
-<section id="scenario-type-determines-if-it-is-historical-baseline-or-future-anything-else-as-well" class="level1">
-<h1>Scenario type determines if it is historical (baseline) or future (anything else) as well</h1>
-</section>
-<section id="as-what-the-scenario-should-be-compared-against.-i.e.-policy-minus-bau." class="level1">
-<h1>as what the scenario should be compared against. I.e., Policy minus BAU.</h1>
-<p>p.scenario_type = ‘bau’</p>
-<pre><code>
-This computing stack also uses hazelbean to automatically download needed data at run time. In the code block below, notice the absolute path assigned to p.base_data_dir. Hazelbean will look here for certain files that are necessary and will download them from a cloud bucket if they are not present. This also lets you use the same base data across different projects.
-
-In addition to defining a base_data_dir, you will need to For this to work, you need to also point SEALS to the correct data_credentials_path. If you don't have a credentils file, email jajohns\@umn.edu. The data are freely available but are very, very large (and thus expensive to host), so I limit access via credentials.
-
-``` python
-
-p.base_data_dir = os.path.join('G:/My Drive/Files/base_data')
-
-p.data_credentials_path = '..\\api_key_credentials.json'</code></pre>
-<p>NOTE THAT the final directory has to be named base_data to match the naming convention on the google cloud bucket.</p>
 <section id="running-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-model">Running the model</h2>
 <p>After doing the above steps, you should be ready to run <code>run_test_seals.py</code>. Upon starting, SEALS will report the “task tree” of steps that it will compute in the ProjectFlow environment. To understand SEALS in more depth, inspect each of the functions that define these tasks for more documention in the code.</p>
 <p>Once the model is complete, go to your project directory, and then the intermediate directory. There you will see one directory for each of the tasks in the task tree. To get the final produce, go to the stitched_lulc_simplified_scenarios directory. There you will see the base_year lulc and the newly projected lulc map for the future year:</p>
-<p><img src="images/paste-3.png" class="img-fluid"> [THIS IS NOT THE CORRECT IMAGE]</p>
-<p>Open up the projected one (e.g., lulc_ssp2_rcp45_luh2-message_bau_2045.tif) in QGIS and enjoy your new, high-resolution land-use change projection!</p>
+<p>[THIS IS NOT THE CORRECT IMAGE]</p>
+<p>Open up the projected one (e.g., <code>lulc_ssp2_rcp45_luh2-message_bau_2045.tif</code>) in QGIS and enjoy your new, high-resolution land-use change projection!</p>
 
 
 </section>

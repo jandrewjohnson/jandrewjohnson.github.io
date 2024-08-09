@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -341,7 +375,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#global-invest" id="toc-global-invest" class="nav-link active" data-scroll-target="#global-invest">Global InVEST</a></li>
+  <li><a href="#global-invest" id="toc-global-invest" class="nav-link active" data-scroll-target="#global-invest">Global InVEST</a>
+  <ul class="incremental collapse">
+  <li><a href="#setting-up-global-invest-models" id="toc-setting-up-global-invest-models" class="nav-link" data-scroll-target="#setting-up-global-invest-models">Setting Up Global InVEST Models</a></li>
+  <li><a href="#folder-structure-of-global-invest" id="toc-folder-structure-of-global-invest" class="nav-link" data-scroll-target="#folder-structure-of-global-invest">Folder Structure of Global InVEST</a></li>
+  <li><a href="#run-global-invest-models" id="toc-run-global-invest-models" class="nav-link" data-scroll-target="#run-global-invest-models">Run Global InVEST Models</a></li>
+  <li><a href="#customizing-_tasks-_functions-and-run_-files-in-global-invest" id="toc-customizing-_tasks-_functions-and-run_-files-in-global-invest" class="nav-link" data-scroll-target="#customizing-_tasks-_functions-and-run_-files-in-global-invest">Customizing <code>_tasks</code>, <code>_functions</code>, and <code>run_</code> Files in Global InVEST</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -362,8 +402,104 @@ ul.task-list li input[type="checkbox"] {
 <li>Nature’s Frontiers: <a href="https://www.worldbank.org/en/publication/natures-frontiers">Damania et al.&nbsp;(2023)</a></li>
 </ul>
 <p><img src="images/paste-44.png" class="img-fluid"></p>
+<section id="setting-up-global-invest-models" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-global-invest-models">Setting Up Global InVEST Models</h2>
+<p>To run the Global InVEST models within the Earth Economy Dev Stack standard, you first need to follow the installation steps in the <a href="../earth_economy_devstack/installation.html"><code>earth_economy_devstack</code></a> guide to include <code>global_invest</code> and <code>hazelbean</code> in your workspace.</p>
+</section>
+<section id="folder-structure-of-global-invest" class="level2">
+<h2 class="anchored" data-anchor-id="folder-structure-of-global-invest">Folder Structure of Global InVEST</h2>
+<p>Within the <code>global_invest_dev/global_invest</code> directory, you will find the following structure:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">global_invest</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> ecosystem_services_subfolders</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> global_invest_main.py</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> ecosystem_services_functions.py</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> ecosystem_services_tasks.py</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> example_run_file.py</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> example_execute_invest_ES.py</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│--</span> run_global_ES.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul class="incremental">
+<li><p><code>ecosystem_services_subfolders</code> contains the scripts for the specific ecosystem service models. Currently, it includes folders like <code>pollination_sufficiency</code> and <code>cnc_global_cv</code>.</p></li>
+<li><p><code>global_invest_main.py</code> is the primary script for running the global InVEST models.</p></li>
+<li><p><code>ecosystem_services_functions.py</code> includes general functions used by the global InVEST models. Files ending in <strong><code>_functions.py</code></strong> are not project-specific and contain general utility functions.</p></li>
+<li><p><code>ecosystem_services_tasks.py</code> includes tasks specific to the global InVEST models. Files ending in <strong><code>_tasks.py</code></strong> are project-specific and include the project object <code>p</code>, which is handled by <code>Project Flow</code> in <code>hazelbean</code>.</p></li>
+<li><p><code>example_run_file.py</code> is a script to run an example at the global level. This script demonstrates how to run a carbon storage model for a specific area of interest (AOI). The default AOI is <code>RWA</code>.</p></li>
+<li><p><code>example_execute_invest_ES.py</code> is similar to the run script created by InVEST but uses different paths.</p></li>
+<li><p><code>run_global_ES.py</code> is the script for running the global InVEST models for a specific Ecosystem Service. Files ending in <strong><code>_ES.py</code></strong> are provided as examples, such as the Global-InVEST-Carbon Storage model (<code>run_global_carbon.py</code>).</p></li>
+</ul>
+</section>
+<section id="run-global-invest-models" class="level2">
+<h2 class="anchored" data-anchor-id="run-global-invest-models">Run Global InVEST Models</h2>
+<p>To have a testing run of Global InVEST Model, you can run the <code>example_run_file.py</code> script. This script runs the carbon storage model for a specific AOI (Rwanda). The script will download the necessary data, run the model, and save the results in the <code>workspace</code> directory. It is well-documented script with the following major steps:</p>
+<ol class="incremental" type="1">
+<li>Create a <code>Project</code> object <code>p</code>, and set up corresponding project-directories.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the project flow object</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set project-directories</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p.user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>) <span class="co"># EE Devstack is defined relative to the user's directory, but could be overwritten if running not for the Devstack.    </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p.extra_dirs <span class="op">=</span> [<span class="st">'Files'</span>, <span class="st">'global_invest'</span>, <span class="st">'projects'</span>] <span class="co"># Extra directories used inside the user_dir</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> <span class="st">'test_global_invest'</span> <span class="co"># Name of the project, which will be used to create the project_dir</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> p.project_name <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> hb.pretty_time() <span class="co"># Comment this line out if you want it to use an existing project. Will skip recreation of files that already exist.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>p.project_dir <span class="op">=</span> os.path.join(p.user_dir, os.sep.join(p.extra_dirs), p.project_name) <span class="co"># Combines above to set the user_dir. </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>p.set_project_dir(p.project_dir) <span class="co"># Based on the project_dir, create all other relevant dirs, like input, intermediate, and output.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Set basa_data_dir. Will download required files here.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>p.base_data_dir <span class="op">=</span> os.path.join(p.user_dir, <span class="st">'Files'</span>, <span class="st">'base_data'</span>) <span class="co"># Could be anywhere, including external storage. But, should not be cloud-controlled (like Google Drive). </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol class="incremental" start="2" type="1">
+<li>Define the test and paths for the LULC, region_ids, and global_regions_vector. By default, the AOI is set to Rwanda. The paths are set to the <code>catographic/ee</code> folder in the base data directory.</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set model-paths and details</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p.aoi <span class="op">=</span> <span class="st">'RWA'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p.base_year_lulc_path <span class="op">=</span> p.get_path(<span class="st">'lulc/esa/lulc_esa_2017.tif'</span>) <span class="co"># Defines the fine_resolution</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p.region_ids_coarse_path <span class="op">=</span> p.get_path(<span class="st">'cartographic/ee/id_rasters/eemarine_r566_ids_900sec.tif'</span>) <span class="co"># Defines the coarse_resolution</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>p.global_regions_vector_path <span class="op">=</span> p.get_path(<span class="st">'cartographic/ee/eemarine_r566_correspondence.gpkg'</span>) <span class="co"># Will be used to create the aoi vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol class="incremental" start="3" type="1">
+<li>Create your own tasks trees and execute the task tree.</li>
+</ol>
+<p>For example, in the following task tree, the project object <code>p</code> has 4 tasks:</p>
+<ul class="incremental">
+<li><code>project_aoi_task</code>: Clips the global regions vector to the AOI selected.</li>
+<li><code>aoi_inputs_task</code>: Clips global inputs based on the AOI.</li>
+<li><code>ecosystem_services_task</code>: Empty task just to contain all the other ES tasks (by being set as their parent task).</li>
+<li><code>carbon_storage_biophysical_task</code>: Actually implements the model logic.</li>
+</ul>
+<p>Note: if <code>parent=p.ecosystem_services_task</code> is not set for <code>carbon_storage_biophysical_task</code>, the task will not be set as the child-task of the <code>ecosystem_services_task</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_task_tree(p):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p.project_aoi_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.project_aoi) <span class="co"># Clips the global_regions_vector to the aoi selected   </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    p.aoi_inputs_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.aoi_inputs) <span class="co"># Clips global inputs based on the aoi</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    p.ecosystem_services_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.ecosystem_services) <span class="co"># Empty task just to contain all the other ES tasks (by being set as their parent task)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    p.carbon_storage_biophysical_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.example_ecosystem_services_invest_task, parent<span class="op">=</span>p.ecosystem_services_task) <span class="co"># Actually implements the model logic</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the task tree and excute it!</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>build_task_tree(p)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>p.execute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="customizing-_tasks-_functions-and-run_-files-in-global-invest" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-_tasks-_functions-and-run_-files-in-global-invest">Customizing <code>_tasks</code>, <code>_functions</code>, and <code>run_</code> Files in Global InVEST</h2>
+<p>If you are a new user who has forked the <code>global_invest_dev</code> repository and want to add a new ecosystem service model, you can follow these steps:</p>
+<ol class="incremental" type="1">
+<li>Copy and paste the <code>example_run_file.py</code>, then rename it to <code>run_global_&lt;new_es&gt;.py</code>. In the newly created file, ensure you define your own <code>p.&lt;new_es&gt;_biophysical_task</code> in the <code>ecosystem_services_tasks.py</code> file. For instance, if your new ecosystem service model is <code>sediment_retention</code>, in your <code>run_global_sdr.py</code>, you should define your own task tree as follows:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_task_tree(p):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p.project_aoi_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.project_aoi) <span class="co"># Clips the global_regions_vector to the selected AOI</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    p.aoi_inputs_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.aoi_inputs) <span class="co"># Clips global inputs based on the AOI</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    p.ecosystem_services_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.ecosystem_services) <span class="co"># Empty task to contain all other ES tasks (set as their parent task)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    p.sediment_retention_biophysical_task <span class="op">=</span> p.add_task(ecosystem_services_tasks.sediment_retention_invest_task, parent<span class="op">=</span>p.ecosystem_services_task) <span class="co"># CHANGED FROM CARBON STORAGE TO SEDIMENT RETENTION</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol class="incremental" start="2" type="1">
+<li>In the <code>ecosystem_services_tasks.py</code> file, add a new task for the new ecosystem service model. For example:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sediment_retention_invest_task(p):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Iterate over a scenarios file to calculate SDR from LULC maps."""</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.run_this:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        ecosystem_services_functions.sdr_biophysical(current_lulc_path, current_sdr_path, p.exhaustive_sdr_path, sdr_output_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol class="incremental" start="3" type="1">
+<li>Any functions used in the <code>sediment_retention_invest_task</code> in the <code>ecosystem_services_tasks.py</code> file should be called from the <code>ecosystem_services_functions.py</code> file. For example, the <code>sdr_biophysical</code> function called in the <code>def sediment_retention_invest_task(p):</code> function should be defined in <code>ecosystem_services_functions.py</code>. Alternatively, you can save this function in a separate Python or C script compiled by Cython for faster calculation, similar to <code>carbon_storage_ipcc_tier_1_cython.pyx</code>. However, keep the main calculation core in a single Cython file and retain the main body of the function in the <code>ecosystem_services_functions.py</code> file.</li>
+</ol>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

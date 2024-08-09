@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -395,10 +429,61 @@ ul.task-list li input[type="checkbox"] {
 <p>After committing the changes, they can be pushed to your fork by using <code>git push origin &lt;name-of-branch&gt;</code>.</p>
 <p><img src="images/git_branches.png" class="img-fluid"></p>
 </section>
+<section id="updating-your-fork-with-changes-from-the-original-repository" class="level4">
+<h4 class="anchored" data-anchor-id="updating-your-fork-with-changes-from-the-original-repository">Updating Your Fork with Changes from the Original Repository</h4>
+<p>To update your fork with the latest changes from the original repository, follow these steps:</p>
+<p><strong>1. Configure the Original Repository as a Remote</strong></p>
+<p>If you haven’t already, add the original repository as a remote. You typically name it <code>upstream</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream <span class="op">&lt;</span>URL of the original repository<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>2. Fetch the Latest Changes from the Original Repository</strong></p>
+<p>Fetch the branches and their respective commits from the <code>upstream</code> repository. Commits to <code>main</code> will be stored in the local branch <code>upstream/main</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>3. Merge or Rebase the Changes</strong></p>
+<p><strong>Option A: Merge the Changes</strong></p>
+<ol class="incremental" type="1">
+<li><p>Switch to your local <code>main</code> branch (or the branch you want to update).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Merge the changes from <code>upstream/main</code> into your local <code>main</code> branch.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge upstream/main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Resolve any merge conflicts if they arise, commit the merge, and push the updated branch to your fork.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<p><strong>Option B: Rebase the Changes</strong></p>
+<ol class="incremental" type="1">
+<li><p>Switch to your local <code>main</code> branch (or the branch you want to update).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Rebase your local changes on top of the upstream changes.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase upstream/main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Resolve any rebase conflicts if they arise, continue the rebase, and push the updated branch to your fork.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main <span class="at">--force</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<p><strong>4. Ensure Your Fork is Up-to-Date</strong></p>
+<p>If you have other branches, you may need to repeat the merge or rebase process for each branch.</p>
+<p><strong>Summary of Commands</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream <span class="op">&lt;</span>URL of the original repository<span class="op">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge upstream/main  <span class="co"># or git rebase upstream/main</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main  <span class="co"># use --force with rebase</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>By following these steps, you will incorporate the latest changes from the original repository into your fork.</p>
+</section>
 </section>
 <section id="pull-requests" class="level3">
 <h3 class="anchored" data-anchor-id="pull-requests">Pull requests</h3>
 <p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specfied. Pull requests should be reviewed by at least one of the main code developers.</p>
+<p>Here is an example where you think some functions in <code>seals_process_coarse_timeseries.py</code> within the <code>seals_dev</code> project should be removed and relocated to a project-specific repository, rather than remaining in the core <code>seals_dev</code> repository. In your <strong>forked</strong> <code>seals_dev</code> repository:</p>
+<p><img src="images/pull_request_example_step1.png" class="img-fluid"></p>
+<p>This example shows that you have made changes in <code>seals_process_coarse_timeseries.py</code>. You need to “Stage Changes” (as indicated by the red circle) and “Commit Changes” before you can create a pull request.</p>
+<p><img src="images/pull_request_example_step2.png" class="img-fluid"></p>
+<p>Next, <code>commit and sync</code> the changes to the forked repository.</p>
+<p><img src="images/pull_request_example_step3.png" class="img-fluid"></p>
+<p>To create a pull request, please go to your forked repository on GitHub.</p>
+<p><img src="images/pull_request_example_step4.png" class="img-fluid"></p>
+<p>You will see your commit message should match the information you typed in the commit box when you committed and synced the changes. Then, click on the <code>Contribute</code> button and select <code>Open pull request</code>.</p>
+<p><img src="images/pull_request_example_step5.png" class="img-fluid"></p>
+<p>On the pull request page, which appears on the <code>upstream</code> repository, you can add more information about the changes you made. Before clicking on the <code>Create pull request</code> button, <strong>test your changes again</strong> and ensure they pass all tests before proceeding to ensure that the changes work as expected.</p>
+<p><img src="images/pull_request_example_step6.png" class="img-fluid"></p>
+<p>Finally, the pull request will appear in the <code>upstream</code> repository. The main developers will review your changes and, if approved, will merge them into the <code>upstream</code> repository.</p>
 </section>
 <section id="branching" class="level3">
 <h3 class="anchored" data-anchor-id="branching">Branching</h3>

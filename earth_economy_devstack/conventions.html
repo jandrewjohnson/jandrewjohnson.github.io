@@ -612,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="get_path-and-ref_path" class="level2">
 <h2 class="anchored" data-anchor-id="get_path-and-ref_path">get_path and ref_path</h2>
-<p>Paths that are ready to use are denoted with ’_path’ as the last 5 characters.</p>
+<p>Paths that are ready to use are denoted with ‘_path’ as the last 5 characters.</p>
 <p><code>p.ha_per_cell_10sec_ref_path = os.path.join(p.base_data_dir, 'pyramids', "ha_per_cell_10sec.tif")</code></p>
 <p>However prior to calling get_path, the root directory of the path is not clear. Get path will search all the options given an inputted reference path. These follow the convention that the last 8 characters are ‘ref_path’, it is a relative path, and specifically, it is relative to one of the many possible root directories, which include by default</p>
 <ol class="incremental" type="1">

@@ -343,7 +343,8 @@ ul.task-list li input[type="checkbox"] {
   <ul class="incremental">
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
   <ul class="incremental collapse">
-  <li><a href="#quickstart-installation" id="toc-quickstart-installation" class="nav-link" data-scroll-target="#quickstart-installation">Quickstart Installation</a>
+  <li><a href="#standard-installation" id="toc-standard-installation" class="nav-link" data-scroll-target="#standard-installation">Standard Installation</a></li>
+  <li><a href="#workspace-installation" id="toc-workspace-installation" class="nav-link" data-scroll-target="#workspace-installation">Workspace Installation</a>
   <ul class="incremental collapse">
   <li><a href="#install-git" id="toc-install-git" class="nav-link" data-scroll-target="#install-git">Install Git</a></li>
   <li><a href="#create-a-python-environment" id="toc-create-a-python-environment" class="nav-link" data-scroll-target="#create-a-python-environment">Create a python environment</a></li>
@@ -354,7 +355,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#get-the-other-required-repositories-and-put-them-in-the-right-directory" id="toc-get-the-other-required-repositories-and-put-them-in-the-right-directory" class="nav-link" data-scroll-target="#get-the-other-required-repositories-and-put-them-in-the-right-directory">Get the other required repositories and put them in the right directory</a></li>
   <li><a href="#optional-cython-installation-steps" id="toc-optional-cython-installation-steps" class="nav-link" data-scroll-target="#optional-cython-installation-steps">Optional Cython Installation steps</a></li>
   </ul></li>
-  <li><a href="#step-by-step-installation" id="toc-step-by-step-installation" class="nav-link" data-scroll-target="#step-by-step-installation">Step by Step Installation</a>
+  <li><a href="#workspace-step-by-step-installation" id="toc-workspace-step-by-step-installation" class="nav-link" data-scroll-target="#workspace-step-by-step-installation">Workspace Step by Step Installation</a>
   <ul class="incremental collapse">
   <li><a href="#install-git-1" id="toc-install-git-1" class="nav-link" data-scroll-target="#install-git-1">Install Git</a></li>
   <li><a href="#configure-windows-explorer-optional" id="toc-configure-windows-explorer-optional" class="nav-link" data-scroll-target="#configure-windows-explorer-optional">Configure Windows Explorer (optional)</a></li>
@@ -379,14 +380,63 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="installation" class="level1">
 <h1>Installation</h1>
-<p>The Earth Economy Devstack is a specific way of organizing files, VS Code workspaces, local development repositories and preconfigured launch configurations that let a user contribute to NatCap TEEMs projects. This document contains:</p>
+<p>The Earth Economy Devstack is a specific way of organizing files, VS Code workspaces, local development repositories and preconfigured launch configurations that let a user contribute to NatCap TEEMs projects. This document contains three possible installation methods:</p>
 <ol class="incremental" type="1">
-<li><p>A quickstark installation guide for installing the Earth Economy Devstack which assumes a basic understanding of the command line and Python.</p></li>
-<li><p>A detailed step-by-step installation guide of Python, Git, QGIS and other related software.</p></li>
+<li>Standard: A quickstart guide for users who are already familiar with Python, Git, and using pip to install github-based packages.</li>
+<li>Workspace: Uses VS Code Workspaces and launch configs to integrate many related repos from the Economy Devstack. Assumes a good understanding of the command line, Python, VS Code configuration and related skills.</li>
+<li>Workspace with guide: A detailed step-by-step installation guide of Python, Git, QGIS and other related software for someone with little to no experience with Python, Git, VS Code, etc.</li>
 </ol>
-<p>Both sections will discuss putting files in specific locations relative to your user directory. If followed exactly, this will allow the multiple repositories to work together as intended. Other file organization schemes are possible, but will require manual configuration of the launch configurations and other settings.</p>
-<section id="quickstart-installation" class="level2">
-<h2 class="anchored" data-anchor-id="quickstart-installation">Quickstart Installation</h2>
+<section id="standard-installation" class="level2">
+<h2 class="anchored" data-anchor-id="standard-installation">Standard Installation</h2>
+<ol class="incremental" type="1">
+<li>Install git: <a href="https://Git-scm.com/downloads" class="uri">https://Git-scm.com/downloads</a></li>
+<li>Install Miniforge3 from <a href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3" class="uri">https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3</a> - Be sure to select the correct version for your operating system (Windows, Mac, Linux)
+<ol class="incremental" type="1">
+<li>If you have an Apple “m1 or m2” chip (a relatively new apple chip, make sure you select the Apple Silicon option). - Install in <code>C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3</code> (PC) or <code>~/miniconda3</code> (Mac)</li>
+<li>During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable” - If you get a “Windows Protected your PC”, click more info then Run Anyway.</li>
+</ol></li>
+<li>Use conda to install packages with the following command
+<ol class="incremental" type="1">
+<li><code>conda install -c conda-forge natcap.invest geopandas rasterstats netCDF4 cartopy xlrd markdown qtpy qtawesome plotly descartes pygeoprocessing taskgraph cython rioxarray dask google-cloud-datastore google-cloud-storage aenum anytree statsmodels openpyxl seaborn twine pyqt ipykernel imageio pandoc conda numba intake more-itertools google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 gdown tqdm sympy gekko python-pptx</code></li>
+<li>If you don’t add conda to your path, you can do this manually. On PC, you could use the command
+<ul class="incremental">
+<li><code>SETX PATH "%PATH%;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3;C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3;"</code></li>
+</ul></li>
+</ol></li>
+<li>Install C/C++ compiler
+<ol class="incremental" type="1">
+<li>If you run any part of the code that uses compiled C++ code (mostly SEALS and the optimized raster functions in Hazelbean), then you will need to have a C++ compiler on your system.
+<ol class="incremental" type="1">
+<li>Windows:
+<ol class="incremental" type="1">
+<li>Option 1: You could go to <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="uri">https://visualstudio.microsoft.com/visual-cpp-build-tools/</a> and select download build tools.</li>
+<li>Option 2: Enter the following command in the Terminal: <code>winget install Microsoft.VisualStudio.2022.BuildTools --force --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</code> This will launch the build-tools installer (you could do this manually via the MS website if you want, but this ensures you get the right tools).</li>
+</ol></li>
+<li>Mac can use Xcode to compile the cython files. Most users will already have this installed but if not, follow the directions below.
+<ol class="incremental" type="1">
+<li>Xcode Command Line Tools: macOS users can install these tools by running xcode-select –install in the Terminal. This command downloads and installs the Xcode Command Line Tools, which includes gcc and clang, the compilers needed to compile C/C++ code on macOS. This is somewhat analogous to the Visual Studio Build Tools on Windows.</li>
+</ol></li>
+</ol></li>
+</ol></li>
+<li>Clone and install required git repos
+<ol class="incremental" type="1">
+<li>To run SEALS, you will need to clone the following two repos. Put these wherever you want, but if you want to switch to a Workspace configuration later, we recommend installing them in /Users/<your_username>/Files/<toolname>/<repo_name> which using the SEALS example on my machine would be C:/Users/jajohns/Files/seals/seals_dev.
+<ol class="incremental" type="1">
+<li>https://github.com/jandrewjohnson/seals_dev</li>
+<li>https://github.com/jandrewjohnson/hazelbean_dev</li>
+</ol></repo_name></toolname></your_username></li>
+<li>Once cloned use pip to install them. You can do this by navigating to the directory where the setup.py file is located and running the following command:
+<ol class="incremental" type="1">
+<li><code>pip install -e .</code>
+<ol class="incremental" type="1">
+<li>Note, the ‘e’ option makes this an “editable” install, which means the code will live in the repository you cloned, but it will still be importable through normal python methods (a symlink is created in the site-packages directory).</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+</section>
+<section id="workspace-installation" class="level2">
+<h2 class="anchored" data-anchor-id="workspace-installation">Workspace Installation</h2>
 <section id="install-git" class="level3">
 <h3 class="anchored" data-anchor-id="install-git">Install Git</h3>
 <ul class="incremental">
@@ -398,10 +448,13 @@ ul.task-list li input[type="checkbox"] {
 <ol class="incremental" type="1">
 <li><p>Install Miniforge from <a href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3" class="uri">https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3</a> - Be sure to select the correct version for your operating system (Windows, Mac, Linux)</p>
 <ul class="incremental">
-<li>If you have an Apple “m1 or m2” chip (a relatively new apple chip, make sure you select the Apple Silicon option). - Install in <code>C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3</code> (PC) or <code>~/miniconda3</code> (Mac) - During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable” - If you get a “Windows Protected your PC”, click more info then Run Anyway.</li>
+<li>If you have an Apple “m1 or m2” chip (a relatively new apple chip, make sure you select the Apple Silicon option).</li>
+<li>Install in <code>C:\Users\&lt;YOUR_USERNAME&gt;\miniforge3</code> (PC) or <code>~/miniconda3</code> (Mac)</li>
+<li>During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable”</li>
+<li>If you get a “Windows Protected your PC”, click more info then Run Anyway.</li>
+<li>Conda can be very slow at solving complex environments. The previous solution was to install mambaforge, which was much faster. Now, mamba is included in miniforge, so you can use mamba to install packages instead of conda. However, if the conda command is still unmodified, so you still have to explicitly call mamba.</li>
 </ul></li>
-<li><p>Open the Miniforge Prompt (PC only, search for it in the start menu) or just type “mamba init” in a new terminal/command line</p></li>
-<li><p>Create a new mamba environment with the following commands (putting your desired environment name in place of <code>&lt;env_name&gt;</code>):</p></li>
+<li><p>Create a new conda environment with the following commands (putting your desired environment name in place of <code>&lt;env_name&gt;</code>):</p></li>
 </ol>
 <p><code>mamba create -n &lt;env_name&gt; -c conda-forge</code></p>
 <ol class="incremental" start="4" type="1">
@@ -419,8 +472,10 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 <ol class="incremental" start="6" type="1">
-<li>Install more with pip using the following command:</li>
+<li>Install more with pip using the following command:
+<ul class="incremental">
 <li><code>pip install winshell</code></li>
+</ul></li>
 </ol>
 </section>
 <section id="clone-the-earth-economy-devstack" class="level3">
@@ -528,8 +583,8 @@ ul.task-list li input[type="checkbox"] {
 </section>
 </section>
 </section>
-<section id="step-by-step-installation" class="level2">
-<h2 class="anchored" data-anchor-id="step-by-step-installation">Step by Step Installation</h2>
+<section id="workspace-step-by-step-installation" class="level2">
+<h2 class="anchored" data-anchor-id="workspace-step-by-step-installation">Workspace Step by Step Installation</h2>
 <section id="install-git-1" class="level3">
 <h3 class="anchored" data-anchor-id="install-git-1">Install Git</h3>
 <ul class="incremental">

@@ -414,9 +414,9 @@ ul.task-list li input[type="checkbox"] {
 <li>Clone all desired repos
 <ol class="incremental" type="1">
 <li>To run e.g.&nbsp;seals, you start by cloning the repo at <a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a>. You can clone it to whatever folder you want, but if you want to switch to a Workspace configuration later, we recommend installing it in /Users/<your_username>/Files/<toolname>/<repo_name> which using the SEALS example on my machine would be C:/Users/jajohns/Files/seals/seals_dev.</repo_name></toolname></your_username></li>
-<li>Other supported repositories include
+<li>Supported repositories include
 <ol class="incremental" type="1">
-<li><a href="https://github.com/jandrewjohnson/hazelbean_dev" class="uri">https://github.com/jandrewjohnson/hazelbean_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="uri">https://github.com/jandrewjohnson/gtap_invest_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/global_invest_dev" class="uri">https://github.com/jandrewjohnson/global_invest_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a></li>
@@ -438,11 +438,14 @@ ul.task-list li input[type="checkbox"] {
 </ol></li>
 </ol></li>
 </ol></li>
-<li>Install the clone repositories. Open a command prompt in the directory where you cloned the additional repos. In there, you will see a setup.py and/or a pyproject.toml file. Install this by running the following command (you <em>must</em> be in the repo’s root directory for it to find the setup.py).
+<li>Install the cloned repositories. Note that you probably don’t want to install hazelbean this way (from the repository via pip) but instead you’ll want to keep the version that came via Anaconda/Mamba.
+<ol class="incremental" type="1">
+<li>Open a command prompt in the directory where you cloned the additional repos. In there, you will see a setup.py and/or a pyproject.toml file. Install this by running the following command (you <em>must</em> be in the repo’s root directory for it to find the setup.py).
 <ol class="incremental" type="1">
 <li><code>pip install -e .</code>
 <ol class="incremental" type="1">
 <li>Note, the ‘e’ option makes this an “editable” install, which means the code will live in the repository you cloned, but it will still be importable through normal python methods (a symlink is created in the site-packages directory).</li>
+</ol></li>
 </ol></li>
 </ol></li>
 </ol>

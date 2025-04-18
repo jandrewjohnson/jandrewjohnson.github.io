@@ -363,9 +363,10 @@ ul.task-list li input[type="checkbox"] {
 <li>Install just for your User Account</li>
 <li>During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable”</li>
 </ul></li>
-<li>Create a new conda environment and install required packages with the following 2 mamba commands. The second command will take quite a while (10+ minutes).
+<li>Create a new conda environment, activate it, and then install required packages with the following 3 mamba commands. The third command will take quite a while (10+ minutes).
 <ol class="incremental" type="1">
 <li><code>mamba create -n environment_name</code></li>
+<li><code>mamba activate environment_name</code></li>
 <li><code>mamba install hazelbean</code></li>
 </ol></li>
 <li>Clone all desired repos

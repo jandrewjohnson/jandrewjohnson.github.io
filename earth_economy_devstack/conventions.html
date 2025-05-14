@@ -377,6 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#conventions" id="toc-conventions" class="nav-link active" data-scroll-target="#conventions">Conventions</a>
   <ul class="incremental collapse">
+  <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
   <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
   <li><a href="#id-index-etc.-in-the-context-of-vector-data" id="toc-id-index-etc.-in-the-context-of-vector-data" class="nav-link" data-scroll-target="#id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</a></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
@@ -402,6 +403,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="conventions" class="level1">
 <h1>Conventions</h1>
+<section id="slashes-vs-backslashes" class="level3">
+<h3 class="anchored" data-anchor-id="slashes-vs-backslashes">Slashes vs backslashes</h3>
+<p>On windows, for historical sillyness reasons, paths at the most bare-metal level separate levels with backslash \. However, nearly everything else within windows correctly interprets a forward slash / as a backslash at the os level. Thus, although we can’t control how OTHER programs process or report out on backslashes, we follow the basic rule that if we are inputting it as text into our repos, <strong>always use forward slash</strong>, no matter what ($5 bounty: argue a case where this needs an exception within our devstack). Linux/mac always uses forward slash (henceforth, aka slash), so this should work well.</p>
+</section>
 <section id="id-index-label-name-description" class="level3">
 <h3 class="anchored" data-anchor-id="id-index-label-name-description">Id, index, label, name, description</h3>
 <p>In programming, <code>id</code> and <code>index</code> are two different concepts that are used in different contexts.</p>
@@ -515,7 +520,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You can have multiple mappings in a single correspondence file. For example, gtapv7_r251_s65_r50_s26_correspondence_input_path, we are mapping r251 to r50 and s (sectors) 65 to s26, all in the gtapv7 domain.</p>
 <p>Appart from correspondence files, we also have <strong>labels</strong> files, such as gtapv7_r251_labels_path. Labels files are for a single set/variable/dimension but map together the synonymous categorizers. Specifically, it must have an id, label, and name, all filled out for every entry. It can optionally have others like description.</p>
 <p>In the filename gtapv7_r251_labels_path we extract from the input_path and write a EE-compliant labels table for the gtapv7 r251 set. In the filename <code>gtap11_gtapaez11_region_correspondence_path</code>, we use these regions and then connect it to the gtapaez11 labels. We can infer also that it is from a mapping labeled gtap11 to gtapaez11 and that the variable in question is the regions while the word correspondence then indicates this is a many-to-one mapping file.</p>
-<p>Note that the file path says “regions” while the column label in the CSV says “region”.</p>
+<p>Note that the file path says “regions” while the column label in the CSV says “region”. Almost always, a table should never have column indices that are plural. The file path can, because it contains many of the thing and can’t on its own refer to a single entry of itself.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
@@ -528,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The word label refers to a relatively short string (preferably 8 characters long or less) with no spaces, underscores or punctuation (but may have hyphens). This is case-sensitive, but try to avoid capitalization.</p></li>
 <li><p>The word short_label refers to a label that is strictly less or equal to 8 characters to ensure compatibility with HAR files.</p></li>
 <li><p>The word name refers to a longer string that describes a specific label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary.</p></li>
-<li><p>The words index, indices or id refers to numerical data that describes a label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary. If both are used, index/indices refer to a unique, ordered list of ints while an id/ids refer are unique but not necessarily ordered.</p></li>
+<li><p>The words index, indices or id refers to numerical data that describes a label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary. If both are used, index/indices refer to a unique, ordered list of ints while an id/ids refer are unique but not necessarily ordered. It’s best to use index/indices and never id/ids.</p></li>
 <li><p>The word class refers to LULC class. Consider renaming this to lc-class?</p></li>
 <li><p>Scenarios are defined in the following nested structure:</p>
 <ul class="incremental">
@@ -547,7 +552,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>When the variable is singular, it must be an int. If it is plural, as is ints in a list. However, when either is stored in a dataframe, always type always type check as follows:</p>
 <ul class="incremental">
 <li><p>If singular, do str(value), int(value) or float(value) as appropriate when reading from the df into a python variable.</p></li>
-<li><p>If plural, assume the df value is a space-delimited string that needs to be split, e.g.&nbsp;as [int(i) for i in value.split(’ ‘)], or’ ’.join(values) if going into the DF</p></li>
+<li><p>If plural, assume the df value is a space-delimited string that needs to be split, e.g.&nbsp;as [int(i) for i in value.split(’ ‘)], or’ ’.join(values) if going into the DF.</p>
+<ul class="incremental">
+<li>TODO: This needs to be updated with the json-style parsing added to scenarios.csv files.</li>
+</ul></li>
 </ul></li>
 <li><p>Three types of years exist, including</p>
 <ul class="incremental">
@@ -573,6 +581,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
 <li><p>And if there are no ES considered, it would be <code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
 </ul></li>
+<li><p>notice that in both examples, the variable still starts with the variable name “lulc” before the scenario information (if it’s included).</p></li>
+</ul></li>
+<li><p>For defining variable names (like “lulc” above), you might have multiple nested layers of the variable definition. These can be (or ARE) distinct from the nesting implied by scenarios. So for example, consider the base data path:</p>
+<ul class="incremental">
+<li><p><code>C:\Users\jajohns\Files\base_data\lulc\esa\seals7\binaries\2014\lulc_esa_seals7_binary_2014_cropland.tif</code></p></li>
+<li><p>Here, lulc is the variable label, but it then has sub nests for esa to denote its origin. seals7 to denote it has been recategorized, binaries to denote the seals7 has been processed into binary format (is-class vs is-not-class), and the year comes last. I haven’t figured out a standard that sets the order of the subnests, but it should be consistent. It probably depends on which element you’re going to iterate over, so years should probably be last? Actually no, once you’re in a year, you’d then iterate over class labels.</p></li>
 </ul></li>
 <li><p>Because labels have no spaces or underscores, it is possible to convert the nested structure above to a single string, as in <code>filename_ssp2_rcp45_policyname_year.tif</code>.</p></li>
 <li><p>Filetypes that supported in this computation environment include</p>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Cycle Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            overflow: hidden;
+        }
+        #canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .stat {
+            margin: 5px 0;
+        }
+        .happiness {
+            color: #ffeb3b;
+        }
+        .goods {
+            color: #4caf50;
+        }
+        .status {
+            color: #2196f3;
+        }
+        .house-happiness {
+            margin: 8px 0;
+            font-size: 12px;
+        }
+        .happiness-bar {
+            width: 150px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .happiness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">
+        <div class="stat status">Status: <span id="status">56 People Simulation</span></div>
+        <div class="stat goods">Total Goods: <span id="goods">0</span></div>
+        <div class="stat happiness">Average Happiness: <span id="happiness">50</span></div>
+        <div style="margin-top: 15px; max-height: 200px; overflow-y: auto;">
+            <div class="house-happiness">
+                <span style="color: #2196f3;">House 1 (Blue):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-1" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #4caf50;">House 2 (Green):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-2" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #e91e63;">House 3 (Pink):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-3" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #ff9800;">House 4 (Orange):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-4" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #9c27b0;">House 5 (Purple):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-5" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #00bcd4;">House 6 (Cyan):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-6" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #ffeb3b;">House 7 (Yellow):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-7" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="house-happiness">
+                <span style="color: #795548;">House 8 (Brown):</span>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happiness-8" style="width: 50%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x1a1a1a, 50, 500);
+        
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 40, 60);
+        camera.lookAt(0, 0, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Camera controls
+        const cameraControls = {
+            distance: 80,
+            theta: 0,
+            phi: Math.PI / 6,
+            target: new THREE.Vector3(0, 0, 0),
+            mouseDown: false,
+            mouseX: 0,
+            mouseY: 0,
+            autoRotate: false,
+            keys: {},
+            panSpeed: 0.5,
+            isPanning: false
+        };
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(50, 100, 50);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.camera.left = -50;
+        directionalLight.shadow.camera.right = 50;
+        directionalLight.shadow.camera.top = 50;
+        directionalLight.shadow.camera.bottom = -50;
+        scene.add(directionalLight);
+        
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(600, 600);
+        const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x2d4a2b });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+        
+        // Roads - Complex asymmetric network
+        const roadMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        
+        // Main arterial road (east-west)
+        const mainRoad = new THREE.Mesh(new THREE.PlaneGeometry(400, 10), roadMaterial);
+        mainRoad.rotation.x = -Math.PI / 2;
+        mainRoad.position.set(0, 0.1, 30);
+        scene.add(mainRoad);
+        
+        // Secondary roads (multiple levels)
+        const secondaryRoad1 = new THREE.Mesh(new THREE.PlaneGeometry(300, 8), roadMaterial);
+        secondaryRoad1.rotation.x = -Math.PI / 2;
+        secondaryRoad1.position.set(-50, 0.1, -40);
+        scene.add(secondaryRoad1);
+        
+        const secondaryRoad2 = new THREE.Mesh(new THREE.PlaneGeometry(250, 8), roadMaterial);
+        secondaryRoad2.rotation.x = -Math.PI / 2;
+        secondaryRoad2.position.set(75, 0.1, -100);
+        scene.add(secondaryRoad2);
+        
+        const secondaryRoad3 = new THREE.Mesh(new THREE.PlaneGeometry(200, 8), roadMaterial);
+        secondaryRoad3.rotation.x = -Math.PI / 2;
+        secondaryRoad3.position.set(-100, 0.1, -160);
+        scene.add(secondaryRoad3);
+        
+        // Connecting roads (north-south)
+        const connectingRoads = [
+            { x: -200, length: 190 },
+            { x: -120, length: 130 },
+            { x: -40, length: 70 },
+            { x: 40, length: 130 },
+            { x: 120, length: 190 },
+            { x: 200, length: 130 }
+        ];
+        
+        connectingRoads.forEach(road => {
+            const mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(8, road.length), 
+                roadMaterial
+            );
+            mesh.rotation.x = -Math.PI / 2;
+            mesh.position.set(road.x, 0.1, 30 - road.length/2);
+            scene.add(mesh);
+        });
+        
+        // Factory access roads
+        for (let i = 0; i < 4; i++) {
+            const factoryRoad = new THREE.Mesh(new THREE.PlaneGeometry(8, 40), roadMaterial);
+            factoryRoad.rotation.x = -Math.PI / 2;
+            factoryRoad.position.set(-150 + i * 100, 0.1, 50);
+            scene.add(factoryRoad);
+        }
+        
+        // Create houses - 8 houses in various locations
+        const houses = [];
+        const housePositions = [
+            // Closest tier (direct main road access)
+            { x: -120, z: -10, tier: 0 },
+            { x: 40, z: -10, tier: 0 },
+            // Second tier
+            { x: -200, z: -70, tier: 1 },
+            { x: -40, z: -70, tier: 1 },
+            { x: 120, z: -70, tier: 1 },
+            // Third tier (furthest)
+            { x: -120, z: -130, tier: 2 },
+            { x: 40, z: -130, tier: 2 },
+            { x: 200, z: -160, tier: 2 }
+        ];
+        
+        const houseColors = [
+            0x2196f3, // Blue
+            0x4caf50, // Green
+            0xe91e63, // Pink
+            0xff9800, // Orange
+            0x9c27b0, // Purple
+            0x00bcd4, // Cyan
+            0xffeb3b, // Yellow
+            0x795548  // Brown
+        ];
+        
+        for (let i = 0; i < 8; i++) {
+            const homeGroup = new THREE.Group();
+            const homeBase = new THREE.Mesh(
+                new THREE.BoxGeometry(20, 12, 20),
+                new THREE.MeshLambertMaterial({ color: houseColors[i] })
+            );
+            homeBase.position.y = 6;
+            homeBase.castShadow = true;
+            homeGroup.add(homeBase);
+            
+            const roof = new THREE.Mesh(
+                new THREE.ConeGeometry(15, 10, 4),
+                new THREE.MeshLambertMaterial({ color: 0x8b2222 })
+            );
+            roof.position.y = 17;
+            roof.rotation.y = Math.PI / 4;
+            roof.castShadow = true;
+            homeGroup.add(roof);
+            
+            homeGroup.position.set(housePositions[i].x, 0, housePositions[i].z);
+            scene.add(homeGroup);
+            houses.push(homeGroup);
+        }
+        
+        // Create factories - 4 factories to handle more workers
+        const factories = [];
+        const factoryPositions = [
+            { x: -150, z: 70 },
+            { x: -50, z: 70 },
+            { x: 50, z: 70 },
+            { x: 150, z: 70 }
+        ];
+        
+        for (let i = 0; i < 4; i++) {
+            const factoryGroup = new THREE.Group();
+            const factoryBase = new THREE.Mesh(
+                new THREE.BoxGeometry(30, 20, 25),
+                new THREE.MeshLambertMaterial({ color: 0x555555 })
+            );
+            factoryBase.position.y = 10;
+            factoryBase.castShadow = true;
+            factoryGroup.add(factoryBase);
+            
+            const chimney = new THREE.Mesh(
+                new THREE.CylinderGeometry(3, 3, 15),
+                new THREE.MeshLambertMaterial({ color: 0x333333 })
+            );
+            chimney.position.set(10, 27.5, 0);
+            chimney.castShadow = true;
+            factoryGroup.add(chimney);
+            
+            factoryGroup.position.set(factoryPositions[i].x, 0, factoryPositions[i].z);
+            scene.add(factoryGroup);
+            factories.push(factoryGroup);
+        }
+        
+        // Create people for each house (7 per house = 56 total)
+        const people = [];
+        const goods = [];
+        
+        for (let i = 0; i < 56; i++) {
+            const personGroup = new THREE.Group();
+            const houseIndex = Math.floor(i / 7);
+            
+            // Use house color with slight variation
+            const baseColor = new THREE.Color(houseColors[houseIndex]);
+            const variation = 0.8 + Math.random() * 0.4;
+            baseColor.multiplyScalar(variation);
+            
+            const body = new THREE.Mesh(
+                new THREE.CylinderGeometry(1.2, 1.2, 3.5),
+                new THREE.MeshLambertMaterial({ color: baseColor })
+            );
+            body.position.y = 3.5;
+            body.castShadow = true;
+            personGroup.add(body);
+            
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(1),
+                new THREE.MeshLambertMaterial({ color: 0xffdbac })
+            );
+            head.position.y = 6;
+            head.castShadow = true;
+            personGroup.add(head);
+            
+            personGroup.position.copy(houses[houseIndex].position);
+            // Arrange 7 people in a hex pattern around house
+            const offsetIndex = i % 7;
+            if (offsetIndex === 0) {
+                // Center
+            } else {
+                const angle = (offsetIndex - 1) * Math.PI / 3;
+                personGroup.position.x += Math.cos(angle) * 5;
+                personGroup.position.z += Math.sin(angle) * 5;
+            }
+            
+            scene.add(personGroup);
+            people.push(personGroup);
+            
+            // Good for each person
+            const good = new THREE.Mesh(
+                new THREE.BoxGeometry(1.5, 1.5, 1.5),
+                new THREE.MeshLambertMaterial({ color: 0xffd700 })
+            );
+            good.visible = false;
+            good.castShadow = true;
+            scene.add(good);
+            goods.push(good);
+        }
+        
+        // Happiness particles (scaled for 56 people)
+        const particleGroup = new THREE.Group();
+        const particleGeometry = new THREE.SphereGeometry(0.25);
+        const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xffeb3b });
+        
+        for (let i = 0; i < 280; i++) { // 5 particles per person (reduced for performance)
+            const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+            particle.visible = false;
+            particleGroup.add(particle);
+        }
+        scene.add(particleGroup);
+        
+        // Simulation state for each person
+        const states = [];
+        for (let i = 0; i < 56; i++) {
+            const houseIndex = Math.floor(i / 7);
+            states.push({
+                personIndex: i,
+                houseIndex: houseIndex,
+                position: 'home',
+                carrying: false,
+                goods: 0,
+                happiness: 50,
+                waypoints: [],
+                currentWaypoint: 0,
+                movementSpeed: 0.4 + Math.random() * 0.3, // Varied speeds
+                animationTime: Math.random() * Math.PI * 2,
+                particleTime: 0,
+                assignedFactory: i % 4, // Distribute across 4 factories
+                homePos: houses[houseIndex].position.clone(),
+                tier: housePositions[houseIndex].tier
+            });
+        }
+        
+        // Update UI to show aggregate stats
+        function updateUI() {
+            const totalGoods = states.reduce((sum, s) => sum + s.goods, 0);
+            const avgHappiness = states.reduce((sum, s) => sum + s.happiness, 0) / states.length;
+            
+            document.getElementById('goods').textContent = totalGoods;
+            document.getElementById('happiness').textContent = Math.round(avgHappiness);
+            document.getElementById('status').textContent = '56 People Simulation';
+            
+            // Calculate average happiness per house
+            const houseHappiness = new Array(8).fill(0);
+            const houseCounts = new Array(8).fill(0);
+            
+            states.forEach((state) => {
+                houseHappiness[state.houseIndex] += state.happiness;
+                houseCounts[state.houseIndex]++;
+            });
+            
+            // Update individual house happiness bars
+            for (let i = 0; i < 8; i++) {
+                const avgHouseHappiness = houseHappiness[i] / houseCounts[i];
+                const happinessBar = document.getElementById(`happiness-${i + 1}`);
+                if (happinessBar) {
+                    happinessBar.style.width = avgHouseHappiness + '%';
+                }
+            }
+        }
+        
+        // Animation functions for each person
+        function moveToFactory(state) {
+            state.position = 'traveling-to-factory';
+            const factoryPos = factories[state.assignedFactory].position;
+            
+            // Generate path based on tier
+            if (state.tier === 0) {
+                // Tier 0: Direct access to main road
+                state.waypoints = [
+                    { x: state.homePos.x, z: 30 }, // To main road
+                    { x: factoryPos.x, z: 30 }, // Along main road
+                    factoryPos.clone() // To factory
+                ];
+            } else if (state.tier === 1) {
+                // Tier 1: Use secondary road
+                const nearestConnector = state.homePos.x < 0 ? -120 : 40;
+                state.waypoints = [
+                    { x: state.homePos.x, z: -40 }, // To secondary road
+                    { x: nearestConnector, z: -40 }, // Along secondary road
+                    { x: nearestConnector, z: 30 }, // Up to main road
+                    { x: factoryPos.x, z: 30 }, // Along main road
+                    factoryPos.clone() // To factory
+                ];
+            } else {
+                // Tier 2: Longest path through multiple roads
+                let path = [];
+                if (state.houseIndex === 7) { // Rightmost house
+                    path = [
+                        { x: state.homePos.x, z: -100 }, // To third road
+                        { x: 120, z: -100 }, // Along third road
+                        { x: 120, z: -40 }, // Up to secondary road
+                        { x: 40, z: -40 }, // Along secondary road
+                        { x: 40, z: 30 }, // Up to main road
+                    ];
+                } else {
+                    const nearestConnector = state.homePos.x < 0 ? -200 : 40;
+                    path = [
+                        { x: state.homePos.x, z: -160 }, // To third road
+                        { x: nearestConnector, z: -160 }, // Along third road
+                        { x: nearestConnector, z: 30 }, // Up to main road
+                    ];
+                }
+                path.push({ x: factoryPos.x, z: 30 }); // Along main road
+                path.push(factoryPos.clone()); // To factory
+                state.waypoints = path;
+            }
+            state.currentWaypoint = 0;
+        }
+        
+        function produceGood(state) {
+            state.position = 'factory';
+            setTimeout(() => {
+                state.carrying = true;
+                state.goods++;
+                state.position = 'traveling-to-home';
+                
+                // Reverse the path
+                const reversedWaypoints = [];
+                for (let i = state.waypoints.length - 2; i >= 0; i--) {
+                    reversedWaypoints.push(state.waypoints[i]);
+                }
+                reversedWaypoints.push(state.homePos.clone());
+                
+                state.waypoints = reversedWaypoints;
+                state.currentWaypoint = 0;
+            }, 1500); // Faster production with more workers
+        }
+        
+        function consumeGood(state) {
+            if (state.goods > 0) {
+                state.position = 'consuming';
+                state.goods--;
+                state.carrying = false;
+                
+                // Diminishing marginal utility: happiness gain decreases as happiness increases
+                // Formula: gain = baseGain * (1 - currentHappiness/100)^0.5
+                const baseGain = 25;
+                const utilityMultiplier = Math.pow(1 - state.happiness / 100, 0.5);
+                const happinessGain = baseGain * utilityMultiplier;
+                
+                state.happiness = Math.min(100, state.happiness + happinessGain);
+                state.particleTime = 1;
+                
+                setTimeout(() => {
+                    state.position = 'home';
+                    setTimeout(() => moveToFactory(state), 1000 + Math.random() * 2000);
+                }, 2000);
+            } else {
+                setTimeout(() => moveToFactory(state), 1000);
+            }
+        }
+        
+        // Start the cycles with staggered timing
+        states.forEach((state, i) => {
+            setTimeout(() => moveToFactory(state), 2000 + i * 200);
+        });
+        
+        // Mouse controls
+        const canvas = document.getElementById('canvas');
+        
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { // Left click for rotation
+                cameraControls.mouseDown = true;
+                cameraControls.isPanning = false;
+            } else if (e.button === 1 || e.button === 2) { // Middle or right click for panning
+                cameraControls.mouseDown = true;
+                cameraControls.isPanning = true;
+                e.preventDefault();
+            }
+            cameraControls.mouseX = e.clientX;
+            cameraControls.mouseY = e.clientY;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            cameraControls.mouseDown = false;
+            cameraControls.isPanning = false;
+        });
+        
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent right-click menu
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (!cameraControls.mouseDown) return;
+            
+            const deltaX = e.clientX - cameraControls.mouseX;
+            const deltaY = e.clientY - cameraControls.mouseY;
+            
+            if (cameraControls.isPanning) {
+                // Calculate camera-relative pan vectors
+                const cameraDirection = new THREE.Vector3();
+                camera.getWorldDirection(cameraDirection);
+                
+                // Right vector (perpendicular to camera direction and world up)
+                const right = new THREE.Vector3();
+                right.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
+                
+                // Up vector (perpendicular to camera direction and right)
+                const up = new THREE.Vector3();
+                up.crossVectors(right, cameraDirection).normalize();
+                
+                cameraControls.target.add(right.multiplyScalar(-deltaX * 0.1));
+                cameraControls.target.add(up.multiplyScalar(deltaY * 0.1));
+            } else {
+                // Rotation (inverted)
+                cameraControls.theta += deltaX * 0.01;
+                cameraControls.phi = Math.max(0.1, Math.min(Math.PI - 0.1, cameraControls.phi - deltaY * 0.01));
+            }
+            
+            cameraControls.mouseX = e.clientX;
+            cameraControls.mouseY = e.clientY;
+        });
+        
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            cameraControls.distance *= 1 + e.deltaY * 0.001;
+            cameraControls.distance = Math.max(20, Math.min(200, cameraControls.distance));
+        });
+        
+        // Touch controls for mobile
+        let touchStart = null;
+        
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && touchStart) {
+                e.preventDefault();
+                const deltaX = e.touches[0].clientX - touchStart.x;
+                const deltaY = e.touches[0].clientY - touchStart.y;
+                
+                cameraControls.theta += deltaX * 0.01;
+                cameraControls.phi = Math.max(0.1, Math.min(Math.PI - 0.1, cameraControls.phi - deltaY * 0.01));
+                
+                touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+        });
+        
+        canvas.addEventListener('touchend', () => {
+            touchStart = null;
+        });
+        
+        // Keyboard controls
+        window.addEventListener('keydown', (e) => {
+            cameraControls.keys[e.key.toLowerCase()] = true;
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            cameraControls.keys[e.key.toLowerCase()] = false;
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Update each person
+            states.forEach((state, index) => {
+                state.animationTime += 0.016;
+                
+                // Happiness decay - slower with diminishing returns (reduced for large population)
+                // Decay rate increases as happiness increases (harder to maintain high happiness)
+                const decayRate = 0.008 + (state.happiness / 100) * 0.015;
+                state.happiness = Math.max(0, state.happiness - decayRate);
+                
+                const person = people[index];
+                const good = goods[index];
+                
+                // Person movement
+                if (state.position === 'traveling-to-factory' || state.position === 'traveling-to-home') {
+                    if (state.waypoints.length > 0 && state.currentWaypoint < state.waypoints.length) {
+                        const target = state.waypoints[state.currentWaypoint];
+                        const dx = target.x - person.position.x;
+                        const dz = target.z - person.position.z;
+                        const distance = Math.sqrt(dx * dx + dz * dz);
+                        
+                        if (distance > 1) {
+                            // Move towards current waypoint
+                            person.position.x += (dx / distance) * state.movementSpeed;
+                            person.position.z += (dz / distance) * state.movementSpeed;
+                            // Bob animation
+                            person.position.y = Math.sin(state.animationTime * 8) * 0.5;
+                        } else {
+                            // Reached current waypoint
+                            state.currentWaypoint++;
+                            
+                            // Check if reached final destination
+                            if (state.currentWaypoint >= state.waypoints.length) {
+                                person.position.y = 0;
+                                if (state.position === 'traveling-to-factory') {
+                                    produceGood(state);
+                                } else {
+                                    consumeGood(state);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Good follows person
+                if (state.carrying) {
+                    good.visible = true;
+                    good.position.copy(person.position);
+                    good.position.y = 10;
+                    good.rotation.y += 0.02;
+                } else {
+                    good.visible = false;
+                }
+                
+                // Happiness particles for this person (reduced to 5 per person)
+                if (state.particleTime > 0) {
+                    state.particleTime -= 0.016;
+                    const startIdx = index * 5;
+                    for (let i = 0; i < 5; i++) {
+                        const particle = particleGroup.children[startIdx + i];
+                        if (particle) {
+                            particle.visible = true;
+                            const angle = (i / 5) * Math.PI * 2;
+                            const radius = 5 + state.particleTime * 10;
+                            particle.position.x = person.position.x + Math.cos(angle) * radius;
+                            particle.position.y = 5 + (1 - state.particleTime) * 15;
+                            particle.position.z = person.position.z + Math.sin(angle) * radius;
+                        }
+                    }
+                } else {
+                    const startIdx = index * 5;
+                    for (let i = 0; i < 5; i++) {
+                        const particle = particleGroup.children[startIdx + i];
+                        if (particle) particle.visible = false;
+                    }
+                }
+            });
+            
+            // Keyboard panning (camera-relative)
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+            cameraDirection.normalize();
+            
+            // Calculate right vector
+            const right = new THREE.Vector3();
+            right.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
+            
+            // Forward is camera direction projected onto XZ plane
+            const forward = new THREE.Vector3(cameraDirection.x, 0, cameraDirection.z).normalize();
+            
+            if (cameraControls.keys['w']) {
+                cameraControls.target.add(forward.clone().multiplyScalar(cameraControls.panSpeed));
+            }
+            if (cameraControls.keys['s']) {
+                cameraControls.target.add(forward.clone().multiplyScalar(-cameraControls.panSpeed));
+            }
+            if (cameraControls.keys['a']) {
+                cameraControls.target.add(right.clone().multiplyScalar(-cameraControls.panSpeed));
+            }
+            if (cameraControls.keys['d']) {
+                cameraControls.target.add(right.clone().multiplyScalar(cameraControls.panSpeed));
+            }
+            
+            // Update camera position based on controls
+            camera.position.x = cameraControls.target.x + cameraControls.distance * Math.sin(cameraControls.phi) * Math.cos(cameraControls.theta);
+            camera.position.y = cameraControls.target.y + cameraControls.distance * Math.cos(cameraControls.phi);
+            camera.position.z = cameraControls.target.z + cameraControls.distance * Math.sin(cameraControls.phi) * Math.sin(cameraControls.theta);
+            camera.lookAt(cameraControls.target);
+            
+            updateUI();
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        animate();
+    </script>
+</body>
+</html>

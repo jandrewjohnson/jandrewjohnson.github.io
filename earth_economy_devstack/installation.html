@@ -190,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Basic Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -211,7 +211,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Installation</span></a>
+ <span class="menu-text">Basic Installation</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -341,7 +341,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
+  <li><a href="#basic-installation" id="toc-basic-installation" class="nav-link active" data-scroll-target="#basic-installation">Basic Installation</a></li>
+  <li><a href="#repository-installation" id="toc-repository-installation" class="nav-link" data-scroll-target="#repository-installation">Repository Installation</a>
   <ul class="incremental collapse">
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul></li>
@@ -354,8 +355,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="installation" class="level1">
-<h1>Installation</h1>
+<section id="basic-installation" class="level1">
+<h1>Basic Installation</h1>
+<p>Hazelbean can be installed using condaforge following these steps.</p>
 <ol class="incremental" type="1">
 <li>Install git: <a href="https://Git-scm.com/downloads" class="uri">https://Git-scm.com/downloads</a></li>
 <li>Install Miniforge3 from <a href="https://conda-forge.org/download/" class="uri">https://conda-forge.org/download/</a>
@@ -365,11 +367,30 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 <li>Create a new conda environment, activate it, and then install required packages with the following 3 mamba commands. The third command will take quite a while (10+ minutes).
 <ol class="incremental" type="1">
+<li><code>mamba init</code></li>
 <li><code>mamba create -n environment_name</code></li>
 <li><code>mamba activate environment_name</code></li>
 <li><code>mamba install hazelbean</code></li>
 </ol></li>
-<li>Clone all desired repos
+</ol>
+<p>You can now import hazelbean and it will have precompiled binaries already working for your operating system for geospatial operations using ProjectFlow!</p>
+</section>
+<section id="repository-installation" class="level1">
+<h1>Repository Installation</h1>
+<p>If you want to run SEALS, edit hazelbean, or run our global_invest models, you will need to have a C compiler and have editable installs of our git repositories. First, do the basic installation above and then follow these steps:</p>
+<ol class="incremental" type="1">
+<li>Install C/C++ compiler
+<ol class="incremental" type="1">
+<li>Windows: - Option 1: You could go to <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="uri">https://visualstudio.microsoft.com/visual-cpp-build-tools/</a> and select download build tools. - Option 2: Enter the following command in the Terminal: <code>winget install Microsoft.VisualStudio.2022.BuildTools --force --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</code> This will launch the build-tools installer (you could do this manually via the MS website if you want, but this ensures you get the right tools). - Option 3: Run the install.bat file in the Earth Economy Devestack repo’s root. This just runs the winget command above. - Mac:</li>
+<li>Mac/Linux
+<ol class="incremental" type="1">
+<li>You can use Xcode to compile the cython files. Most users will already have this installed but if not, follow the directions below.
+<ul class="incremental">
+<li>If you don’t have Xcode, you can get it by running <code>xcode-select --install</code> in the Terminal. This command downloads and installs the Xcode Command Line Tools, which includes gcc and clang, the compilers needed to compile C/C++ code on macOS. This is somewhat analogous to the Visual Studio Build Tools on Windows.</li>
+</ul></li>
+</ol></li>
+</ol></li>
+<li>Clone all desired repositories
 <ul class="incremental">
 <li>To install one of our repositories, for example SEALS, you start by cloning the repo at <a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a>.
 <ul class="incremental">
@@ -379,7 +400,7 @@ ul.task-list li input[type="checkbox"] {
 <li><code>git clone https://github.com/jandrewjohnson</code></li>
 </ul></li>
 </ul></li>
-<li>Supported repositories include
+<li>Supported repositories include the below
 <ul class="incremental">
 <li><a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="uri">https://github.com/jandrewjohnson/gtap_invest_dev</a></li>
@@ -387,24 +408,17 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a></li>
 </ul></li>
 </ul></li>
-<li>Install C/C++ compiler. OPTIONAL, but required for seals or recompilation of hazelbean if you change the cython/pyx files. - Windows:
+<li>Install the cloned repositories using an “editable” install with pip
 <ul class="incremental">
-<li>Option 1: You could go to <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" class="uri">https://visualstudio.microsoft.com/visual-cpp-build-tools/</a> and select download build tools.</li>
-<li>Option 2: Enter the following command in the Terminal: <code>winget install Microsoft.VisualStudio.2022.BuildTools --force --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</code> This will launch the build-tools installer (you could do this manually via the MS website if you want, but this ensures you get the right tools).</li>
-<li>Option 3: Run the install.bat file in the Earth Economy Devestack repo’s root. This just runs the winget command above. - Mac:</li>
-<li>You can use Xcode to compile the cython files. Most users will already have this installed but if not, follow the directions below.
-<ul class="incremental">
-<li>If you don’t have Xcode, you can get it by running <code>xcode-select --install</code> in the Terminal. This command downloads and installs the Xcode Command Line Tools, which includes gcc and clang, the compilers needed to compile C/C++ code on macOS. This is somewhat analogous to the Visual Studio Build Tools on Windows.</li>
-</ul></li>
-</ul></li>
-<li>Install the cloned repositories.
-<ul class="incremental">
-<li>Note that you probably don’t want to install hazelbean this way (from the repository via pip) but instead you’ll want to keep the version that came via Anaconda/Mamba.</li>
-<li>Open a command prompt in the directory where you cloned the additional repos. For the SEALS example, this would be C:\Users\jajohns\Files\seals\seals_dev</li>
 <li>Activate the conda environment in this command prompt with the following command
 <ul class="incremental">
 <li><code>mamba activate environment_name</code></li>
 </ul></li>
+<li>Remove from your environment any previously installed devstack software, INCLUDING HAZELBEAN. It is still necessary to install hazelbean as a first step from the Basic install steps above to get all required dependencies.
+<ul class="incremental">
+<li>With your environment activated, run e.g.&nbsp;<code>pip uninstall hazelbean</code> or similar for other previously installed models.</li>
+</ul></li>
+<li>Navigate in you command prompt to the directory where you cloned the additional repos. For the SEALS example, this would be C:\Users\jajohns\Files\seals\seals_dev</li>
 <li>Use pip to install the repo you as an “editable install” with the following command
 <ul class="incremental">
 <li><code>pip install -e .</code></li>

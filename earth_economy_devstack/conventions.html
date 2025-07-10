@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basic Installation</span></a>
+ <span class="menu-text">Installation</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -375,9 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#conventions" id="toc-conventions" class="nav-link active" data-scroll-target="#conventions">Conventions</a>
-  <ul class="incremental collapse">
-  <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
+  <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link active" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
   <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
   <li><a href="#id-index-etc.-in-the-context-of-vector-data" id="toc-id-index-etc.-in-the-context-of-vector-data" class="nav-link" data-scroll-target="#id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</a></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
@@ -387,10 +385,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#more-on-naming-conventions" id="toc-more-on-naming-conventions" class="nav-link" data-scroll-target="#more-on-naming-conventions">More on naming Conventions</a></li>
   <li><a href="#variable-and-scenario-naming-conventions" id="toc-variable-and-scenario-naming-conventions" class="nav-link" data-scroll-target="#variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</a></li>
   <li><a href="#get_path-and-ref_path" id="toc-get_path-and-ref_path" class="nav-link" data-scroll-target="#get_path-and-ref_path">get_path and ref_path</a></li>
-  </ul></li>
-  <li><a href="#python-tricks" id="toc-python-tricks" class="nav-link" data-scroll-target="#python-tricks">Python tricks</a>
-  <ul class="incremental collapse">
   <li><a href="#setting-the-environment" id="toc-setting-the-environment" class="nav-link" data-scroll-target="#setting-the-environment">Setting the environment</a></li>
+  <li><a href="#dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" id="toc-dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" class="nav-link" data-scroll-target="#dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide">Dealing with UTF-8 Encoding Issues in Data Analysis: A Practical Guide</a></li>
+  <li><a href="#docstrings" id="toc-docstrings" class="nav-link" data-scroll-target="#docstrings">Docstrings</a></li>
+  <li><a href="#function-and-method-naming-conventions" id="toc-function-and-method-naming-conventions" class="nav-link" data-scroll-target="#function-and-method-naming-conventions">Function and Method Naming Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#factory-and-creation-functions" id="toc-factory-and-creation-functions" class="nav-link" data-scroll-target="#factory-and-creation-functions">Factory and Creation Functions</a></li>
+  <li><a href="#file-operations" id="toc-file-operations" class="nav-link" data-scroll-target="#file-operations">File Operations</a></li>
+  <li><a href="#data-manipulation" id="toc-data-manipulation" class="nav-link" data-scroll-target="#data-manipulation">Data Manipulation</a></li>
+  <li><a href="#collection-operations" id="toc-collection-operations" class="nav-link" data-scroll-target="#collection-operations">Collection Operations</a></li>
+  </ul></li>
+  <li><a href="#directory-and-file-naming" id="toc-directory-and-file-naming" class="nav-link" data-scroll-target="#directory-and-file-naming">Directory and File Naming</a>
+  <ul class="incremental collapse">
+  <li><a href="#directory-conventions" id="toc-directory-conventions" class="nav-link" data-scroll-target="#directory-conventions">Directory Conventions</a></li>
+  <li><a href="#file-naming" id="toc-file-naming" class="nav-link" data-scroll-target="#file-naming">File Naming</a></li>
+  </ul></li>
+  <li><a href="#variable-naming-conventions" id="toc-variable-naming-conventions" class="nav-link" data-scroll-target="#variable-naming-conventions">Variable Naming Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#counting-and-size" id="toc-counting-and-size" class="nav-link" data-scroll-target="#counting-and-size">Counting and Size</a></li>
+  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">Data Types</a></li>
+  <li><a href="#geospatial-conventions" id="toc-geospatial-conventions" class="nav-link" data-scroll-target="#geospatial-conventions">Geospatial Conventions</a></li>
+  <li><a href="#bounding-boxes" id="toc-bounding-boxes" class="nav-link" data-scroll-target="#bounding-boxes">Bounding Boxes</a></li>
+  <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">Coordinates</a></li>
+  </ul></li>
+  <li><a href="#identifiers-and-indexing" id="toc-identifiers-and-indexing" class="nav-link" data-scroll-target="#identifiers-and-indexing">Identifiers and Indexing</a></li>
+  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">Data Processing</a></li>
+  <li><a href="#standard-library-abbreviations" id="toc-standard-library-abbreviations" class="nav-link" data-scroll-target="#standard-library-abbreviations">Standard Library Abbreviations</a></li>
+  <li><a href="#special-conventions" id="toc-special-conventions" class="nav-link" data-scroll-target="#special-conventions">Special Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#priority-indicators" id="toc-priority-indicators" class="nav-link" data-scroll-target="#priority-indicators">Priority Indicators</a></li>
+  <li><a href="#naming-to-avoid" id="toc-naming-to-avoid" class="nav-link" data-scroll-target="#naming-to-avoid">Naming to Avoid</a></li>
+  <li><a href="#debug-conventions" id="toc-debug-conventions" class="nav-link" data-scroll-target="#debug-conventions">Debug Conventions</a></li>
+  </ul></li>
+  <li><a href="#miscellaneous-conventions" id="toc-miscellaneous-conventions" class="nav-link" data-scroll-target="#miscellaneous-conventions">Miscellaneous Conventions</a></li>
+  <li><a href="#file-type-specific" id="toc-file-type-specific" class="nav-link" data-scroll-target="#file-type-specific">File Type Specific</a></li>
+  <li><a href="#scenario-naming-conventions" id="toc-scenario-naming-conventions" class="nav-link" data-scroll-target="#scenario-naming-conventions">Scenario Naming Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#filename-conventions" id="toc-filename-conventions" class="nav-link" data-scroll-target="#filename-conventions">Filename Conventions</a></li>
+  </ul></li>
+  <li><a href="#utf-8-encoding-guidelines" id="toc-utf-8-encoding-guidelines" class="nav-link" data-scroll-target="#utf-8-encoding-guidelines">UTF-8 Encoding Guidelines</a></li>
+  <li><a href="#python-style-guidelines" id="toc-python-style-guidelines" class="nav-link" data-scroll-target="#python-style-guidelines">Python Style Guidelines</a>
+  <ul class="incremental collapse">
+  <li><a href="#docstringsgeneral-style" id="toc-docstringsgeneral-style" class="nav-link" data-scroll-target="#docstringsgeneral-style">DocstringsGeneral Style</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -401,8 +437,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="conventions" class="level1">
-<h1>Conventions</h1>
 <section id="slashes-vs-backslashes" class="level3">
 <h3 class="anchored" data-anchor-id="slashes-vs-backslashes">Slashes vs backslashes</h3>
 <p>On windows, for historical sillyness reasons, paths at the most bare-metal level separate levels with backslash \. However, nearly everything else within windows correctly interprets a forward slash / as a backslash at the os level. Thus, although we can’t control how OTHER programs process or report out on backslashes, we follow the basic rule that if we are inputting it as text into our repos, <strong>always use forward slash</strong>, no matter what ($5 bounty: argue a case where this needs an exception within our devstack). Linux/mac always uses forward slash (henceforth, aka slash), so this should work well.</p>
@@ -528,6 +562,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="variable-and-scenario-naming-conventions" class="level2">
 <h2 class="anchored" data-anchor-id="variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</h2>
+<p>TODO: This one section is possibly redundant with above and some practices are out of date.</p>
 <p>To keep track of the MANY different filetypes, data processes, variables, scenarios, policies etc, please follow exactly the specifications below.</p>
 <ul class="incremental">
 <li><p>The word label refers to a relatively short string (preferably 8 characters long or less) with no spaces, underscores or punctuation (but may have hyphens). This is case-sensitive, but try to avoid capitalization.</p></li>
@@ -616,12 +651,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li>Clarify what is the naming difference between src dst versus input output. Is the former only for file paths or can it also be e.g.&nbsp;array. OR does this have to do with if it is a function return.
 <ul class="incremental">
-<li>Proposed answer: src/dst is a pointer/reference to a thing and Input/Output is the thing itself. Esp useful for paths.</li>
-<li>Similarly, _path and _dir imply the string is a reference, so src_path and src_dir are common.</li>
-<li>You might often see e.g.&nbsp;<code>input_array = hb.as_array(src_path)</code>, illustrating this difference.</li>
+<li><p>Proposed answer: src/dst is a pointer/reference to a thing and Input/Output is the thing itself. Esp useful for paths.</p></li>
+<li><p>Similarly, _path and _dir imply the string is a reference, so src_path and src_dir are common.</p></li>
+<li><p>You might often see e.g.&nbsp;<code>input_array = hb.as_array(src_path)</code>, illustrating this difference.</p></li>
 </ul></li>
 </ul></li>
-<li></li>
 </ul>
 </section>
 <section id="get_path-and-ref_path" class="level2">
@@ -637,9 +671,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>p.ha_per_cell_10sec_ref_path = os.path.join(‘pyramids’, “ha_per_cell_10sec.tif”)</p>
 </section>
-</section>
-<section id="python-tricks" class="level1">
-<h1>Python tricks</h1>
 <section id="setting-the-environment" class="level2">
 <h2 class="anchored" data-anchor-id="setting-the-environment">Setting the environment</h2>
 <ul class="incremental">
@@ -664,6 +695,333 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>yaml     execute:         engine: python         python: C:\Users\jajohns\mambaforge\envs\env2023a\python.exe</code></li>
 </ul></li>
 </ul></li>
+</ul>
+</section>
+<section id="dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide">Dealing with UTF-8 Encoding Issues in Data Analysis: A Practical Guide</h2>
+<p>If you’ve ever loaded a CSV file in pandas and found your first column mysteriously renamed to something like <code>Ã¯Â»Â¿fao_country_id</code>, or noticed that place names like “Åland” turn into garbled text like “Ã…land”, you’ve encountered UTF-8 encoding problems. These issues are incredibly common when working with international datasets and can be frustrating to debug. Understanding what’s happening and how to fix it will save you hours of headaches.</p>
+<p>The weird characters you’re seeing are typically caused by Byte Order Mark (BOM) confusion or encoding mismatches. When you see <code>Ã¯Â»Â¿</code> at the start of column names, that’s the UTF-8 BOM (bytes EF BB BF) being incorrectly interpreted as Latin-1 characters. To fix this when reading CSV files, use <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code> instead of the default encoding. If you’ve already loaded the data, you can rename the column with <code>df.rename(columns={df.columns[0]: 'correct_name'})</code> or strip the BOM from all columns with <code>df.columns = df.columns.str.replace('\ufeff', '')</code>.</p>
+<p>When working with geospatial data, you might load a GeoPackage file that correctly displays international characters, but then find those characters get mangled when you drop the geometry and save as CSV. This happens because programs like Excel don’t properly handle UTF-8 files unless they have a BOM signature. The solution is to explicitly specify the encoding when saving: <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code>. The <code>-sig</code> part adds the BOM that tells programs like Excel “this file is UTF-8 encoded.”</p>
+<p>The key difference between <code>utf-8</code> and <code>utf-8-sig</code> is the presence of a 3-byte signature at the beginning of the file. Plain <code>utf-8</code> follows the Unicode standard exactly and produces smaller files, while <code>utf-8-sig</code> adds a BOM that acts as a hint to applications about the file’s encoding. Modern web applications and APIs typically expect plain UTF-8, while desktop applications like Excel often need the BOM to interpret international characters correctly.</p>
+<p>Excel causes problems when it encounters UTF-8 files without the BOM because it assumes the file uses Windows-1252 encoding (or your system’s default). When Excel tries to interpret UTF-8 bytes using the wrong encoding, single international characters get split and displayed as multiple garbled characters. For example, “Å” (stored as bytes C3 85 in UTF-8) gets interpreted as “Ã…” because Excel reads each byte separately using Windows-1252.</p>
+<p>For most data analysis workflows, using <code>utf-8-sig</code> everywhere is the safest approach. While it adds 3 bytes to your files, this overhead is negligible, and you’ll avoid encoding issues when sharing data or opening files in different applications. Only use plain <code>utf-8</code> when you’re specifically working in environments that expect it (like certain Unix command-line tools) or when you know the consuming application handles UTF-8 correctly without needing the BOM signature.</p>
+</section>
+<section id="docstrings" class="level2">
+<h2 class="anchored" data-anchor-id="docstrings">Docstrings</h2>
+<p>We use “Google style docstrings” , which work well with Quarto.</p>
+<p>Example:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fibonacci(n):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate the nth Fibonacci number.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">        n (int): The position in the Fibonacci sequence.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">        int: The nth Fibonacci number.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Raises:</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">        NameError: If n is not an int.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Basic usage:</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">        ```python</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(5)  # Returns 5</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(10) # Returns 55</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">        ```</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="function-and-method-naming-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="function-and-method-naming-conventions">Function and Method Naming Conventions</h2>
+<section id="factory-and-creation-functions" class="level3">
+<h3 class="anchored" data-anchor-id="factory-and-creation-functions">Factory and Creation Functions</h3>
+<p><strong>make</strong><br>
+Reserved for factory functions or methods that create new instances (e.g., make_dataset, make_grid)</p>
+<p><strong>create</strong><br>
+For functions that generate new objects/files from scratch (e.g., create_empty_raster, create_new_project)</p>
+</section>
+<section id="file-operations" class="level3">
+<h3 class="anchored" data-anchor-id="file-operations">File Operations</h3>
+<p><strong>open</strong><br>
+Opens file handles or connections, loads metadata but not full data (e.g., gdal.Open, open_database_connection)</p>
+<p><strong>load</strong><br>
+Reads entire data into memory from disk or remote source (e.g., load_dataset, load_model_weights)</p>
+<p><strong>read</strong><br>
+Gets data into memory from filepath or file-like object, often line-by-line or chunk-based (e.g., read_csv, read_lines)</p>
+<p><strong>write</strong><br>
+Outputs data to disk or stream, often incremental (e.g., write_results, write_to_buffer)</p>
+<p><strong>save</strong><br>
+Persists complete objects/states to disk, typically all at once (e.g., save_model, save_checkpoint)</p>
+</section>
+<section id="data-manipulation" class="level3">
+<h3 class="anchored" data-anchor-id="data-manipulation">Data Manipulation</h3>
+<p><strong>extract</strong><br>
+Pulls out specific portions from larger data structures (e.g., extract_features, extract_roi)</p>
+<p><strong>execute</strong><br>
+Runs commands, scripts, or processes (e.g., execute_query, execute_pipeline)</p>
+<p><strong>convert</strong><br>
+Transforms data from one format/type to another (e.g., convert_to_numpy, convert_crs)</p>
+</section>
+<section id="collection-operations" class="level3">
+<h3 class="anchored" data-anchor-id="collection-operations">Collection Operations</h3>
+<p><strong>list</strong><br>
+Returns collection of items, typically as Python list (e.g., list_files, list_available_datasets)</p>
+<p><strong>remove</strong><br>
+Deletes from collections/memory structures (e.g., remove_duplicates, remove_from_cache)</p>
+<p><strong>delete</strong><br>
+Permanently removes from disk/database (e.g., delete_file, delete_record)</p>
+<p><strong>displace</strong><br>
+In-house term for renaming a path with e.g.&nbsp;a timestamp so you can write a new file into the old place (without eliminating the original). Has optional delete_on_exit functionality</p>
+<p><strong>rename</strong><br>
+Changes name while keeping same location (e.g., rename_file, rename_column)</p>
+<p><strong>replace</strong><br>
+Substitutes one value/object with another (e.g., replace_missing_values, replace_substring)</p>
+<p><strong>move</strong><br>
+Relocates to different location/container (e.g., move_file, move_to_archive)</p>
+</section>
+</section>
+<section id="directory-and-file-naming" class="level2">
+<h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and File Naming</h2>
+<section id="directory-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="directory-conventions">Directory Conventions</h3>
+<p><strong>dir</strong><br>
+Avoid - ambiguous (directory or direction?). Use ‘directory’ instead. Note that it CAN be used as a suffix, like temp_dir. Function Names Exception: Use <code>dir</code> in function names (e.g., <code>delete_dir()</code>, <code>create_dir()</code>) for brevity, matching Unix heritage.</p>
+<p><strong>directory</strong><br>
+Preferred over ‘dir’ for clarity (e.g., output_directory, working_directory)</p>
+<p><strong>folder</strong><br>
+Avoid using unless it’s user-facing documentation. Alternative to ‘directory’, more GUI-oriented.</p>
+<p><strong>dirname</strong><br>
+Preferred in most cases. Matches stdlib conventions. Name of directory without path (e.g., “outputs” from “/home/user/outputs”)</p>
+<p><strong>dir_name</strong><br>
+Avoid. Used when following strict PEP 8 in a codebase that emphasizes readability</p>
+<p><strong>dir_path</strong><br>
+The full directory path (e.g., “/home/user/documents”)</p>
+<p><strong>directory_name</strong><br>
+Avoid. Too long.</p>
+</section>
+<section id="file-naming" class="level3">
+<h3 class="anchored" data-anchor-id="file-naming">File Naming</h3>
+<p><strong>path</strong><br>
+Full path to file/directory (e.g., input_path, config_path)</p>
+<p><strong>file_name</strong><br>
+Full filename with extension (e.g., “data.csv”, “image.tif”). Preferred over filename.</p>
+<p><strong>filename</strong><br>
+Avoid. Use file_name. However this is broadly used elsewhere.</p>
+<p><strong>file_root</strong><br>
+Filename without extension (e.g., “data” from “data.csv”)</p>
+<p><strong>fileroot</strong><br>
+Avoid. Use file_root. However this is broadly used elsewhere.</p>
+<p><strong>file_extension</strong><br>
+File suffix including dot (e.g., “.csv”, “.tif”)</p>
+<p><strong>parent_directory</strong><br>
+One level up in directory tree (e.g., os.path.dirname(path))</p>
+<p><strong>grandparent_path</strong><br>
+Two levels up; consider using pathlib for clarity</p>
+</section>
+</section>
+<section id="variable-naming-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="variable-naming-conventions">Variable Naming Conventions</h2>
+<section id="counting-and-size" class="level3">
+<h3 class="anchored" data-anchor-id="counting-and-size">Counting and Size</h3>
+<p><strong>n_cols</strong><br>
+Common shorthand for counts in scientific computing (e.g., n_samples, n_features)</p>
+<p><strong>num_cols</strong><br>
+More explicit than n_, good for public APIs (e.g., num_iterations, num_bands)</p>
+<p><strong>number_cols</strong><br>
+Too verbose; prefer n_ or num_ prefix</p>
+<p><strong>shape</strong><br>
+Dimensions tuple for arrays/matrices (e.g., array.shape returns (rows, cols))</p>
+<p><strong>size</strong><br>
+Total number of elements or bytes (e.g., array.size, file_size)</p>
+</section>
+<section id="data-types" class="level3">
+<h3 class="anchored" data-anchor-id="data-types">Data Types</h3>
+<p><strong>data_type</strong><br>
+Preferred option for most cases and consistency with numpy/pandas conventions</p>
+<p><strong>dtype</strong><br>
+Avoid except where a library uses it explicitly, specifically numpy</p>
+<p><strong>datatype</strong><br>
+Avoid except where a library uses it explicitly</p>
+</section>
+<section id="geospatial-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial-conventions">Geospatial Conventions</h3>
+<p><strong>cell_size</strong><br>
+Spatial resolution of single raster cell (e.g., 30m for Landsat)</p>
+<p><strong>res</strong><br>
+Common abbreviation for resolution in geospatial contexts</p>
+<p><strong>resolution</strong><br>
+Full word preferred in public APIs, documentation</p>
+<p><strong>x_res</strong><br>
+Horizontal resolution (width of pixel in map units)</p>
+<p><strong>y_res</strong><br>
+Vertical resolution (height of pixel in map units)</p>
+<p><strong>raster_info</strong><br>
+Metadata dict/object for gridded data (extent, projection, resolution)</p>
+<p><strong>vector_info</strong><br>
+Metadata dict/object for feature data (geometry type, attribute schema)</p>
+</section>
+<section id="bounding-boxes" class="level3">
+<h3 class="anchored" data-anchor-id="bounding-boxes">Bounding Boxes</h3>
+<p><strong>bb</strong><br>
+Common abbreviation for bounding box in geospatial code</p>
+<p><strong>bounding_box</strong><br>
+Preferred for clarity</p>
+<p><strong>bb_exact<br>
+</strong>Pyramids-specific notation that the bb aligns with some pyramidal ID raster. (preferably identified in the name, like bb_exact_30sec)</p>
+<p><strong>bounding_box_min_max_notation</strong><br>
+[xmin, ymin, xmax, ymax]</p>
+<p><strong>bounding_box_xy_notation</strong><br>
+[xmin, xmax, ymin, ymax]</p>
+<p><strong>cr_widthheight</strong><br>
+[col, row, width, height] Specific usecase optimized for use with GDAL notation on bounding boxes.</p>
+</section>
+<section id="coordinates" class="level3">
+<h3 class="anchored" data-anchor-id="coordinates">Coordinates</h3>
+<p><strong>lat</strong><br>
+Standard abbreviation for latitude</p>
+<p><strong>lon</strong><br>
+Standard abbreviation for longitude (preferred over ‘long’)</p>
+<p><strong>lon_vs_long</strong><br>
+Always use ‘lon’; ‘long’ conflicts with Python built-in type</p>
+<p><strong>lat_size</strong><br>
+Height in degrees or number of latitude values</p>
+<p><strong>lon_size</strong><br>
+Width in degrees or number of longitude values</p>
+</section>
+</section>
+<section id="identifiers-and-indexing" class="level2">
+<h2 class="anchored" data-anchor-id="identifiers-and-indexing">Identifiers and Indexing</h2>
+<p><strong>index</strong><br>
+Position in sequence or database index (e.g., row_index, spatial_index). DO NOT USE for id columns in e.g.&nbsp;pandas DataFrames as the position can change.</p>
+<p><strong>id</strong><br>
+Unique identifier; prefer ‘identifier’ or specific names (e.g., user_id, feature_id)</p>
+<p><strong>counter</strong><br>
+For loop counters or accumulation (e.g., error_counter, iteration_counter). When lots of counters are being used, consider c_row, row in enumerate(rows) or c_col, col in enumerate(cols) to avoid confusion.</p>
+</section>
+<section id="data-processing" class="level2">
+<h2 class="anchored" data-anchor-id="data-processing">Data Processing</h2>
+<p><strong>valid</strong><br>
+Boolean or mask indicating valid/usable data points</p>
+<p><strong>not_valid</strong><br>
+Prefer ‘invalid’ or use boolean logic with ‘valid’</p>
+<p><strong>mask</strong><br>
+Boolean array for filtering/selection (True where condition met)</p>
+<p><strong>ndv</strong><br>
+Preferred option over nodata, no_data, no_data_value, etc.</p>
+<p><strong>nonzero</strong><br>
+Elements/indices where value != 0 (e.g., numpy.nonzero())</p>
+</section>
+<section id="standard-library-abbreviations" class="level2">
+<h2 class="anchored" data-anchor-id="standard-library-abbreviations">Standard Library Abbreviations</h2>
+<p><strong>array</strong><br>
+Generic numpy/array object (e.g., data_array, temperature_array)</p>
+<p><strong>df</strong><br>
+Standard abbreviation for pandas DataFrame. If you have many dfs, consider using df_ prefix (e.g., df_sales, df_customers)</p>
+<p><strong>gdf</strong><br>
+Standard abbreviation for GeoPandas GeoDataFrame</p>
+<p><strong>gpd</strong><br>
+Standard import alias for geopandas (import geopandas as gpd)</p>
+<p><strong>pd</strong><br>
+Standard import alias for pandas (import pandas as pd)</p>
+<p><strong>np</strong><br>
+Standard import alias for numpy (import numpy as np)</p>
+</section>
+<section id="special-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="special-conventions">Special Conventions</h2>
+<p><strong>default</strong><br>
+Default parameter values (e.g., default_crs, default_timeout)</p>
+<p><strong>paths_to_delete_at_exit</strong><br>
+Clear naming for cleanup list; good practice for temp files</p>
+<p><strong>uris_to_delete_at_exit</strong><br>
+Outdated. Use paths_to_delete_at_exit instead.</p>
+<p><strong>plots_to_display_at_exit</strong><br>
+Clear naming for deferred plotting; useful for batch processing</p>
+<section id="priority-indicators" class="level3">
+<h3 class="anchored" data-anchor-id="priority-indicators">Priority Indicators</h3>
+<p><strong>todo</strong><br>
+Single TODO for standard priority tasks</p>
+<p><strong>todoo</strong><br>
+Double-O for lower priority items needing attention. The priority order for todo markers is usually opposite among coders.</p>
+<p><strong>todooo</strong><br>
+Triple-O for even lower issues that must be addressed</p>
+</section>
+<section id="naming-to-avoid" class="level3">
+<h3 class="anchored" data-anchor-id="naming-to-avoid">Naming to Avoid</h3>
+<p><strong>globals</strong><br>
+Avoid global variables; if necessary, use UPPER_CASE naming</p>
+<p><strong>temp</strong><br>
+Never use - ambiguous (temporary or temperature?)</p>
+<p><strong>temporary</strong><br>
+Better than ‘temp’ - clear meaning for short-lived objects</p>
+<p><strong>temperature</strong><br>
+Better than ‘temp’ - clear meaning for thermal data</p>
+</section>
+<section id="debug-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="debug-conventions">Debug Conventions</h3>
+<p><strong>print_parentheses</strong><br>
+print() with no space likely debug code to be removed</p>
+<p><strong>print_space_parentheses</strong><br>
+print () with space indicates intentional output to keep</p>
+</section>
+</section>
+<section id="miscellaneous-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="miscellaneous-conventions">Miscellaneous Conventions</h2>
+<p><strong>use_of_word_old</strong><br>
+Prefix ‘old_’ for previous versions during refactoring (e.g., old_algorithm)</p>
+<p><strong>info</strong><br>
+Generic metadata container (e.g., dataset_info, processing_info)</p>
+<p><strong>describe</strong><br>
+Statistical summary function name (e.g., describe_dataset, pandas.describe())</p>
+<p><strong>desc</strong><br>
+Common abbreviation for description in metadata/documentation</p>
+<p><strong>run_dir</strong><br>
+Directory for current execution outputs (e.g., experiments, logs)</p>
+<p><strong>postpending_array_etc_to_var_name</strong><br>
+Good practice to indicate type (e.g., temps_array vs temps_list)</p>
+</section>
+<section id="file-type-specific" class="level2">
+<h2 class="anchored" data-anchor-id="file-type-specific">File Type Specific</h2>
+<p><strong>shapefile</strong><br>
+Only use to specify that you’re explicitly using an ESRI shapefile vs eg geopackage.</p>
+<p><strong>tiff</strong><br>
+Never use, except in GDAL Drivername GTiff</p>
+</section>
+<section id="scenario-naming-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-naming-conventions">Scenario Naming Conventions</h2>
+<p>Scenarios are defined in the following nested structure:</p>
+<ol class="incremental" type="1">
+<li><p><strong>Exogenous Assumptions Label</strong> (no hyphens) - e.g., SSP, GDP, population</p></li>
+<li><p><strong>Climate Assumption Label</strong> (no hyphens) - which RCP</p></li>
+<li><p><strong>Model Label</strong> (can have hyphens) - e.g., magpie, luh2-message</p></li>
+<li><p><strong>Counterfactual Label</strong> - includes BAU as special counterfactual</p></li>
+</ol>
+<p>Example directory structure:</p>
+<pre><code>ssp2/rcp45/luh2-message/bau/filename_2050.tif </code></pre>
+<section id="filename-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="filename-conventions">Filename Conventions</h3>
+<p><strong>Implied</strong>: Directory structure defines all labels except year:</p>
+<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif </code></pre>
+<p><strong>Explicit</strong>: Include all labels in filename:</p>
+<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif </code></pre>
+</section>
+</section>
+<section id="utf-8-encoding-guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="utf-8-encoding-guidelines">UTF-8 Encoding Guidelines</h2>
+<p>When working with international datasets:</p>
+<ul class="incremental">
+<li><p>Use <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code> for reading</p></li>
+<li><p>Use <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code> for writing</p></li>
+<li><p>The <code>-sig</code> adds a BOM that helps Excel correctly interpret UTF-8</p></li>
+</ul>
+</section>
+<section id="python-style-guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="python-style-guidelines">Python Style Guidelines</h2>
+<section id="docstringsgeneral-style" class="level3">
+<h3 class="anchored" data-anchor-id="docstringsgeneral-style">DocstringsGeneral Style</h3>
+<ul class="incremental">
+<li><p>Use snake_case for variables and functions</p></li>
+<li><p>Use CamelCase for classes</p></li>
+<li><p>Avoid global variables</p></li>
+<li><p>Keep functions concise and focused on a single task</p></li>
 </ul>
 
 

@@ -190,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Basic Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -211,7 +211,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Basic Installation</span></a>
+ <span class="menu-text">Installation</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -341,9 +341,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#basic-installation" id="toc-basic-installation" class="nav-link active" data-scroll-target="#basic-installation">Basic Installation</a></li>
-  <li><a href="#repository-installation" id="toc-repository-installation" class="nav-link" data-scroll-target="#repository-installation">Repository Installation</a>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
   <ul class="incremental collapse">
+  <li><a href="#basic-installation" id="toc-basic-installation" class="nav-link" data-scroll-target="#basic-installation">Basic Installation</a></li>
+  <li><a href="#repository-installation" id="toc-repository-installation" class="nav-link" data-scroll-target="#repository-installation">Repository Installation</a></li>
+  <li><a href="#common-problems" id="toc-common-problems" class="nav-link" data-scroll-target="#common-problems"><strong>Common problems:</strong></a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul></li>
   </ul>
@@ -355,8 +357,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="basic-installation" class="level1">
-<h1>Basic Installation</h1>
+<section id="installation" class="level1">
+<h1>Installation</h1>
+<section id="basic-installation" class="level2">
+<h2 class="anchored" data-anchor-id="basic-installation">Basic Installation</h2>
 <p>Hazelbean can be installed using condaforge following these steps.</p>
 <ol class="incremental" type="1">
 <li>Install git: <a href="https://Git-scm.com/downloads" class="uri">https://Git-scm.com/downloads</a></li>
@@ -365,19 +369,19 @@ ul.task-list li input[type="checkbox"] {
 <li>Install just for your User Account</li>
 <li>During installation, select yes for “Add Mambaforge/Miniforge to my PATH environment Variable”</li>
 </ul></li>
-<li>Create a new conda environment, activate it, and then install required packages with the following 3 mamba commands. The third command will take quite a while (10+ minutes).
+<li>Create a new conda environment, activate it, and then install required packages with the following 3 mamba commands. The third command will take quite a while (10+ minutes). The <code>conda init</code> command may not be needed depending on how you configured your shell.
 <ol class="incremental" type="1">
-<li><code>mamba init</code></li>
-<li><code>mamba create -n environment_name</code></li>
-<li><code>mamba activate environment_name</code></li>
+<li><code>conda init</code></li>
+<li><code>conda create -n environment_name</code></li>
+<li><code>conda activate environment_name</code></li>
 <li><code>mamba install hazelbean</code></li>
 </ol></li>
 </ol>
 <p>You can now import hazelbean and it will have precompiled binaries already working for your operating system for geospatial operations using ProjectFlow!</p>
 </section>
-<section id="repository-installation" class="level1">
-<h1>Repository Installation</h1>
-<p>If you want to run SEALS, edit hazelbean, or run our global_invest models, you will need to have a C compiler and have editable installs of our git repositories. First, do the basic installation above and then follow these steps:</p>
+<section id="repository-installation" class="level2">
+<h2 class="anchored" data-anchor-id="repository-installation">Repository Installation</h2>
+<p>If you want to run SEALS, edit Hazelbean, or run our global_invest models, you will need to have a C compiler and have editable installs of our git repositories. First, do the basic installation above and then follow these steps:</p>
 <ol class="incremental" type="1">
 <li>Install C/C++ compiler
 <ol class="incremental" type="1">
@@ -403,6 +407,10 @@ ul.task-list li input[type="checkbox"] {
 <li>Supported repositories include the below
 <ul class="incremental">
 <li><a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a></li>
+<li><a href="https://github.com/jandrewjohnson/hazelbean_dev" class="uri">https://github.com/jandrewjohnson/hazelbean_dev</a>
+<ul class="incremental">
+<li>NOTE: Hazelbean is a little different than the other repos because you have already installed it via Condaforge and that might not need updating. However, if you want to have the very latest version of hazelbean and/or modify it, you will need to install directly from the repository. Note, however, that you should <code>pip uninstall hazelbean</code> before doing the <code>pip install -e .</code> command below.</li>
+</ul></li>
 <li><a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="uri">https://github.com/jandrewjohnson/gtap_invest_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/global_invest_dev" class="uri">https://github.com/jandrewjohnson/global_invest_dev</a></li>
 <li><a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a></li>
@@ -426,7 +434,9 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ol>
 <p>One installed, the cloned repositories are all importable by python. For SEALS, you might want to start by poking around run_seals_standard.py.</p>
-<p><strong>Common problems:</strong></p>
+</section>
+<section id="common-problems" class="level2">
+<h2 class="anchored" data-anchor-id="common-problems"><strong>Common problems:</strong></h2>
 <ul class="incremental">
 <li><p>You MUST have administrator rights to your computer.</p></li>
 <li><p>If you’re using Windows PowerShell (instead of the Command Prompt and it isn’t working with Conda, you must initialize conda in powershell</p>
@@ -443,6 +453,7 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 <li><p>If you get a “Windows Protected your PC”, click more info then Run Anyway.</p></li>
 </ul>
+</section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section"></h2>
 

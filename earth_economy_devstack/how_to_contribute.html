@@ -377,16 +377,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#contributing-code-to-the-earth-economy-devstack" id="toc-contributing-code-to-the-earth-economy-devstack" class="nav-link active" data-scroll-target="#contributing-code-to-the-earth-economy-devstack">Contributing code to the Earth Economy Devstack</a>
   <ul class="incremental collapse">
-  <li><a href="#adding-your-own-repository" id="toc-adding-your-own-repository" class="nav-link" data-scroll-target="#adding-your-own-repository">Adding your own repository</a></li>
-  <li><a href="#version-management-with-git-github-repository" id="toc-version-management-with-git-github-repository" class="nav-link" data-scroll-target="#version-management-with-git-github-repository">Version management with Git &amp; GitHub repository</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a>
+  <li><a href="#getting-started-with-forking" id="toc-getting-started-with-forking" class="nav-link" data-scroll-target="#getting-started-with-forking">Getting started with forking</a>
   <ul class="incremental collapse">
-  <li><a href="#forking" id="toc-forking" class="nav-link" data-scroll-target="#forking">Forking</a></li>
   <li><a href="#pull-requests" id="toc-pull-requests" class="nav-link" data-scroll-target="#pull-requests">Pull requests</a></li>
-  <li><a href="#branching" id="toc-branching" class="nav-link" data-scroll-target="#branching">Branching</a></li>
+  <li><a href="#branching-with-vs-code-gui" id="toc-branching-with-vs-code-gui" class="nav-link" data-scroll-target="#branching-with-vs-code-gui">Branching (with VS Code GUI)</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#contributing-to-devstacks-base-data" id="toc-contributing-to-devstacks-base-data" class="nav-link" data-scroll-target="#contributing-to-devstacks-base-data">Contributing to Devstack’s Base Data</a></li>
+  <li><a href="#contributing-to-devstacks-base-data" id="toc-contributing-to-devstacks-base-data" class="nav-link" data-scroll-target="#contributing-to-devstacks-base-data">Contributing to Devstack’s Base Data</a>
+  <ul class="incremental collapse">
+  <li><a href="#option-1-contributing-input-data" id="toc-option-1-contributing-input-data" class="nav-link" data-scroll-target="#option-1-contributing-input-data">Option 1: Contributing Input data</a></li>
+  <li><a href="#option-2-contributing-outputs-of-your-model" id="toc-option-2-contributing-outputs-of-your-model" class="nav-link" data-scroll-target="#option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -398,28 +399,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="contributing-code-to-the-earth-economy-devstack" class="level1">
 <h1>Contributing code to the Earth Economy Devstack</h1>
-<section id="adding-your-own-repository" class="level2">
-<h2 class="anchored" data-anchor-id="adding-your-own-repository">Adding your own repository</h2>
-<p>Adding your own code to the Earth Economy Devstack is Easy! After you have cloned</p>
-</section>
-<section id="version-management-with-git-github-repository" class="level2">
-<h2 class="anchored" data-anchor-id="version-management-with-git-github-repository">Version management with Git &amp; GitHub repository</h2>
 <p>The Earth Economy Devstack and all of its published article code is available as open source software at GitHub, which not only allows users to download and run the code but also to develop it collaboratively. GitHub is based on the free and open source distributed version control system <strong>git</strong> (<a href="https://git-scm.com/)." class="uri">https://git-scm.com/).</a> <strong>git</strong> allows users to track changes in code development, to work on different code branches and to revert changes to previous code versions, if necessary. Workflows using the version control system <strong>git</strong> can vary and there generally is no ‘right’ or ‘wrong’ in collaborative software development.</p>
-<p>There are two different ways to interact with a github repository: 1. making a fork; 2; working on a branch. This section describes both options, however internal members of TEEMs will usually use branches.</p>
-</section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
-<section id="forking" class="level3">
-<h3 class="anchored" data-anchor-id="forking">Forking</h3>
-<p>However, some basic preferred workflows are outlined in the following.</p>
+<p>There are two different ways to interact with a github repository: 1. making a fork; 2; working on a branch. This section describes both options, however internal members of TEEMs will use the fork method, using Pull Requests when their code is ready to incorporate back into the forked repository.</p>
+<p>We also create and host a curated base_data. This data can be seamlessly downloaded using ProjectFlow within the devstack via the <code>get_path()</code> method. See the last section of this page for details on contributing data.</p>
+<section id="getting-started-with-forking" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started-with-forking">Getting started with forking</h2>
+<p>Using SEALS as an example, this section walks through how a new user could contribute a modification via a fork and pull request.</p>
 <p><img src="images/git_workflow.png" class="img-fluid"></p>
-<section id="create-a-new-fork-of-the-original-seals-repo" class="level4">
-<h4 class="anchored" data-anchor-id="create-a-new-fork-of-the-original-seals-repo">Create a new fork of the original SEALS repo</h4>
-<p>Before developing the code it is recommended to create a <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">fork</a> of the original SEALS repository. This will create a new code repository at your own GitHub profile, which includes the same code base and visibility settings as the original ‘upstream’ repository. The fork can now be used for - code development or fixes - submitting a pull request to the original SEALS repository.</p>
-</section>
+<p>Before developing the code it is recommended to create a <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">fork</a> of the original SEALS repository. This will create a new code repository at your own GitHub profile, which includes the same code base and visibility settings as the original ‘upstream’ repository. The fork can now be used for</p>
+<ol class="incremental" type="1">
+<li>code development or fixes</li>
+<li>submitting a pull request to the original SEALS repository.</li>
+</ol>
 <section id="clone-fork-to-your-local-machine" class="level4">
-<h4 class="anchored" data-anchor-id="clone-fork-to-your-local-machine">Clone fork to your local machine</h4>
-<p>Although GitHub allows for some basic code changes, it is recommended to <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository">clone</a> the forked repository at your local machine and do code developments using an integrated development environment (IDE), such as <a href="https://code.visualstudio.com/">VS Code</a>. To clone the repository on your local machine via the command line, navigate to the local folder, in which you want to clone the repository, and type</p>
+<h4 class="anchored" data-anchor-id="clone-fork-to-your-local-machine">1. Clone fork to your local machine</h4>
+<p>Although GitHub allows for some basic code changes, it is recommended to <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository">clone</a> the forked repository at your local machine and do code developments using an integrated development environment (IDE), such as <a href="https://code.visualstudio.com/">VS Code</a>. The figure below illustrates the relationship of the original repo, your own user repo (made by forking) and then the local set of files cloned onto your machine.</p>
+<p><img src="images/paste-68.png" class="img-fluid"></p>
+<p>To clone the repository on your local machine via the command line, navigate to the local folder, in which you want to clone the repository, and type</p>
 <pre><code>git clone -b &lt;name-of-branch&gt;` &lt;url-to-github-repo&gt; &lt;name-of-local-clone-folder&gt;</code></pre>
 <p>For example, if you want to clone the develop branch of your SEALS fork type</p>
 <pre><code>git clone -b develop https://github.com/&lt;username/seals_dev seals_develop</code></pre>
@@ -427,20 +423,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>During code development, any changes or fixes that should go back to the fork and/or the original SEALS repository need to be <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘staged’</a> and then <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘commited’</a> with a commit message that succinctly describes the changes. By staging changes, <strong>git</strong> is informed that these changes should become part of the next ‘commit’, which essentially takes a snapshot of all staged changes thus far.</p>
 <p>To stage all changes in the current repository use the command <code>git add .</code>. If you only want to stage changes in a certain file use <code>git add &lt;(relative)-path-to-file-in-repo&gt;</code>.</p>
 <p>To commit all staged changes use the command <code>git commit -m "a short description of the code changes"</code>.</p>
-<p>After committing the changes, they can be pushed to your fork by using <code>git push origin &lt;name-of-branch&gt;</code>.</p>
+<p>After committing the changes, they can be pushed to your fork by using <code>git push origin &lt;name-of-branch&gt;</code>, illustrated in the bottom two rows of the figure below. Eventually, your code can be incorporated back into the upstream repository via pull requests, discussed below.</p>
 <p><img src="images/git_branches.png" class="img-fluid"></p>
 </section>
 <section id="updating-your-fork-with-changes-from-the-original-repository" class="level4">
 <h4 class="anchored" data-anchor-id="updating-your-fork-with-changes-from-the-original-repository">Updating Your Fork with Changes from the Original Repository</h4>
-<p>To update your fork with the latest changes from the original repository, follow these steps:</p>
+<p>It often happens that after you forked a repo, someone else makes a change that you need and you would like to update your fork with the latest changes from the original repository, This is easy if you haven’t made any changes, and just a bit harder if you have. To do so, follow these steps:</p>
 <p><strong>1. Configure the Original Repository as a Remote</strong></p>
 <p>If you haven’t already, add the original repository as a remote. You typically name it <code>upstream</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream <span class="op">&lt;</span>URL of the original repository<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>2. Fetch the Latest Changes from the Original Repository</strong></p>
 <p>Fetch the branches and their respective commits from the <code>upstream</code> repository. Commits to <code>main</code> will be stored in the local branch <code>upstream/main</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>3. Merge or Rebase the Changes</strong></p>
-<p><strong>Option A: Merge the Changes</strong></p>
+<p><strong>3. Merge (or Rebase) the Changes</strong></p>
 <ol class="incremental" type="1">
 <li><p>Switch to your local <code>main</code> branch (or the branch you want to update).</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
@@ -449,25 +444,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Resolve any merge conflicts if they arise, commit the merge, and push the updated branch to your fork.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ol>
-<p><strong>Option B: Rebase the Changes</strong></p>
-<ol class="incremental" type="1">
-<li><p>Switch to your local <code>main</code> branch (or the branch you want to update).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Rebase your local changes on top of the upstream changes.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase upstream/main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Resolve any rebase conflicts if they arise, continue the rebase, and push the updated branch to your fork.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main <span class="at">--force</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-</ol>
 <p><strong>4. Ensure Your Fork is Up-to-Date</strong></p>
 <p>If you have other branches, you may need to repeat the merge or rebase process for each branch.</p>
 <p><strong>Summary of Commands</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream <span class="op">&lt;</span>URL of the original repository<span class="op">&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge upstream/main  <span class="co"># or git rebase upstream/main</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main  <span class="co"># use --force with rebase</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream <span class="op">&lt;</span>URL of the original repository<span class="op">&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge upstream/main  <span class="co"># or git rebase upstream/main</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main  <span class="co"># use --force with rebase</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>By following these steps, you will incorporate the latest changes from the original repository into your fork.</p>
-</section>
 </section>
 <section id="pull-requests" class="level3">
 <h3 class="anchored" data-anchor-id="pull-requests">Pull requests</h3>
@@ -486,9 +471,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="images/pull_request_example_step6.png" class="img-fluid"></p>
 <p>Finally, the pull request will appear in the <code>upstream</code> repository. The main developers will review your changes and, if approved, will merge them into the <code>upstream</code> repository.</p>
 </section>
-<section id="branching" class="level3">
-<h3 class="anchored" data-anchor-id="branching">Branching</h3>
-<p>Wheter you are working on a Fork or on the seals repository itself, we will organize contributions with branches. On the command line, you can create new code branch by using <code>git branch &lt;name-of-new-branch&gt;</code>. To let git know that you want to switch to and work on the new branch use <code>git checkout &lt;name-of-new-branch&gt;</code>. There are many other graphical user interfaces that help with git commands (so you don’t have to memorize all of the commands), including Github Desktop, Sourcetree and others. We also will use a VS Code plug called GitGraph to manage our repository. To install GitGraph, go the the Extensions left tab in VS Code and search for it. Once installed, you will find a button on the status bar to launch it. Using the gtap_invest_dev repository as an example, it should look like this:</p>
+<section id="branching-with-vs-code-gui" class="level3">
+<h3 class="anchored" data-anchor-id="branching-with-vs-code-gui">Branching (with VS Code GUI)</h3>
+<p>Usually Forking is sufficient for most uses. But, if for instance you are working on two different features simultaneously on your own fork, you might want to organize it with branches. On the command line, you can create new code branch by using <code>git branch &lt;name-of-new-branch&gt;</code>. To let git know that you want to switch to and work on the new branch use <code>git checkout &lt;name-of-new-branch&gt;</code>. There are many other graphical user interfaces that help with git commands (so you don’t have to memorize all of the commands), including Github Desktop, Sourcetree and others. We also will use a VS Code plug called GitGraph to manage our repository. To install GitGraph, go the the Extensions left tab in VS Code and search for it. Once installed, you will find a button on the status bar to launch it. Using the gtap_invest_dev repository as an example, it should look like this:</p>
 <section id="using-git-graph-to-make-a-change" class="level4">
 <h4 class="anchored" data-anchor-id="using-git-graph-to-make-a-change">Using Git Graph to make a change</h4>
 <p>Suppose you want to make a change to the <code>hazelbean_dev</code> repository. We will use this example to explain how we use Git Graph to make this contribution. First, let’s take a look at the Git Graph interface.</p>
@@ -536,14 +521,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Contributing to Devstack’s Base Data</h1>
 <p>Our base data is becoming a valuable asset that accelerates our shared work. Towards that, I wanted to document how <strong>you</strong> could contribute (if you want) your project’s data so that it works seamlessly&nbsp;with the rest of the devstack</p>
 <p>To make one’s project fully replicable, it obviously needs to have an open git repo. The challenge, though, is that git is not good for managing data, so if someone clones your code, it will fail because it doesn’t (and shouldn’t if the data is &gt; 5MB), include the data in the repo. The way our Devstack manages base_data is that it is automatically downloaded via p.get_path() when it is needed. Thus, if you want your project to “just work”, we need to figure out how to create a good system for proposing new contributions to the base data and then cleaning/curating them so they work well.&nbsp;</p>
-<p><strong>Proposed contribution process:</strong></p>
+<section id="option-1-contributing-input-data" class="level3">
+<h3 class="anchored" data-anchor-id="option-1-contributing-input-data">Option 1: Contributing Input data</h3>
+<p>If you have code that you want to contribute to the devstack but it uses data not in the existing base_data, you can contribute it via this process so your code works for everyone else (in the lab, be with options for literally everyone else).</p>
 <p>1. Move your data into our TEEMs drive in the base_data submissions folder in a single folder. I’ve populated this already with the 4 projects that I think we could incorporate right now, pictured below, for air_quality, natures_frontiers, manage_invest , urban_cooling.</p>
 <p><img src="images/paste-60.png" class="img-fluid"></p>
 <p>2. Change your git repo so that that ALL (ABSOLUTELY&nbsp;ALL) data are referenced via a relative path into this submissions base_data folder. So, for instance, if sumil had a file “emissions_factors.csv”, his code would reference it as</p>
 <p><code>base_data_dir = "G:/Shared drives/NatCapTEEMs/Files/base_data/submissions"</code></p>
 <p><code>data_filename = "emissions_factors.csv"</code></p>
 <p><code>data_path = os.path.join(base_data_dir, data_filename)</code></p>
-<p>3. Ensure that your repo has a readme.md in the base of the repo (this is automatically visualised in github when someone visits your repo. Additionally, copy/paste readme doc to a google doc in the your projects’ base_data root, as pictured:</p>
+<p>3. Ensure that your repo has a readme.md in the base of the repo (this is automatically visualized in github when someone visits your repo. Additionally, copy/paste readme doc to a google doc in the your projects’ base_data root, as pictured:</p>
 <p><img src="images/paste-61.png" class="img-fluid"></p>
 <p>4. I then test your repo and code by cloning the repo, modifying ONLY the base_data_dir, and then check that everything runs. I will then further clean the data (to be compliant with the conventions defined here&nbsp;<a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html" class="uri">https://justinandrewjohnson.com/earth_economy_devstack/conventions.html</a></p>
 <p>I’m happy to do the cleaning, but if you want, you might want to consider following the conventions earlier in your project rather than later.&nbsp;</p>
@@ -551,8 +538,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>6. If everything passes, the data get “promoted” to base_data by eliminating the word “submissions” in their file path (e.g.,&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\submissions\emissions_factors.csv becomes&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\emissions_factors.csv)</p>
 <p>7. You make a new repo commit to your repository that&nbsp; changes the&nbsp; <code>base_data_dir</code> &nbsp; reference.</p>
 <p>8. Profit! Now your code can be run seamlessly by anyone with access to our TEEMs drive. This also means it is a small task to make accessible to anyone (done by me putting it on our google cloud bucket for fast and public download).</p>
+</section>
+<section id="option-2-contributing-outputs-of-your-model" class="level3">
+<h3 class="anchored" data-anchor-id="option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</h3>
+<p>In more advanced circumstances, or in large lab projects, you may want <strong>outputs</strong> rather than inputs as described above brought into the base_data. The best example of this would be the GEP project where eventually, even the extremely large filesize outputs will be hosted in a consistent and accessible manner. Follow these steps to do this.</p>
+<ol class="incremental" type="1">
+<li>Ensure you are using ProjectFlow, which will create a set of directories to use for intermediate and final outputs based on your TaskTree.</li>
+<li>As a final task in your TaskTree, include a <code>p.distribute_outputs_task</code> that simply copies and pastes your key outputs, as defined in the ProjectFlow outputs typology in the proper subdirectory of your ProjectFlow output_dir.</li>
+<li>The results of this task must also be copied, along with a zip archive of the contents of the distribute_outputs_task verbatim, to the outputs directory with a structure defined in the project outputs typology.</li>
+<li>Upload this zip archive to our TEEMs shared drive at:</li>
+</ol>
+<p>Using commercial agriculture as an example, we see the build_standard_task_tree() method.</p>
+<p><img src="images/paste-62.png" class="img-fluid" width="988"></p>
+<p>Go into this function to see the logic of the code (Ctrl-Leftclick in Windows VS Code). It defines a bunch of tasks (labeled as nouns because they will be interpreted as directories). Notice that the first task <code>commercial_agriculture</code> is the parent task to the other four tasks. This is critical for organization, data-caching, and namespace management, set with <code>parent=p.commercial_agriculture_task</code>.</p>
+<p><img src="images/paste-65.png" class="img-fluid"></p>
+<p>When we run the run.py function, we’ll see output that summarizes the TaskTree, as below.</p>
+<p><img src="images/paste-63.png" class="img-fluid"></p>
+<p>This corresponds to the task directories in the Project directory:</p>
+<p><img src="images/paste-64.png" class="img-fluid"></p>
+<p>The results distribution folder is organized according to the structure defined in the output typology, which is defined in the parent task for the service.</p>
+<p><img src="images/paste-67.png" class="img-fluid"></p>
+<p>The results_distribution_task should organize the results so that they organize well into <code>base_data/gep/commercial_agriculture/&lt;contents_of_zip&gt;</code></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

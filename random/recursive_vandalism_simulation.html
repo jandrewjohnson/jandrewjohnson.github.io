@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vandalism Legalization Simulation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .status-display {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 2px solid;
+        }
+        .illegal { border-color: #ff6b6b; }
+        .legal { border-color: #51cf66; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #51cf66;
+        }
+        .simulation-log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Vandalism Legalization Simulation</h1>
+        <p class="subtitle">Exploring how vandalism might theoretically become "legal" through various social pathways</p>
+        
+        <div class="controls">
+            <button onclick="runSimulation('small')">Small Community (50 agents)</button>
+            <button onclick="runSimulation('medium')">Medium City (100 agents)</button>
+            <button onclick="runSimulation('large')">Viral Phenomenon (200 agents)</button>
+            <button onclick="resetSimulation()">Reset</button>
+        </div>
+
+        <div id="statusDisplay" class="status-display illegal">
+            <strong>Current Status: ILLEGAL</strong><br>
+            <span id="statusDetails">No vandalism yet - property is clean</span>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <canvas id="layersChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="metricsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="enforcementChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalLayers">0</div>
+                <div>Total Layers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="contributors">0</div>
+                <div>Contributors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="culturalSig">0.000</div>
+                <div>Cultural Significance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="communitySent">0.200</div>
+                <div>Community Sentiment</div>
+            </div>
+        </div>
+
+        <div class="simulation-log" id="simulationLog">
+            <div>🚀 Ready to run simulation...</div>
+            <div>Click a button above to start exploring different scenarios!</div>
+        </div>
+    </div>
+
+    <script>
+        let charts = {};
+        let simulationData = {
+            steps: [],
+            layers: [],
+            sentiment: [],
+            cultural: [],
+            enforcement: [],
+            status: []
+        };
+
+        const statusNames = [
+            'Illegal', 'Art Installation', 'Community Consent', 
+            'Transformation', 'Democratic Mandate', 'Statute Expired', 'Adverse Possession'
+        ];
+
+        // Initialize charts
+        function initCharts() {
+            const chartConfig = {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { labels: { color: 'white' } }
+                },
+                scales: {
+                    x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                }
+            };
+
+            charts.layers = new Chart(document.getElementById('layersChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Vandalism Layers',
+                        data: [],
+                        borderColor: '#51cf66',
+                        backgroundColor: 'rgba(81, 207, 102, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: { ...chartConfig, plugins: { ...chartConfig.plugins, title: { display: true, text: 'Cumulative Vandalism Layers', color: 'white' } } }
+            });
+
+            charts.metrics = new Chart(document.getElementById('metricsChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Community Sentiment',
+                            data: [],
+                            borderColor: '#4ecdc4',
+                            backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Cultural Significance',
+                            data: [],
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: { ...chartConfig, plugins: { ...chartConfig.plugins, title: { display: true, text: 'Community Metrics', color: 'white' } } }
+            });
+
+            charts.enforcement = new Chart(document.getElementById('enforcementChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Law Enforcement Attention',
+                        data: [],
+                        borderColor: '#ffa726',
+                        backgroundColor: 'rgba(255, 167, 38, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: { ...chartConfig, plugins: { ...chartConfig.plugins, title: { display: true, text: 'Law Enforcement Attention', color: 'white' } } }
+            });
+
+            charts.status = new Chart(document.getElementById('statusChart'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Legal Status',
+                        data: [],
+                        borderColor: '#ab47bc',
+                        backgroundColor: 'rgba(171, 71, 188, 0.1)',
+                        tension: 0.1,
+                        stepped: true
+                    }]
+                },
+                options: { 
+                    ...chartConfig, 
+                    plugins: { ...chartConfig.plugins, title: { display: true, text: 'Legal Status Over Time', color: 'white' } },
+                    scales: {
+                        ...chartConfig.scales,
+                        y: {
+                            ...chartConfig.scales.y,
+                            ticks: {
+                                ...chartConfig.scales.y.ticks,
+                                callback: function(value) {
+                                    return statusNames[Math.floor(value)] || '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function logMessage(message) {
+            const log = document.getElementById('simulationLog');
+            const div = document.createElement('div');
+            div.innerHTML = message;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateStats(layers, contributors, cultural, sentiment) {
+            document.getElementById('totalLayers').textContent = layers;
+            document.getElementById('contributors').textContent = contributors;
+            document.getElementById('culturalSig').textContent = cultural.toFixed(3);
+            document.getElementById('communitySent').textContent = sentiment.toFixed(3);
+        }
+
+        function updateStatus(status, details) {
+            const statusDisplay = document.getElementById('statusDisplay');
+            const statusDetails = document.getElementById('statusDetails');
+            
+            statusDisplay.className = `status-display ${status === 0 ? 'illegal' : 'legal'}`;
+            statusDisplay.innerHTML = `<strong>Current Status: ${statusNames[status].toUpperCase()}</strong><br>`;
+            statusDetails.textContent = details;
+            statusDisplay.appendChild(statusDetails);
+        }
+
+        function updateCharts() {
+            Object.values(charts).forEach(chart => {
+                chart.data.labels = simulationData.steps;
+                chart.update('none');
+            });
+
+            charts.layers.data.datasets[0].data = simulationData.layers;
+            charts.metrics.data.datasets[0].data = simulationData.sentiment;
+            charts.metrics.data.datasets[1].data = simulationData.cultural;
+            charts.enforcement.data.datasets[0].data = simulationData.enforcement;
+            charts.status.data.datasets[0].data = simulationData.status;
+
+            Object.values(charts).forEach(chart => chart.update('none'));
+        }
+
+        class VandalismSimulation {
+            constructor(numAgents = 100) {
+                this.numAgents = numAgents;
+                this.step = 0;
+                this.layers = 0;
+                this.contributors = new Set();
+                this.communitySentiment = 0.2;
+                this.culturalSignificance = 0.0;
+                this.communityAttachment = 0.0;
+                this.lawEnforcement = 0.5;
+                this.mediaAttention = 0.0;
+                this.legalStatus = 0; // ILLEGAL
+                
+                // Create agents with random characteristics
+                this.agents = Array.from({length: numAgents}, (_, i) => ({
+                    id: i,
+                    artisticSkill: Math.random(),
+                    respectForProperty: Math.random(),
+                    riskTolerance: Math.random(),
+                    communityInfluence: Math.random()
+                }));
+            }
+
+            runStep() {
+                this.step++;
+                
+                // Agents decide whether to vandalize
+                this.agents.forEach(agent => {
+                    if (this.lawEnforcement > 0.8 && Math.random() < 0.9) {
+                        return; // Skip due to high enforcement
+                    }
+                    
+                    if (this.shouldVandalize(agent)) {
+                        this.addVandalism(agent);
+                    }
+                });
+                
+                this.updateMetrics();
+                this.checkLegalization();
+                this.recordHistory();
+            }
+
+            shouldVandalize(agent) {
+                const baseProbability = (1 - agent.respectForProperty) * agent.riskTolerance;
+                const peerPressure = this.layers * 0.01;
+                const communityFactor = this.communitySentiment * 0.3;
+                const artisticOpportunity = this.layers === 0 ? 0.1 : 0.2;
+                
+                const totalProbability = Math.min(0.3, baseProbability + peerPressure + communityFactor + artisticOpportunity);
+                return Math.random() < totalProbability;
+            }
+
+            addVandalism(agent) {
+                this.layers++;
+                this.contributors.add(agent.id);
+                
+                const artisticValue = agent.artisticSkill * (0.5 + Math.random());
+                const offensiveness = Math.random() * (1 - agent.respectForProperty);
+                
+                // Update cultural significance
+                this.culturalSignificance = Math.min(1.0, this.layers * 0.015 + artisticValue * 0.1);
+                this.communityAttachment = Math.min(1.0, this.contributors.size * 0.05);
+            }
+
+            updateMetrics() {
+                // Community sentiment evolves
+                const sentimentChange = (Math.random() - 0.5) * 0.02;
+                this.communitySentiment = Math.max(0, Math.min(1, this.communitySentiment + sentimentChange));
+                
+                // Law enforcement responds to activity
+                const recentActivity = Math.min(0.1, this.layers * 0.001);
+                this.lawEnforcement = Math.max(0, Math.min(1, this.lawEnforcement + recentActivity - 0.005));
+                
+                // Media attention grows with cultural significance
+                if (this.culturalSignificance > 0.7) {
+                    this.mediaAttention = Math.min(1.0, this.mediaAttention + 0.02);
+                } else {
+                    this.mediaAttachment = Math.max(0.0, this.mediaAttention - 0.01);
+                }
+            }
+
+            checkLegalization() {
+                const uniqueContributors = this.contributors.size;
+                
+                // Art Installation: High cultural significance + media attention
+                if (this.culturalSignificance > 0.8 && this.mediaAttention > 0.6) {
+                    this.legalStatus = 1; // ART_INSTALLATION
+                    return;
+                }
+                
+                // Community Consent: High community attachment + low enforcement
+                if (this.communityAttachment > 0.7 && this.lawEnforcement < 0.3) {
+                    this.legalStatus = 2; // COMMUNITY_CONSENT
+                    return;
+                }
+                
+                // Transformation: Enough layers that it's a new entity
+                if (this.layers > 50) {
+                    this.legalStatus = 3; // TRANSFORMATION
+                    return;
+                }
+                
+                // Democratic Mandate: Many unique contributors + high sentiment
+                if (uniqueContributors > this.numAgents * 0.3 && this.communitySentiment > 0.8) {
+                    this.legalStatus = 4; // DEMOCRATIC_MANDATE
+                    return;
+                }
+                
+                // Statute Expired: Old vandalism without recent enforcement
+                if (this.layers > 0 && this.step > 200 && this.lawEnforcement < 0.2) {
+                    this.legalStatus = 5; // STATUTE_EXPIRED
+                    return;
+                }
+                
+                // Adverse Possession: Continuous modification over long period
+                if (this.layers > 20 && this.step > 300) {
+                    this.legalStatus = 6; // ADVERSE_POSSESSION
+                    return;
+                }
+                
+                this.legalStatus = 0; // ILLEGAL
+            }
+
+            recordHistory() {
+                simulationData.steps.push(this.step);
+                simulationData.layers.push(this.layers);
+                simulationData.sentiment.push(this.communitySentiment);
+                simulationData.cultural.push(this.culturalSignificance);
+                simulationData.enforcement.push(this.lawEnforcement);
+                simulationData.status.push(this.legalStatus);
+            }
+
+            getStatusDetails() {
+                const contributors = this.contributors.size;
+                if (this.legalStatus === 0) {
+                    return `${this.layers} layers by ${contributors} vandals - still criminal activity`;
+                } else {
+                    const reasons = {
+                        1: `High cultural value (${this.culturalSignificance.toFixed(2)}) with media attention`,
+                        2: `Community ownership (${contributors} contributors) with low enforcement`,
+                        3: `Transformed into new entity (${this.layers} layers accumulated)`,
+                        4: `Democratic mandate (${contributors}/${this.numAgents} agents, ${this.communitySentiment.toFixed(2)} sentiment)`,
+                        5: `Statute of limitations expired (${this.step} steps old)`,
+                        6: `Adverse possession established (${this.step} steps of continuous use)`
+                    };
+                    return reasons[this.legalStatus] || 'Unknown legalization pathway';
+                }
+            }
+        }
+
+        let currentSimulation = null;
+        let isRunning = false;
+
+        function runSimulation(size) {
+            if (isRunning) return;
+            
+            resetSimulation();
+            
+            const agentCounts = { small: 50, medium: 100, large: 200 };
+            const numAgents = agentCounts[size] || 100;
+            
+            currentSimulation = new VandalismSimulation(numAgents);
+            isRunning = true;
+            
+            logMessage(`🚀 Starting ${size} community simulation with ${numAgents} agents...`);
+            
+            let stepCount = 0;
+            const maxSteps = 500;
+            
+            const interval = setInterval(() => {
+                currentSimulation.runStep();
+                stepCount++;
+                
+                updateStats(
+                    currentSimulation.layers,
+                    currentSimulation.contributors.size,
+                    currentSimulation.culturalSignificance,
+                    currentSimulation.communitySentiment
+                );
+                
+                updateStatus(currentSimulation.legalStatus, currentSimulation.getStatusDetails());
+                updateCharts();
+                
+                if (stepCount % 50 === 0) {
+                    logMessage(`Step ${stepCount}: ${currentSimulation.layers} layers, ${currentSimulation.contributors.size} contributors, status: ${statusNames[currentSimulation.legalStatus]}`);
+                }
+                
+                if (currentSimulation.legalStatus !== 0) {
+                    logMessage(`🎉 LEGALIZATION ACHIEVED at step ${stepCount} via ${statusNames[currentSimulation.legalStatus]}!`);
+                    clearInterval(interval);
+                    isRunning = false;
+                    return;
+                }
+                
+                if (stepCount >= maxSteps) {
+                    logMessage(`⏰ Simulation completed after ${maxSteps} steps - still illegal`);
+                    clearInterval(interval);
+                    isRunning = false;
+                }
+            }, 50);
+        }
+
+        function resetSimulation() {
+            isRunning = false;
+            simulationData = {
+                steps: [],
+                layers: [],
+                sentiment: [],
+                cultural: [],
+                enforcement: [],
+                status: []
+            };
+            
+            updateStats(0, 0, 0.0, 0.2);
+            updateStatus(0, "No vandalism yet - property is clean");
+            updateCharts();
+            
+            document.getElementById('simulationLog').innerHTML = '<div>🔄 Simulation reset - ready to run again!</div>';
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            initCharts();
+            logMessage('📊 Simulation interface ready!');
+            logMessage('💡 Try different community sizes to see how vandalism legalization emerges...');
+        });
+    </script>
+</body>
+</html>

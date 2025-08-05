@@ -377,12 +377,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#contributing-code-to-the-earth-economy-devstack" id="toc-contributing-code-to-the-earth-economy-devstack" class="nav-link active" data-scroll-target="#contributing-code-to-the-earth-economy-devstack">Contributing code to the Earth Economy Devstack</a>
   <ul class="incremental collapse">
-  <li><a href="#getting-started-with-forking" id="toc-getting-started-with-forking" class="nav-link" data-scroll-target="#getting-started-with-forking">Getting started with forking</a>
+  <li><a href="#contributing-via-branches-internal" id="toc-contributing-via-branches-internal" class="nav-link" data-scroll-target="#contributing-via-branches-internal">1. Contributing via Branches (internal)</a>
   <ul class="incremental collapse">
-  <li><a href="#pull-requests" id="toc-pull-requests" class="nav-link" data-scroll-target="#pull-requests">Pull requests</a></li>
-  <li><a href="#branching-with-vs-code-gui" id="toc-branching-with-vs-code-gui" class="nav-link" data-scroll-target="#branching-with-vs-code-gui">Branching (with VS Code GUI)</a></li>
+  <li><a href="#command-line-contribution" id="toc-command-line-contribution" class="nav-link" data-scroll-target="#command-line-contribution">Command line contribution</a></li>
+  <li><a href="#vs-code-gitgraph-based-contribution" id="toc-vs-code-gitgraph-based-contribution" class="nav-link" data-scroll-target="#vs-code-gitgraph-based-contribution">VS Code GitGraph based contribution</a></li>
   </ul></li>
+  <li><a href="#contributing-via-forking-external" id="toc-contributing-via-forking-external" class="nav-link" data-scroll-target="#contributing-via-forking-external">2. Contributing via Forking (external)</a></li>
   </ul></li>
+  <li><a href="#pull-requests" id="toc-pull-requests" class="nav-link" data-scroll-target="#pull-requests">Pull Requests</a></li>
   <li><a href="#contributing-to-devstacks-base-data" id="toc-contributing-to-devstacks-base-data" class="nav-link" data-scroll-target="#contributing-to-devstacks-base-data">Contributing to Devstack’s Base Data</a>
   <ul class="incremental collapse">
   <li><a href="#option-1-contributing-input-data" id="toc-option-1-contributing-input-data" class="nav-link" data-scroll-target="#option-1-contributing-input-data">Option 1: Contributing Input data</a></li>
@@ -399,11 +401,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="contributing-code-to-the-earth-economy-devstack" class="level1">
 <h1>Contributing code to the Earth Economy Devstack</h1>
-<p>The Earth Economy Devstack and all of its published article code is available as open source software at GitHub, which not only allows users to download and run the code but also to develop it collaboratively. GitHub is based on the free and open source distributed version control system <strong>git</strong> (<a href="https://git-scm.com/)." class="uri">https://git-scm.com/).</a> <strong>git</strong> allows users to track changes in code development, to work on different code branches and to revert changes to previous code versions, if necessary. Workflows using the version control system <strong>git</strong> can vary and there generally is no ‘right’ or ‘wrong’ in collaborative software development.</p>
-<p>There are two different ways to interact with a github repository: 1. making a fork; 2; working on a branch. This section describes both options, however internal members of TEEMs will use the fork method, using Pull Requests when their code is ready to incorporate back into the forked repository.</p>
-<p>We also create and host a curated base_data. This data can be seamlessly downloaded using ProjectFlow within the devstack via the <code>get_path()</code> method. See the last section of this page for details on contributing data.</p>
-<section id="getting-started-with-forking" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started-with-forking">Getting started with forking</h2>
+<p>The Earth Economy Devstack and all of its published article code is available as open source software at GitHub, which not only allows users to download and run the code but also to develop it collaboratively. GitHub is based on the free and open source distributed version control system <strong>git</strong> (<a href="https://git-scm.com/)." class="uri">https://git-scm.com/).</a> <strong>git</strong> allows users to track changes in code development, to work on different code branches and to revert changes to previous code versions, if necessary. Workflows using the version control system <strong>git</strong> can vary and there generally is no ‘right’ or ‘wrong’ in collaborative software development. We also create and host a curated base_data. This data can be seamlessly downloaded using ProjectFlow within the devstack via the <code>get_path()</code> method. See the last section of this page for details on contributing data.</p>
+<p>There are two different ways to interact with a github repository:</p>
+<ol class="incremental" type="1">
+<li><p>Branching for internal collaborators. Needs to be a member of the NatCapTEEMs github organization. We use a process called Github Flow, documented below.</p></li>
+<li><p>Forking with pull requests. Works for external collaborators. Anyone can do it!</p></li>
+</ol>
+<p>Below we summarize these two processes.</p>
+<section id="contributing-via-branches-internal" class="level2">
+<h2 class="anchored" data-anchor-id="contributing-via-branches-internal">1. Contributing via Branches (internal)</h2>
+<p>Internal TEEMs members have push access to our repos. The repos themselves are already public, but unless you’re on the team, you can only push changes to your GitHub User Account repo (not the main repo). Below we describe the standard command-line method for contributing in this way and then summarize how to do it in VS Code with a UI via GitGraph.</p>
+<section id="command-line-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="command-line-contribution">Command line contribution</h3>
+<ol class="incremental" type="1">
+<li>Clone main repo. <code>git clone https://github.com/NatCapTEEMs/global_invest_dev</code></li>
+<li>Create feature branch: <code>git checkout -b feature/my-change</code></li>
+<li>Make changes, commit, push branch to main repo</li>
+<li>Open pull request from feature branch to develop</li>
+<li>After review/approval, merge and delete feature branch</li>
+</ol>
+</section>
+<section id="vs-code-gitgraph-based-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="vs-code-gitgraph-based-contribution">VS Code GitGraph based contribution</h3>
+<p>There are many other graphical user interfaces that help with git commands (so you don’t have to memorize all of the commands), including Github Desktop, Sourcetree and others. We also will use a VS Code plug called GitGraph to manage our repository. To install GitGraph, go the the Extensions left tab in VS Code and search for it. Once installed, you will find a button on the status bar to launch it. Using the gtap_invest_dev repository as an example, it should look like this:</p>
+<section id="using-git-graph-to-make-a-change" class="level4">
+<h4 class="anchored" data-anchor-id="using-git-graph-to-make-a-change">Using Git Graph to make a change</h4>
+<p>STATUS NOTE: We are debating if we should have GitHub Flow style contribution (which has no develop branch separate from Main) and Git Flow style, which does have the develop branch. Below we document Git Flow.</p>
+<p>Suppose you want to make a change to the <code>hazelbean_dev</code> repository. We will use this example to explain how we use Git Graph to make this contribution. First, let’s take a look at the Git Graph interface.</p>
+<p><img src="images/2024-02-02-12-41-04.png" class="img-fluid"></p>
+<p>First note the Repo dropdown box indicating we are looking at the hazelbean_dev repo. Here you could switch to other Repos that have been added to your workspace. The next thing to note are the three different branch tages (Blue, Magenta and Green boxes on the Git Graph tree view). These are the three branches that are currently in the hazelbean_dev repository. The blue branch is the <code>main</code> branch, the magenta branch is the <code>develop</code> branch and the green branch is a branch specific to the user and/or the feature. In this case, it is <code>develop_justin</code> branch. The lines and dots indicates the history of how files were edited and then how the different branches were merged back together after an edit. By default, when you clone a repository, you will be on the <code>main</code> branch. To switch to another branch, right-click the tag and select <code>checkout branch</code>. When you do this, the files on your harddrive will be changed by Git to match the status of the branch you just checked out. In the image below, we can see which is the current branch because it has an open-circle dot in the graph and the name is bold. Other things to notice is that after the name of the branch there is the word <code>origin</code>. This indicates that the branch is synced with the remote repository (named origin by convention).</p>
+<p>To make a change, you will first want to create your own branch. First, make absolutely certain you currently have checked out the <code>develop</code> branch (unless you know why to do otherwise). We will use <code>main</code> branch only to contain working “releases”. Once <code>develop</code> is checked out, use the Command Pallate (<code>ctrl-shift-p</code>) and search for <code>create branch</code>.</p>
+<p><img src="images/2024-02-02-12-50-59.png" class="img-fluid"></p>
+<p>Choose the right repository among those loaded in your workspace, hazelbean_dev in this example.</p>
+<p><img src="images/2024-02-02-12-52-23.png" class="img-fluid"></p>
+<p>Then select it and give the new branch a name, either <code>develop_&lt;your_name&gt;</code> or <code>feature_&lt;your_feature_name&gt;</code>. Below we have created a new feature branch called <code>feature_test</code> branched off of the <code>develop</code> branch. It should look like this</p>
+<p><img src="images/2024-02-02-12-59-34.png" class="img-fluid"></p>
+<p>You’ll notice that the tag is bold, indicating you have checked it out and it is your current branch. Also notice though that it does not have the tag <code>origin</code> after it, indicating that it is not synced with the remote repository. To sync it, you will need to push it to the remote repository. To do this, right-click the tag and select <code>push branch</code>. This will push the branch to the remote repository and it will be available to other users.</p>
+<p>Another way to push the branch is using the Version Control tab in VS Code. Click the Version Control tab on the Lefthand bar. There you will see all of the repos you have loaded into our workspace. For hazelbean_dev, you will see it has a <code>publish branch</code> button. Clicking this will have the same effect as the <code>push branch</code> command in Git Graph.</p>
+<p><img src="images/2024-02-02-13-28-31.png" class="img-fluid"></p>
+<p>Regardless of how you pushed it to the remote repository, you will now see the branch has the ‘origin’ tag after it, indicating it is synced with the remote repository. It is now also the checked-out branch and so all changes you make will be made to this branch.</p>
+<p><img src="images/2024-02-02-13-29-25.png" class="img-fluid"></p>
+<p>Now, we’re going to make a small change to the code. In the VS Code file explorer, I will open up file_io.py in the hazelbean module and scroll to the function I want to edit.</p>
+<p><img src="images/2024-02-02-13-38-53.png" class="img-fluid"></p>
+<p>On lines 778-779, you’ll see VS Code has greyed the variables out indicating they are not used, so I will remove them. Once gone, you’ll see a blue bar on the left side of the editor. This is Git and VS Code indicating to you you made a change. Blue indicates a modification where as green indicates a new addition and red indicates a deletion.</p>
+<p><img src="images/2024-02-02-13-40-59.png" class="img-fluid"></p>
+<p>To illustrate a new addition, I will add a line at to space out our for loop. Once I do this, you’ll see the green bar on the left side of the editor. In the image you can also see that the file_io.py is now a different color and has an M next to it. This indicates that the file has been modified.</p>
+<p><img src="images/2024-02-02-13-42-49.png" class="img-fluid"></p>
+<p>Another useful thing you can do is click on the Blue or Green edit bar to see more details, as below.</p>
+<p><img src="images/2024-02-02-13-44-07.png" class="img-fluid"></p>
+<p>Here, you can see the exact changes you made. Additionally, there are buttons at the top of this new box that let you revert the change to go back to how it was before.</p>
+<p>Before we commit our changes, look at the Git Graph view. You’ll see that we now have a new grey line coming from the feature_test branch, showing that we have uncommitted changes. You could click on the uncommitted changes link to see the edits we made.</p>
+<p><img src="images/2024-02-02-13-49-34.png" class="img-fluid"></p>
+<p>We are now going to commit our changes. To do this, go to the Version Control Tab. You will now see that there is a change listed under the hazelbean_dev repository. Click on the change to see the details. You will see a more detailed “diff editor” that lets you understand (or change) what was edited. To accept these changes, we will click the commit button. But first write a short commit message. Click Commit (but don’t yet click the next button to Sync changes). After committing, look back at the Git Graph view. You’ll see that the grey line is now gone and the blue feature_test tag is at the top of our commit tree along with our comitt message.</p>
+<p><img src="images/2024-02-02-13-51-20.png" class="img-fluid"></p>
+<p>Notice though that the tag for origin/feature_test is not yet up at the new location. This is because we have not yet pushed our changes to the remote repository. To do this, click the Sync button in the bottom right of the VS Code window. This will push your changes to the remote repository and update the tag to the new location, like this.</p>
+<p><img src="images/2024-02-02-13-52-14.png" class="img-fluid"></p>
+<p>Your code is now on GitHub and other contributors with access could check it out and try it. But, this code will be different than their code and if you made non-trivial changes, it could be hard to keep straight what is going on. To clarify this, we are going to merge our <code>feature_test</code> branch back into <code>develop</code>.</p>
+<p>To do this, first you must make sure you have the most recent version of the <code>develop</code> branch. To do this, first we will use the command palette and search for <code>git pull</code>. This will pull the most recent changes from the remote repository and update your local <code>develop</code> branch. Next, we want to make sure that any changes in <code>develop</code> are merged with what we just did to our <code>feature_test</code> branch. If there were no changes, this is not strictly necessary, but it’s a good precation to take to avoid future merge conflicts. To do this, right click on the <code>develop</code> tag and select <code>merge into current branch</code>. A popup will ask you to confirm this, which you do want to (with the default options).</p>
+<p><img src="images/2024-02-02-13-54-50.png" class="img-fluid"></p>
+<p>Now that we know for sure we have the most up-to-date develop branch details, we can merge our new feature into the develop branch. However, we will protect the develop branch so that only features that pass unit tests can be merged in. Thus, you will make a pull request, as described above, to get me to merge your work in the develop branch. For completeness, here we discuss how one would to that. To do this, first right-click on the <code>develop</code> tag and select <code>Checkout branch</code>. Our git tree will now show we have <code>develop</code> checked out:</p>
+<p><img src="images/paste-42.png" class="img-fluid"></p>
+<p>With develop checked out, now right click on <code>feature_test</code> and select <code>merge into current branch</code>. Select confirm in the popup box. Click Sync Changes in the Version Control Tab.</p>
+<p><img src="images/paste-43.png" class="img-fluid"></p>
+<p>the feature_test and develop branches are now identical. You could now delete feature_test and nothing would be lost. Now, the develop branch is ready for a user to use and/or make new branches off of.</p>
+<p>For this feature to become released into the main branch, you must submit a Pull Request (see the section below).</p>
+</section>
+</section>
+</section>
+<section id="contributing-via-forking-external" class="level2">
+<h2 class="anchored" data-anchor-id="contributing-via-forking-external">2. Contributing via Forking (external)</h2>
 <p>Using SEALS as an example, this section walks through how a new user could contribute a modification via a fork and pull request.</p>
 <p><img src="images/git_workflow.png" class="img-fluid"></p>
 <p>Before developing the code it is recommended to create a <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">fork</a> of the original SEALS repository. This will create a new code repository at your own GitHub profile, which includes the same code base and visibility settings as the original ‘upstream’ repository. The fork can now be used for</p>
@@ -454,9 +520,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main  <span class="co"># use --force with rebase</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>By following these steps, you will incorporate the latest changes from the original repository into your fork.</p>
 </section>
-<section id="pull-requests" class="level3">
-<h3 class="anchored" data-anchor-id="pull-requests">Pull requests</h3>
-<p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specfied. Pull requests should be reviewed by at least one of the main code developers.</p>
+</section>
+</section>
+<section id="pull-requests" class="level1">
+<h1>Pull Requests</h1>
+<p>Regardless of if your contributing via branches or teams, we will use Pull Requests to incorporate your changes into the main branch.</p>
+<p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specified. Pull requests should be reviewed by at least one of the main code developers.</p>
 <p>Here is an example where you think some functions in <code>seals_process_coarse_timeseries.py</code> within the <code>seals_dev</code> project should be removed and relocated to a project-specific repository, rather than remaining in the core <code>seals_dev</code> repository. In your <strong>forked</strong> <code>seals_dev</code> repository:</p>
 <p><img src="images/pull_request_example_step1.png" class="img-fluid"></p>
 <p>This example shows that you have made changes in <code>seals_process_coarse_timeseries.py</code>. You need to “Stage Changes” (as indicated by the red circle) and “Commit Changes” before you can create a pull request.</p>
@@ -470,52 +539,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>On the pull request page, which appears on the <code>upstream</code> repository, you can add more information about the changes you made. Before clicking on the <code>Create pull request</code> button, <strong>test your changes again</strong> and ensure they pass all tests before proceeding to ensure that the changes work as expected.</p>
 <p><img src="images/pull_request_example_step6.png" class="img-fluid"></p>
 <p>Finally, the pull request will appear in the <code>upstream</code> repository. The main developers will review your changes and, if approved, will merge them into the <code>upstream</code> repository.</p>
-</section>
-<section id="branching-with-vs-code-gui" class="level3">
-<h3 class="anchored" data-anchor-id="branching-with-vs-code-gui">Branching (with VS Code GUI)</h3>
-<p>Usually Forking is sufficient for most uses. But, if for instance you are working on two different features simultaneously on your own fork, you might want to organize it with branches. On the command line, you can create new code branch by using <code>git branch &lt;name-of-new-branch&gt;</code>. To let git know that you want to switch to and work on the new branch use <code>git checkout &lt;name-of-new-branch&gt;</code>. There are many other graphical user interfaces that help with git commands (so you don’t have to memorize all of the commands), including Github Desktop, Sourcetree and others. We also will use a VS Code plug called GitGraph to manage our repository. To install GitGraph, go the the Extensions left tab in VS Code and search for it. Once installed, you will find a button on the status bar to launch it. Using the gtap_invest_dev repository as an example, it should look like this:</p>
-<section id="using-git-graph-to-make-a-change" class="level4">
-<h4 class="anchored" data-anchor-id="using-git-graph-to-make-a-change">Using Git Graph to make a change</h4>
-<p>Suppose you want to make a change to the <code>hazelbean_dev</code> repository. We will use this example to explain how we use Git Graph to make this contribution. First, let’s take a look at the Git Graph interface.</p>
-<p><img src="images/2024-02-02-12-41-04.png" class="img-fluid"></p>
-<p>First note the Repo dropdown box indicating we are looking at the hazelbean_dev repo. Here you could switch to other Repos that have been added to your workspace. The next thing to note are the three different branch tages (Blue, Magenta and Green boxes on the Git Graph tree view). These are the three branches that are currently in the hazelbean_dev repository. The blue branch is the <code>main</code> branch, the magenta branch is the <code>develop</code> branch and the green branch is a branch specific to the user and/or the feature. In this case, it is <code>develop_justin</code> branch. The lines and dots indicates the history of how files were edited and then how the different branches were merged back together after an edit. By default, when you clone a repository, you will be on the <code>main</code> branch. To switch to another branch, right-click the tag and select <code>checkout branch</code>. When you do this, the files on your harddrive will be changed by Git to match the status of the branch you just checked out. In the image below, we can see which is the current branch because it has an open-circle dot in the graph and the name is bold. Other things to notice is that after the name of the branch there is the word <code>origin</code>. This indicates that the branch is synced with the remote repository (named origin by convention).</p>
-<p>To make a change, you will first want to create your own branch. First, make absolutely certain you currently have checked out the <code>develop</code> branch (unless you know why to do otherwise). We will use <code>main</code> branch only to contain working “releases”. Once <code>develop</code> is checked out, use the Command Pallate (<code>ctrl-shift-p</code>) and search for <code>create branch</code>.</p>
-<p><img src="images/2024-02-02-12-50-59.png" class="img-fluid"></p>
-<p>Choose the right repository among those loaded in your workspace, hazelbean_dev in this example.</p>
-<p><img src="images/2024-02-02-12-52-23.png" class="img-fluid"></p>
-<p>Then select it and give the new branch a name, either <code>develop_&lt;your_name&gt;</code> or <code>feature_&lt;your_feature_name&gt;</code>. Below we have created a new feature branch called <code>feature_test</code> branched off of the <code>develop</code> branch. It should look like this</p>
-<p><img src="images/2024-02-02-12-59-34.png" class="img-fluid"></p>
-<p>You’ll notice that the tag is bold, indicating you have checked it out and it is your current branch. Also notice though that it does not have the tag <code>origin</code> after it, indicating that it is not synced with the remote repository. To sync it, you will need to push it to the remote repository. To do this, right-click the tag and select <code>push branch</code>. This will push the branch to the remote repository and it will be available to other users.</p>
-<p>Another way to push the branch is using the Version Control tab in VS Code. Click the Version Control tab on the Lefthand bar. There you will see all of the repos you have loaded into our workspace. For hazelbean_dev, you will see it has a <code>publish branch</code> button. Clicking this will have the same effect as the <code>push branch</code> command in Git Graph.</p>
-<p><img src="images/2024-02-02-13-28-31.png" class="img-fluid"></p>
-<p>Regardless of how you pushed it to the remote repository, you will now see the branch has the ‘origin’ tag after it, indicating it is synced with the remote repository. It is now also the checked-out branch and so all changes you make will be made to this branch.</p>
-<p><img src="images/2024-02-02-13-29-25.png" class="img-fluid"></p>
-<p>Now, we’re going to make a small change to the code. In the VS Code file explorer, I will open up file_io.py in the hazelbean module and scroll to the function I want to edit.</p>
-<p><img src="images/2024-02-02-13-38-53.png" class="img-fluid"></p>
-<p>On lines 778-779, you’ll see VS Code has greyed the variables out indicating they are not used, so I will remove them. Once gone, you’ll see a blue bar on the left side of the editor. This is Git and VS Code indicating to you you made a change. Blue indicates a modification where as green indicates a new addition and red indicates a deletion.</p>
-<p><img src="images/2024-02-02-13-40-59.png" class="img-fluid"></p>
-<p>To illustrate a new addition, I will add a line at to space out our for loop. Once I do this, you’ll see the green bar on the left side of the editor. In the image you can also see that the file_io.py is now a different color and has an M next to it. This indicates that the file has been modified.</p>
-<p><img src="images/2024-02-02-13-42-49.png" class="img-fluid"></p>
-<p>Another useful thing you can do is click on the Blue or Green edit bar to see more details, as below.</p>
-<p><img src="images/2024-02-02-13-44-07.png" class="img-fluid"></p>
-<p>Here, you can see the exact changes you made. Additionally, there are buttons at the top of this new box that let you revert the change to go back to how it was before.</p>
-<p>Before we commit our changes, look at the Git Graph view. You’ll see that we now have a new grey line coming from the feature_test branch, showing that we have uncommitted changes. You could click on the uncommitted changes link to see the edits we made.</p>
-<p><img src="images/2024-02-02-13-49-34.png" class="img-fluid"></p>
-<p>We are now going to commit our changes. To do this, go to the Version Control Tab. You will now see that there is a change listed under the hazelbean_dev repository. Click on the change to see the details. You will see a more detailed “diff editor” that lets you understand (or change) what was edited. To accept these changes, we will click the commit button. But first write a short commit message. Click Commit (but don’t yet click the next button to Sync changes). After committing, look back at the Git Graph view. You’ll see that the grey line is now gone and the blue feature_test tag is at the top of our commit tree along with our comitt message.</p>
-<p><img src="images/2024-02-02-13-51-20.png" class="img-fluid"></p>
-<p>Notice though that the tag for origin/feature_test is not yet up at the new location. This is because we have not yet pushed our changes to the remote repository. To do this, click the Sync button in the bottom right of the VS Code window. This will push your changes to the remote repository and update the tag to the new location, like this.</p>
-<p><img src="images/2024-02-02-13-52-14.png" class="img-fluid"></p>
-<p>Your code is now on GitHub and other contributors with access could check it out and try it. But, this code will be different than their code and if you made non-trivial changes, it could be hard to keep straight what is going on. To clarify this, we are going to merge our <code>feature_test</code> branch back into <code>develop</code>.</p>
-<p>To do this, first you must make sure you have the most recent version of the <code>develop</code> branch. To do this, first we will use the command palette and search for <code>git pull</code>. This will pull the most recent changes from the remote repository and update your local <code>develop</code> branch. Next, we want to make sure that any changes in <code>develop</code> are merged with what we just did to our <code>feature_test</code> branch. If there were no changes, this is not strictly necessary, but it’s a good precation to take to avoid future merge conflicts. To do this, right click on the <code>develop</code> tag and select <code>merge into current branch</code>. A popup will ask you to confirm this, which you do want to (with the default options).</p>
-<p><img src="images/2024-02-02-13-54-50.png" class="img-fluid"></p>
-<p>Now that we know for sure we have the most up-to-date develop branch details, we can merge our new feature into the develop branch. However, we will protect the develop branch so that only features that pass unit tests can be merged in. Thus, you will make a pull request, as described above, to get me to merge your work in the develop branch. For completeness, here we discuss how one would to that. To do this, first right-click on the <code>develop</code> tag and select <code>Checkout branch</code>. Our git tree will now show we have <code>develop</code> checked out:</p>
-<p><img src="images/paste-42.png" class="img-fluid"></p>
-<p>With develop checked out, now right click on <code>feature_test</code> and select <code>merge into current branch</code>. Select confirm in the popup box. Click Sync Changes in the Version Control Tab.</p>
-<p><img src="images/paste-43.png" class="img-fluid"></p>
-<p>the feature_test and develop branches are now identical. You could now delete feature_test and nothing would be lost. Now, the develop branch is ready for a user to use and/or make new branches off of. # End</p>
-</section>
-</section>
-</section>
 </section>
 <section id="contributing-to-devstacks-base-data" class="level1">
 <h1>Contributing to Devstack’s Base Data</h1>

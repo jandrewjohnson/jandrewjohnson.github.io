@@ -4652,7 +4652,7 @@ vertical-align: -.125em;
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../assignments/index.html">Assignments</a></li><li class="breadcrumb-item"><a href="../assignments/01-gitting_up_to_speed.html">01 - Gitting up to Speed</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/index.html">Lectures</a></li><li class="breadcrumb-item"><a href="../lectures/08-hands_on_with_ecosystem_services_part_2.html">08 - Hands on with Ecosystem Services - Part 2</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -4680,11 +4680,11 @@ vertical-align: -.125em;
       <div class="sidebar-item-container"> 
             <a href="../lectures/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lectures</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lectures/01-big_picture_and_syllabus_introduction.html" class="sidebar-item-text sidebar-link">
@@ -4729,7 +4729,7 @@ vertical-align: -.125em;
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lectures/08-hands_on_with_ecosystem_services_part_2.html" class="sidebar-item-text sidebar-link">
+  <a href="../lectures/08-hands_on_with_ecosystem_services_part_2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">08 - Hands on with Ecosystem Services - Part 2</span></a>
   </div>
 </li>
@@ -4739,14 +4739,14 @@ vertical-align: -.125em;
       <div class="sidebar-item-container"> 
             <a href="../assignments/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Assignments</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../assignments/01-gitting_up_to_speed.html" class="sidebar-item-text sidebar-link active">
+  <a href="../assignments/01-gitting_up_to_speed.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">01 - Gitting up to Speed</span></a>
   </div>
 </li>
@@ -4780,7 +4780,53 @@ vertical-align: -.125em;
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#gitting-up-to-speed" id="toc-gitting-up-to-speed" class="nav-link active" data-scroll-target="#gitting-up-to-speed">01 - Gitting up to Speed</a></li>
+  <li><a href="#lecture-08---hands-on-with-ecosystem-services---part-2" id="toc-lecture-08---hands-on-with-ecosystem-services---part-2" class="nav-link active" data-scroll-target="#lecture-08---hands-on-with-ecosystem-services---part-2">Lecture 08 - Hands on with Ecosystem Services - Part 2</a></li>
+  <li><a href="#content" id="toc-content" class="nav-link" data-scroll-target="#content">Content</a>
+  <ul class="collapse">
+  <li><a href="#introduction-to-sediment-retention-modeling" id="toc-introduction-to-sediment-retention-modeling" class="nav-link" data-scroll-target="#introduction-to-sediment-retention-modeling">Introduction to Sediment Retention Modeling</a>
+  <ul class="collapse">
+  <li><a href="#opening-the-discussion-with-landscape-visualization" id="toc-opening-the-discussion-with-landscape-visualization" class="nav-link" data-scroll-target="#opening-the-discussion-with-landscape-visualization">Opening the Discussion with Landscape Visualization</a></li>
+  </ul></li>
+  <li><a href="#the-evolution-of-invest-as-open-science-software" id="toc-the-evolution-of-invest-as-open-science-software" class="nav-link" data-scroll-target="#the-evolution-of-invest-as-open-science-software">The Evolution of InVEST as Open Science Software</a>
+  <ul class="collapse">
+  <li><a href="#from-proprietary-beginnings-to-open-source-success" id="toc-from-proprietary-beginnings-to-open-source-success" class="nav-link" data-scroll-target="#from-proprietary-beginnings-to-open-source-success">From Proprietary Beginnings to Open Source Success</a></li>
+  <li><a href="#technical-and-access-challenges-of-the-toolbox-era" id="toc-technical-and-access-challenges-of-the-toolbox-era" class="nav-link" data-scroll-target="#technical-and-access-challenges-of-the-toolbox-era">Technical and Access Challenges of the Toolbox Era</a></li>
+  <li><a href="#the-open-source-revolution-with-invest-3.0" id="toc-the-open-source-revolution-with-invest-3.0" class="nav-link" data-scroll-target="#the-open-source-revolution-with-invest-3.0">The Open Source Revolution with InVEST 3.0</a></li>
+  <li><a href="#modern-architecture-and-automatic-documentation" id="toc-modern-architecture-and-automatic-documentation" class="nav-link" data-scroll-target="#modern-architecture-and-automatic-documentation">Modern Architecture and Automatic Documentation</a></li>
+  <li><a href="#the-broader-impact-of-open-science-principles" id="toc-the-broader-impact-of-open-science-principles" class="nav-link" data-scroll-target="#the-broader-impact-of-open-science-principles">The Broader Impact of Open Science Principles</a></li>
+  </ul></li>
+  <li><a href="#understanding-the-science-of-sediment-delivery" id="toc-understanding-the-science-of-sediment-delivery" class="nav-link" data-scroll-target="#understanding-the-science-of-sediment-delivery">Understanding the Science of Sediment Delivery</a>
+  <ul class="collapse">
+  <li><a href="#the-importance-of-sediment-in-agricultural-and-water-systems" id="toc-the-importance-of-sediment-in-agricultural-and-water-systems" class="nav-link" data-scroll-target="#the-importance-of-sediment-in-agricultural-and-water-systems">The Importance of Sediment in Agricultural and Water Systems</a></li>
+  <li><a href="#the-universal-soil-loss-equation-framework" id="toc-the-universal-soil-loss-equation-framework" class="nav-link" data-scroll-target="#the-universal-soil-loss-equation-framework">The Universal Soil Loss Equation Framework</a></li>
+  <li><a href="#slope-and-management-factors" id="toc-slope-and-management-factors" class="nav-link" data-scroll-target="#slope-and-management-factors">Slope and Management Factors</a></li>
+  <li><a href="#data-requirements-and-spatial-application" id="toc-data-requirements-and-spatial-application" class="nav-link" data-scroll-target="#data-requirements-and-spatial-application">Data Requirements and Spatial Application</a></li>
+  <li><a href="#sediment-routing-and-retention-dynamics" id="toc-sediment-routing-and-retention-dynamics" class="nav-link" data-scroll-target="#sediment-routing-and-retention-dynamics">Sediment Routing and Retention Dynamics</a></li>
+  </ul></li>
+  <li><a href="#digital-elevation-models-and-flow-routing" id="toc-digital-elevation-models-and-flow-routing" class="nav-link" data-scroll-target="#digital-elevation-models-and-flow-routing">Digital Elevation Models and Flow Routing</a>
+  <ul class="collapse">
+  <li><a href="#the-foundation-of-hydrological-modeling" id="toc-the-foundation-of-hydrological-modeling" class="nav-link" data-scroll-target="#the-foundation-of-hydrological-modeling">The Foundation of Hydrological Modeling</a></li>
+  <li><a href="#defining-stream-networks-from-topography" id="toc-defining-stream-networks-from-topography" class="nav-link" data-scroll-target="#defining-stream-networks-from-topography">Defining Stream Networks from Topography</a></li>
+  <li><a href="#measuring-ecosystem-services-in-sediment-retention" id="toc-measuring-ecosystem-services-in-sediment-retention" class="nav-link" data-scroll-target="#measuring-ecosystem-services-in-sediment-retention">Measuring Ecosystem Services in Sediment Retention</a></li>
+  <li><a href="#the-critical-role-of-baseline-scenarios" id="toc-the-critical-role-of-baseline-scenarios" class="nav-link" data-scroll-target="#the-critical-role-of-baseline-scenarios">The Critical Role of Baseline Scenarios</a></li>
+  </ul></li>
+  <li><a href="#hands-on-application-with-invest" id="toc-hands-on-application-with-invest" class="nav-link" data-scroll-target="#hands-on-application-with-invest">Hands-On Application with InVEST</a>
+  <ul class="collapse">
+  <li><a href="#setting-up-the-workspace-and-model-parameters" id="toc-setting-up-the-workspace-and-model-parameters" class="nav-link" data-scroll-target="#setting-up-the-workspace-and-model-parameters">Setting Up the Workspace and Model Parameters</a></li>
+  <li><a href="#configuring-the-five-essential-inputs" id="toc-configuring-the-five-essential-inputs" class="nav-link" data-scroll-target="#configuring-the-five-essential-inputs">Configuring the Five Essential Inputs</a></li>
+  <li><a href="#visualization-in-qgis" id="toc-visualization-in-qgis" class="nav-link" data-scroll-target="#visualization-in-qgis">Visualization in QGIS</a></li>
+  <li><a href="#understanding-watershed-definitions" id="toc-understanding-watershed-definitions" class="nav-link" data-scroll-target="#understanding-watershed-definitions">Understanding Watershed Definitions</a></li>
+  <li><a href="#running-the-model-and-interpreting-results" id="toc-running-the-model-and-interpreting-results" class="nav-link" data-scroll-target="#running-the-model-and-interpreting-results">Running the Model and Interpreting Results</a></li>
+  <li><a href="#analyzing-model-outputs" id="toc-analyzing-model-outputs" class="nav-link" data-scroll-target="#analyzing-model-outputs">Analyzing Model Outputs</a></li>
+  <li><a href="#key-insights-from-spatial-analysis" id="toc-key-insights-from-spatial-analysis" class="nav-link" data-scroll-target="#key-insights-from-spatial-analysis">Key Insights from Spatial Analysis</a></li>
+  </ul></li>
+  <li><a href="#automation-and-advanced-applications" id="toc-automation-and-advanced-applications" class="nav-link" data-scroll-target="#automation-and-advanced-applications">Automation and Advanced Applications</a>
+  <ul class="collapse">
+  <li><a href="#transitioning-to-scripted-workflows" id="toc-transitioning-to-scripted-workflows" class="nav-link" data-scroll-target="#transitioning-to-scripted-workflows">Transitioning to Scripted Workflows</a></li>
+  <li><a href="#the-path-forward" id="toc-the-path-forward" class="nav-link" data-scroll-target="#the-path-forward">The Path Forward</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#transcript" id="toc-transcript" class="nav-link" data-scroll-target="#transcript">Transcript</a></li>
   </ul>
 </nav>
     </div>
@@ -4790,17 +4836,197 @@ vertical-align: -.125em;
 
 
 
-<section id="gitting-up-to-speed" class="level1">
-<h1>01 - Gitting up to Speed</h1>
-<p>This assignment will ensure you have the basic tools configured on your machine and that you understand the very basics of version control with git. See the course scehdule on the homepage for due dates. Note that this is a greatly simplified version of what you would learn in APEC 8222. If you are taking that course next, you will return to this in more depth.</p>
-<ol type="1">
-<li>Install the VS Code editor from <a href="https://code.visualstudio.com/">here</a>.</li>
-<li>Install git from <a href="https://git-scm.com/downloads">here</a>.</li>
-<li>If you don’t already have a Github account, create one <a href="https://github.com">here</a>. REMINDER: don’t pick a silly username; this will likely stick with you for life. I’m looking at you, “xX_NoScope360Lol_Xx”…</li>
-<li>Navigate to the course Github repository <a href="https://github.com/jandrewjohnson/apec_8602_2025">here</a> and click the “Fork” button in the upper right corner. This will create a copy of the repository under your own Github account.</li>
-<li>Email me the URL to your own copy of the repository (it should look something like <code>github.com/YOUR_github_username/apec_8602_2025</code>).</li>
-</ol>
-<p>Done!</p>
+<section id="lecture-08---hands-on-with-ecosystem-services---part-2" class="level1">
+<h1>Lecture 08 - Hands on with Ecosystem Services - Part 2</h1>
+<p>Reading: <a href="https://doi.org/10.1146/annurev.resource.050708.144110">Polasky and Segerson 2009</a></p>
+<p>Slides as Powerpoint: <a href="https://docs.google.com/presentation/d/1F4WYaIvKeJ7iBjf9aBHBvjUGRXrNAzm8?rtpof=true&amp;usp=drive_fs">Download here</a></p>
+<p>Video link: <a href="https://www.youtube.com/watch?v=cTuxZ86YslM&amp;list=PLir2vw2cQ_Nsn_zNtX050t5Y49YkxcNRt&amp;index=9">On Youtube</a></p>
+</section>
+<section id="content" class="level1">
+<h1>Content</h1>
+<section id="introduction-to-sediment-retention-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-sediment-retention-modeling">Introduction to Sediment Retention Modeling</h2>
+<section id="opening-the-discussion-with-landscape-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="opening-the-discussion-with-landscape-visualization">Opening the Discussion with Landscape Visualization</h3>
+<p>The lecture begins with a visually striking image that serves as more than just an aesthetic element. The image displays wiggly lines that represent the Mississippi River system, though initially some might mistake it for similar-looking rivers like those in Colombia. These two river systems share many characteristic features in their meandering patterns and sediment dynamics. If the view were expanded, the full extent from Louisiana to Minnesota would be visible, showing the complete watershed system. This particular visualization is a digital elevation model map, commonly referred to as a DEM, which plays a central role in understanding ecosystem services, particularly in the context of sediment retention modeling.</p>
+<p>The sediment retention model fundamentally depends on various landscape factors, with slope being one of the most critical. The map displays raw elevation data, and slope represents the derivative of this elevation, providing crucial information about how water and sediment move across the landscape. The lecture’s agenda encompasses four main components that build upon each other systematically. First, there will be an exploration of the history of InVEST as a compelling example of how open science principles enable the development and spread of new ideas. Second, the technical details and underlying science of the sediment delivery model will be examined in detail. Third, participants will gain hands-on experience by actually running the model. Finally, the discussion will turn to the critical topic of valuation and how ecosystem services are quantified in economic terms.</p>
+</section>
+</section>
+<section id="the-evolution-of-invest-as-open-science-software" class="level2">
+<h2 class="anchored" data-anchor-id="the-evolution-of-invest-as-open-science-software">The Evolution of InVEST as Open Science Software</h2>
+<section id="from-proprietary-beginnings-to-open-source-success" class="level3">
+<h3 class="anchored" data-anchor-id="from-proprietary-beginnings-to-open-source-success">From Proprietary Beginnings to Open Source Success</h3>
+<p>The journey of creating useful models for sustainability policy provides important lessons about the value of open science approaches. The Natural Capital Project’s experience with InVEST illustrates this evolution perfectly. While InVEST is now recognized as a user-friendly and well-documented tool, currently at version 3.16.4 as a stable release, its origins were far more humble and restrictive. The original InVEST version 1 existed merely as a collection of code saved to a CD-ROM in the early 2000s. The only remaining evidence of this early version is a lost photograph of someone holding that historic CD, highlighting how ephemeral code could be in that era before systematic version control and documentation practices became standard.</p>
+<p>The second iteration of InVEST represented a significant step forward but still faced substantial limitations. InVEST version 2 was implemented as a toolbox within Esri’s ArcGIS program, which was and remains the industry standard for GIS applications. However, ArcGIS presents significant barriers despite its widespread use. The software is expensive and proprietary, creating access issues for many potential users. From a student’s perspective, perhaps the most significant problem is the loss of access after graduation when institutional licenses expire. This limitation motivated the adoption of QGIS for educational purposes, as it is free and has evolved to become superior to ArcGIS in many respects.</p>
+</section>
+<section id="technical-and-access-challenges-of-the-toolbox-era" class="level3">
+<h3 class="anchored" data-anchor-id="technical-and-access-challenges-of-the-toolbox-era">Technical and Access Challenges of the Toolbox Era</h3>
+<p>The toolbox approach of InVEST version 2 created numerous challenges that limited its impact and utility. Many partners, particularly those working in Sub-Saharan Africa, simply could not afford the expensive ArcGIS licenses required to run the tools. This economic barrier severely limited the reach and impact of the ecosystem services modeling approach in regions where it could have provided significant value. Beyond the access issues, there were substantial technical limitations. The development team lacked control over core code and algorithms, particularly for critical functions like hydrological routing. This dependency on external software limited the ability to optimize and improve model performance.</p>
+</section>
+<section id="the-open-source-revolution-with-invest-3.0" class="level3">
+<h3 class="anchored" data-anchor-id="the-open-source-revolution-with-invest-3.0">The Open Source Revolution with InVEST 3.0</h3>
+<p>The transformation to InVEST version 3.0 and subsequent versions marked a revolutionary change enabled by generous donor support. A dedicated software team was assembled to make the platform fully open source, fundamentally changing its accessibility and capabilities. InVEST 3.0 severed the dependency on ArcGIS, making it completely free to use. The codebase was rewritten in Python, with computationally intensive components implemented in C++ for optimal performance. Python proved to be an ideal choice because it can efficiently call fast C++ functions for demanding calculations, such as determining water flow paths across complex landscapes.</p>
+<p>An unexpected but highly valuable benefit of this transition was the dramatic improvement in algorithm performance. The new algorithms, particularly those for hydrological routing, proved to be approximately ten times faster than their ArcGIS counterparts when calculating water flow paths. This performance improvement was not merely incremental but transformative, as it enabled calculations at a global scale that were previously computationally infeasible. The ability to process global datasets opened entirely new research possibilities and applications.</p>
+</section>
+<section id="modern-architecture-and-automatic-documentation" class="level3">
+<h3 class="anchored" data-anchor-id="modern-architecture-and-automatic-documentation">Modern Architecture and Automatic Documentation</h3>
+<p>InVEST has continued to evolve with sophisticated features that enhance both usability and transparency. The modern user interface is generated automatically from the underlying science code, ensuring perfect correspondence between what users see and what the code actually does. For example, when a Python snippet calls the NetCap InVEST urban cooling model and executes it, the user interface is generated directly from this function definition. This approach guarantees transparency and consistency. Power users can run the code thousands of times in batch mode, and they can be confident that the code matches exactly what they see in the interface. This architecture enables integration with Jupyter notebooks, cloud computation platforms, and high-performance computing clusters.</p>
+<p>The automatic documentation system represents another crucial innovation. The comprehensive user guide is generated directly from the GitHub repository that documents the models. Well-written code, accompanied by clear explanatory text, automatically produces a user’s guide that is always current and accurate. Whenever a function is modified or improved, the documentation updates automatically without requiring manual intervention. This system eliminates the common problem of documentation lagging behind code development.</p>
+</section>
+<section id="the-broader-impact-of-open-science-principles" class="level3">
+<h3 class="anchored" data-anchor-id="the-broader-impact-of-open-science-principles">The Broader Impact of Open Science Principles</h3>
+<p>The transition to open science has proven important not just for running InVEST but for extending and adapting it to new applications. The GTAP InVEST model exemplifies this extensibility, leveraging InVEST’s comprehensive documentation and programmability to create tight integration with the Global Trade Analysis Project (GTAP) framework. This integration allows researchers to calculate economic impacts on the environment and dependencies on nature in ways that were previously impossible. This work culminated in a significant PNAS article that demonstrates the scientific value of these open approaches. All these advances were directly enabled by open science principles. If the code had remained locked within proprietary systems like MATLAB or ArcGIS, such extensions would have been nearly impossible to achieve. Good open science practices enable new science by allowing researchers to fork code, customize it for their specific needs, and contribute improvements back to the community.</p>
+</section>
+</section>
+<section id="understanding-the-science-of-sediment-delivery" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-the-science-of-sediment-delivery">Understanding the Science of Sediment Delivery</h2>
+<section id="the-importance-of-sediment-in-agricultural-and-water-systems" class="level3">
+<h3 class="anchored" data-anchor-id="the-importance-of-sediment-in-agricultural-and-water-systems">The Importance of Sediment in Agricultural and Water Systems</h3>
+<p>Sediment dynamics matter enormously to multiple stakeholders, particularly farmers who depend on soil conservation for long-term productivity. While soil scientists and hydrologists possess deep expertise in this field with numerous specialized models, the approach taken here focuses on consensus models that capture the essential dynamics while remaining interpretable and widely accepted. Experts in the field often concentrate on cutting-edge research and novel approaches, but for policy support applications, consensus models frequently prove more valuable because they are widely recognized, well-validated, and their results are interpretable by diverse stakeholders.</p>
+<p>The model simplifies the complex science of sediment movement to focus specifically on overland sedimentation. This refers to sediment that has not yet reached streams or formed gullies but moves across the land surface during rainfall events. Plants and their associated root systems play a crucial role in this process by keeping soil deposited in place or maintaining its stability, thereby preventing it from entering reservoirs and other water bodies where it can cause significant problems.</p>
+</section>
+<section id="the-universal-soil-loss-equation-framework" class="level3">
+<h3 class="anchored" data-anchor-id="the-universal-soil-loss-equation-framework">The Universal Soil Loss Equation Framework</h3>
+<p>The consensus model employed is the Universal Soil Loss Equation (USLE), also known in its updated form as the Revised Universal Soil Loss Equation (RUSLE). This equation combines multiple biophysical factors through a multiplicative relationship: R, K, LS, C, and P. The ultimate goal is to calculate the tonnage per hectare per year of soil loss from each grid cell in the landscape, based on these variables which are estimated from extensive academic literature and field measurements.</p>
+<p>The R factor represents rainfall erosivity, measured in the complex units of megajoules per millimeter hectare hour year. This factor indicates the potential of rainfall to cause erosion and is fundamentally a function of rain intensity. More intense rainfall events have greater erosive power and thus higher R values. The K factor represents soil erodibility, which captures the inherent susceptibility of different soil types to erosion. Different soils demonstrate markedly different resistance to erosive forces. For instance, granite-derived soils or heavy clay soils typically show greater resistance to erosion than sandy or silty soils.</p>
+</section>
+<section id="slope-and-management-factors" class="level3">
+<h3 class="anchored" data-anchor-id="slope-and-management-factors">Slope and Management Factors</h3>
+<p>The LS factor combines slope length and gradient into a single measure of topographic influence on erosion. This factor measures both the length of the slope and its steepness, recognizing that longer and steeper slopes are inherently more susceptible to erosion. Importantly, it is not simply the angle of the slope that matters but also the length over which water can accelerate and gain erosive power. The C factor captures the cover management effect, reflecting how different crops and management practices compare to a baseline condition, typically defined as bare, continuously tilled soil. Management practices such as maintaining cover crops, practicing conservation tillage, or establishing permanent vegetation can dramatically improve the C value and reduce erosion.</p>
+<p>The P factor accounts for supporting practices, which relates to specific farming techniques and conservation measures. These include practices such as contour plowing, strip cropping, terracing, and other structural measures designed to reduce erosion. Each of these practices interrupts the flow of water and reduces its erosive power in different ways.</p>
+</section>
+<section id="data-requirements-and-spatial-application" class="level3">
+<h3 class="anchored" data-anchor-id="data-requirements-and-spatial-application">Data Requirements and Spatial Application</h3>
+<p>Understanding the data requirements for these models is crucial for successful application. The Natural Capital Project’s user’s guide provides extensive articles and detailed methods for generating or obtaining appropriate data for any location of interest. This documentation ensures that users can properly parameterize the model for their specific study areas.</p>
+<p>The spatial application of these principles requires careful consideration of how water and sediment move across landscapes. Consider a simple landscape represented by four pixels with different land uses and a stream running through it. When elevation is added to this simple model, it becomes clear that when water falls on an upslope corn grid cell, it flows downhill according to topography, eventually reaching the stream. The USLE equation calculates the sediment leaving each grid cell, but the complete picture requires understanding what happens as sediment moves downhill toward the stream.</p>
+</section>
+<section id="sediment-routing-and-retention-dynamics" class="level3">
+<h3 class="anchored" data-anchor-id="sediment-routing-and-retention-dynamics">Sediment Routing and Retention Dynamics</h3>
+<p>The movement of sediment across the landscape follows predictable patterns based on topography and land cover. Arrows indicating sediment flow show that corn fields typically lose substantial amounts of soil, while forested areas retain more sediment but also contribute their own baseline erosion. This process continues iteratively downhill, with the model tracking precisely how much sediment from each grid cell ultimately reaches the stream. This computational approach allows the model to track not just sediment export but also the retention service provided by each pixel, which proves essential for estimating ecosystem service value.</p>
+<p>This analysis must be repeated for every pixel in the landscape to build a complete picture. Interestingly, a forest grid cell located near a river, despite having lower inherent soil loss, may export more sediment to the stream than a corn field located further uphill. This counterintuitive result highlights how spatial arrangement fundamentally affects ecosystem service provision. Reforesting areas near streams provides particularly high ecosystem service value due to their strategic position in intercepting sediment before it reaches water bodies.</p>
+</section>
+</section>
+<section id="digital-elevation-models-and-flow-routing" class="level2">
+<h2 class="anchored" data-anchor-id="digital-elevation-models-and-flow-routing">Digital Elevation Models and Flow Routing</h2>
+<section id="the-foundation-of-hydrological-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="the-foundation-of-hydrological-modeling">The Foundation of Hydrological Modeling</h3>
+<p>Digital elevation models serve as the fundamental driver of sediment and water routing processes. These DEMs are produced through various sophisticated methods, including laser measurements from space shuttle missions that can measure elevation with remarkable precision. DEMs provide continuous raster data of elevation across landscapes, and from this elevation data, river networks and flow patterns become clearly visible and quantifiable.</p>
+<p>From the raw elevation data in DEMs, it becomes possible to calculate flow direction, determining precisely where water will flow from each pixel based on topographic gradients. The flow direction can be represented visually with colors indicating the direction in degrees. The simplest and most commonly used algorithm for this calculation is D8 routing, which uses elevation differences to determine flow to the lowest adjacent pixel among the eight surrounding cells. This calculation of upslope contributing area and downslope flow path must be repeated for every pixel across the entire landscape to build a complete picture of hydrological connectivity.</p>
+</section>
+<section id="defining-stream-networks-from-topography" class="level3">
+<h3 class="anchored" data-anchor-id="defining-stream-networks-from-topography">Defining Stream Networks from Topography</h3>
+<p>The definition of what constitutes a stream in these models emerges from the DEM and flow accumulation calculations. Flow accumulation represents how many pixels contribute flow to any given pixel in the landscape. When sufficient water accumulates based on the upstream contributing area, that location is considered to represent a river or stream channel. Setting appropriate flow accumulation thresholds allows for precise definition of stream networks that match observed hydrological features.</p>
+</section>
+<section id="measuring-ecosystem-services-in-sediment-retention" class="level3">
+<h3 class="anchored" data-anchor-id="measuring-ecosystem-services-in-sediment-retention">Measuring Ecosystem Services in Sediment Retention</h3>
+<p>The best measurement of ecosystem service in the context of sediment retention depends critically on the perspective and needs of different stakeholders. Two key terms distinguish different aspects of the service: avoided erosion and avoided export. Avoided erosion measures how much soil loss is prevented by vegetative cover and management practices, which is particularly relevant to farmers concerned with maintaining soil productivity on their fields. Avoided export, on the other hand, measures how much sediment is kept out of reservoirs and water bodies, which is more relevant to downstream water users, water treatment facilities, and reservoir managers. The specific ecosystem service of interest depends entirely on the stakeholder perspective and the particular environmental or economic concern being addressed.</p>
+</section>
+<section id="the-critical-role-of-baseline-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="the-critical-role-of-baseline-scenarios">The Critical Role of Baseline Scenarios</h3>
+<p>The baseline scenario chosen for comparison fundamentally affects the valuation of ecosystem services. In the InVEST framework, retention is calculated by comparing current conditions to a bare soil baseline. This involves calculating how much sediment would be exported if the land were completely bare and unmanaged, then subtracting the actual export under current conditions. The choice of reference scenario greatly influences the calculated values and their interpretation, making it essential to be explicit and clear about what baseline is being used for comparison. Different baseline choices can lead to dramatically different ecosystem service valuations, even for the same landscape.</p>
+</section>
+</section>
+<section id="hands-on-application-with-invest" class="level2">
+<h2 class="anchored" data-anchor-id="hands-on-application-with-invest">Hands-On Application with InVEST</h2>
+<section id="setting-up-the-workspace-and-model-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-the-workspace-and-model-parameters">Setting Up the Workspace and Model Parameters</h3>
+<p>The practical application begins with loading InVEST and QGIS for visualization and analysis. Users should set their workspace carefully in InVEST, using organized file structures such as those provided in the base data and InVEST sample data folders. When navigating to the SDR (Sediment Delivery Ratio) model, it is important to create a dedicated output folder to separate calculated results from input data. This output folder should be selected as the workspace to ensure all results are properly organized.</p>
+<p>The file suffix option provides a useful way to organize outputs when running multiple scenarios. For instance, when analyzing different years such as 2025, 2030, and 2035, suffixes can be appended to output files to distinguish between scenarios. While this approach works, creating separate folders for each scenario often provides better organization for complex analyses.</p>
+</section>
+<section id="configuring-the-five-essential-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="configuring-the-five-essential-inputs">Configuring the Five Essential Inputs</h3>
+<p>The model requires five essential inputs that must be properly configured. First, the DEM file (such as DEMGura.tiff) provides the topographic foundation. Second, the erosivity layer captures rainfall patterns and intensity. Third, the erodibility layer represents soil characteristics. Fourth, the land use map (such as landusegura.tiff) defines the spatial distribution of different land cover types. Fifth, the biophysical table (such as Biophysical Table Gura.csv) contains the C and P factors for each land use type. Each input must be properly loaded and verified, with checkmarks appearing to confirm successful configuration.</p>
+</section>
+<section id="visualization-in-qgis" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-in-qgis">Visualization in QGIS</h3>
+<p>After configuring InVEST, the DEM should be added to QGIS for visualization. The color scheme should be adjusted to single-band pseudocolor to properly display floating-point elevation values. In the example landscape, elevations range from 1,600 meters at the lowest points to 3,100 meters at the highest peaks. Applying an appropriate color ramp helps visualize the topographic variation. Zooming in reveals the intricate river network carved into the landscape. The visualization can be enhanced by stretching the color bar using “Stretch Using Current Extent” or by manually adjusting the range to highlight specific elevation bands of interest.</p>
+<p>Adding the watershed boundary (such as watershedgura.shp) as a vector file provides important context. The symbology should be changed to a blue outline for visibility against the elevation background. Vector files represent geographic features as lines or polygons defined by latitude-longitude coordinate pairs, in contrast to the raster format of the DEM.</p>
+</section>
+<section id="understanding-watershed-definitions" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-watershed-definitions">Understanding Watershed Definitions</h3>
+<p>A watershed encompasses all locations that contribute flow to a specific outlet point, typically at the downstream end of a river system. Sub-watersheds represent smaller drainage areas within the larger watershed, defined by flow to intermediate points along the stream network. Hydrologists routinely track water quality and quantity statistics at the sub-watershed level, making these units fundamental for water resource management and analysis.</p>
+</section>
+<section id="running-the-model-and-interpreting-results" class="level3">
+<h3 class="anchored" data-anchor-id="running-the-model-and-interpreting-results">Running the Model and Interpreting Results</h3>
+<p>With all inputs configured, the remaining coefficients should be entered using appropriate values from the user’s guide or literature. The threshold flow parameter, typically set to 1,000, defines the stream network as those pixels with at least 1,000 upstream pixels contributing flow. Once all parameters are set, the model can be executed. Processing may take several seconds to minutes depending on the size of the study area and computer performance. If errors occur, careful checking of inputs and examination of the log file usually reveals the issue.</p>
+</section>
+<section id="analyzing-model-outputs" class="level3">
+<h3 class="anchored" data-anchor-id="analyzing-model-outputs">Analyzing Model Outputs</h3>
+<p>After successful execution, the SDR output folder contains multiple result files. The sediment export map (sedimentexport.tiff) should be added to QGIS first. Adjusting the color bar to quantile mode provides better visualization by dividing the data into classes with equal numbers of pixels, making the display robust to outliers. The sediment export map reveals spatial patterns, with pixels near streams typically showing higher export values. Both land cover type and proximity to the river significantly affect sediment export rates.</p>
+<p>The avoided export map (avoidedexport.tiff) represents the actual ecosystem service provision. Using a green color ramp for retention values and continuous mode visualization helps identify high-value pixels. These pixels perform significant work in retaining soil, especially when compared to the bare soil baseline. Further adjustments to the color ramp and maximum values can enhance visualization of spatial patterns.</p>
+</section>
+<section id="key-insights-from-spatial-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="key-insights-from-spatial-analysis">Key Insights from Spatial Analysis</h3>
+<p>The analysis reveals that pixels near streams provide particularly high retention value, supporting policies such as riparian buffer requirements that mandate vegetation maintenance near water bodies. The path of water flow also proves critical, with areas of high flow accumulation being particularly important for retention services. The river channel begins where flow accumulation crosses the defined threshold, marking the transition from overland to channel flow processes.</p>
+<p>Additional outputs include sediment deposition maps and avoided erosion calculations, each providing different perspectives on ecosystem service provision. While QGIS and simple screen capture tools prove useful for sharing and annotating maps during analysis, Python should be used for producing publication-quality figures for papers and reports.</p>
+</section>
+</section>
+<section id="automation-and-advanced-applications" class="level2">
+<h2 class="anchored" data-anchor-id="automation-and-advanced-applications">Automation and Advanced Applications</h2>
+<section id="transitioning-to-scripted-workflows" class="level3">
+<h3 class="anchored" data-anchor-id="transitioning-to-scripted-workflows">Transitioning to Scripted Workflows</h3>
+<p>The power of InVEST extends beyond the graphical interface to support automated and scripted workflows. Instead of repeatedly using the interface for multiple runs, users can save their configuration as a Python script. Within InVEST, the “Save As” function allows export as a Python script, creating a file such as executeinvestSDR.py that captures all settings and parameters.</p>
+<p>Opening this script in a code editor like VS Code reveals that the desktop application has generated a complete Python script replicating the calculation with all parameter values preserved. This script provides the foundation for batch processing, sensitivity analysis, and integration with larger modeling workflows. The next phase of work involves using Python to run models in a fully scripted environment, enabling more sophisticated analyses and automation of complex modeling tasks.</p>
+</section>
+<section id="the-path-forward" class="level3">
+<h3 class="anchored" data-anchor-id="the-path-forward">The Path Forward</h3>
+<p>The comprehensive understanding of sediment retention modeling gained through this hands-on experience provides the foundation for more advanced applications. The combination of theoretical understanding, practical application, and scripting capabilities enables researchers and practitioners to apply these tools effectively for ecosystem service assessment and landscape management planning. The open science approach of InVEST ensures that these capabilities continue to expand and improve through community contributions and collaborative development.</p>
+</section>
+</section>
+</section>
+<section id="transcript" class="level1">
+<h1>Transcript</h1>
+<p>All right, let’s get started. Welcome to Lecture 8: Hands-On with Ecosystem Services Part 2. First, following today’s theme, who knows what this is? Besides being a visually striking image, what do you think it depicts? What are these wiggly lines? Does anyone know where this is? Columbia? No, but that’s a similar-looking river. This is the Mississippi. The two rivers share many characteristics. If I zoomed out, you’d see Louisiana and Minnesota. This is a digital elevation model map (DEM), which will be central to our discussion on ecosystem services, specifically the sediment retention model.</p>
+<p>The sediment retention model depends on factors like landscape slope. This map shows raw elevation; slope is the derivative of elevation. We’ll dive into these concepts. The agenda is: first, a history of Invest as an example of how open science enables new ideas; then, the details and science of the sediment delivery model; then we’ll run it; and finally, discuss valuation.</p>
+<p>Any questions or logistical notes? If you have issues with the problem set, let me know. Feel free to reach out.</p>
+<p>Let’s dive into the agenda. How do we make useful models for sustainability policy? I’ll share a story about open science software at the Natural Capital Project. We’ve been using Invest, which is now user-friendly and well-documented, but it wasn’t always that way. We’re on Invest version 3.16.4, a stable version. The original Invest version 1 was a collection of code saved to a CD-ROM in the early 2000s. The only remaining evidence is a lost photo of someone holding that CD.</p>
+<p>Back then, code was ephemeral. Invest version 2 was coded as a toolbox within Esri’s ArcGIS program. Who here has used ArcGIS? It’s the standard GIS tool, but expensive and proprietary. From a student’s perspective, the biggest problem is losing access after graduation. That’s why we use QGIS, which is free and, in many ways, now superior.</p>
+<p>In Invest’s history, the toolbox approach had challenges. Many partners, especially in Sub-Saharan Africa, couldn’t afford it. Technically, we lacked control over code and algorithms, such as hydrological routing. This changed with Invest version 3.0 and onwards, thanks to generous donors. A dedicated software team made it fully open source. Invest 3.0 disconnected from ArcGIS, making it free. It was written in Python, with computationally intensive parts in C++. Python is useful because it can call fast C++ functions, like calculating water flow paths.</p>
+<p>A surprise benefit was that our new algorithms, such as for hydrological routing, were much faster than ArcGIS—ten times faster at calculating water flow paths. This allowed calculations at a global scale.</p>
+<p>Invest has continued to evolve. The modern user interface is generated automatically from underlying science code. For example, a Python snippet calls the NetCap Invest urban cooling model and executes it. The user interface is generated from this function, ensuring transparency. Power users can run the code thousands of times, and the code matches the interface. This enables Jupyter notebook access, cloud computation, and high-performance computing.</p>
+<p>Automatic documentation is crucial. The user guide is generated from the GitHub repository documenting the models. Good code, accompanied by explanatory text, creates a user’s guide that is always up to date. If you change a function, the documentation updates automatically.</p>
+<p>Why is this transition to open science important? It enabled us to not just run Invest, but extend it. For example, the GTAP Invest model leverages Invest’s documentation and programmability to connect tightly with GTAP, allowing us to calculate economic impacts on the environment and dependencies on nature. This led to a PNAS article we’ll read later. All these steps were enabled by open science. If the code were in MATLAB or ArcGIS, this would be nearly impossible. Good open science enables new science: you can fork the code, make it your own, and contribute back to the community.</p>
+<p>Any questions on open science before we move to our second model, the sediment delivery model?</p>
+<p>Sediment matters a lot, especially to farmers. Soil scientists and hydrologists have deep expertise, but we’ll summarize it into a consensus model. Experts often focus on cutting-edge research, but for policy support, consensus models are often preferable—they’re widely recognized and interpretable.</p>
+<p>We’ll simplify the science and focus on overland sedimentation—sediment that hasn’t reached the stream or formed gullies, but moves overland. Plants and their root systems can keep soil deposited or stable, preventing it from entering reservoirs.</p>
+<p>The consensus model is the Universal Soil Loss Equation (USLE), also known as the Revised Universal Soil Loss Equation (RUSLE). It combines biophysical factors: R, K, LS, C, and P. The goal is to calculate the tonnage per hectare per year of soil loss from a grid cell, based on these variables, which are estimated from academic literature.</p>
+<p>R is rainfall erosivity, measured in megajoules per millimeter hectare hour year, indicating the potential of rainfall to cause erosion. It’s a function of rain intensity.</p>
+<p>K is erodibility, the susceptibility of soil to erosion. Different soils withstand erosive forces differently—granite or clay soils are more resistant.</p>
+<p>LS is the slope length-gradient factor, measuring slope length and steepness. Longer and steeper slopes are more susceptible to erosion. It’s not just slope; the length matters too.</p>
+<p>C is the cover management factor, reflecting the effect of crops and management practices compared to a baseline, such as bare, continuously tilled soil. Practices like cover crops improve the C value.</p>
+<p>P is the supporting practices factor, related to farming techniques like plowing, strip cropping, and terracing.</p>
+<p>Understanding the data is important. The Natural Capital Project’s user’s guide provides articles and methods for generating data for your location.</p>
+<p>Now, let’s talk about spatial application. We’ve seen land use/land cover maps. Here’s a simple one with four pixels and a stream. We’ll add elevation, so when water drops on a corn grid cell, it flows downhill, eventually reaching the stream.</p>
+<p>The USLE equation calculates sediment leaving a grid cell. But we also need to consider what happens as sediment moves downhill toward the stream. The arrows indicate sediment flow: corn loses a lot, forest retains some, but also contributes its own sediment. This process continues iteratively downhill, tracking how much sediment reaches the stream from each grid cell.</p>
+<p>This computation lets us track not just export, but retention by each pixel, which is useful for estimating ecosystem service value.</p>
+<p>We’ll repeat this for each pixel. For example, the forest grid cell near the river, despite lower soil loss, exports more sediment to the stream than the corn cell further uphill. Spatial arrangement matters: reforesting near the stream has high ecosystem service value.</p>
+<p>Combining the soil loss equation with a simplified routing algorithm, we calculate the sediment delivery ratio, which is then scaled up to larger landscapes.</p>
+<p>The digital elevation model (DEM) drives this process. DEMs are produced by methods like lasers from the space shuttle, which measure elevation precisely. DEMs provide continuous raster data of elevation, revealing river networks.</p>
+<p>From DEMs, we can calculate flow direction—where water will flow from each pixel. The color indicates flow direction in degrees. The simplest algorithm, D8 routing, uses elevation to determine flow to the lowest adjacent pixel. We calculate upslope and downslope for every pixel, repeating the calculation across the landscape.</p>
+<p>What is a stream? In this model, streams are defined from the DEM and flow accumulation—how many pixels flow into a given pixel. When enough water accumulates, it’s considered a river. Setting flow accumulation thresholds defines streams precisely.</p>
+<p>Now, let’s consider the best measurement of ecosystem service in this context. Two terms: avoided erosion and avoided export. Avoided erosion measures how much soil loss is prevented by cover, relevant to farmers. Avoided export measures how much sediment is kept out of reservoirs, relevant to downstream water users. Ecosystem service depends on the perspective.</p>
+<p>The baseline scenario affects valuation. In INVEST, retention is calculated by comparing to bare soil—how much would be exported if the land were bare, minus actual export. The reference scenario greatly influences values, so it’s important to be clear about the baseline.</p>
+<p>That’s the SDR model. Any questions before we dive into Invest?</p>
+<p>Now you are all soil experts. NetGap focuses on useful tools, not irrelevant details. Go ahead and load up Invest and QGIS.</p>
+<p>Set your workspace in Invest, using the organized files in your base data, invest sample data. Scroll to the SDR model and create an output folder to separate calculated results from inputs. Select this output folder as your workspace.</p>
+<p>For file suffix, you can run multiple scenarios (e.g., years 2025, 2030, 2035) and append suffixes to outputs. It’s a way to organize outputs, though separate folders are better.</p>
+<p>Set the five inputs: DEM (DEMGura.tiff), erosivity, erodibility, land use (landusegura.tiff), and the biophysical table (Biophysical Table Gura.csv). Ensure you get checkmarks for each input.</p>
+<p>Next, add the DEM to QGIS. Adjust the color scheme to single-band pseudocolor for floating point elevation values. The lowest elevation is 1,600 meters, highest is 3,100 meters. Apply the color ramp.</p>
+<p>Zoom in to see the river network. You can stretch the color bar using “Stretch Using Current Extent” or manually adjust the range for better visualization.</p>
+<p>Add the watershedgura.shp vector file to QGIS. Change the symbology to outline blue for visibility. Vectors represent lines or polygons defined by latitude-longitude points.</p>
+<p>The definition of a watershed is all locations that flow into a specific point, such as the end of a river. Sub-watersheds are subsets, defined by flow to intermediate points. Hydrologists track statistics at the sub-watershed level.</p>
+<p>We’re almost ready to run the model. Enter the remaining coefficients using default values from the user’s guide. Threshold flow is 1,000, defining the river network as pixels with at least 1,000 upstream pixels.</p>
+<p>Once all inputs are entered, hit run. The model may take a few seconds. If you encounter errors, check your inputs and logging level.</p>
+<p>Open your workspace and look at the SDR/output folder. Start with sedimentexport.tiff. Add it to QGIS and adjust the color bar to quantile mode for better visualization. Quantile mode divides the data into classes with equal pixel counts, making it robust to outliers.</p>
+<p>Analyze the sediment export map: red values are low export, green and blue are higher. Spatially, pixels near the stream contribute more export. Land cover and proximity to the river affect sediment export.</p>
+<p>Next, add avoidedexport.tiff, representing ecosystem service. Adjust the color bar to green for retention. Use continuous mode, zoom in to see high-value pixels. These pixels are doing significant work retaining soil, especially compared to the bare soil baseline.</p>
+<p>You can further adjust the color ramp and maximum value for better visualization. The key takeaway is that pixels near the stream are highly valuable for retention. Policies like riparian buffers require vegetation near streams to maximize ecosystem service.</p>
+<p>The path of water flow also matters; areas with high flow accumulation are important for retention. The river starts where flow accumulation crosses the threshold.</p>
+<p>Other outputs include sediment deposition and avoided erosion, depending on the perspective.</p>
+<p>When producing maps for papers, use Python for final figures, but QGIS and the snipping tool are useful for sharing and annotating maps.</p>
+<p>The definition of a watershed is all locations flowing to a point. Sub-watersheds are subsets, forming a tree-like structure. Hydrologists track water statistics at these levels.</p>
+<p>We’re ready to run the model as power users. Instead of using the interface repeatedly, you can save your setup as a Python script. In Invest, click Save As and select Python script. Save it as executeinvestSDR.py.</p>
+<p>Open the script in VS Code. The desktop application generates a Python script that replicates your calculation, including all parameter values. Next time, we’ll use Python to run this in a scripting environment.</p>
 
 
 </section>

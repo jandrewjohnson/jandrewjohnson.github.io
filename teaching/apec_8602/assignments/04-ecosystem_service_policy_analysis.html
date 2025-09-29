@@ -4652,7 +4652,7 @@ vertical-align: -.125em;
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../assignments/index.html">Assignments</a></li><li class="breadcrumb-item"><a href="../assignments/01-gitting_up_to_speed.html">01 - Gitting up to Speed</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../assignments/index.html">Assignments</a></li><li class="breadcrumb-item"><a href="../assignments/04-ecosystem_service_policy_analysis.html">04 - Ecosystem Service Policy Analysis</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -4746,7 +4746,7 @@ vertical-align: -.125em;
       <ul id class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../assignments/01-gitting_up_to_speed.html" class="sidebar-item-text sidebar-link active">
+  <a href="../assignments/01-gitting_up_to_speed.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">01 - Gitting up to Speed</span></a>
   </div>
 </li>
@@ -4764,7 +4764,7 @@ vertical-align: -.125em;
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../assignments/04-ecosystem_service_policy_analysis.html" class="sidebar-item-text sidebar-link">
+  <a href="../assignments/04-ecosystem_service_policy_analysis.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">04 - Ecosystem Service Policy Analysis</span></a>
   </div>
 </li>
@@ -4780,7 +4780,7 @@ vertical-align: -.125em;
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#gitting-up-to-speed" id="toc-gitting-up-to-speed" class="nav-link active" data-scroll-target="#gitting-up-to-speed">01 - Gitting up to Speed</a></li>
+  <li><a href="#assignment-04---ecosystem-service-policy-analysis" id="toc-assignment-04---ecosystem-service-policy-analysis" class="nav-link active" data-scroll-target="#assignment-04---ecosystem-service-policy-analysis">Assignment 04 - Ecosystem Service Policy Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -4790,17 +4790,27 @@ vertical-align: -.125em;
 
 
 
-<section id="gitting-up-to-speed" class="level1">
-<h1>01 - Gitting up to Speed</h1>
-<p>This assignment will ensure you have the basic tools configured on your machine and that you understand the very basics of version control with git. See the course scehdule on the homepage for due dates. Note that this is a greatly simplified version of what you would learn in APEC 8222. If you are taking that course next, you will return to this in more depth.</p>
+<section id="assignment-04---ecosystem-service-policy-analysis" class="level1">
+<h1>Assignment 04 - Ecosystem Service Policy Analysis</h1>
+<p><strong>Question 1:</strong> Run the InVEST Carbon Model with the current LULC map for the current Willamette basin, but this time, also run it with Carbon Sequestration enabled for the future Willamette LULC map.</p>
+<ul>
+<li>Assume the year for the current LULC map was 2023 and the future LULC was 2050.</li>
+<li>Assume that the price of Carbon is $187 (based on the $51 per ton of Carbon Dioxide that the Biden administration uses).</li>
+<li>Assume a discount rate of 0.03 (Anything higher and you’d be a monster!).</li>
+<li>Assume an Annual Price Change of 0</li>
+</ul>
+<p>What is the total change in carbon between these time periods?</p>
+<p><strong>Question 2:</strong> Suppose that the future LULC map represents a policy of allowing logging in the area. Suppose that the value (net present value) of the timber is $50 million dollars. Use the information you’ve generated to make an argument that you could send to a legislator on whether or not this logging policy should be accepted. Hint: look for a report.html file that is generated in your Workspace directory.</p>
+<p><strong>Question 3:</strong> The results of the Carbon Model are driven by the values in the biophysical table. But what if they’re wrong? Or what if they change over time? Suppose that urban green-space became a huge thing and we want to know what total carbon will be present in the area if there is 50%, 100%, 150% and 200% more carbon present in each of the four residential land-use classes. Modify the Python code generated by InVEST and have it run for the baseline and these 4 additional values. Report the total carbon stored.</p>
+<p>An easy way is to use <code>array = gdal.Open(path_to_raster)</code> and <code>Output = np.sum(array)</code></p>
+<p><strong>Question 4:</strong> Choose one OTHER InVEST models that we haven’t yet run in class. You can use the InVEST sample data as your input. Document in ytour PDF report the following:</p>
 <ol type="1">
-<li>Install the VS Code editor from <a href="https://code.visualstudio.com/">here</a>.</li>
-<li>Install git from <a href="https://git-scm.com/downloads">here</a>.</li>
-<li>If you don’t already have a Github account, create one <a href="https://github.com">here</a>. REMINDER: don’t pick a silly username; this will likely stick with you for life. I’m looking at you, “xX_NoScope360Lol_Xx”…</li>
-<li>Navigate to the course Github repository <a href="https://github.com/jandrewjohnson/apec_8602_2025">here</a> and click the “Fork” button in the upper right corner. This will create a copy of the repository under your own Github account.</li>
-<li>Email me the URL to your own copy of the repository (it should look something like <code>github.com/YOUR_github_username/apec_8602_2025</code>).</li>
+<li><p>What model you ran and the general concept of why this ecosystem service is valuable to humans</p></li>
+<li><p>A brief description of the key calculations to be done</p></li>
+<li><p>A briefer description of each data input</p></li>
+<li><p>Image(s) of your result. Refer to the InVEST users’ guide to see which output layers are actually the interesting outputs and how you should interpret them.</p></li>
+<li><p>A sensitivity analysis of at least 1 variable (of your choosing) where you will iteratively run in Python (include your script as an appendix) InVEST for at least 10 values of the variable. Create a graph of how the output(s) for your ES change over the range of parameters.</p></li>
 </ol>
-<p>Done!</p>
 
 
 </section>

@@ -433,7 +433,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#docstringsgeneral-style" id="toc-docstringsgeneral-style" class="nav-link" data-scroll-target="#docstringsgeneral-style">DocstringsGeneral Style</a></li>
   </ul></li>
   <li><a href="#styleguide" id="toc-styleguide" class="nav-link" data-scroll-target="#styleguide">Styleguide</a></li>
-  <li><a href="#unsorted" id="toc-unsorted" class="nav-link" data-scroll-target="#unsorted">UNSORTED</a></li>
+  <li><a href="#unsorted" id="toc-unsorted" class="nav-link" data-scroll-target="#unsorted">UNSORTED</a>
+  <ul class="incremental collapse">
+  <li><a href="#single-vs-double-quotes" id="toc-single-vs-double-quotes" class="nav-link" data-scroll-target="#single-vs-double-quotes">Single vs Double quotes</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1039,8 +1042,13 @@ Never use, except in GDAL Drivername GTiff</p>
 <h2 class="anchored" data-anchor-id="unsorted">UNSORTED</h2>
 <p>TODO, needs to be put in the right place in the documentation</p>
 <p>only a projectflow module’s root dir can have the exact file run.py. This is used as a markerfile to identify the module’s root.</p>
+<section id="single-vs-double-quotes" class="level3">
+<h3 class="anchored" data-anchor-id="single-vs-double-quotes">Single vs Double quotes</h3>
+<p>Python allows both single and double quotes for strings, but they must be <em>balanced</em>. Best practices are mixed, but we do it where the outer string always uses doublequote and then inner strings (like in the dictionary key string values below) use single quotes.</p>
+<p>hb.log(f”!hb.df_merge, left had non-shared values in merge-col.&nbsp;N=: {str(len(comparison_dict[‘right_only’]))}. First few values:” + str(comparison_dict[‘right_only’])[:100] + “…”)</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

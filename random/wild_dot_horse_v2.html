@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Horse Freedom 3D</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #a8d5ba; font-family: 'Courier New', Courier, monospace; }
+        
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            border: 2px solid #3d5a44;
+            pointer-events: none;
+            min-width: 250px;
+        }
+
+        .stat-label { font-size: 0.8rem; color: #666; text-transform: uppercase; margin: 0; }
+        .stat-value { font-size: 1.5rem; color: #2e7d32; font-weight: bold; margin: 0; }
+        #actions-left { color: #b71c1c; }
+
+        #game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        button {
+            background: #3d5a44; color: white; border: none; padding: 12px 24px;
+            font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 5px;
+            margin-top: 20px; pointer-events: auto;
+        }
+
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <p class="stat-label">Total Range Score</p>
+        <p class="stat-value" id="score">0</p>
+        <div style="display:flex; justify-content: space-between; margin-top:10px; border-top:1px solid #ddd; padding-top:10px;">
+            <div>
+                <p class="stat-label">Actions</p>
+                <p class="stat-value" id="actions-left">30</p>
+            </div>
+            <div>
+                <p class="stat-label">Horses</p>
+                <p class="stat-value" id="horse-count">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over">
+        <h2>MISSION COMPLETE</h2>
+        <p>Final Liberty Score:</p>
+        <h1 id="final-score" style="color: #2e7d32;">0</h1>
+        <button onclick="location.reload()">RE-WILD AGAIN</button>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- Configuration ---
+        const GRID_SIZE = 16;
+        const CELL_UNIT = 2;
+        const HORSE_COUNT = 10;
+        let actionsLeft = 30;
+        let totalScore = 0;
+
+        // --- Setup ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xa8d5ba);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(20, 25, 20);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(10, 20, 10);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // --- Game Logic State ---
+        const grid = []; // 0: grass, 1: fence
+        const fenceMeshes = []; // To track for raycasting
+        const horses = [];
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // --- Objects ---
+        const geometryFloor = new THREE.PlaneGeometry(GRID_SIZE * CELL_UNIT, GRID_SIZE * CELL_UNIT);
+        const materialFloor = new THREE.MeshLambertMaterial({ color: 0x97c9aa });
+        const floor = new THREE.Mesh(geometryFloor, materialFloor);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        function initGrid() {
+            for (let z = 0; z < GRID_SIZE; z++) {
+                grid[z] = [];
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    // Start with mostly fences
+                    grid[z][x] = Math.random() > 0.15 ? 1 : 0;
+                }
+            }
+            
+            // Spawn fence visuals
+            for (let z = 0; z < GRID_SIZE; z++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    if (grid[z][x] === 1) createFence(x, z);
+                }
+            }
+        }
+
+        function createFence(x, z) {
+            const group = new THREE.Group();
+            
+            // Post
+            const postGeo = new THREE.BoxGeometry(0.4, 1.2, 0.4);
+            const postMat = new THREE.MeshLambertMaterial({ color: 0x6d4c41 });
+            const post = new THREE.Mesh(postGeo, postMat);
+            post.position.y = 0.6;
+            post.castShadow = true;
+            group.add(post);
+
+            // Positioning
+            const posX = (x - GRID_SIZE / 2) * CELL_UNIT + CELL_UNIT / 2;
+            const posZ = (z - GRID_SIZE / 2) * CELL_UNIT + CELL_UNIT / 2;
+            group.position.set(posX, 0, posZ);
+            
+            group.userData = { gridX: x, gridZ: z };
+            scene.add(group);
+            fenceMeshes.push(group);
+        }
+
+        class Horse {
+            constructor() {
+                this.mesh = this.createModel();
+                scene.add(this.mesh);
+                this.resetPosition();
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = 0.03 + Math.random() * 0.04;
+                this.state = 'idle';
+                this.timer = Math.random() * 100;
+            }
+
+            createModel() {
+                const group = new THREE.Group();
+                const colors = [0x5d4037, 0x8d6e63, 0x4e342e, 0x795548];
+                const mat = new THREE.MeshLambertMaterial({ color: colors[Math.floor(Math.random()*colors.length)] });
+
+                const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.6, 0.4), mat);
+                body.position.y = 0.5;
+                body.castShadow = true;
+                group.add(body);
+
+                const head = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.4, 0.3), mat);
+                head.position.set(0.4, 0.9, 0);
+                group.add(head);
+
+                return group;
+            }
+
+            resetPosition() {
+                // Find grass
+                let found = false;
+                while(!found) {
+                    let rx = Math.floor(Math.random()*GRID_SIZE);
+                    let rz = Math.floor(Math.random()*GRID_SIZE);
+                    if(grid[rz][rx] === 0) {
+                        this.mesh.position.set(
+                            (rx - GRID_SIZE / 2) * CELL_UNIT + CELL_UNIT / 2,
+                            0,
+                            (rz - GRID_SIZE / 2) * CELL_UNIT + CELL_UNIT / 2
+                        );
+                        found = true;
+                    }
+                }
+            }
+
+            update() {
+                if (this.state === 'idle') {
+                    this.timer--;
+                    if (this.timer <= 0) {
+                        this.state = 'walk';
+                        this.timer = 100 + Math.random() * 200;
+                        this.targetAngle = this.angle + (Math.random() - 0.5) * 2;
+                    }
+                } else {
+                    // Movement logic
+                    const nextX = this.mesh.position.x + Math.cos(this.angle) * this.speed;
+                    const nextZ = this.mesh.position.z - Math.sin(this.angle) * this.speed;
+
+                    // Grid Collision
+                    const gx = Math.floor((nextX / CELL_UNIT) + GRID_SIZE / 2);
+                    const gz = Math.floor((nextZ / CELL_UNIT) + GRID_SIZE / 2);
+
+                    if (gx >= 0 && gx < GRID_SIZE && gz >= 0 && gz < GRID_SIZE && grid[gz][gx] === 0) {
+                        this.mesh.position.x = nextX;
+                        this.mesh.position.z = nextZ;
+                        this.mesh.rotation.y = this.angle;
+                    } else {
+                        this.angle += Math.PI / 2;
+                    }
+
+                    this.timer--;
+                    if (this.timer <= 0) {
+                        this.state = 'idle';
+                        this.timer = 50 + Math.random() * 100;
+                    }
+                }
+            }
+        }
+
+        // --- Area Scoring (Flood Fill) ---
+        function calculateRangeScore() {
+            let total = 0;
+            horses.forEach(h => {
+                const gx = Math.floor((h.mesh.position.x / CELL_UNIT) + GRID_SIZE / 2);
+                const gz = Math.floor((h.mesh.position.z / CELL_UNIT) + GRID_SIZE / 2);
+                total += floodFill(gx, gz);
+            });
+            totalScore = total;
+            document.getElementById('score').innerText = totalScore;
+            document.getElementById('actions-left').innerText = actionsLeft;
+            
+            if (actionsLeft <= 0) {
+                document.getElementById('game-over').style.display = 'block';
+                document.getElementById('final-score').innerText = totalScore;
+            }
+        }
+
+        function floodFill(startX, startZ) {
+            const visited = Array.from({length: GRID_SIZE}, () => Array(GRID_SIZE).fill(false));
+            const stack = [[startX, startZ]];
+            let count = 0;
+            if (grid[startZ][startX] === 1) return 0;
+
+            visited[startZ][startX] = true;
+            while(stack.length > 0) {
+                const [cx, cz] = stack.pop();
+                count++;
+                [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dx, dz]) => {
+                    const nx = cx + dx, nz = cz + dz;
+                    if (nx >= 0 && nx < GRID_SIZE && nz >= 0 && nz < GRID_SIZE && !visited[nz][nx] && grid[nz][nx] === 0) {
+                        visited[nz][nx] = true;
+                        stack.push([nx, nz]);
+                    }
+                });
+            }
+            return count;
+        }
+
+        // --- Interaction ---
+        window.addEventListener('mousedown', (event) => {
+            if (actionsLeft <= 0) return;
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(fenceMeshes, true);
+
+            if (intersects.length > 0) {
+                const object = intersects[0].object.parent; // Get the Group
+                const { gridX, gridZ } = object.userData;
+
+                grid[gridZ][gridX] = 0;
+                scene.remove(object);
+                
+                // Cleanup raycast array
+                const index = fenceMeshes.indexOf(object);
+                if (index > -1) fenceMeshes.splice(index, 1);
+
+                actionsLeft--;
+                calculateRangeScore();
+            }
+        });
+
+        // --- Main Loop ---
+        initGrid();
+        for(let i=0; i<HORSE_COUNT; i++) horses.push(new Horse());
+        document.getElementById('horse-count').innerText = HORSE_COUNT;
+        calculateRangeScore();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            horses.forEach(h => h.update());
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>

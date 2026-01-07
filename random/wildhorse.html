@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Horse Freedom: 10 Levels</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #a8d5ba; font-family: 'Courier New', Courier, monospace; }
+        
+        /* UI Panels */
+        #ui-left {
+            position: absolute; top: 20px; left: 20px; z-index: 10;
+            background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-top: 6px solid #3d5a44;
+            pointer-events: none; min-width: 220px;
+        }
+        
+        #ui-right {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;
+            width: 150px; /* Fixed width to prevent padding issues */
+        }
+
+        #level-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .level-btn {
+            background: #eee; border: 1px solid #ccc; padding: 6px 2px;
+            cursor: pointer; font-family: inherit; font-size: 0.8rem; font-weight: bold;
+            width: 45%; box-sizing: border-box;
+        }
+        .level-btn .btn-num { font-size: 1rem; display: block; }
+        .level-btn .btn-score { font-size: 0.55rem; color: #666; display: block; overflow: hidden; white-space: nowrap; }
+        
+        .level-btn:hover { background: #ddd; }
+        .level-btn.active { background: #3d5a44; color: white; border-color: #1e2e22; }
+        .level-btn.active .btn-score { color: #fff; }
+
+        .stat-label { font-size: 0.7rem; color: #777; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .stat-value { font-size: 1.6rem; color: #2e7d32; font-weight: bold; margin: 0 0 12px 0; }
+        .stat-total { color: #1b5e20; border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px;}
+        
+        #actions-left { color: #b71c1c; }
+        #level-name { color: #3d5a44; font-size: 0.9rem; font-weight: bold; border-bottom: 2px solid #eee; margin-bottom: 10px; padding-bottom: 5px; }
+
+        /* Game Over Screen */
+        #game-over {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 40px; border-radius: 15px; text-align: center;
+            box-shadow: 0 0 100px rgba(0,0,0,0.6); z-index: 100; border: 4px solid #3d5a44;
+            min-width: 300px;
+        }
+        
+        .hint { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #2e4635; font-size: 0.8rem; pointer-events: none; opacity: 0.8; font-weight: bold; }
+        
+        .btn-container { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        button.action-btn { background: #3d5a44; color: white; border: none; padding: 12px 20px; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 5px; pointer-events: auto; }
+        button.action-btn:hover { background: #2e4635; }
+        button#next-level-btn { background: #1b5e20; }
+    </style>
+</head>
+<body>
+
+    <div id="ui-left">
+        <div id="level-name">The Paddock</div>
+        <p class="stat-label">Action Points</p>
+        <p class="stat-value" id="actions-left">0</p>
+        <p class="stat-label">Current Liberty Score</p>
+        <p class="stat-value" id="score">0</p>
+        
+        <p class="stat-label stat-total">Cumulative Liberty Total</p>
+        <p class="stat-value stat-total" id="total-score">0</p>
+    </div>
+
+    <div id="ui-right">
+        <p class="stat-label" style="margin-bottom: 8px;">Select Territory</p>
+        <div id="level-buttons"></div>
+    </div>
+
+    <div class="hint">CLICK FENCE POSTS TO REMOVE. HIGHEST SCORES ARE RECORDED.</div>
+
+    <div id="game-over">
+        <h2 id="msg">ACTIONS DEPLETED</h2>
+        <p>Current Run Score:</p>
+        <h1 id="final-score" style="color: #2e7d32; font-size: 4rem; margin: 10px 0;">0</h1>
+        <div class="btn-container">
+            <button class="action-btn" onclick="retryLevel()">RETRY</button>
+            <button class="action-btn" id="next-level-btn" onclick="goToNextLevel()">NEXT LEVEL</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const LEVEL_DATA = [
+            { name: "1: The Small Paddock", actions: 2, map: ["#######","#H...H#","#######","#..H###","####H.#","#H.#.H#","#######"]},
+            { name: "2: The Twin Corrals", actions: 2, map: ["#############","#H....#....H#","#.###.#.HH..#","#.....#.....#","#.....#######","#.....#.....#","#.....#..#..#","#.....#.....#","#######..#..#","#.HH..#.....#","#.....#.....#","#H....#....H#","#############"]},
+            { name: "3: Cross Divide", actions: 3, map: ["###########","#H...#HHHH#","#.##.#.##.#","#.#..#..#.#","#.#..#..#.#","###########","#.#..#..#.#","#.#..#..#.#","#########.#","#H...#.#.H#","###########"]},
+            { name: "4: The Quad Lock", actions: 3, map: ["###############","#H...#H......H#","#....#........#","#....#HHHHHHHH#","#....#........#","#....##########","#....#........#","######..#######","#....#..#.....#","#....####.....#","######..#.....#","#....#..#.....#","#....####.....#","#H...#..#....H#","###############"]},
+            { name: "5: The Outer Ring", actions: 4, map: ["#################","#H......H......H#","#.......H.......#","#..###########..#","#..#H.......H#..#","#..#.........#..#","#..#.........#..#","#..###########..#","#..#.........#..#","#..#..HHHHHH.####","#..#.........#..#","#..#H.......H#..#","#..###########..#","#...............#","#...............#","#H.............H#","#################"]},
+            { name: "6: The Prison Hall", actions: 5, map: ["#######################","#H.#H.#H.#H.#H.#H.#H.H#","#..#..#..#..#..#..#..##","#..#..#HH#..#..#..#..##","#..#..#..#..#..#..#..##","#######################","#..#..#..#..#..#..#..##","#..#..#..#..#.H#..#..##","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#H.#H.#H.#H.#H.#H.#H.H#","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#######################","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#..#..#..#..#..#..#..##","#..#..#HH#..#..#..#..##","#..#..#..#..#..#..#..##","#H.#H.#H.#H.#H.#H.#H.H#","#######################"]},
+            { name: "7: Triple-Thick Wall", actions: 6, map: ["#######################","#H...#H#H#H#H#H#H#...H#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","######H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H######","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","######H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#HHHH#","###..#H#H#H#H#H#H#....#","#.#..#H#H#H#H#H#H#....#","#.##.#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H######","#....#H#H#H#H#H#H#....#","#....#H#H#H#H#H#H#....#","#H...#H#H#H#H#H#H#...H#","#######################"]},
+            { name: "8: Labyrinth Square", actions: 5, map: ["###############################","#H......#........#...........H#","#.######.#.######.#.###########","#.#H...#.#.#H...#.#.#H........#","#.#####.#.#.####.#.#.##########","#.#H..#.#.#.#H...#.#.#H.......#","#.###.#.#.#.######.#.##########","#H..#.#.#.#........#.........H#","####.###.#.####################","#H....#..#....................#","#.######.#.######.#.###########","#.#H...#.#.#H...#.#.#H........#","#.#####.#.#.####.#.#.##########","#.#H..#.#.#.#H...#.#.#H.......#","#.###.#.#.#.######.#.##########","#H..#.#.#.#........#.........H#","####.###.#.####################","#H....#..#....................#","#.######.#.######.#.###########","#.#H...#.#.#H...#.#.#H........#","#.#####.#.#.####.#.#.##########","#.#H..#.#.#.#H...#.#.#H.......#","#.###.#.#.#.######.#.##########","#H..#.#.#.#........#.........H#","####.###.#.####################","#.#H...#.#.#H...#.#.#H........#","#.#####.#.#.####.#.#.##########","#.#H..#.#.#.#H...#.#.#H.......#","#.###.#.#.#.######.#.##########","#H..#.#.#.#........#.........H#","###############################"]},
+            { name: "9: The Mega-Herd", actions: 4, map: ["########################################","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHH...HHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","########################################","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHH#HHHH#HHHHHHHHHHHH#","##############.############.############","#HHH#HHHHHHH#HHHH.....HHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","########################################","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","###########################.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","########################################","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHH.......HH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHHHHHHHHHH#HHHHHHHHHHHH#","##############.############.############","#HHHHHHHHHHHH#HHHH...HHHHH#HHHHHHH##HHH#","########################################"]},
+            { name: "10: The Fortress Final", actions: 6, map: ["########################################","#H..#HH#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","######.....#############################","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","##############...#######################","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","########################################","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","########################################","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#HH#..H#..#..H#.H#","######..###########.....################","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","########################################","#HHHHHHH#..#..H#..#..H#..#..H#..#..H#.H#","###.##.##.##.##.##.##.##.##.##.##.##.###","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","####################.....###############","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","#H..#..H#..#..H#..#..H#..#..H#..#..H#.H#","###.##.###########.##.##..##.##.##.##.##","#H..#..H#..#..H#..#..H#..#..H#HH#..H#.H#","########################################"]}
+        ];
+
+        const CELL = 2.2;
+        let currentIdx = 0, actions = 0, grid = [], horses = [], gridN = 0;
+        let bestScores = new Array(LEVEL_DATA.length).fill(0);
+        let currentScore = 0;
+
+        const fenceGroup = new THREE.Group();
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xa8d5ba);
+        scene.fog = new THREE.Fog(0xa8d5ba, 30, 200);
+
+        const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(50, 60, 50);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+        const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+        sun.position.set(40, 80, 20);
+        sun.castShadow = true;
+        scene.add(sun);
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let mDown = { x: 0, y: 0 };
+
+        const floorContainer = new THREE.Group();
+        scene.add(floorContainer);
+        scene.add(fenceGroup);
+
+        window.retryLevel = () => {
+            loadLevel(currentIdx);
+        };
+
+        window.goToNextLevel = () => {
+            if (currentIdx < LEVEL_DATA.length - 1) {
+                loadLevel(currentIdx + 1);
+            }
+        };
+
+        function setupUI() {
+            const container = document.getElementById('level-buttons');
+            container.innerHTML = '';
+            LEVEL_DATA.forEach((_, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'level-btn' + (i === currentIdx ? ' active' : '');
+                
+                const num = document.createElement('span');
+                num.className = 'btn-num';
+                num.innerText = i + 1;
+                
+                const score = document.createElement('span');
+                score.className = 'btn-score';
+                score.innerText = bestScores[i] > 0 ? bestScores[i] : '---';
+                
+                btn.appendChild(num);
+                btn.appendChild(score);
+                btn.onclick = () => loadLevel(i);
+                container.appendChild(btn);
+            });
+
+            const total = bestScores.reduce((a, b) => a + b, 0);
+            document.getElementById('total-score').innerText = total.toLocaleString();
+        }
+
+        function loadLevel(idx) {
+            currentIdx = idx;
+            const data = LEVEL_DATA[idx];
+            gridN = Math.max(data.map.length, data.map[0].length);
+            actions = data.actions;
+
+            document.getElementById('level-name').innerText = data.name;
+            document.getElementById('game-over').style.display = 'none';
+
+            horses.forEach(h => scene.remove(h.mesh));
+            horses = [];
+            grid = [];
+            floorContainer.clear();
+
+            const fGeo = new THREE.PlaneGeometry(gridN * CELL, gridN * CELL);
+            const floor = new THREE.Mesh(fGeo, new THREE.MeshLambertMaterial({ color: 0x97c9aa }));
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            floorContainer.add(floor);
+
+            for (let z = 0; z < gridN; z++) {
+                grid[z] = [];
+                for (let x = 0; x < gridN; x++) {
+                    const char = (data.map[z] && data.map[z][x]) ? data.map[z][x] : ".";
+                    if (char === '#') grid[z][x] = 1;
+                    else {
+                        grid[z][x] = 0;
+                        if (char === 'H') horses.push(new Horse(x, z));
+                    }
+                }
+            }
+            renderFences();
+            calculateScore();
+            setupUI();
+            controls.target.set(0,0,0);
+        }
+
+        function renderFences() {
+            while(fenceGroup.children.length > 0) {
+                const child = fenceGroup.children[0];
+                if(child.geometry) child.geometry.dispose();
+                fenceGroup.remove(child);
+            }
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x5d4037 });
+            const postGeo = new THREE.BoxGeometry(0.35, 1.5, 0.35);
+            const railGeoE = new THREE.BoxGeometry(CELL, 0.1, 0.1);
+            const railGeoS = new THREE.BoxGeometry(0.1, 0.1, CELL);
+
+            for (let z = 0; z < gridN; z++) {
+                for (let x = 0; x < gridN; x++) {
+                    if (grid[z][x] === 1) {
+                        const px = (x - gridN/2) * CELL + CELL/2;
+                        const pz = (z - gridN/2) * CELL + CELL/2;
+                        const post = new THREE.Mesh(postGeo, woodMat);
+                        post.position.set(px, 0.75, pz);
+                        post.userData = { gx: x, gz: z };
+                        fenceGroup.add(post);
+
+                        if (x + 1 < gridN && grid[z][x+1] === 1) {
+                            const r1 = new THREE.Mesh(railGeoE, woodMat);
+                            r1.position.set(px + CELL/2, 0.6, pz);
+                            fenceGroup.add(r1);
+                            const r2 = new THREE.Mesh(railGeoE, woodMat);
+                            r2.position.set(px + CELL/2, 1.1, pz);
+                            fenceGroup.add(r2);
+                        }
+                        if (z + 1 < gridN && grid[z+1][x] === 1) {
+                            const r3 = new THREE.Mesh(railGeoS, woodMat);
+                            r3.position.set(px, 0.6, pz + CELL/2);
+                            fenceGroup.add(r3);
+                            const r4 = new THREE.Mesh(railGeoS, woodMat);
+                            r4.position.set(px, 1.1, pz + CELL/2);
+                            fenceGroup.add(r4);
+                        }
+                    }
+                }
+            }
+        }
+
+        class Horse {
+            constructor(gx, gz) {
+                this.mesh = this.createModel();
+                scene.add(this.mesh);
+                this.mesh.position.set((gx - gridN/2) * CELL + CELL/2, 0, (gz - gridN/2) * CELL + CELL/2);
+                this.angle = Math.random() * Math.PI * 2;
+                this.state = 'idle';
+                this.timer = Math.random() * 50;
+            }
+            createModel() {
+                const g = new THREE.Group();
+                const mat = new THREE.MeshLambertMaterial({ color: [0x5d4037, 0x8d6e63, 0xffffff, 0x4e342e][Math.floor(Math.random()*4)] });
+                const b = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 0.3), mat);
+                b.position.y = 0.35; g.add(b);
+                const h = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.35, 0.18), mat);
+                h.position.set(0.3, 0.65, 0); g.add(h);
+                return g;
+            }
+            update() {
+                if (this.state === 'idle') {
+                    if (--this.timer <= 0) { this.state = 'walk'; this.timer = 100 + Math.random()*100; this.angle += (Math.random()-0.5); }
+                } else {
+                    const nx = this.mesh.position.x + Math.cos(this.angle) * 0.04;
+                    const nz = this.mesh.position.z - Math.sin(this.angle) * 0.04;
+                    const gx = Math.floor((nx / CELL) + gridN/2);
+                    const gz = Math.floor((nz / CELL) + gridN/2);
+                    if (gx >= 0 && gx < gridN && gz >= 0 && gz < gridN && grid[gz][gx] === 0) {
+                        this.mesh.position.set(nx, 0, nz);
+                        this.mesh.rotation.y = this.angle;
+                    } else { this.angle += Math.PI/2; this.state = 'idle'; }
+                    if (--this.timer <= 0) this.state = 'idle';
+                }
+            }
+        }
+
+        function calculateScore() {
+            let total = 0;
+            horses.forEach(h => {
+                const gx = Math.floor((h.mesh.position.x / CELL) + gridN/2);
+                const gz = Math.floor((h.mesh.position.z / CELL) + gridN/2);
+                total += floodFill(gx, gz);
+            });
+            currentScore = total;
+            document.getElementById('score').innerText = currentScore.toLocaleString();
+            document.getElementById('actions-left').innerText = actions;
+            
+            if (actions <= 0) {
+                if (currentScore > bestScores[currentIdx]) {
+                    bestScores[currentIdx] = currentScore;
+                }
+                
+                document.getElementById('game-over').style.display = 'block';
+                document.getElementById('final-score').innerText = currentScore.toLocaleString();
+                
+                // Show/Hide Next Level button
+                const nxtBtn = document.getElementById('next-level-btn');
+                if (currentIdx < LEVEL_DATA.length - 1) {
+                    nxtBtn.style.display = 'inline-block';
+                } else {
+                    nxtBtn.style.display = 'none';
+                    document.getElementById('msg').innerText = "ALL TERRITORIES LIBERATED!";
+                }
+                
+                setupUI();
+            }
+        }
+
+        function floodFill(sx, sz) {
+            if (sx < 0 || sx >= gridN || sz < 0 || sz >= gridN || grid[sz][sx] !== 0) return 0;
+            const seen = Array.from({length: gridN}, () => Array(gridN).fill(false));
+            const q = [[sx, sz]];
+            let count = 0;
+            seen[sz][sx] = true;
+            while(q.length > 0) {
+                const [cx, cz] = q.pop();
+                count++;
+                [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dx, dz]) => {
+                    const nx = cx + dx, nz = cz + dz;
+                    if (nx >= 0 && nx < gridN && nz >= 0 && nz < gridN && !seen[nz][nx] && grid[nz][nx] === 0) {
+                        seen[nz][nx] = true; q.push([nx, nz]);
+                    }
+                });
+            }
+            return count;
+        }
+
+        window.addEventListener('mousedown', e => mDown = { x: e.clientX, y: e.clientY });
+        window.addEventListener('mouseup', e => {
+            if (actions <= 0) return;
+            if (Math.hypot(e.clientX - mDown.x, e.clientY - mDown.y) > 5) return;
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const hits = raycaster.intersectObjects(fenceGroup.children);
+            if (hits.length > 0) {
+                const hit = hits[0].object;
+                if(hit.userData.gx !== undefined) {
+                    grid[hit.userData.gz][hit.userData.gx] = 0;
+                    actions--;
+                    renderFences();
+                    calculateScore();
+                }
+            }
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            horses.forEach(h => h.update());
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        setupUI();
+        loadLevel(0);
+        animate();
+    </script>
+</body>
+</html>

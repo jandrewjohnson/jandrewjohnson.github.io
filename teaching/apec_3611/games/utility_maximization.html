@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Maximization</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 300;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #0f0f1a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #2a2a4a;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .control-panel {
+            background: #0f0f1a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #2a2a4a;
+        }
+        
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8892b0;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .slider-group {
+            margin-bottom: 16px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .slider-value {
+            background: #1a1a2e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #64ffda;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #2a2a4a;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.3);
+            transition: transform 0.15s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 3px solid #64ffda;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9rem;
+        }
+        
+        .info-label {
+            color: #8892b0;
+        }
+        
+        .info-value {
+            font-family: 'Monaco', monospace;
+            color: #fff;
+        }
+        
+        .info-value.highlight {
+            color: #64ffda;
+            font-weight: 600;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-line {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .equation-box {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #ccd6f6;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .tangency-condition {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(100, 255, 218, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        .tangency-title {
+            font-size: 0.8rem;
+            color: #64ffda;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .tangency-eq {
+            font-family: 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Utility Maximization</h1>
+        <p class="subtitle">The optimal bundle occurs where the indifference curve is tangent to the budget constraint</p>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <canvas id="graph" width="700" height="600"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel">
+                    <div class="panel-title">Budget Constraint</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Income (M)</span>
+                            <span class="slider-value" id="income-value">100</span>
+                        </div>
+                        <input type="range" id="income" min="40" max="200" value="100">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price of X (Pₓ)</span>
+                            <span class="slider-value" id="px-value">2</span>
+                        </div>
+                        <input type="range" id="px" min="1" max="10" value="2" step="0.5">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price of Y (Pᵧ)</span>
+                            <span class="slider-value" id="py-value">2</span>
+                        </div>
+                        <input type="range" id="py" min="1" max="10" value="2" step="0.5">
+                    </div>
+                    
+                    <div class="equation-box">
+                        M = Pₓ·X + Pᵧ·Y
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Utility Function (Cobb-Douglas)</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Preference α</span>
+                            <span class="slider-value" id="alpha-value">0.50</span>
+                        </div>
+                        <input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01">
+                    </div>
+                    
+                    <div class="equation-box">
+                        U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>
+                    </div>
+                    
+                    <div class="tangency-condition">
+                        <div class="tangency-title">Tangency Condition</div>
+                        <div class="tangency-eq">MRS = Pₓ/Pᵧ</div>
+                        <div class="tangency-eq" style="margin-top: 6px; font-size: 0.8rem; color: #8892b0;">
+                            (αY) / ((1-α)X) = Pₓ/Pᵧ
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Optimal Bundle</div>
+                    
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-label">X*</span>
+                            <span class="info-value highlight" id="opt-x">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Y*</span>
+                            <span class="info-value highlight" id="opt-y">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Utility U*</span>
+                            <span class="info-value" id="opt-u">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">MRS at optimum</span>
+                            <span class="info-value" id="opt-mrs">1.00</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Price ratio Pₓ/Pᵧ</span>
+                            <span class="info-value" id="price-ratio">1.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #ff6b6b;"></div>
+                            <span>Budget Constraint</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #4ecdc4;"></div>
+                            <span>Optimal Indifference Curve</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: rgba(78, 205, 196, 0.3);"></div>
+                            <span>Other Indifference Curves</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #ffd93d;"></div>
+                            <span>Optimal Bundle (X*, Y*)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('graph');
+        const ctx = canvas.getContext('2d');
+        
+        // Get slider elements
+        const incomeSlider = document.getElementById('income');
+        const pxSlider = document.getElementById('px');
+        const pySlider = document.getElementById('py');
+        const alphaSlider = document.getElementById('alpha');
+        
+        // Graph parameters
+        const margin = { top: 40, right: 40, bottom: 60, left: 70 };
+        const maxX = 80;
+        const maxY = 80;
+        
+        function getGraphDimensions() {
+            const width = canvas.width - margin.left - margin.right;
+            const height = canvas.height - margin.top - margin.bottom;
+            return { width, height };
+        }
+        
+        function toCanvasX(x) {
+            const { width } = getGraphDimensions();
+            return margin.left + (x / maxX) * width;
+        }
+        
+        function toCanvasY(y) {
+            const { height } = getGraphDimensions();
+            return margin.top + height - (y / maxY) * height;
+        }
+        
+        // Calculate optimal bundle for Cobb-Douglas utility
+        function calculateOptimal(M, Px, Py, alpha) {
+            const xStar = (alpha * M) / Px;
+            const yStar = ((1 - alpha) * M) / Py;
+            const utility = Math.pow(xStar, alpha) * Math.pow(yStar, 1 - alpha);
+            const mrs = (alpha * yStar) / ((1 - alpha) * xStar);
+            return { xStar, yStar, utility, mrs };
+        }
+        
+        // Get Y value on indifference curve for given X and utility level
+        function getIndifferenceY(x, utility, alpha) {
+            if (x <= 0) return null;
+            const yPower = Math.pow(utility / Math.pow(x, alpha), 1 / (1 - alpha));
+            return yPower;
+        }
+        
+        function drawGraph() {
+            const M = parseFloat(incomeSlider.value);
+            const Px = parseFloat(pxSlider.value);
+            const Py = parseFloat(pySlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            
+            // Update display values
+            document.getElementById('income-value').textContent = M;
+            document.getElementById('px-value').textContent = Px;
+            document.getElementById('py-value').textContent = Py;
+            document.getElementById('alpha-value').textContent = alpha.toFixed(2);
+            
+            const { xStar, yStar, utility, mrs } = calculateOptimal(M, Px, Py, alpha);
+            
+            // Update optimal bundle display
+            document.getElementById('opt-x').textContent = xStar.toFixed(1);
+            document.getElementById('opt-y').textContent = yStar.toFixed(1);
+            document.getElementById('opt-u').textContent = utility.toFixed(1);
+            document.getElementById('opt-mrs').textContent = mrs.toFixed(2);
+            document.getElementById('price-ratio').textContent = (Px / Py).toFixed(2);
+            
+            // Clear canvas
+            ctx.fillStyle = '#0f0f1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const { width, height } = getGraphDimensions();
+            
+            // Draw grid
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i <= 8; i++) {
+                const x = margin.left + (i / 8) * width;
+                const y = margin.top + (i / 8) * height;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + width, y);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#4a4a6a';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+            
+            // Axis labels
+            ctx.fillStyle = '#8892b0';
+            ctx.font = '14px Segoe UI';
+            ctx.textAlign = 'center';
+            
+            for (let i = 0; i <= 8; i++) {
+                const val = (i / 8) * maxX;
+                ctx.fillText(val.toFixed(0), toCanvasX(val), margin.top + height + 25);
+            }
+            
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 8; i++) {
+                const val = (i / 8) * maxY;
+                ctx.fillText(val.toFixed(0), margin.left - 10, toCanvasY(val) + 5);
+            }
+            
+            // Axis titles
+            ctx.fillStyle = '#ccd6f6';
+            ctx.font = '16px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Good X', margin.left + width / 2, canvas.height - 10);
+            
+            ctx.save();
+            ctx.translate(20, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Good Y', 0, 0);
+            ctx.restore();
+            
+            // Draw other indifference curves (for context)
+            const utilityLevels = [utility * 0.5, utility * 0.75, utility * 1.25, utility * 1.5];
+            
+            ctx.strokeStyle = 'rgba(78, 205, 196, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            
+            for (const u of utilityLevels) {
+                ctx.beginPath();
+                let started = false;
+                for (let x = 0.5; x <= maxX; x += 0.5) {
+                    const y = getIndifferenceY(x, u, alpha);
+                    if (y !== null && y <= maxY && y >= 0) {
+                        if (!started) {
+                            ctx.moveTo(toCanvasX(x), toCanvasY(y));
+                            started = true;
+                        } else {
+                            ctx.lineTo(toCanvasX(x), toCanvasY(y));
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+            
+            ctx.setLineDash([]);
+            
+            // Draw budget constraint
+            const xIntercept = M / Px;
+            const yIntercept = M / Py;
+            
+            ctx.strokeStyle = '#ff6b6b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(0), toCanvasY(Math.min(yIntercept, maxY)));
+            ctx.lineTo(toCanvasX(Math.min(xIntercept, maxX)), toCanvasY(0));
+            ctx.stroke();
+            
+            // Draw optimal indifference curve
+            ctx.strokeStyle = '#4ecdc4';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let started = false;
+            for (let x = 0.5; x <= maxX; x += 0.3) {
+                const y = getIndifferenceY(x, utility, alpha);
+                if (y !== null && y <= maxY && y >= 0) {
+                    if (!started) {
+                        ctx.moveTo(toCanvasX(x), toCanvasY(y));
+                        started = true;
+                    } else {
+                        ctx.lineTo(toCanvasX(x), toCanvasY(y));
+                    }
+                }
+            }
+            ctx.stroke();
+            
+            // Draw tangent line at optimal point (to show tangency)
+            const tangentLength = 15;
+            const slope = -Px / Py;
+            
+            ctx.strokeStyle = 'rgba(255, 217, 61, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(xStar - tangentLength), toCanvasY(yStar - slope * (-tangentLength)));
+            ctx.lineTo(toCanvasX(xStar + tangentLength), toCanvasY(yStar - slope * tangentLength));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw optimal point
+            if (xStar <= maxX && yStar <= maxY) {
+                // Glow effect
+                const gradient = ctx.createRadialGradient(
+                    toCanvasX(xStar), toCanvasY(yStar), 0,
+                    toCanvasX(xStar), toCanvasY(yStar), 20
+                );
+                gradient.addColorStop(0, 'rgba(255, 217, 61, 0.4)');
+                gradient.addColorStop(1, 'rgba(255, 217, 61, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 20, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Point
+                ctx.fillStyle = '#ffd93d';
+                ctx.beginPath();
+                ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 13px Segoe UI';
+                ctx.textAlign = 'left';
+                ctx.fillText(`(${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toCanvasX(xStar) + 15, toCanvasY(yStar) - 10);
+                
+                // Utility label
+                ctx.fillStyle = '#4ecdc4';
+                ctx.font = '12px Segoe UI';
+                ctx.fillText(`U = ${utility.toFixed(1)}`, toCanvasX(xStar) + 15, toCanvasY(yStar) + 8);
+            }
+            
+            // Draw intercept labels
+            ctx.fillStyle = '#ff6b6b';
+            ctx.font = '12px Segoe UI';
+            
+            if (xIntercept <= maxX) {
+                ctx.textAlign = 'center';
+                ctx.fillText(`M/Pₓ = ${xIntercept.toFixed(1)}`, toCanvasX(xIntercept), toCanvasY(0) + 40);
+            }
+            
+            if (yIntercept <= maxY) {
+                ctx.textAlign = 'left';
+                ctx.fillText(`M/Pᵧ = ${yIntercept.toFixed(1)}`, toCanvasX(0) + 10, toCanvasY(yIntercept) - 10);
+            }
+        }
+        
+        // Event listeners
+        [incomeSlider, pxSlider, pySlider, alphaSlider].forEach(slider => {
+            slider.addEventListener('input', drawGraph);
+        });
+        
+        // Initial draw
+        drawGraph();
+    </script>
+</body>
+</html>

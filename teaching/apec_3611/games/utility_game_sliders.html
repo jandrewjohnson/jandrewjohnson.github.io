@@ -62,11 +62,6 @@
             display: block;
             width: 100%;
             height: auto;
-            cursor: grab;
-        }
-        
-        canvas:active {
-            cursor: grabbing;
         }
         
         .utility-display {
@@ -113,9 +108,9 @@
         }
         
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+            0%, 100% { transform: translateX(-50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
+            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
         }
         
         .error-banner {
@@ -184,6 +179,11 @@
             border: 1px solid #2a2a4a;
         }
         
+        .control-panel.choice-panel {
+            border: 2px solid #4ecdc4;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, #0f0f1a 100%);
+        }
+        
         .panel-title {
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -193,8 +193,17 @@
             font-weight: 600;
         }
         
+        .panel-title.highlight {
+            color: #4ecdc4;
+            font-size: 0.95rem;
+        }
+        
         .slider-group {
             margin-bottom: 16px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
         }
         
         .slider-label {
@@ -212,6 +221,12 @@
             font-family: 'Monaco', monospace;
             font-size: 0.85rem;
             color: #64ffda;
+        }
+        
+        .slider-value.large {
+            font-size: 1.1rem;
+            padding: 6px 14px;
+            color: #4ecdc4;
         }
         
         input[type="range"] {
@@ -236,6 +251,17 @@
         
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.15);
+        }
+        
+        input[type="range"].choice-slider {
+            height: 10px;
+        }
+        
+        input[type="range"].choice-slider::-webkit-slider-thumb {
+            width: 24px;
+            height: 24px;
+            background: #4ecdc4;
+            box-shadow: 0 2px 12px rgba(78, 205, 196, 0.5);
         }
         
         .info-box {
@@ -263,6 +289,11 @@
         
         .info-value.highlight {
             color: #64ffda;
+            font-weight: 600;
+        }
+        
+        .info-value.warning {
+            color: #ff4757;
             font-weight: 600;
         }
         
@@ -420,12 +451,60 @@
             border-radius: 4px;
             transition: width 0.1s ease;
         }
+        
+        .budget-bar {
+            margin-top: 16px;
+            padding: 12px;
+            background: #1a1a2e;
+            border-radius: 8px;
+        }
+        
+        .budget-label {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .budget-label .over {
+            color: #ff4757;
+            font-weight: 600;
+        }
+        
+        .budget-track {
+            height: 12px;
+            background: #2a2a4a;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .budget-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4 0%, #64ffda 100%);
+            border-radius: 6px;
+            transition: width 0.15s ease, background 0.15s ease;
+        }
+        
+        .budget-fill.over {
+            background: linear-gradient(90deg, #ff4757 0%, #ff6b6b 100%);
+        }
+        
+        .budget-limit {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #fff;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎮 Utility Maximization Game</h1>
-        <p class="subtitle">Drag on the graph to find the bundle that maximizes your utility!</p>
+        <p class="subtitle">Adjust X and Y to maximize your utility while staying within budget!</p>
         
         <div class="main-content">
             <div class="graph-container">
@@ -443,10 +522,33 @@
             </div>
             
             <div class="controls">
-                <div class="control-panel">
-                    <div class="instructions">
-                        <h3>🎯 How to Play</h3>
-                        <p>Click and drag anywhere on the graph to choose your consumption bundle (X, Y). Try to find the point that gives you the <strong>highest utility</strong> while staying <strong>within your budget</strong>!</p>
+                <div class="control-panel choice-panel">
+                    <div class="panel-title highlight">🎯 Your Choices</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Good X</span>
+                            <span class="slider-value large" id="user-x-value">20</span>
+                        </div>
+                        <input type="range" class="choice-slider" id="user-x" min="0" max="80" value="20" step="0.5">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Good Y</span>
+                            <span class="slider-value large" id="user-y-value">20</span>
+                        </div>
+                        <input type="range" class="choice-slider" id="user-y" min="0" max="80" value="20" step="0.5">
+                    </div>
+                    
+                    <div class="budget-bar">
+                        <div class="budget-label">
+                            <span>Budget Used</span>
+                            <span id="budget-status">$80 / $100</span>
+                        </div>
+                        <div class="budget-track">
+                            <div class="budget-fill" id="budget-fill" style="width: 80%"></div>
+                        </div>
                     </div>
                 </div>
                 
@@ -518,28 +620,6 @@
                     <div class="equation-box">
                         U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>
                     </div>
-                </div>
-                
-                <div class="control-panel">
-                    <div class="panel-title">Current Bundle</div>
-                    <div class="info-box">
-                        <div class="info-row">
-                            <span class="info-label">X</span>
-                            <span class="info-value highlight" id="current-x">0.0</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Y</span>
-                            <span class="info-value highlight" id="current-y">0.0</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Spending</span>
-                            <span class="info-value" id="current-spending">$0.0</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Budget</span>
-                            <span class="info-value" id="current-budget">$100</span>
-                        </div>
-                    </div>
                     
                     <div class="legend">
                         <div class="legend-item">
@@ -551,8 +631,8 @@
                             <span>Your Indifference Curve</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-dot" style="background: #ffd93d;"></div>
-                            <span>Your Choice</span>
+                            <div class="legend-dot" style="background: #4ecdc4;"></div>
+                            <span>Your Bundle</span>
                         </div>
                     </div>
                 </div>
@@ -569,6 +649,8 @@
         const pxSlider = document.getElementById('px');
         const pySlider = document.getElementById('py');
         const alphaSlider = document.getElementById('alpha');
+        const userXSlider = document.getElementById('user-x');
+        const userYSlider = document.getElementById('user-y');
         const errorBanner = document.getElementById('error-banner');
         const successBanner = document.getElementById('success-banner');
         const bigUtility = document.getElementById('big-utility');
@@ -579,10 +661,8 @@
         const maxY = 80;
         
         // Game state
-        let userX = 25;
-        let userY = 25;
-        let isDragging = false;
         let showOptimal = false;
+        let wasAffordable = true;
         
         function getGraphDimensions() {
             const width = canvas.width - margin.left - margin.right;
@@ -598,16 +678,6 @@
         function toCanvasY(y) {
             const { height } = getGraphDimensions();
             return margin.top + height - (y / maxY) * height;
-        }
-        
-        function fromCanvasX(canvasX) {
-            const { width } = getGraphDimensions();
-            return ((canvasX - margin.left) / width) * maxX;
-        }
-        
-        function fromCanvasY(canvasY) {
-            const { height } = getGraphDimensions();
-            return ((margin.top + height - canvasY) / height) * maxY;
         }
         
         function calculateOptimal(M, Px, Py, alpha) {
@@ -629,7 +699,7 @@
         }
         
         function isAffordable(x, y, M, Px, Py) {
-            return (Px * x + Py * y) <= M * 1.001; // Small tolerance
+            return (Px * x + Py * y) <= M * 1.001;
         }
         
         function drawGraph() {
@@ -637,26 +707,34 @@
             const Px = parseFloat(pxSlider.value);
             const Py = parseFloat(pySlider.value);
             const alpha = parseFloat(alphaSlider.value);
+            const userX = parseFloat(userXSlider.value);
+            const userY = parseFloat(userYSlider.value);
             
             // Update display values
             document.getElementById('income-value').textContent = M;
             document.getElementById('px-value').textContent = Px;
             document.getElementById('py-value').textContent = Py;
             document.getElementById('alpha-value').textContent = alpha.toFixed(2);
+            document.getElementById('user-x-value').textContent = userX.toFixed(1);
+            document.getElementById('user-y-value').textContent = userY.toFixed(1);
             
             const { xStar, yStar, utility: optimalUtility } = calculateOptimal(M, Px, Py, alpha);
             const userUtility = calculateUtility(userX, userY, alpha);
             const spending = Px * userX + Py * userY;
             const affordable = isAffordable(userX, userY, M, Px, Py);
             
-            // Check if near optimal (within 2% of optimal utility and affordable)
+            // Check if near optimal
             const nearOptimal = affordable && Math.abs(userUtility - optimalUtility) / optimalUtility < 0.02;
             
+            // Budget bar
+            const budgetPct = Math.min((spending / M) * 100, 150);
+            document.getElementById('budget-fill').style.width = `${Math.min(budgetPct, 100)}%`;
+            document.getElementById('budget-fill').className = 'budget-fill' + (!affordable ? ' over' : '');
+            document.getElementById('budget-status').innerHTML = affordable 
+                ? `$${spending.toFixed(0)} / $${M}` 
+                : `<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
+            
             // Update UI elements
-            document.getElementById('current-x').textContent = userX.toFixed(1);
-            document.getElementById('current-y').textContent = userY.toFixed(1);
-            document.getElementById('current-spending').textContent = `$${spending.toFixed(1)}`;
-            document.getElementById('current-budget').textContent = `$${M}`;
             document.getElementById('score-value').textContent = affordable ? userUtility.toFixed(1) : '—';
             document.getElementById('optimal-utility').textContent = optimalUtility.toFixed(1);
             
@@ -669,12 +747,20 @@
             bigUtility.textContent = affordable ? userUtility.toFixed(1) : '—';
             bigUtility.className = 'utility-value' + (!affordable ? ' infeasible' : (nearOptimal ? ' optimal' : ''));
             
-            // Banners
-            errorBanner.className = 'error-banner' + (!affordable ? ' visible' : '');
-            successBanner.className = 'success-banner' + (nearOptimal ? ' visible' : '');
+            // Banners - trigger shake only on transition to unaffordable
+            const nowUnaffordable = !affordable;
+            if (nowUnaffordable && wasAffordable) {
+                errorBanner.classList.remove('visible');
+                void errorBanner.offsetWidth; // Force reflow
+                errorBanner.classList.add('visible');
+            } else if (nowUnaffordable) {
+                errorBanner.classList.add('visible');
+            } else {
+                errorBanner.classList.remove('visible');
+            }
+            wasAffordable = affordable;
             
-            // Spending display color
-            document.getElementById('current-spending').style.color = affordable ? '#fff' : '#ff4757';
+            successBanner.className = 'success-banner' + (nearOptimal ? ' visible' : '');
             
             // Clear canvas
             ctx.fillStyle = '#0f0f1a';
@@ -792,7 +878,7 @@
             // Draw optimal point and curve if hint is shown
             if (showOptimal) {
                 // Optimal indifference curve
-                ctx.strokeStyle = 'rgba(255, 217, 61, 0.5)';
+                ctx.strokeStyle = 'rgba(255, 217, 61, 0.6)';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 4]);
                 ctx.beginPath();
@@ -812,20 +898,23 @@
                 ctx.setLineDash([]);
                 
                 // Optimal point
-                ctx.strokeStyle = '#ffd93d';
-                ctx.lineWidth = 2;
+                ctx.fillStyle = '#ffd93d';
                 ctx.beginPath();
-                ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 12, 0, Math.PI * 2);
+                ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
                 ctx.stroke();
                 
-                ctx.fillStyle = '#8892b0';
-                ctx.font = '12px Segoe UI';
+                ctx.fillStyle = '#ffd93d';
+                ctx.font = 'bold 12px Segoe UI';
                 ctx.textAlign = 'left';
-                ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toCanvasX(xStar) + 18, toCanvasY(yStar) + 4);
+                ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toCanvasX(xStar) + 16, toCanvasY(yStar) + 4);
             }
             
             // Draw user's chosen point
-            if (userX > 0 && userY > 0) {
+            if (userX > 0 && userY > 0 && userX <= maxX && userY <= maxY) {
                 // Glow effect
                 const gradient = ctx.createRadialGradient(
                     toCanvasX(userX), toCanvasY(userY), 0,
@@ -853,6 +942,13 @@
                 ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 3;
                 ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Segoe UI';
+                ctx.textAlign = 'left';
+                const labelX = userX < 60 ? toCanvasX(userX) + 16 : toCanvasX(userX) - 80;
+                ctx.fillText(`(${userX.toFixed(1)}, ${userY.toFixed(1)})`, labelX, toCanvasY(userY) - 8);
             }
             
             // Budget constraint labels
@@ -870,61 +966,16 @@
             }
         }
         
-        // Mouse/touch handlers
-        function handleStart(e) {
-            e.preventDefault();
-            isDragging = true;
-            updatePosition(e);
-        }
-        
-        function handleMove(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            updatePosition(e);
-        }
-        
-        function handleEnd() {
-            isDragging = false;
-        }
-        
-        function updatePosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            let clientX, clientY;
-            if (e.touches) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            
-            const canvasX = (clientX - rect.left) * scaleX;
-            const canvasY = (clientY - rect.top) * scaleY;
-            
-            userX = Math.max(0.5, Math.min(maxX, fromCanvasX(canvasX)));
-            userY = Math.max(0.5, Math.min(maxY, fromCanvasY(canvasY)));
-            
-            drawGraph();
-        }
-        
-        canvas.addEventListener('mousedown', handleStart);
-        canvas.addEventListener('mousemove', handleMove);
-        canvas.addEventListener('mouseup', handleEnd);
-        canvas.addEventListener('mouseleave', handleEnd);
-        
-        canvas.addEventListener('touchstart', handleStart, { passive: false });
-        canvas.addEventListener('touchmove', handleMove, { passive: false });
-        canvas.addEventListener('touchend', handleEnd);
-        
-        // Slider event listeners
+        // Event listeners for all sliders
         [incomeSlider, pxSlider, pySlider, alphaSlider].forEach(slider => {
             slider.addEventListener('input', () => {
                 showOptimal = false;
                 drawGraph();
             });
+        });
+        
+        [userXSlider, userYSlider].forEach(slider => {
+            slider.addEventListener('input', drawGraph);
         });
         
         function resetGame() {
@@ -934,9 +985,9 @@
             pySlider.value = 1 + Math.random() * 6;
             alphaSlider.value = 0.2 + Math.random() * 0.6;
             
-            // Reset user position to center-ish
-            userX = 15 + Math.random() * 20;
-            userY = 15 + Math.random() * 20;
+            // Reset user position
+            userXSlider.value = 10 + Math.random() * 20;
+            userYSlider.value = 10 + Math.random() * 20;
             
             showOptimal = false;
             drawGraph();

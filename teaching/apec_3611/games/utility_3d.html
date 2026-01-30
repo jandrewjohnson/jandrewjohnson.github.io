@@ -11,8 +11,8 @@
         
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
@@ -26,15 +26,15 @@
         
         h1 {
             text-align: center;
-            font-weight: 400;
+            font-weight: 300;
             font-size: 1.8rem;
             margin-bottom: 8px;
-            color: #1a202c;
+            color: #fff;
         }
         
         .subtitle {
             text-align: center;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
@@ -52,11 +52,10 @@
         }
         
         .graph-container {
-            background: #ffffff;
+            background: #0f0f1a;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #2a2a4a;
             position: relative;
             min-height: 600px;
         }
@@ -79,7 +78,7 @@
         
         .utility-label {
             font-size: 1rem;
-            color: #718096;
+            color: #8892b0;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 4px;
@@ -88,20 +87,20 @@
         .utility-value {
             font-size: 4rem;
             font-weight: 700;
-            font-family: 'Monaco', 'Consolas', monospace;
-            color: #319795;
-            text-shadow: 0 0 30px rgba(49, 151, 149, 0.3);
+            font-family: 'Monaco', monospace;
+            color: #4ecdc4;
+            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
             transition: all 0.1s ease;
         }
         
         .utility-value.infeasible {
-            color: #e53e3e;
-            text-shadow: 0 0 30px rgba(229, 62, 62, 0.3);
+            color: #ff4757;
+            text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
         }
         
         .utility-value.optimal {
-            color: #d69e2e;
-            text-shadow: 0 0 40px rgba(214, 158, 46, 0.5);
+            color: #ffd93d;
+            text-shadow: 0 0 40px rgba(255, 217, 61, 0.7);
         }
         
         @keyframes shake {
@@ -115,7 +114,7 @@
             top: 120px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
             color: white;
             padding: 12px 30px;
             border-radius: 8px;
@@ -123,7 +122,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.5);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -140,15 +139,15 @@
             top: 120px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
+            color: #1a1a2e;
             padding: 12px 30px;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(214, 158, 46, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 217, 61, 0.5);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -168,29 +167,28 @@
         }
         
         .control-panel {
-            background: #ffffff;
+            background: #0f0f1a;
             border-radius: 12px;
             padding: 18px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #2a2a4a;
         }
         
         .control-panel.choice-panel {
-            border: 2px solid #319795;
-            background: linear-gradient(135deg, rgba(49, 151, 149, 0.05) 0%, #ffffff 100%);
+            border: 2px solid #4ecdc4;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, #0f0f1a 100%);
         }
         
         .panel-title {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 14px;
             font-weight: 600;
         }
         
         .panel-title.highlight {
-            color: #319795;
+            color: #4ecdc4;
             font-size: 0.95rem;
         }
         
@@ -208,30 +206,28 @@
             align-items: center;
             margin-bottom: 6px;
             font-size: 0.85rem;
-            color: #4a5568;
         }
         
         .slider-value {
-            background: #edf2f7;
+            background: #1a1a2e;
             padding: 3px 8px;
             border-radius: 4px;
-            font-family: 'Monaco', 'Consolas', monospace;
+            font-family: 'Monaco', monospace;
             font-size: 0.8rem;
-            color: #2b6cb0;
-            font-weight: 500;
+            color: #64ffda;
         }
         
         .slider-value.large {
             font-size: 1rem;
             padding: 5px 12px;
-            color: #319795;
+            color: #4ecdc4;
         }
         
         input[type="range"] {
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             outline: none;
             -webkit-appearance: none;
         }
@@ -241,9 +237,9 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #4299e1;
+            background: #64ffda;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.3);
         }
         
         input[type="range"].choice-slider {
@@ -253,60 +249,58 @@
         input[type="range"].choice-slider::-webkit-slider-thumb {
             width: 20px;
             height: 20px;
-            background: #319795;
-            box-shadow: 0 2px 12px rgba(49, 151, 149, 0.4);
+            background: #4ecdc4;
+            box-shadow: 0 2px 12px rgba(78, 205, 196, 0.5);
         }
         
         .budget-bar {
             margin-top: 14px;
             padding: 10px;
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
         }
         
         .budget-label {
             font-size: 0.75rem;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
         }
         
         .budget-label .over {
-            color: #e53e3e;
+            color: #ff4757;
             font-weight: 600;
         }
         
         .budget-track {
             height: 10px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             border-radius: 5px;
             overflow: hidden;
         }
         
         .budget-fill {
             height: 100%;
-            background: linear-gradient(90deg, #319795 0%, #38b2ac 100%);
+            background: linear-gradient(90deg, #4ecdc4 0%, #64ffda 100%);
             border-radius: 5px;
             transition: width 0.15s ease, background 0.15s ease;
         }
         
         .budget-fill.over {
-            background: linear-gradient(90deg, #e53e3e 0%, #fc8181 100%);
+            background: linear-gradient(90deg, #ff4757 0%, #ff6b6b 100%);
         }
         
         .score-panel {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
             border-radius: 8px;
             padding: 14px;
             text-align: center;
-            border: 1px solid #e2e8f0;
         }
         
         .score-label {
             font-size: 0.75rem;
-            color: #718096;
+            color: #8892b0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -314,27 +308,26 @@
         .score-value {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #d69e2e;
-            font-family: 'Monaco', 'Consolas', monospace;
+            color: #ffd93d;
+            font-family: 'Monaco', monospace;
         }
         
         .score-optimal {
             font-size: 0.8rem;
-            color: #2b6cb0;
+            color: #64ffda;
             margin-top: 4px;
         }
         
         .proximity-meter {
             margin-top: 10px;
             padding: 10px;
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
         }
         
         .proximity-label {
             font-size: 0.75rem;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
@@ -342,14 +335,14 @@
         
         .proximity-bar {
             height: 6px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             border-radius: 3px;
             overflow: hidden;
         }
         
         .proximity-fill {
             height: 100%;
-            background: linear-gradient(90deg, #e53e3e 0%, #d69e2e 50%, #319795 100%);
+            background: linear-gradient(90deg, #ff4757 0%, #ffd93d 50%, #4ecdc4 100%);
             border-radius: 3px;
             transition: width 0.1s ease;
         }
@@ -368,36 +361,35 @@
         }
         
         .reset-btn {
-            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: #0f0f1a;
         }
         
         .reset-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(49, 151, 149, 0.4);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
         }
         
         .hint-btn {
             background: transparent;
-            border: 2px solid #d69e2e !important;
-            color: #d69e2e;
+            border: 2px solid #ffd93d !important;
+            color: #ffd93d;
             margin-top: 8px;
         }
         
         .hint-btn:hover {
-            background: rgba(214, 158, 46, 0.1);
+            background: rgba(255, 217, 61, 0.1);
         }
         
         .equation-box {
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
             padding: 10px 14px;
-            font-family: 'Monaco', 'Consolas', monospace;
+            font-family: 'Monaco', monospace;
             font-size: 0.8rem;
-            color: #4a5568;
+            color: #ccd6f6;
             text-align: center;
             margin-top: 8px;
-            border: 1px solid #e2e8f0;
         }
         
         .legend {
@@ -412,7 +404,6 @@
             align-items: center;
             gap: 8px;
             font-size: 0.8rem;
-            color: #4a5568;
         }
         
         .legend-color {
@@ -430,7 +421,7 @@
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.8rem;
-            color: #e2e8f0;
+            color: #8892b0;
             pointer-events: none;
         }
     </style>
@@ -582,19 +573,19 @@
                     
                     <div class="legend">
                         <div class="legend-item">
-                            <div class="legend-color" style="background: rgba(229, 62, 62, 0.5);"></div>
+                            <div class="legend-color" style="background: rgba(255, 107, 107, 0.5);"></div>
                             <span>Budget Plane</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color" style="background: rgba(49, 151, 149, 0.6);"></div>
+                            <div class="legend-color" style="background: rgba(78, 205, 196, 0.6);"></div>
                             <span>Indifference Surface</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color" style="background: #319795;"></div>
+                            <div class="legend-color" style="background: #4ecdc4;"></div>
                             <span>Your Bundle</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color" style="background: #d69e2e;"></div>
+                            <div class="legend-color" style="background: #ffd93d;"></div>
                             <span>Optimal Bundle</span>
                         </div>
                     </div>
@@ -627,7 +618,7 @@
         function init() {
             // Scene
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xffffff);
+            scene.background = new THREE.Color(0x0f0f1a);
             
             // Camera
             camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -699,24 +690,13 @@
             
             updateCamera();
             
-            // Lighting - enhanced for better 3D shading
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             
-            // Main light from above-front
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(50, 100, 50);
             scene.add(directionalLight);
-            
-            // Fill light from opposite side
-            const fillLight = new THREE.DirectionalLight(0x319795, 0.3);
-            fillLight.position.set(-50, 50, -50);
-            scene.add(fillLight);
-            
-            // Rim light from below for edge definition
-            const rimLight = new THREE.DirectionalLight(0xffffff, 0.2);
-            rimLight.position.set(0, -50, 0);
-            scene.add(rimLight);
             
             // Axes
             createAxes();
@@ -730,14 +710,14 @@
         
         function createAxes() {
             const axisLength = 55;
-            const axisColor = 0xa0aec0;
+            const axisColor = 0x4a4a6a;
             
             // X axis (red tint)
             const xGeom = new THREE.BufferGeometry().setFromPoints([
                 new THREE.Vector3(0, 0, 0),
                 new THREE.Vector3(axisLength, 0, 0)
             ]);
-            const xMat = new THREE.LineBasicMaterial({ color: 0xe53e3e });
+            const xMat = new THREE.LineBasicMaterial({ color: 0xff6b6b });
             scene.add(new THREE.Line(xGeom, xMat));
             
             // Y axis (green tint)
@@ -745,7 +725,7 @@
                 new THREE.Vector3(0, 0, 0),
                 new THREE.Vector3(0, axisLength, 0)
             ]);
-            const yMat = new THREE.LineBasicMaterial({ color: 0x38a169 });
+            const yMat = new THREE.LineBasicMaterial({ color: 0x6bff6b });
             scene.add(new THREE.Line(yGeom, yMat));
             
             // Z axis (blue tint)
@@ -753,11 +733,11 @@
                 new THREE.Vector3(0, 0, 0),
                 new THREE.Vector3(0, 0, axisLength)
             ]);
-            const zMat = new THREE.LineBasicMaterial({ color: 0x3182ce });
+            const zMat = new THREE.LineBasicMaterial({ color: 0x6b6bff });
             scene.add(new THREE.Line(zGeom, zMat));
             
             // Grid on XZ plane (floor)
-            const gridHelper = new THREE.GridHelper(50, 10, 0xa0aec0, 0xe2e8f0);
+            const gridHelper = new THREE.GridHelper(50, 10, 0x2a2a4a, 0x1a1a2e);
             gridHelper.position.set(25, 0, 25);
             scene.add(gridHelper);
             
@@ -782,7 +762,7 @@
         
         function createTickMark() {
             const geometry = new THREE.SphereGeometry(0.3, 8, 8);
-            const material = new THREE.MeshBasicMaterial({ color: 0x718096 });
+            const material = new THREE.MeshBasicMaterial({ color: 0x8892b0 });
             return new THREE.Mesh(geometry, material);
         }
         
@@ -827,7 +807,7 @@
             geometry.computeVertexNormals();
             
             const material = new THREE.MeshBasicMaterial({
-                color: 0xe53e3e,
+                color: 0xff6b6b,
                 transparent: true,
                 opacity: 0.35,
                 side: THREE.DoubleSide,
@@ -844,7 +824,7 @@
                 new THREE.Vector3(0, 0, zInt),
                 new THREE.Vector3(xInt, 0, 0)
             ]);
-            const edgeMat = new THREE.LineBasicMaterial({ color: 0xe53e3e, linewidth: 2 });
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0xff6b6b, linewidth: 2 });
             const edges = new THREE.Line(edgeGeom, edgeMat);
             budgetPlane.add(edges);
         }
@@ -864,51 +844,30 @@
             
             // Create parametric surface for indifference surface
             // U = x^α * y^β * z^γ => z = (U / (x^α * y^β))^(1/γ)
-            const segments = 120;
+            const segments = 30;
             const geometry = new THREE.BufferGeometry();
             const vertices = [];
             const indices = [];
             
             const maxVal = 50;
-            const clipMax = 40; // Hard clip ceiling
-            const minVal = 2.0; // Stay further from axes
+            const minVal = 0.5;
             
-            // Calculate all z values first
-            const zGrid = [];
             for (let i = 0; i <= segments; i++) {
-                zGrid[i] = [];
                 for (let j = 0; j <= segments; j++) {
                     const x = minVal + (i / segments) * (maxVal - minVal);
                     const y = minVal + (j / segments) * (maxVal - minVal);
                     
                     const base = utility / (Math.pow(x, alpha) * Math.pow(y, beta));
-                    let z = Math.pow(base, 1 / gamma);
+                    const z = Math.pow(base, 1 / gamma);
                     
-                    // Clamp z values
-                    if (!isFinite(z) || z < 0) z = -1; // Mark invalid
-                    else if (z > clipMax) z = -1; // Mark as too high
-                    
-                    zGrid[i][j] = z;
+                    if (z > 0 && z <= maxVal && isFinite(z)) {
+                        vertices.push(x, z, y); // Note: swapped y and z for better viewing
+                    } else {
+                        vertices.push(x, 0, y);
+                    }
                 }
             }
             
-            // Create vertices, marking validity
-            const validMask = [];
-            for (let i = 0; i <= segments; i++) {
-                for (let j = 0; j <= segments; j++) {
-                    const x = minVal + (i / segments) * (maxVal - minVal);
-                    const y = minVal + (j / segments) * (maxVal - minVal);
-                    const z = zGrid[i][j];
-                    
-                    const isValid = z > 0;
-                    validMask.push(isValid);
-                    
-                    // For vertices, use actual z if valid, otherwise placeholder
-                    vertices.push(x, isValid ? z : 0, y);
-                }
-            }
-            
-            // Create faces only where ALL four vertices are valid
             for (let i = 0; i < segments; i++) {
                 for (let j = 0; j < segments; j++) {
                     const a = i * (segments + 1) + j;
@@ -916,56 +875,26 @@
                     const c = a + (segments + 1);
                     const d = c + 1;
                     
-                    // All four corners must be valid
-                    if (validMask[a] && validMask[b] && validMask[c] && validMask[d]) {
-                        // Also check that the z values aren't too different (avoid steep spikes)
-                        const za = vertices[a * 3 + 1];
-                        const zb = vertices[b * 3 + 1];
-                        const zc = vertices[c * 3 + 1];
-                        const zd = vertices[d * 3 + 1];
-                        
-                        const maxZ = Math.max(za, zb, zc, zd);
-                        const minZ = Math.min(za, zb, zc, zd);
-                        
-                        // Skip faces with too much z variation (would look spiky)
-                        if (maxZ - minZ < 8) {
-                            indices.push(a, b, c);
-                            indices.push(b, d, c);
-                        }
-                    }
+                    indices.push(a, b, c);
+                    indices.push(b, d, c);
                 }
             }
-            
-            if (indices.length === 0) return;
             
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
             geometry.setIndex(indices);
             geometry.computeVertexNormals();
             
-            const baseColor = affordable ? 0x319795 : 0xe53e3e;
             const material = new THREE.MeshPhongMaterial({
-                color: baseColor,
-                specular: 0x444444,
-                shininess: 80,
+                color: affordable ? 0x4ecdc4 : 0xff4757,
                 transparent: true,
-                opacity: 0.7,
+                opacity: 0.4,
                 side: THREE.DoubleSide,
                 depthWrite: false,
-                flatShading: false
+                shininess: 50
             });
             
             indifferenceSurface = new THREE.Mesh(geometry, material);
             scene.add(indifferenceSurface);
-            
-            // Add wireframe overlay for additional depth cues
-            const wireGeometry = new THREE.WireframeGeometry(geometry);
-            const wireMaterial = new THREE.LineBasicMaterial({ 
-                color: baseColor, 
-                transparent: true, 
-                opacity: 0.15 
-            });
-            const wireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
-            indifferenceSurface.add(wireframe);
         }
         
         function createUserPoint(x, y, z, affordable, nearOptimal) {
@@ -976,7 +905,7 @@
             }
             
             const geometry = new THREE.SphereGeometry(1.5, 32, 32);
-            let color = affordable ? (nearOptimal ? 0xd69e2e : 0x319795) : 0xe53e3e;
+            let color = affordable ? (nearOptimal ? 0xffd93d : 0x4ecdc4) : 0xff4757;
             const material = new THREE.MeshPhongMaterial({ 
                 color: color,
                 emissive: color,
@@ -1009,8 +938,8 @@
             
             const geometry = new THREE.SphereGeometry(1.2, 32, 32);
             const material = new THREE.MeshPhongMaterial({
-                color: 0xd69e2e,
-                emissive: 0xd69e2e,
+                color: 0xffd93d,
+                emissive: 0xffd93d,
                 emissiveIntensity: 0.5
             });
             
@@ -1020,7 +949,7 @@
             
             // Ring around optimal
             const ringGeom = new THREE.TorusGeometry(2.5, 0.15, 16, 32);
-            const ringMat = new THREE.MeshBasicMaterial({ color: 0xd69e2e });
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xffd93d });
             const ring = new THREE.Mesh(ringGeom, ringMat);
             ring.rotation.x = Math.PI / 2;
             optimalPoint.add(ring);

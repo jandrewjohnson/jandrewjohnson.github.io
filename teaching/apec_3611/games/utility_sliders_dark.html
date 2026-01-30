@@ -11,8 +11,8 @@
         
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
@@ -25,15 +25,15 @@
         
         h1 {
             text-align: center;
-            font-weight: 400;
+            font-weight: 300;
             font-size: 1.8rem;
             margin-bottom: 8px;
-            color: #1a202c;
+            color: #fff;
         }
         
         .subtitle {
             text-align: center;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
@@ -51,11 +51,10 @@
         }
         
         .graph-container {
-            background: #ffffff;
+            background: #0f0f1a;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #2a2a4a;
             position: relative;
         }
         
@@ -77,7 +76,7 @@
         
         .utility-label {
             font-size: 1rem;
-            color: #718096;
+            color: #8892b0;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 4px;
@@ -86,20 +85,20 @@
         .utility-value {
             font-size: 4.5rem;
             font-weight: 700;
-            font-family: 'Monaco', 'Consolas', monospace;
-            color: #319795;
-            text-shadow: 0 0 30px rgba(49, 151, 149, 0.3);
+            font-family: 'Monaco', monospace;
+            color: #4ecdc4;
+            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
             transition: all 0.1s ease;
         }
         
         .utility-value.infeasible {
-            color: #e53e3e;
-            text-shadow: 0 0 30px rgba(229, 62, 62, 0.3);
+            color: #ff4757;
+            text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
         }
         
         .utility-value.optimal {
-            color: #d69e2e;
-            text-shadow: 0 0 40px rgba(214, 158, 46, 0.5);
+            color: #ffd93d;
+            text-shadow: 0 0 40px rgba(255, 217, 61, 0.7);
             animation: pulse 0.5s ease-in-out;
         }
         
@@ -119,7 +118,7 @@
             top: 140px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
             color: white;
             padding: 12px 30px;
             border-radius: 8px;
@@ -127,7 +126,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.5);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -148,15 +147,15 @@
             top: 140px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
+            color: #1a1a2e;
             padding: 12px 30px;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(214, 158, 46, 0.4);
+            box-shadow: 0 4px 20px rgba(255, 217, 61, 0.5);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -174,29 +173,28 @@
         }
         
         .control-panel {
-            background: #ffffff;
+            background: #0f0f1a;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #2a2a4a;
         }
         
         .control-panel.choice-panel {
-            border: 2px solid #319795;
-            background: linear-gradient(135deg, rgba(49, 151, 149, 0.05) 0%, #ffffff 100%);
+            border: 2px solid #4ecdc4;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, #0f0f1a 100%);
         }
         
         .panel-title {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 16px;
             font-weight: 600;
         }
         
         .panel-title.highlight {
-            color: #319795;
+            color: #4ecdc4;
             font-size: 0.95rem;
         }
         
@@ -214,30 +212,28 @@
             align-items: center;
             margin-bottom: 8px;
             font-size: 0.9rem;
-            color: #4a5568;
         }
         
         .slider-value {
-            background: #edf2f7;
+            background: #1a1a2e;
             padding: 4px 10px;
             border-radius: 4px;
-            font-family: 'Monaco', 'Consolas', monospace;
+            font-family: 'Monaco', monospace;
             font-size: 0.85rem;
-            color: #2b6cb0;
-            font-weight: 500;
+            color: #64ffda;
         }
         
         .slider-value.large {
             font-size: 1.1rem;
             padding: 6px 14px;
-            color: #319795;
+            color: #4ecdc4;
         }
         
         input[type="range"] {
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             outline: none;
             -webkit-appearance: none;
         }
@@ -247,9 +243,9 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #4299e1;
+            background: #64ffda;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.3);
             transition: transform 0.15s;
         }
         
@@ -264,15 +260,15 @@
         input[type="range"].choice-slider::-webkit-slider-thumb {
             width: 24px;
             height: 24px;
-            background: #319795;
-            box-shadow: 0 2px 12px rgba(49, 151, 149, 0.4);
+            background: #4ecdc4;
+            box-shadow: 0 2px 12px rgba(78, 205, 196, 0.5);
         }
         
         .info-box {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
             border-radius: 8px;
             padding: 16px;
-            border-left: 3px solid #4299e1;
+            border-left: 3px solid #64ffda;
         }
         
         .info-row {
@@ -283,21 +279,21 @@
         }
         
         .info-label {
-            color: #718096;
+            color: #8892b0;
         }
         
         .info-value {
-            font-family: 'Monaco', 'Consolas', monospace;
-            color: #1a202c;
+            font-family: 'Monaco', monospace;
+            color: #fff;
         }
         
         .info-value.highlight {
-            color: #2b6cb0;
+            color: #64ffda;
             font-weight: 600;
         }
         
         .info-value.warning {
-            color: #e53e3e;
+            color: #ff4757;
             font-weight: 600;
         }
         
@@ -313,7 +309,6 @@
             align-items: center;
             gap: 10px;
             font-size: 0.85rem;
-            color: #4a5568;
         }
         
         .legend-line {
@@ -329,15 +324,15 @@
         }
         
         .instructions {
-            background: linear-gradient(135deg, rgba(49, 151, 149, 0.08) 0%, rgba(66, 153, 225, 0.05) 100%);
-            border: 1px solid rgba(49, 151, 149, 0.3);
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(100, 255, 218, 0.05) 100%);
+            border: 1px solid rgba(78, 205, 196, 0.3);
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 0;
         }
         
         .instructions h3 {
-            color: #319795;
+            color: #4ecdc4;
             margin: 0 0 10px 0;
             font-size: 0.95rem;
             font-weight: 600;
@@ -347,20 +342,19 @@
             margin: 0;
             font-size: 0.85rem;
             line-height: 1.5;
-            color: #4a5568;
+            color: #ccd6f6;
         }
         
         .score-panel {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
             border-radius: 8px;
             padding: 16px;
             text-align: center;
-            border: 1px solid #e2e8f0;
         }
         
         .score-label {
             font-size: 0.8rem;
-            color: #718096;
+            color: #8892b0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -368,23 +362,23 @@
         .score-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #d69e2e;
-            font-family: 'Monaco', 'Consolas', monospace;
+            color: #ffd93d;
+            font-family: 'Monaco', monospace;
         }
         
         .score-optimal {
             font-size: 0.85rem;
-            color: #2b6cb0;
+            color: #64ffda;
             margin-top: 4px;
         }
         
         .reset-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
             border: none;
             border-radius: 8px;
-            color: #ffffff;
+            color: #0f0f1a;
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
@@ -395,16 +389,16 @@
         
         .reset-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(49, 151, 149, 0.4);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
         }
         
         .hint-btn {
             width: 100%;
             padding: 10px;
             background: transparent;
-            border: 2px solid #d69e2e;
+            border: 2px solid #ffd93d;
             border-radius: 8px;
-            color: #d69e2e;
+            color: #ffd93d;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
@@ -415,32 +409,30 @@
         }
         
         .hint-btn:hover {
-            background: rgba(214, 158, 46, 0.1);
+            background: rgba(255, 217, 61, 0.1);
         }
         
         .equation-box {
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
             padding: 12px 16px;
-            font-family: 'Monaco', 'Consolas', monospace;
+            font-family: 'Monaco', monospace;
             font-size: 0.85rem;
-            color: #4a5568;
+            color: #ccd6f6;
             text-align: center;
             margin-top: 8px;
-            border: 1px solid #e2e8f0;
         }
 
         .proximity-meter {
             margin-top: 12px;
             padding: 12px;
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
         }
 
         .proximity-label {
             font-size: 0.8rem;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
@@ -448,14 +440,14 @@
 
         .proximity-bar {
             height: 8px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             border-radius: 4px;
             overflow: hidden;
         }
 
         .proximity-fill {
             height: 100%;
-            background: linear-gradient(90deg, #e53e3e 0%, #d69e2e 50%, #319795 100%);
+            background: linear-gradient(90deg, #ff4757 0%, #ffd93d 50%, #4ecdc4 100%);
             border-radius: 4px;
             transition: width 0.1s ease;
         }
@@ -463,27 +455,26 @@
         .budget-bar {
             margin-top: 16px;
             padding: 12px;
-            background: #f7fafc;
+            background: #1a1a2e;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
         }
         
         .budget-label {
             font-size: 0.8rem;
-            color: #718096;
+            color: #8892b0;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
         }
         
         .budget-label .over {
-            color: #e53e3e;
+            color: #ff4757;
             font-weight: 600;
         }
         
         .budget-track {
             height: 12px;
-            background: #e2e8f0;
+            background: #2a2a4a;
             border-radius: 6px;
             overflow: hidden;
             position: relative;
@@ -491,13 +482,13 @@
         
         .budget-fill {
             height: 100%;
-            background: linear-gradient(90deg, #319795 0%, #38b2ac 100%);
+            background: linear-gradient(90deg, #4ecdc4 0%, #64ffda 100%);
             border-radius: 6px;
             transition: width 0.15s ease, background 0.15s ease;
         }
         
         .budget-fill.over {
-            background: linear-gradient(90deg, #e53e3e 0%, #fc8181 100%);
+            background: linear-gradient(90deg, #ff4757 0%, #ff6b6b 100%);
         }
         
         .budget-limit {
@@ -506,7 +497,7 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background: #1a202c;
+            background: #fff;
         }
     </style>
 </head>
@@ -632,15 +623,15 @@
                     
                     <div class="legend">
                         <div class="legend-item">
-                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <div class="legend-line" style="background: #ff6b6b;"></div>
                             <span>Budget Constraint</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-line" style="background: #319795;"></div>
+                            <div class="legend-line" style="background: #4ecdc4;"></div>
                             <span>Your Indifference Curve</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-dot" style="background: #319795;"></div>
+                            <div class="legend-dot" style="background: #4ecdc4;"></div>
                             <span>Your Bundle</span>
                         </div>
                     </div>
@@ -772,13 +763,13 @@
             successBanner.className = 'success-banner' + (nearOptimal ? ' visible' : '');
             
             // Clear canvas
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#0f0f1a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             const { width, height } = getGraphDimensions();
             
             // Draw grid
-            ctx.strokeStyle = '#edf2f7';
+            ctx.strokeStyle = '#1a1a2e';
             ctx.lineWidth = 1;
             
             for (let i = 0; i <= 8; i++) {
@@ -800,7 +791,7 @@
             const xIntercept = M / Px;
             const yIntercept = M / Py;
             
-            ctx.fillStyle = 'rgba(49, 151, 149, 0.08)';
+            ctx.fillStyle = 'rgba(78, 205, 196, 0.08)';
             ctx.beginPath();
             ctx.moveTo(toCanvasX(0), toCanvasY(0));
             ctx.lineTo(toCanvasX(0), toCanvasY(Math.min(yIntercept, maxY)));
@@ -819,7 +810,7 @@
             ctx.fill();
             
             // Draw axes
-            ctx.strokeStyle = '#a0aec0';
+            ctx.strokeStyle = '#4a4a6a';
             ctx.lineWidth = 2;
             
             ctx.beginPath();
@@ -829,7 +820,7 @@
             ctx.stroke();
             
             // Axis labels
-            ctx.fillStyle = '#718096';
+            ctx.fillStyle = '#8892b0';
             ctx.font = '14px Segoe UI';
             ctx.textAlign = 'center';
             
@@ -845,7 +836,7 @@
             }
             
             // Axis titles
-            ctx.fillStyle = '#4a5568';
+            ctx.fillStyle = '#ccd6f6';
             ctx.font = '16px Segoe UI';
             ctx.textAlign = 'center';
             ctx.fillText('Good X', margin.left + width / 2, canvas.height - 10);
@@ -857,7 +848,7 @@
             ctx.restore();
             
             // Draw budget constraint
-            ctx.strokeStyle = '#e53e3e';
+            ctx.strokeStyle = '#ff6b6b';
             ctx.lineWidth = 4;
             ctx.beginPath();
             ctx.moveTo(toCanvasX(0), toCanvasY(Math.min(yIntercept, maxY)));
@@ -866,7 +857,7 @@
             
             // Draw user's indifference curve
             if (userUtility > 0) {
-                ctx.strokeStyle = affordable ? '#319795' : '#e53e3e';
+                ctx.strokeStyle = affordable ? '#4ecdc4' : '#ff4757';
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 let started = false;
@@ -887,7 +878,7 @@
             // Draw optimal point and curve if hint is shown
             if (showOptimal) {
                 // Optimal indifference curve
-                ctx.strokeStyle = 'rgba(214, 158, 46, 0.6)';
+                ctx.strokeStyle = 'rgba(255, 217, 61, 0.6)';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 4]);
                 ctx.beginPath();
@@ -907,16 +898,16 @@
                 ctx.setLineDash([]);
                 
                 // Optimal point
-                ctx.fillStyle = '#d69e2e';
+                ctx.fillStyle = '#ffd93d';
                 ctx.beginPath();
                 ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 10, 0, Math.PI * 2);
                 ctx.fill();
                 
-                ctx.strokeStyle = '#ffffff';
+                ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
-                ctx.fillStyle = '#d69e2e';
+                ctx.fillStyle = '#ffd93d';
                 ctx.font = 'bold 12px Segoe UI';
                 ctx.textAlign = 'left';
                 ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toCanvasX(xStar) + 16, toCanvasY(yStar) + 4);
@@ -930,11 +921,11 @@
                     toCanvasX(userX), toCanvasY(userY), 25
                 );
                 if (affordable) {
-                    gradient.addColorStop(0, nearOptimal ? 'rgba(214, 158, 46, 0.5)' : 'rgba(49, 151, 149, 0.3)');
-                    gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                    gradient.addColorStop(0, nearOptimal ? 'rgba(255, 217, 61, 0.6)' : 'rgba(78, 205, 196, 0.4)');
+                    gradient.addColorStop(1, 'rgba(78, 205, 196, 0)');
                 } else {
-                    gradient.addColorStop(0, 'rgba(229, 62, 62, 0.4)');
-                    gradient.addColorStop(1, 'rgba(229, 62, 62, 0)');
+                    gradient.addColorStop(0, 'rgba(255, 71, 87, 0.5)');
+                    gradient.addColorStop(1, 'rgba(255, 71, 87, 0)');
                 }
                 
                 ctx.fillStyle = gradient;
@@ -943,17 +934,17 @@
                 ctx.fill();
                 
                 // Point
-                ctx.fillStyle = affordable ? (nearOptimal ? '#d69e2e' : '#319795') : '#e53e3e';
+                ctx.fillStyle = affordable ? (nearOptimal ? '#ffd93d' : '#4ecdc4') : '#ff4757';
                 ctx.beginPath();
                 ctx.arc(toCanvasX(userX), toCanvasY(userY), 10, 0, Math.PI * 2);
                 ctx.fill();
                 
-                ctx.strokeStyle = '#ffffff';
+                ctx.strokeStyle = '#fff';
                 ctx.lineWidth = 3;
                 ctx.stroke();
                 
                 // Label
-                ctx.fillStyle = '#1a202c';
+                ctx.fillStyle = '#fff';
                 ctx.font = 'bold 12px Segoe UI';
                 ctx.textAlign = 'left';
                 const labelX = userX < 60 ? toCanvasX(userX) + 16 : toCanvasX(userX) - 80;
@@ -961,7 +952,7 @@
             }
             
             // Budget constraint labels
-            ctx.fillStyle = '#e53e3e';
+            ctx.fillStyle = '#ff6b6b';
             ctx.font = '12px Segoe UI';
             
             if (xIntercept <= maxX) {

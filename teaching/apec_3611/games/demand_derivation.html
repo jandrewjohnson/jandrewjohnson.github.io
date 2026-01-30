@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriving Demand from Indifference Curves</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 300px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .graph-title {
+            text-align: center;
+            font-size: 1rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #ffffff;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.highlight {
+            border: 2px solid #e53e3e;
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.05) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        
+        .panel-title.price {
+            color: #e53e3e;
+        }
+        
+        .slider-group {
+            margin-bottom: 14px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        .slider-value.price {
+            color: #e53e3e;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+        }
+        
+        input[type="range"].price-slider::-webkit-slider-thumb {
+            background: #e53e3e;
+            box-shadow: 0 2px 6px rgba(229, 62, 62, 0.4);
+        }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 3px solid #319795;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        .info-label {
+            color: #718096;
+        }
+        
+        .info-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+        }
+        
+        .info-value.highlight {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(49, 151, 149, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #e53e3e;
+            color: #e53e3e;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(229, 62, 62, 0.1);
+        }
+        
+        .btn-animate {
+            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
+            color: #ffffff;
+        }
+        
+        .btn-animate.running {
+            background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+            color: white;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            padding: 6px 14px;
+            background: #edf2f7;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #718096;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+            color: #ffffff;
+            font-weight: 600;
+            border-color: transparent;
+        }
+        
+        .explanation {
+            background: rgba(49, 151, 149, 0.08);
+            border: 1px solid rgba(49, 151, 149, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+        
+        .explanation strong {
+            color: #319795;
+        }
+        
+        .price-history {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .price-point {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.02);
+            margin-bottom: 3px;
+            border-radius: 4px;
+        }
+        
+        .price-point:hover {
+            background: rgba(49, 151, 149, 0.1);
+        }
+        
+        .arrow-indicator {
+            text-align: center;
+            font-size: 2rem;
+            color: #319795;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Deriving the Demand Curve</h1>
+        <p class="subtitle">See how changing prices trace out the demand curve through optimal consumption choices</p>
+        
+        <div class="step-indicator">
+            <div class="step active">1. Set Preferences</div>
+            <div class="step">2. Vary Price of X</div>
+            <div class="step">3. Trace Demand Curve</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="graph-title">Indifference Curves & Budget Constraint</div>
+                <canvas id="ic-graph" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <div class="graph-title">Demand Curve for Good X</div>
+                <canvas id="demand-graph" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title price">🎯 Price of X (Vary This!)</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price Pₓ</span>
+                            <span class="slider-value price" id="px-value">$2.00</span>
+                        </div>
+                        <input type="range" class="price-slider" id="px" min="0.5" max="8" value="2" step="0.1">
+                    </div>
+                    
+                    <button class="btn btn-animate" id="animate-btn" onclick="toggleAnimation()">
+                        ▶️ Animate Price Change
+                    </button>
+                    
+                    <button class="btn btn-secondary" onclick="clearHistory()">
+                        🗑️ Clear Traced Points
+                    </button>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Budget Parameters</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Income (M)</span>
+                            <span class="slider-value" id="income-value">$100</span>
+                        </div>
+                        <input type="range" id="income" min="40" max="200" value="100">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price of Y (Pᵧ)</span>
+                            <span class="slider-value" id="py-value">$2.00</span>
+                        </div>
+                        <input type="range" id="py" min="0.5" max="8" value="2" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Preferences (Cobb-Douglas)</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Preference α</span>
+                            <span class="slider-value" id="alpha-value">0.50</span>
+                        </div>
+                        <input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01">
+                    </div>
+                    
+                    <div class="equation-box">
+                        U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Current Optimal Bundle</div>
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-label">X* (quantity)</span>
+                            <span class="info-value highlight" id="opt-x">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Y* (quantity)</span>
+                            <span class="info-value" id="opt-y">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Utility</span>
+                            <span class="info-value" id="opt-u">25.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="equation-box" style="margin-top: 10px;">
+                        X* = αM / Pₓ = <span id="demand-formula">0.5 × 100 / 2</span>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Explanation</div>
+                    <div class="explanation">
+                        <strong>Key Insight:</strong> As the price of X changes, the budget constraint pivots, and the consumer chooses a new optimal bundle. Each optimal X* at each price Pₓ gives us one point on the demand curve!
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <span>Budget Constraint</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #319795;"></div>
+                            <span>Indifference Curve</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: rgba(229, 62, 62, 0.3);"></div>
+                            <span>Previous Budgets</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #d69e2e;"></div>
+                            <span>Optimal Bundle</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #d69e2e;"></div>
+                            <span>Price-Consumption Path</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const icCanvas = document.getElementById('ic-graph');
+        const demandCanvas = document.getElementById('demand-graph');
+        const icCtx = icCanvas.getContext('2d');
+        const demandCtx = demandCanvas.getContext('2d');
+        
+        // Sliders
+        const pxSlider = document.getElementById('px');
+        const pySlider = document.getElementById('py');
+        const incomeSlider = document.getElementById('income');
+        const alphaSlider = document.getElementById('alpha');
+        
+        // State
+        let demandPoints = [];
+        let budgetHistory = [];
+        let isAnimating = false;
+        let animationId = null;
+        
+        // Graph parameters
+        const margin = { top: 30, right: 30, bottom: 50, left: 60 };
+        
+        function getGraphDims(canvas) {
+            return {
+                width: canvas.width - margin.left - margin.right,
+                height: canvas.height - margin.top - margin.bottom
+            };
+        }
+        
+        function calculateOptimal(M, Px, Py, alpha) {
+            const xStar = (alpha * M) / Px;
+            const yStar = ((1 - alpha) * M) / Py;
+            const utility = Math.pow(xStar, alpha) * Math.pow(yStar, 1 - alpha);
+            return { xStar, yStar, utility };
+        }
+        
+        function getIndifferenceY(x, utility, alpha) {
+            if (x <= 0) return null;
+            return Math.pow(utility / Math.pow(x, alpha), 1 / (1 - alpha));
+        }
+        
+        function drawICGraph() {
+            const M = parseFloat(incomeSlider.value);
+            const Px = parseFloat(pxSlider.value);
+            const Py = parseFloat(pySlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            
+            const { xStar, yStar, utility } = calculateOptimal(M, Px, Py, alpha);
+            
+            // Update displays
+            document.getElementById('px-value').textContent = `$${Px.toFixed(2)}`;
+            document.getElementById('py-value').textContent = `$${Py.toFixed(2)}`;
+            document.getElementById('income-value').textContent = `$${M}`;
+            document.getElementById('alpha-value').textContent = alpha.toFixed(2);
+            document.getElementById('opt-x').textContent = xStar.toFixed(1);
+            document.getElementById('opt-y').textContent = yStar.toFixed(1);
+            document.getElementById('opt-u').textContent = utility.toFixed(1);
+            document.getElementById('demand-formula').textContent = `${alpha.toFixed(2)} × ${M} / ${Px.toFixed(1)} = ${xStar.toFixed(1)}`;
+            
+            // Clear canvas
+            icCtx.fillStyle = '#ffffff';
+            icCtx.fillRect(0, 0, icCanvas.width, icCanvas.height);
+            
+            const { width, height } = getGraphDims(icCanvas);
+            const maxX = 80;
+            const maxY = 80;
+            
+            const toX = (x) => margin.left + (x / maxX) * width;
+            const toY = (y) => margin.top + height - (y / maxY) * height;
+            
+            // Draw grid
+            icCtx.strokeStyle = '#edf2f7';
+            icCtx.lineWidth = 1;
+            for (let i = 0; i <= 8; i++) {
+                icCtx.beginPath();
+                icCtx.moveTo(toX(i * 10), margin.top);
+                icCtx.lineTo(toX(i * 10), margin.top + height);
+                icCtx.stroke();
+                
+                icCtx.beginPath();
+                icCtx.moveTo(margin.left, toY(i * 10));
+                icCtx.lineTo(margin.left + width, toY(i * 10));
+                icCtx.stroke();
+            }
+            
+            // Draw axes
+            icCtx.strokeStyle = '#a0aec0';
+            icCtx.lineWidth = 2;
+            icCtx.beginPath();
+            icCtx.moveTo(margin.left, margin.top);
+            icCtx.lineTo(margin.left, margin.top + height);
+            icCtx.lineTo(margin.left + width, margin.top + height);
+            icCtx.stroke();
+            
+            // Axis labels
+            icCtx.fillStyle = '#718096';
+            icCtx.font = '12px Segoe UI';
+            icCtx.textAlign = 'center';
+            for (let i = 0; i <= 8; i++) {
+                icCtx.fillText(i * 10, toX(i * 10), margin.top + height + 20);
+            }
+            icCtx.textAlign = 'right';
+            for (let i = 0; i <= 8; i++) {
+                icCtx.fillText(i * 10, margin.left - 8, toY(i * 10) + 4);
+            }
+            
+            // Axis titles
+            icCtx.fillStyle = '#4a5568';
+            icCtx.font = '14px Segoe UI';
+            icCtx.textAlign = 'center';
+            icCtx.fillText('Good X', margin.left + width / 2, icCanvas.height - 10);
+            
+            icCtx.save();
+            icCtx.translate(15, margin.top + height / 2);
+            icCtx.rotate(-Math.PI / 2);
+            icCtx.fillText('Good Y', 0, 0);
+            icCtx.restore();
+            
+            // Draw previous budget constraints (faded)
+            icCtx.strokeStyle = 'rgba(229, 62, 62, 0.2)';
+            icCtx.lineWidth = 1;
+            budgetHistory.forEach(b => {
+                const xInt = Math.min(b.M / b.Px, maxX);
+                const yInt = Math.min(b.M / b.Py, maxY);
+                icCtx.beginPath();
+                icCtx.moveTo(toX(0), toY(yInt));
+                icCtx.lineTo(toX(xInt), toY(0));
+                icCtx.stroke();
+            });
+            
+            // Draw price-consumption path
+            if (demandPoints.length > 1) {
+                icCtx.strokeStyle = '#d69e2e';
+                icCtx.lineWidth = 2;
+                icCtx.setLineDash([5, 3]);
+                icCtx.beginPath();
+                demandPoints.forEach((p, i) => {
+                    if (i === 0) icCtx.moveTo(toX(p.x), toY(p.y));
+                    else icCtx.lineTo(toX(p.x), toY(p.y));
+                });
+                icCtx.stroke();
+                icCtx.setLineDash([]);
+            }
+            
+            // Draw previous optimal points
+            demandPoints.forEach((p, i) => {
+                if (i < demandPoints.length - 1) {
+                    icCtx.fillStyle = 'rgba(214, 158, 46, 0.4)';
+                    icCtx.beginPath();
+                    icCtx.arc(toX(p.x), toY(p.y), 5, 0, Math.PI * 2);
+                    icCtx.fill();
+                }
+            });
+            
+            // Draw current budget constraint
+            const xIntercept = Math.min(M / Px, maxX);
+            const yIntercept = Math.min(M / Py, maxY);
+            
+            icCtx.strokeStyle = '#e53e3e';
+            icCtx.lineWidth = 3;
+            icCtx.beginPath();
+            icCtx.moveTo(toX(0), toY(yIntercept));
+            icCtx.lineTo(toX(xIntercept), toY(0));
+            icCtx.stroke();
+            
+            // Draw indifference curve
+            icCtx.strokeStyle = '#319795';
+            icCtx.lineWidth = 3;
+            icCtx.beginPath();
+            let started = false;
+            for (let x = 0.5; x <= maxX; x += 0.3) {
+                const y = getIndifferenceY(x, utility, alpha);
+                if (y !== null && y <= maxY && y >= 0) {
+                    if (!started) {
+                        icCtx.moveTo(toX(x), toY(y));
+                        started = true;
+                    } else {
+                        icCtx.lineTo(toX(x), toY(y));
+                    }
+                }
+            }
+            icCtx.stroke();
+            
+            // Draw optimal point
+            if (xStar <= maxX && yStar <= maxY) {
+                // Glow
+                const gradient = icCtx.createRadialGradient(toX(xStar), toY(yStar), 0, toX(xStar), toY(yStar), 20);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.4)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                icCtx.fillStyle = gradient;
+                icCtx.beginPath();
+                icCtx.arc(toX(xStar), toY(yStar), 20, 0, Math.PI * 2);
+                icCtx.fill();
+                
+                // Point
+                icCtx.fillStyle = '#d69e2e';
+                icCtx.beginPath();
+                icCtx.arc(toX(xStar), toY(yStar), 8, 0, Math.PI * 2);
+                icCtx.fill();
+                icCtx.strokeStyle = '#ffffff';
+                icCtx.lineWidth = 2;
+                icCtx.stroke();
+                
+                // Label
+                icCtx.fillStyle = '#1a202c';
+                icCtx.font = 'bold 11px Segoe UI';
+                icCtx.textAlign = 'left';
+                icCtx.fillText(`(${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toX(xStar) + 12, toY(yStar) - 5);
+            }
+            
+            // Draw intercept labels
+            icCtx.fillStyle = '#e53e3e';
+            icCtx.font = '11px Segoe UI';
+            icCtx.textAlign = 'center';
+            if (xIntercept <= maxX) {
+                icCtx.fillText(`M/Pₓ=${xIntercept.toFixed(0)}`, toX(xIntercept), toY(0) + 35);
+            }
+            icCtx.textAlign = 'left';
+            if (yIntercept <= maxY) {
+                icCtx.fillText(`M/Pᵧ=${yIntercept.toFixed(0)}`, toX(0) + 5, toY(yIntercept) - 8);
+            }
+        }
+        
+        function drawDemandGraph() {
+            const M = parseFloat(incomeSlider.value);
+            const Px = parseFloat(pxSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            
+            const { xStar } = calculateOptimal(M, Px, parseFloat(pySlider.value), alpha);
+            
+            // Clear canvas
+            demandCtx.fillStyle = '#ffffff';
+            demandCtx.fillRect(0, 0, demandCanvas.width, demandCanvas.height);
+            
+            const { width, height } = getGraphDims(demandCanvas);
+            const maxX = 80;
+            const maxP = 10;
+            
+            const toX = (x) => margin.left + (x / maxX) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Draw grid
+            demandCtx.strokeStyle = '#edf2f7';
+            demandCtx.lineWidth = 1;
+            for (let i = 0; i <= 8; i++) {
+                demandCtx.beginPath();
+                demandCtx.moveTo(toX(i * 10), margin.top);
+                demandCtx.lineTo(toX(i * 10), margin.top + height);
+                demandCtx.stroke();
+            }
+            for (let i = 0; i <= 10; i++) {
+                demandCtx.beginPath();
+                demandCtx.moveTo(margin.left, toY(i));
+                demandCtx.lineTo(margin.left + width, toY(i));
+                demandCtx.stroke();
+            }
+            
+            // Draw axes
+            demandCtx.strokeStyle = '#a0aec0';
+            demandCtx.lineWidth = 2;
+            demandCtx.beginPath();
+            demandCtx.moveTo(margin.left, margin.top);
+            demandCtx.lineTo(margin.left, margin.top + height);
+            demandCtx.lineTo(margin.left + width, margin.top + height);
+            demandCtx.stroke();
+            
+            // Axis labels
+            demandCtx.fillStyle = '#718096';
+            demandCtx.font = '12px Segoe UI';
+            demandCtx.textAlign = 'center';
+            for (let i = 0; i <= 8; i++) {
+                demandCtx.fillText(i * 10, toX(i * 10), margin.top + height + 20);
+            }
+            demandCtx.textAlign = 'right';
+            for (let i = 0; i <= 10; i += 2) {
+                demandCtx.fillText(`$${i}`, margin.left - 8, toY(i) + 4);
+            }
+            
+            // Axis titles
+            demandCtx.fillStyle = '#4a5568';
+            demandCtx.font = '14px Segoe UI';
+            demandCtx.textAlign = 'center';
+            demandCtx.fillText('Quantity of X Demanded', margin.left + width / 2, demandCanvas.height - 10);
+            
+            demandCtx.save();
+            demandCtx.translate(15, margin.top + height / 2);
+            demandCtx.rotate(-Math.PI / 2);
+            demandCtx.fillText('Price of X (Pₓ)', 0, 0);
+            demandCtx.restore();
+            
+            // Draw theoretical demand curve (X* = αM/Px)
+            demandCtx.strokeStyle = 'rgba(49, 151, 149, 0.3)';
+            demandCtx.lineWidth = 2;
+            demandCtx.setLineDash([5, 5]);
+            demandCtx.beginPath();
+            for (let p = 0.5; p <= maxP; p += 0.1) {
+                const x = (alpha * M) / p;
+                if (x <= maxX) {
+                    if (p === 0.5) demandCtx.moveTo(toX(x), toY(p));
+                    else demandCtx.lineTo(toX(x), toY(p));
+                }
+            }
+            demandCtx.stroke();
+            demandCtx.setLineDash([]);
+            
+            // Draw traced demand points
+            if (demandPoints.length > 1) {
+                // Connect with line
+                demandCtx.strokeStyle = '#e53e3e';
+                demandCtx.lineWidth = 3;
+                demandCtx.beginPath();
+                
+                // Sort by price for smooth line
+                const sortedPoints = [...demandPoints].sort((a, b) => a.px - b.px);
+                sortedPoints.forEach((p, i) => {
+                    if (i === 0) demandCtx.moveTo(toX(p.x), toY(p.px));
+                    else demandCtx.lineTo(toX(p.x), toY(p.px));
+                });
+                demandCtx.stroke();
+            }
+            
+            // Draw individual demand points
+            demandPoints.forEach((p, i) => {
+                demandCtx.fillStyle = 'rgba(229, 62, 62, 0.6)';
+                demandCtx.beginPath();
+                demandCtx.arc(toX(p.x), toY(p.px), 5, 0, Math.PI * 2);
+                demandCtx.fill();
+            });
+            
+            // Draw current point
+            if (xStar <= maxX && Px <= maxP) {
+                // Glow
+                const gradient = demandCtx.createRadialGradient(toX(xStar), toY(Px), 0, toX(xStar), toY(Px), 20);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.4)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                demandCtx.fillStyle = gradient;
+                demandCtx.beginPath();
+                demandCtx.arc(toX(xStar), toY(Px), 20, 0, Math.PI * 2);
+                demandCtx.fill();
+                
+                // Point
+                demandCtx.fillStyle = '#d69e2e';
+                demandCtx.beginPath();
+                demandCtx.arc(toX(xStar), toY(Px), 8, 0, Math.PI * 2);
+                demandCtx.fill();
+                demandCtx.strokeStyle = '#ffffff';
+                demandCtx.lineWidth = 2;
+                demandCtx.stroke();
+                
+                // Dashed lines to axes
+                demandCtx.strokeStyle = 'rgba(214, 158, 46, 0.5)';
+                demandCtx.lineWidth = 1;
+                demandCtx.setLineDash([4, 4]);
+                
+                demandCtx.beginPath();
+                demandCtx.moveTo(toX(xStar), toY(Px));
+                demandCtx.lineTo(toX(xStar), toY(0));
+                demandCtx.stroke();
+                
+                demandCtx.beginPath();
+                demandCtx.moveTo(toX(xStar), toY(Px));
+                demandCtx.lineTo(toX(0), toY(Px));
+                demandCtx.stroke();
+                
+                demandCtx.setLineDash([]);
+                
+                // Label
+                demandCtx.fillStyle = '#1a202c';
+                demandCtx.font = 'bold 11px Segoe UI';
+                demandCtx.textAlign = 'left';
+                demandCtx.fillText(`(${xStar.toFixed(1)}, $${Px.toFixed(2)})`, toX(xStar) + 12, toY(Px) - 5);
+            }
+            
+            // Label for demand curve
+            demandCtx.fillStyle = '#e53e3e';
+            demandCtx.font = 'bold 12px Segoe UI';
+            demandCtx.textAlign = 'left';
+            demandCtx.fillText('Demand Curve', toX(50), toY(1.5));
+        }
+        
+        function recordPoint() {
+            const M = parseFloat(incomeSlider.value);
+            const Px = parseFloat(pxSlider.value);
+            const Py = parseFloat(pySlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            
+            const { xStar, yStar } = calculateOptimal(M, Px, Py, alpha);
+            
+            // Check if we already have a point at this price
+            const existing = demandPoints.findIndex(p => Math.abs(p.px - Px) < 0.05);
+            if (existing === -1) {
+                demandPoints.push({ x: xStar, y: yStar, px: Px });
+                budgetHistory.push({ M, Px, Py });
+            }
+        }
+        
+        function updateGraphs() {
+            recordPoint();
+            drawICGraph();
+            drawDemandGraph();
+            updateStepIndicator();
+        }
+        
+        function updateStepIndicator() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((s, i) => s.classList.remove('active'));
+            
+            if (demandPoints.length <= 1) {
+                steps[0].classList.add('active');
+            } else if (demandPoints.length < 5) {
+                steps[1].classList.add('active');
+            } else {
+                steps[2].classList.add('active');
+            }
+        }
+        
+        function clearHistory() {
+            demandPoints = [];
+            budgetHistory = [];
+            updateGraphs();
+        }
+        
+        let animationDirection = 1;
+        function toggleAnimation() {
+            const btn = document.getElementById('animate-btn');
+            
+            if (isAnimating) {
+                isAnimating = false;
+                btn.classList.remove('running');
+                btn.textContent = '▶️ Animate Price Change';
+                if (animationId) cancelAnimationFrame(animationId);
+            } else {
+                isAnimating = true;
+                btn.classList.add('running');
+                btn.textContent = '⏹️ Stop Animation';
+                animatePrice();
+            }
+        }
+        
+        function animatePrice() {
+            if (!isAnimating) return;
+            
+            let px = parseFloat(pxSlider.value);
+            px += animationDirection * 0.05;
+            
+            if (px >= 8) {
+                px = 8;
+                animationDirection = -1;
+            } else if (px <= 0.5) {
+                px = 0.5;
+                animationDirection = 1;
+            }
+            
+            pxSlider.value = px;
+            updateGraphs();
+            
+            animationId = requestAnimationFrame(animatePrice);
+        }
+        
+        // Event listeners
+        pxSlider.addEventListener('input', updateGraphs);
+        pySlider.addEventListener('input', () => { clearHistory(); updateGraphs(); });
+        incomeSlider.addEventListener('input', () => { clearHistory(); updateGraphs(); });
+        alphaSlider.addEventListener('input', () => { clearHistory(); updateGraphs(); });
+        
+        // Initial draw
+        updateGraphs();
+    </script>
+</body>
+</html>

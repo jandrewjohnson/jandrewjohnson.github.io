@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggregating Individual Demand to Market Demand</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1500px; margin: 0 auto; }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1400px) {
+            .main-content {
+                grid-template-columns: 300px 1fr 1fr;
+            }
+            .ic-panels {
+                grid-column: span 3;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            .controls-column {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .controls-column, .ic-panels {
+                grid-column: span 1;
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .controls-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .graph-container.small {
+            padding: 12px;
+        }
+        
+        .graph-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .graph-title .highlight {
+            color: #d69e2e;
+        }
+        
+        .graph-title .alice {
+            color: #e53e3e;
+        }
+        
+        .graph-title .bob {
+            color: #319795;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.price-panel {
+            border: 2px solid #e53e3e;
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.03) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .panel-title.price { color: #e53e3e; }
+        
+        .consumer-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #319795;
+        }
+        
+        .consumer-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .consumer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .consumer-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1a202c;
+        }
+        
+        .consumer-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+        
+        .consumer-demand {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .slider-group { margin-bottom: 10px; }
+        .slider-group:last-child { margin-bottom: 0; }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+        }
+        
+        input[type="range"].price-slider::-webkit-slider-thumb {
+            background: #e53e3e;
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 2px 6px rgba(229, 62, 62, 0.4);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: all 0.15s;
+        }
+        
+        .btn-animate {
+            background: linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%);
+            color: #1a202c;
+        }
+        
+        .btn-animate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
+        }
+        
+        .btn-animate.running {
+            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #ffffff;
+            border: 2px solid #4299e1;
+            color: #4299e1;
+        }
+        
+        .btn-secondary:hover {
+            background: #ebf8ff;
+        }
+        
+        .market-summary {
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.1) 0%, rgba(236, 201, 75, 0.05) 100%);
+            border: 1px solid rgba(214, 158, 46, 0.3);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .market-summary .title {
+            font-size: 0.8rem;
+            color: #975a16;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .market-summary .equation {
+            font-size: 1.1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+        }
+        
+        .market-summary .equation .agent1 { color: #e53e3e; font-weight: 600; }
+        .market-summary .equation .agent2 { color: #319795; font-weight: 600; }
+        .market-summary .equation .total { color: #d69e2e; font-weight: 700; }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .ic-panels {
+            display: contents;
+        }
+        
+        @media (min-width: 1401px) {
+            .ic-panel {
+                /* Individual IC panels in main grid */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 From Individual to Market Demand</h1>
+        <p class="subtitle">Two consumers' demand curves sum horizontally to create the market demand curve</p>
+        
+        <div class="main-content">
+            <div class="controls-column">
+                <div class="control-panel price-panel">
+                    <div class="panel-title price">🎯 Market Price</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price Pₓ</span>
+                            <span class="slider-value" style="color: #e53e3e;" id="px-display">$2.00</span>
+                        </div>
+                        <input type="range" class="price-slider" id="px" min="0.5" max="8" value="2" step="0.1">
+                    </div>
+                    <button class="btn btn-animate" id="animate-btn" onclick="toggleAnimation()">
+                        ▶️ Animate Price
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHistory()">
+                        🗑️ Clear Points
+                    </button>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">👥 Two Consumers</div>
+                    
+                    <div class="consumer-card" style="border-left-color: #e53e3e;">
+                        <div class="consumer-header">
+                            <div class="consumer-name">
+                                <div class="consumer-color" style="background: #e53e3e;"></div>
+                                Alice
+                            </div>
+                            <div class="consumer-demand">Q = <span id="demand-alice">25.0</span></div>
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Income M₁</span>
+                                <span class="slider-value" id="income1-display">$100</span>
+                            </div>
+                            <input type="range" id="income1" min="20" max="200" value="100">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Preference α₁</span>
+                                <span class="slider-value" id="alpha1-display">0.50</span>
+                            </div>
+                            <input type="range" id="alpha1" min="0.1" max="0.9" step="0.05" value="0.5">
+                        </div>
+                    </div>
+                    
+                    <div class="consumer-card" style="border-left-color: #319795;">
+                        <div class="consumer-header">
+                            <div class="consumer-name">
+                                <div class="consumer-color" style="background: #319795;"></div>
+                                Bob
+                            </div>
+                            <div class="consumer-demand">Q = <span id="demand-bob">30.0</span></div>
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Income M₂</span>
+                                <span class="slider-value" id="income2-display">$120</span>
+                            </div>
+                            <input type="range" id="income2" min="20" max="200" value="120">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Preference α₂</span>
+                                <span class="slider-value" id="alpha2-display">0.50</span>
+                            </div>
+                            <input type="range" id="alpha2" min="0.1" max="0.9" step="0.05" value="0.5">
+                        </div>
+                    </div>
+                    
+                    <div class="market-summary">
+                        <div class="title">Market Demand</div>
+                        <div class="equation">
+                            <span class="agent1" id="q1">25.0</span> + 
+                            <span class="agent2" id="q2">30.0</span> = 
+                            <span class="total" id="qtotal">55.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="equation-box">
+                        Q<sub>market</sub>(P) = Q₁(P) + Q₂(P)<br>
+                        <span style="color: #718096;">= α₁M₁/P + α₂M₂/P</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="graph-container small ic-panel">
+                <div class="graph-title"><span class="alice">Alice's</span> Budget & IC</div>
+                <canvas id="alice-ic" width="350" height="350"></canvas>
+            </div>
+            
+            <div class="graph-container small ic-panel">
+                <div class="graph-title"><span class="bob">Bob's</span> Budget & IC</div>
+                <canvas id="bob-ic" width="350" height="350"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <div class="graph-title">Demand Curves → <span class="highlight">Market Demand</span></div>
+                <canvas id="demand-graph" width="450" height="450"></canvas>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #e53e3e;"></div>
+                        <span>Alice</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #319795;"></div>
+                        <span>Bob</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #d69e2e;"></div>
+                        <span>Market</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const aliceCanvas = document.getElementById('alice-ic');
+        const bobCanvas = document.getElementById('bob-ic');
+        const demandCanvas = document.getElementById('demand-graph');
+        const aliceCtx = aliceCanvas.getContext('2d');
+        const bobCtx = bobCanvas.getContext('2d');
+        const demandCtx = demandCanvas.getContext('2d');
+        
+        let demandHistory = [];
+        let isAnimating = false;
+        let animationId = null;
+        
+        const margin = { top: 25, right: 25, bottom: 45, left: 50 };
+        const Py = 2; // Fixed price of Y
+        
+        function getParams() {
+            return {
+                Px: parseFloat(document.getElementById('px').value),
+                M1: parseFloat(document.getElementById('income1').value),
+                M2: parseFloat(document.getElementById('income2').value),
+                alpha1: parseFloat(document.getElementById('alpha1').value),
+                alpha2: parseFloat(document.getElementById('alpha2').value)
+            };
+        }
+        
+        function getDemand1(Px, M1, alpha1) {
+            return (alpha1 * M1) / Px;
+        }
+        
+        function getDemand2(Px, M2, alpha2) {
+            return (alpha2 * M2) / Px;
+        }
+        
+        function getOptimalY(M, Px, Py, alpha) {
+            return ((1 - alpha) * M) / Py;
+        }
+        
+        function getUtility(x, y, alpha) {
+            if (x <= 0 || y <= 0) return 0;
+            return Math.pow(x, alpha) * Math.pow(y, 1 - alpha);
+        }
+        
+        function getIndifferenceY(x, utility, alpha) {
+            if (x <= 0 || utility <= 0) return null;
+            return Math.pow(utility / Math.pow(x, alpha), 1 / (1 - alpha));
+        }
+        
+        function drawICGraph(ctx, canvas, M, alpha, color, name) {
+            const { Px } = getParams();
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const width = canvas.width - margin.left - margin.right;
+            const height = canvas.height - margin.top - margin.bottom;
+            const maxX = 80;
+            const maxY = 80;
+            
+            const toX = (x) => margin.left + (x / maxX) * width;
+            const toY = (y) => margin.top + height - (y / maxY) * height;
+            
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(toX(i * 20), margin.top);
+                ctx.lineTo(toX(i * 20), margin.top + height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(margin.left, toY(i * 20));
+                ctx.lineTo(margin.left + width, toY(i * 20));
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '11px Segoe UI';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) ctx.fillText(i * 20, toX(i * 20), margin.top + height + 16);
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) ctx.fillText(i * 20, margin.left - 6, toY(i * 20) + 4);
+            
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '12px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Good X', margin.left + width / 2, canvas.height - 8);
+            ctx.save();
+            ctx.translate(12, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Good Y', 0, 0);
+            ctx.restore();
+            
+            // Budget constraint
+            const xInt = Math.min(M / Px, maxX);
+            const yInt = Math.min(M / Py, maxY);
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(toX(0), toY(yInt));
+            ctx.lineTo(toX(xInt), toY(0));
+            ctx.stroke();
+            
+            // Optimal point
+            const xStar = (alpha * M) / Px;
+            const yStar = ((1 - alpha) * M) / Py;
+            const utility = getUtility(xStar, yStar, alpha);
+            
+            // Indifference curve
+            ctx.strokeStyle = '#805ad5';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let started = false;
+            for (let x = 0.5; x <= maxX; x += 0.3) {
+                const y = getIndifferenceY(x, utility, alpha);
+                if (y !== null && y > 0 && y <= maxY) {
+                    if (!started) { ctx.moveTo(toX(x), toY(y)); started = true; }
+                    else ctx.lineTo(toX(x), toY(y));
+                }
+            }
+            ctx.stroke();
+            
+            // Optimal point
+            if (xStar <= maxX && yStar <= maxY) {
+                ctx.fillStyle = '#d69e2e';
+                ctx.beginPath();
+                ctx.arc(toX(xStar), toY(yStar), 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Dashed lines to axes
+                ctx.strokeStyle = 'rgba(214, 158, 46, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(xStar), toY(yStar));
+                ctx.lineTo(toX(xStar), toY(0));
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(toX(xStar), toY(yStar));
+                ctx.lineTo(toX(0), toY(yStar));
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Label
+                ctx.fillStyle = '#1a202c';
+                ctx.font = '10px Segoe UI';
+                ctx.textAlign = 'left';
+                ctx.fillText(`(${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toX(xStar) + 10, toY(yStar) - 5);
+            }
+        }
+        
+        function drawDemandGraph() {
+            const { Px, M1, M2, alpha1, alpha2 } = getParams();
+            const ctx = demandCtx;
+            const canvas = demandCanvas;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const width = canvas.width - margin.left - margin.right;
+            const height = canvas.height - margin.top - margin.bottom;
+            const maxQ = 150;
+            const maxP = 10;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 6; i++) {
+                ctx.beginPath();
+                ctx.moveTo(toX(i * 25), margin.top);
+                ctx.lineTo(toX(i * 25), margin.top + height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, toY(i));
+                ctx.lineTo(margin.left + width, toY(i));
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '12px Segoe UI';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 6; i++) ctx.fillText(i * 25, toX(i * 25), margin.top + height + 18);
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 10; i += 2) ctx.fillText(`$${i}`, margin.left - 8, toY(i) + 4);
+            
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '13px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Quantity (Q)', margin.left + width / 2, canvas.height - 10);
+            ctx.save();
+            ctx.translate(14, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Price (Pₓ)', 0, 0);
+            ctx.restore();
+            
+            // Alice's demand curve
+            ctx.strokeStyle = '#e53e3e';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let p = 0.5; p <= maxP; p += 0.1) {
+                const q = getDemand1(p, M1, alpha1);
+                if (q <= maxQ) {
+                    if (p === 0.5) ctx.moveTo(toX(q), toY(p));
+                    else ctx.lineTo(toX(q), toY(p));
+                }
+            }
+            ctx.stroke();
+            
+            // Bob's demand curve
+            ctx.strokeStyle = '#319795';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let p = 0.5; p <= maxP; p += 0.1) {
+                const q = getDemand2(p, M2, alpha2);
+                if (q <= maxQ) {
+                    if (p === 0.5) ctx.moveTo(toX(q), toY(p));
+                    else ctx.lineTo(toX(q), toY(p));
+                }
+            }
+            ctx.stroke();
+            
+            // Traced market demand
+            if (demandHistory.length > 1) {
+                ctx.strokeStyle = '#d69e2e';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                const sorted = [...demandHistory].sort((a, b) => a.price - b.price);
+                sorted.forEach((point, i) => {
+                    if (point.quantity <= maxQ) {
+                        if (i === 0) ctx.moveTo(toX(point.quantity), toY(point.price));
+                        else ctx.lineTo(toX(point.quantity), toY(point.price));
+                    }
+                });
+                ctx.stroke();
+            }
+            
+            // Previous points
+            demandHistory.forEach(point => {
+                if (point.quantity <= maxQ) {
+                    ctx.fillStyle = 'rgba(214, 158, 46, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(toX(point.quantity), toY(point.price), 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Current price line
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(margin.left, toY(Px));
+            ctx.lineTo(margin.left + width, toY(Px));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Points at current price
+            const q1 = getDemand1(Px, M1, alpha1);
+            const q2 = getDemand2(Px, M2, alpha2);
+            const marketQ = q1 + q2;
+            
+            // Alice point
+            if (q1 <= maxQ) {
+                ctx.fillStyle = '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(toX(q1), toY(Px), 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            
+            // Bob point
+            if (q2 <= maxQ) {
+                ctx.fillStyle = '#319795';
+                ctx.beginPath();
+                ctx.arc(toX(q2), toY(Px), 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            
+            // Market point
+            if (marketQ <= maxQ) {
+                ctx.fillStyle = '#d69e2e';
+                ctx.beginPath();
+                ctx.arc(toX(marketQ), toY(Px), 9, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Dashed lines
+                ctx.strokeStyle = 'rgba(214, 158, 46, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(marketQ), toY(Px));
+                ctx.lineTo(toX(marketQ), toY(0));
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // Labels
+            ctx.font = 'bold 11px Segoe UI';
+            ctx.textAlign = 'left';
+            const labelP = 1.2;
+            ctx.fillStyle = '#e53e3e';
+            ctx.fillText('Alice', toX(getDemand1(labelP, M1, alpha1)) + 5, toY(labelP) - 3);
+            ctx.fillStyle = '#319795';
+            ctx.fillText('Bob', toX(getDemand2(labelP, M2, alpha2)) + 5, toY(labelP) + 12);
+            ctx.fillStyle = '#d69e2e';
+            if (demandHistory.length > 3) {
+                ctx.fillText('Market', toX(80), toY(1.8));
+            }
+        }
+        
+        function recordPoint() {
+            const { Px, M1, M2, alpha1, alpha2 } = getParams();
+            const marketQ = getDemand1(Px, M1, alpha1) + getDemand2(Px, M2, alpha2);
+            
+            const existing = demandHistory.findIndex(p => Math.abs(p.price - Px) < 0.05);
+            if (existing === -1) {
+                demandHistory.push({ price: Px, quantity: marketQ });
+            }
+        }
+        
+        function updateAll() {
+            const { Px, M1, M2, alpha1, alpha2 } = getParams();
+            
+            // Update displays
+            document.getElementById('px-display').textContent = `$${Px.toFixed(2)}`;
+            document.getElementById('income1-display').textContent = `$${M1}`;
+            document.getElementById('income2-display').textContent = `$${M2}`;
+            document.getElementById('alpha1-display').textContent = alpha1.toFixed(2);
+            document.getElementById('alpha2-display').textContent = alpha2.toFixed(2);
+            
+            const q1 = getDemand1(Px, M1, alpha1);
+            const q2 = getDemand2(Px, M2, alpha2);
+            const total = q1 + q2;
+            
+            document.getElementById('demand-alice').textContent = q1.toFixed(1);
+            document.getElementById('demand-bob').textContent = q2.toFixed(1);
+            document.getElementById('q1').textContent = q1.toFixed(1);
+            document.getElementById('q2').textContent = q2.toFixed(1);
+            document.getElementById('qtotal').textContent = total.toFixed(1);
+            
+            recordPoint();
+            drawICGraph(aliceCtx, aliceCanvas, M1, alpha1, '#e53e3e', 'Alice');
+            drawICGraph(bobCtx, bobCanvas, M2, alpha2, '#319795', 'Bob');
+            drawDemandGraph();
+        }
+        
+        function clearHistory() {
+            demandHistory = [];
+            updateAll();
+        }
+        
+        function toggleAnimation() {
+            const btn = document.getElementById('animate-btn');
+            if (isAnimating) {
+                isAnimating = false;
+                btn.classList.remove('running');
+                btn.textContent = '▶️ Animate Price';
+                cancelAnimationFrame(animationId);
+            } else {
+                isAnimating = true;
+                btn.classList.add('running');
+                btn.textContent = '⏹️ Stop';
+                animatePrice();
+            }
+        }
+        
+        let animDir = 1;
+        function animatePrice() {
+            if (!isAnimating) return;
+            
+            const slider = document.getElementById('px');
+            let px = parseFloat(slider.value);
+            px += animDir * 0.04;
+            
+            if (px >= 8) { px = 8; animDir = -1; }
+            if (px <= 0.5) { px = 0.5; animDir = 1; }
+            
+            slider.value = px;
+            updateAll();
+            
+            animationId = requestAnimationFrame(animatePrice);
+        }
+        
+        // Event listeners
+        document.getElementById('px').addEventListener('input', updateAll);
+        document.getElementById('income1').addEventListener('input', () => { clearHistory(); updateAll(); });
+        document.getElementById('income2').addEventListener('input', () => { clearHistory(); updateAll(); });
+        document.getElementById('alpha1').addEventListener('input', () => { clearHistory(); updateAll(); });
+        document.getElementById('alpha2').addEventListener('input', () => { clearHistory(); updateAll(); });
+        
+        // Initialize
+        updateAll();
+    </script>
+</body>
+</html>

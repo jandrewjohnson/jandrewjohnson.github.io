@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Master: The Complete Economics Game</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 12px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1700px; margin: 0 auto; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        .title-section h1 { font-size: 1.4rem; font-weight: 600; margin: 0 0 3px 0; }
+        .title-section .subtitle { font-size: 0.8rem; color: #bee3f8; margin: 0; }
+        .score-section { display: flex; gap: 20px; align-items: center; }
+        .score-box { text-align: center; padding: 5px 15px; background: rgba(255,255,255,0.1); border-radius: 8px; }
+        .score-label { font-size: 0.65rem; color: #bee3f8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .score-value { font-size: 1.4rem; font-weight: 700; font-family: 'Monaco', 'Consolas', monospace; }
+        .score-value.utility { color: #90cdf4; }
+        .score-value.profit { color: #68d391; }
+        .score-value.total { color: #fbd38d; }
+        .score-value.month { color: #ffffff; }
+        .game-controls { display: flex; gap: 8px; }
+        .game-btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .btn-start { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+        .btn-pause { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; }
+        .btn-reset { background: #4a5568; color: white; }
+        .btn-results { background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%); color: white; }
+        .game-btn:hover { transform: translateY(-1px); }
+        .main-layout { display: grid; grid-template-columns: 320px 1fr 320px; gap: 12px; }
+        @media (max-width: 1400px) { .main-layout { grid-template-columns: 280px 1fr 280px; } }
+        @media (max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
+        .panel { background: #ffffff; border-radius: 10px; padding: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+        .panel-title { font-size: 0.9rem; font-weight: 600; color: #1a202c; }
+        .panel-badge { font-size: 0.6rem; padding: 2px 7px; border-radius: 8px; font-weight: 500; }
+        .badge-consumer { background: rgba(49, 130, 206, 0.15); color: #2b6cb0; }
+        .badge-market { background: rgba(49, 151, 149, 0.15); color: #319795; }
+        .badge-producer { background: rgba(197, 48, 48, 0.15); color: #c53030; }
+        .bundle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .good-box { text-align: center; padding: 10px 8px; border-radius: 8px; border: 2px solid; }
+        .good-box.good-x { background: rgba(229, 62, 62, 0.05); border-color: #e53e3e; }
+        .good-box.good-y { background: rgba(49, 130, 206, 0.05); border-color: #3182ce; }
+        .good-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .good-x .good-label { color: #c53030; }
+        .good-y .good-label { color: #2b6cb0; }
+        .good-value { font-size: 1.6rem; font-weight: 700; font-family: 'Monaco', 'Consolas', monospace; }
+        .good-x .good-value { color: #e53e3e; }
+        .good-y .good-value { color: #3182ce; }
+        .ctrl-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px; }
+        .ctrl-btn { padding: 8px 4px; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.1s; }
+        .ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-x-up { background: #fc8181; color: white; }
+        .btn-x-down { background: #feb2b2; color: #742a2a; }
+        .btn-y-up { background: #63b3ed; color: white; }
+        .btn-y-down { background: #90cdf4; color: #2a4365; }
+        .production-box { text-align: center; padding: 12px; background: linear-gradient(135deg, rgba(56, 161, 105, 0.08) 0%, rgba(72, 187, 120, 0.05) 100%); border: 2px solid #38a169; border-radius: 8px; margin-bottom: 10px; }
+        .prod-label { font-size: 0.6rem; color: #276749; text-transform: uppercase; letter-spacing: 0.5px; }
+        .prod-value { font-size: 2rem; font-weight: 700; color: #38a169; font-family: 'Monaco', 'Consolas', monospace; }
+        .prod-ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .prod-btn { padding: 10px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+        .prod-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-prod-up { background: linear-gradient(135deg, #48bb78, #38a169); color: white; }
+        .btn-prod-down { background: linear-gradient(135deg, #fc8181, #f56565); color: white; }
+        .info-section { background: #f7fafc; border-radius: 6px; padding: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; }
+        .info-title { font-size: 0.6rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .info-row { display: flex; justify-content: space-between; font-size: 0.75rem; padding: 2px 0; }
+        .info-label { color: #718096; }
+        .info-val { font-family: 'Monaco', 'Consolas', monospace; color: #1a202c; font-weight: 500; }
+        .bar-container { margin-bottom: 8px; }
+        .bar-header { display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px; }
+        .bar-label { color: #718096; }
+        .bar-value { font-family: 'Monaco', 'Consolas', monospace; font-weight: 600; }
+        .bar-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
+        .bar-fill.ap { background: linear-gradient(90deg, #805ad5, #b794f4); }
+        .bar-fill.budget-ok { background: linear-gradient(90deg, #48bb78, #68d391); }
+        .bar-fill.budget-warn { background: linear-gradient(90deg, #ed8936, #f6ad55); }
+        .bar-fill.budget-over { background: linear-gradient(90deg, #e53e3e, #fc8181); }
+        .result-box { text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
+        .result-box.utility { background: linear-gradient(135deg, rgba(49, 130, 206, 0.1), rgba(99, 179, 237, 0.05)); border: 1px solid rgba(49, 130, 206, 0.3); }
+        .result-box.profit { background: linear-gradient(135deg, rgba(56, 161, 105, 0.1), rgba(72, 187, 120, 0.05)); border: 1px solid rgba(56, 161, 105, 0.3); }
+        .result-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-box.utility .result-label { color: #2b6cb0; }
+        .result-box.profit .result-label { color: #276749; }
+        .result-value { font-size: 1.5rem; font-weight: 700; font-family: 'Monaco', 'Consolas', monospace; }
+        .result-box.utility .result-value { color: #3182ce; }
+        .result-box.profit .result-value { color: #38a169; }
+        .result-box.profit .result-value.negative { color: #e53e3e; }
+        .graph-container { background: #f7fafc; border-radius: 8px; padding: 8px; margin-top: 10px; border: 1px solid #e2e8f0; }
+        .graph-title { font-size: 0.65rem; color: #718096; text-transform: uppercase; text-align: center; margin-bottom: 5px; letter-spacing: 0.5px; }
+        .market-section { display: flex; flex-direction: column; }
+        canvas { display: block; width: 100%; border-radius: 6px; }
+        .market-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+        .stat-box { background: #f7fafc; padding: 8px 4px; border-radius: 6px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-label { font-size: 0.55rem; color: #718096; text-transform: uppercase; }
+        .stat-value { font-size: 0.9rem; font-weight: 700; font-family: 'Monaco', 'Consolas', monospace; }
+        .stat-value.price { color: #319795; }
+        .stat-value.cs { color: #3182ce; }
+        .stat-value.ps { color: #38a169; }
+        .stat-value.welfare { color: #805ad5; }
+        .news-ticker { background: linear-gradient(135deg, #2d3748, #1a202c); border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+        .news-icon { font-size: 1rem; }
+        .news-text { color: #e2e8f0; font-size: 0.8rem; flex: 1; }
+        .news-text.good { color: #68d391; }
+        .news-text.bad { color: #fc8181; }
+        .news-text.neutral { color: #fbd38d; }
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .chart-box { background: #f7fafc; border-radius: 8px; padding: 10px; border: 1px solid #e2e8f0; }
+        .chart-title { font-size: 0.7rem; color: #718096; text-transform: uppercase; text-align: center; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 16px; padding: 25px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .modal-header { text-align: center; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0 0 5px 0; color: #1a202c; }
+        .modal-header p { color: #718096; margin: 0; font-size: 0.9rem; }
+        .results-card { background: linear-gradient(135deg, #f7fafc, #edf2f7); border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .results-item { text-align: center; }
+        .results-item-label { font-size: 0.7rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+        .results-item-value { font-size: 1.5rem; font-weight: 700; font-family: 'Monaco', 'Consolas', monospace; }
+        .results-item-value.utility { color: #3182ce; }
+        .results-item-value.profit { color: #38a169; }
+        .results-item-value.total { color: #805ad5; }
+        .verification-code { background: #1a202c; color: #68d391; padding: 15px; border-radius: 8px; font-family: 'Monaco', 'Consolas', monospace; font-size: 0.75rem; text-align: center; margin-bottom: 15px; word-break: break-all; }
+        .verification-label { font-size: 0.65rem; color: #a0aec0; margin-bottom: 5px; }
+        .copy-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #4299e1, #3182ce); color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+        .copy-btn:hover { transform: translateY(-1px); }
+        .close-btn { width: 100%; padding: 10px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
+        .player-name-input { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 15px; text-align: center; }
+        .player-name-input:focus { outline: none; border-color: #4299e1; }
+        .speed-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px; background: #f7fafc; border-radius: 6px; }
+        .speed-label { font-size: 0.7rem; color: #718096; }
+        .speed-btns { display: flex; gap: 4px; }
+        .spd-btn { padding: 4px 10px; border: 1px solid #e2e8f0; background: white; border-radius: 4px; font-size: 0.7rem; cursor: pointer; }
+        .spd-btn.active { background: #319795; color: white; border-color: #319795; }
+        .warning-text { color: #e53e3e; font-size: 0.7rem; text-align: center; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-section">
+                <h1>🎯 Market Master: The Complete Economics Game</h1>
+                <p class="subtitle">Control both consumer and producer to maximize total welfare over 48 months!</p>
+            </div>
+            <div class="score-section">
+                <div class="score-box">
+                    <div class="score-label">Month</div>
+                    <div class="score-value month"><span id="current-month">1</span>/48</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">Utility</div>
+                    <div class="score-value utility" id="total-utility">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">Profit</div>
+                    <div class="score-value profit" id="total-profit">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">Combined</div>
+                    <div class="score-value total" id="total-score">0</div>
+                </div>
+                <div class="game-controls">
+                    <button class="game-btn btn-start" id="start-btn" onclick="toggleGame()">▶️ Start</button>
+                    <button class="game-btn btn-reset" onclick="resetGame()">🔄</button>
+                    <button class="game-btn btn-results" onclick="showResults()">📊</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-layout">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">👤 Consumer</div>
+                    <span class="panel-badge badge-consumer">Demand Side</span>
+                </div>
+                <div class="bundle-row">
+                    <div class="good-box good-x">
+                        <div class="good-label">Good X</div>
+                        <div class="good-value" id="consumer-x">25</div>
+                    </div>
+                    <div class="good-box good-y">
+                        <div class="good-label">Good Y</div>
+                        <div class="good-value" id="consumer-y">25</div>
+                    </div>
+                </div>
+                <div class="ctrl-grid">
+                    <button class="ctrl-btn btn-x-up" onclick="changeConsumer(1,0)">X+</button>
+                    <button class="ctrl-btn btn-x-down" onclick="changeConsumer(-1,0)">X-</button>
+                    <button class="ctrl-btn btn-y-up" onclick="changeConsumer(0,1)">Y+</button>
+                    <button class="ctrl-btn btn-y-down" onclick="changeConsumer(0,-1)">Y-</button>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-header">
+                        <span class="bar-label">Budget</span>
+                        <span class="bar-value"><span id="spending">$100</span> / <span id="income">$120</span></span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill budget-ok" id="budget-bar" style="width: 83%"></div>
+                    </div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-header">
+                        <span class="bar-label">Consumer AP</span>
+                        <span class="bar-value" id="consumer-ap">5/5</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill ap" id="consumer-ap-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="graph-container">
+                    <div class="graph-title">Indifference Curve & Budget</div>
+                    <canvas id="consumer-canvas" width="580" height="480"></canvas>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Market Prices</div>
+                    <div class="info-row"><span class="info-label">Price X (Pₓ)</span><span class="info-val" id="price-x">$2.00</span></div>
+                    <div class="info-row"><span class="info-label">Price Y (Pᵧ)</span><span class="info-val" id="price-y">$2.00</span></div>
+                </div>
+                <div class="result-box utility">
+                    <div class="result-label">Monthly Utility</div>
+                    <div class="result-value" id="month-utility">25.0</div>
+                </div>
+                <div class="warning-text" id="budget-warning" style="display: none;">⚠️ Over budget! 0 utility!</div>
+            </div>
+            
+            <div class="panel market-section">
+                <div class="panel-header">
+                    <div class="panel-title">⚖️ Market Equilibrium</div>
+                    <span class="panel-badge badge-market">Supply & Demand</span>
+                </div>
+                <canvas id="market-canvas" width="1500" height="680"></canvas>
+                <div class="market-stats">
+                    <div class="stat-box"><div class="stat-label">Eq. Price</div><div class="stat-value price" id="eq-price">$2.00</div></div>
+                    <div class="stat-box"><div class="stat-label">Eq. Qty</div><div class="stat-value price" id="eq-qty">500</div></div>
+                    <div class="stat-box"><div class="stat-label">Consumer Surplus</div><div class="stat-value cs" id="your-cs">$25</div></div>
+                    <div class="stat-box"><div class="stat-label">Producer Surplus</div><div class="stat-value ps" id="your-ps">$15</div></div>
+                    <div class="stat-box"><div class="stat-label">Total Welfare</div><div class="stat-value welfare" id="your-welfare">$40</div></div>
+                </div>
+                <div class="news-ticker">
+                    <span class="news-icon">📰</span>
+                    <span class="news-text neutral" id="news-text">Press Start to begin the game!</span>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-box"><div class="chart-title">Monthly Utility</div><canvas id="utility-chart" width="340" height="120"></canvas></div>
+                    <div class="chart-box"><div class="chart-title">Monthly Profit</div><canvas id="profit-chart" width="340" height="120"></canvas></div>
+                </div>
+                <div class="speed-row">
+                    <span class="speed-label">Speed:</span>
+                    <div class="speed-btns">
+                        <button class="spd-btn" onclick="setSpeed(0.5)">0.5x</button>
+                        <button class="spd-btn active" onclick="setSpeed(1)">1x</button>
+                        <button class="spd-btn" onclick="setSpeed(2)">2x</button>
+                        <button class="spd-btn" onclick="setSpeed(3)">3x</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">🏭 Producer</div>
+                    <span class="panel-badge badge-producer">Supply Side</span>
+                </div>
+                <div class="production-box">
+                    <div class="prod-label">Production Level</div>
+                    <div class="prod-value" id="production">50</div>
+                </div>
+                <div class="prod-ctrl">
+                    <button class="prod-btn btn-prod-up" onclick="changeProduction(1)">+10</button>
+                    <button class="prod-btn btn-prod-down" onclick="changeProduction(-1)">-10</button>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-header">
+                        <span class="bar-label">Producer AP</span>
+                        <span class="bar-value" id="producer-ap">5/5</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill ap" id="producer-ap-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="graph-container">
+                    <div class="graph-title">MC, ATC & Price</div>
+                    <canvas id="producer-canvas" width="580" height="480"></canvas>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Cost Structure</div>
+                    <div class="info-row"><span class="info-label">Input Price (w)</span><span class="info-val" id="input-price">$10.00</span></div>
+                    <div class="info-row"><span class="info-label">Fixed Cost</span><span class="info-val" id="fixed-cost">$50</span></div>
+                    <div class="info-row"><span class="info-label">Your MC</span><span class="info-val" id="your-mc">$1.50</span></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">Financials</div>
+                    <div class="info-row"><span class="info-label">Revenue</span><span class="info-val" id="revenue">$100</span></div>
+                    <div class="info-row"><span class="info-label">Total Cost</span><span class="info-val" id="total-cost">$85</span></div>
+                </div>
+                <div class="result-box profit">
+                    <div class="result-label">Monthly Profit</div>
+                    <div class="result-value" id="month-profit">$15.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header"><h2>🏆 Game Results</h2><p>Your 48-month performance summary</p></div>
+            <input type="text" class="player-name-input" id="player-name" placeholder="Enter your name" maxlength="20">
+            <div class="results-card">
+                <div class="results-grid">
+                    <div class="results-item"><div class="results-item-label">Total Utility</div><div class="results-item-value utility" id="final-utility">0</div></div>
+                    <div class="results-item"><div class="results-item-label">Total Profit</div><div class="results-item-value profit" id="final-profit">0</div></div>
+                    <div class="results-item"><div class="results-item-label">Combined Score</div><div class="results-item-value total" id="final-score">0</div></div>
+                </div>
+                <div class="results-grid">
+                    <div class="results-item"><div class="results-item-label">Avg Monthly</div><div class="results-item-value" id="avg-monthly" style="color: #718096;">0</div></div>
+                    <div class="results-item"><div class="results-item-label">Best Month</div><div class="results-item-value" id="best-month" style="color: #718096;">0</div></div>
+                    <div class="results-item"><div class="results-item-label">Shocks Faced</div><div class="results-item-value" id="shocks-faced" style="color: #718096;">0</div></div>
+                </div>
+            </div>
+            <div class="verification-code"><div class="verification-label">Verification Code (share to compare!)</div><div id="verification-code">---</div></div>
+            <button class="copy-btn" onclick="copyResults()">📋 Copy Results to Clipboard</button>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        const consumerCanvas = document.getElementById('consumer-canvas');
+        const marketCanvas = document.getElementById('market-canvas');
+        const producerCanvas = document.getElementById('producer-canvas');
+        const utilityChart = document.getElementById('utility-chart');
+        const profitChart = document.getElementById('profit-chart');
+        const consumerCtx = consumerCanvas.getContext('2d');
+        const marketCtx = marketCanvas.getContext('2d');
+        const producerCtx = producerCanvas.getContext('2d');
+        const utilityCtx = utilityChart.getContext('2d');
+        const profitCtx = profitChart.getContext('2d');
+        
+        let gameRunning = false, gameSpeed = 1, currentMonth = 1;
+        const totalMonths = 48;
+        let totalUtility = 0, totalProfit = 0, shockCount = 0;
+        let consumerAP = 5, producerAP = 5;
+        const maxAP = 5;
+        let lastConsumerRecharge = Date.now(), lastProducerRecharge = Date.now();
+        const rechargeTime = 2500;
+        let consumerX = 25, consumerY = 25, production = 50;
+        
+        let market = {
+            priceX: 2.00, priceY: 2.00, income: 120, alpha: 0.5,
+            inputPrice: 8, fixedCost: 14, mcBase: 0.5, mcSlope: 0.05,
+            demandIntercept: 8, demandSlope: 0.001, numConsumers: 100, numOtherFirms: 60
+        };
+        
+        let utilityHistory = [], profitHistory = [], cumulativeUtilityHistory = [], cumulativeProfitHistory = [];
+        
+        const shockMessages = {
+            priceXUp: ["⚠️ Tariff on X! Price rises!", "⚠️ X shortage!", "⚠️ X demand spike!"],
+            priceXDown: ["✅ X sale!", "✅ X oversupply!", "✅ New X competitor!"],
+            priceYUp: ["⚠️ Y costs up!", "⚠️ Y import tax!", "⚠️ Y shortage!"],
+            priceYDown: ["✅ Y surplus!", "✅ Y tech breakthrough!", "✅ Y sale!"],
+            incomeUp: ["💰 Bonus!", "💰 Raise!", "💰 Tax refund!"],
+            incomeDown: ["📉 Hours cut!", "📉 Unexpected bill!", "📉 Rent up!"],
+            inputUp: ["⚠️ Wages rise!", "⚠️ Material costs up!", "⚠️ Energy spike!"],
+            inputDown: ["✅ Automation savings!", "✅ Cheaper materials!", "✅ Energy deal!"],
+            demandUp: ["📈 Consumer boom!", "📈 Product goes viral!", "📈 Competitor exits!"],
+            demandDown: ["📉 Recession fears!", "📉 New substitute!", "📉 Bad press!"],
+            elasticityUp: ["📉 Demand becomes more elastic!"],
+            elasticityDown: ["📈 Demand becomes less elastic!"]
+        };
+        
+        // Predetermined shock sequence - every month has a shock, larger magnitudes
+        // Bounded so optimal stays in frame: income 80-160, priceX/Y 1.0-4.0
+        const predeterminedShocks = [
+            { month: 2, type: 'income', dir: 1, mag: 30, msg: 'incomeUp' },
+            { month: 3, type: 'priceX', dir: 1, mag: 0.8, msg: 'priceXUp' },
+            { month: 4, type: 'demand', dir: 1, mag: 1.5, msg: 'demandUp' },
+            { month: 5, type: 'priceY', dir: -1, mag: 0.6, msg: 'priceYDown' },
+            { month: 6, type: 'mcBase', dir: 1, mag: 0.5, msg: 'inputUp' },
+            { month: 7, type: 'income', dir: -1, mag: 35, msg: 'incomeDown' },
+            { month: 8, type: 'priceX', dir: -1, mag: 0.7, msg: 'priceXDown' },
+            { month: 9, type: 'demand', dir: -1, mag: 1.8, msg: 'demandDown' },
+            { month: 10, type: 'priceY', dir: 1, mag: 0.9, msg: 'priceYUp' },
+            { month: 11, type: 'elasticity', dir: 1, mag: 0.0004, msg: 'elasticityUp' },
+            { month: 12, type: 'income', dir: 1, mag: 40, msg: 'incomeUp' },
+            { month: 13, type: 'mcBase', dir: -1, mag: 0.4, msg: 'inputDown' },
+            { month: 14, type: 'priceX', dir: 1, mag: 0.6, msg: 'priceXUp' },
+            { month: 15, type: 'demand', dir: 1, mag: 2.0, msg: 'demandUp' },
+            { month: 16, type: 'priceY', dir: -1, mag: 0.8, msg: 'priceYDown' },
+            { month: 17, type: 'income', dir: -1, mag: 30, msg: 'incomeDown' },
+            { month: 18, type: 'mcBase', dir: 1, mag: 0.6, msg: 'inputUp' },
+            { month: 19, type: 'priceX', dir: -1, mag: 0.5, msg: 'priceXDown' },
+            { month: 20, type: 'elasticity', dir: -1, mag: 0.0005, msg: 'elasticityDown' },
+            { month: 21, type: 'priceY', dir: 1, mag: 0.7, msg: 'priceYUp' },
+            { month: 22, type: 'demand', dir: -1, mag: 1.6, msg: 'demandDown' },
+            { month: 23, type: 'income', dir: 1, mag: 35, msg: 'incomeUp' },
+            { month: 24, type: 'priceX', dir: 1, mag: 0.9, msg: 'priceXUp' },
+            { month: 25, type: 'mcBase', dir: -1, mag: 0.5, msg: 'inputDown' },
+            { month: 26, type: 'priceY', dir: -1, mag: 0.6, msg: 'priceYDown' },
+            { month: 27, type: 'demand', dir: 1, mag: 1.7, msg: 'demandUp' },
+            { month: 28, type: 'income', dir: -1, mag: 25, msg: 'incomeDown' },
+            { month: 29, type: 'priceX', dir: -1, mag: 0.8, msg: 'priceXDown' },
+            { month: 30, type: 'elasticity', dir: 1, mag: 0.0003, msg: 'elasticityUp' },
+            { month: 31, type: 'priceY', dir: 1, mag: 0.8, msg: 'priceYUp' },
+            { month: 32, type: 'mcBase', dir: 1, mag: 0.4, msg: 'inputUp' },
+            { month: 33, type: 'income', dir: 1, mag: 30, msg: 'incomeUp' },
+            { month: 34, type: 'demand', dir: -1, mag: 1.4, msg: 'demandDown' },
+            { month: 35, type: 'priceX', dir: 1, mag: 0.7, msg: 'priceXUp' },
+            { month: 36, type: 'priceY', dir: -1, mag: 0.5, msg: 'priceYDown' },
+            { month: 37, type: 'income', dir: -1, mag: 40, msg: 'incomeDown' },
+            { month: 38, type: 'mcBase', dir: -1, mag: 0.6, msg: 'inputDown' },
+            { month: 39, type: 'demand', dir: 1, mag: 2.2, msg: 'demandUp' },
+            { month: 40, type: 'priceX', dir: -1, mag: 0.6, msg: 'priceXDown' },
+            { month: 41, type: 'elasticity', dir: -1, mag: 0.0004, msg: 'elasticityDown' },
+            { month: 42, type: 'priceY', dir: 1, mag: 0.9, msg: 'priceYUp' },
+            { month: 43, type: 'income', dir: 1, mag: 45, msg: 'incomeUp' },
+            { month: 44, type: 'mcBase', dir: 1, mag: 0.5, msg: 'inputUp' },
+            { month: 45, type: 'demand', dir: -1, mag: 1.9, msg: 'demandDown' },
+            { month: 46, type: 'priceX', dir: 1, mag: 0.5, msg: 'priceXUp' },
+            { month: 47, type: 'priceY', dir: -1, mag: 0.7, msg: 'priceYDown' },
+            { month: 48, type: 'income', dir: -1, mag: 20, msg: 'incomeDown' }
+        ];
+        
+        function utility(x, y) { return (x <= 0 || y <= 0) ? 0 : Math.pow(x, market.alpha) * Math.pow(y, 1 - market.alpha); }
+        function spending() { return market.priceX * consumerX + market.priceY * consumerY; }
+        function isAffordable() { return spending() <= market.income * 1.001; }
+        function optimalConsumerBundle() {
+            const x = (market.alpha * market.income) / market.priceX;
+            const y = ((1 - market.alpha) * market.income) / market.priceY;
+            return { x, y, u: utility(x, y) };
+        }
+        function getICY(x, u) { return (x <= 0 || u <= 0) ? null : Math.pow(u / Math.pow(x, market.alpha), 1 / (1 - market.alpha)); }
+        function marginalCost(q) { return market.mcBase + market.mcSlope * q; }
+        function totalCost(q) { return market.fixedCost + market.mcBase * q + market.mcSlope * q * q / 2; }
+        function ATC(q) { return q <= 0 ? Infinity : totalCost(q) / q; }
+        function optimalProduction(price) { return Math.max(0, (price - market.mcBase) / market.mcSlope); }
+        function marketDemand(P) { return Math.max(0, (market.demandIntercept - P) / market.demandSlope); }
+        function marketSupply(P) { return production + market.numOtherFirms * Math.max(0, (P - market.mcBase) / market.mcSlope); }
+        
+        function findEquilibrium() {
+            let pLow = market.mcBase + 0.1, pHigh = market.demandIntercept - 0.1, eqP = (pLow + pHigh) / 2;
+            for (let i = 0; i < 40; i++) {
+                const qd = marketDemand(eqP), qs = marketSupply(eqP);
+                if (Math.abs(qd - qs) < 0.5) break;
+                if (qd > qs) pLow = eqP; else pHigh = eqP;
+                eqP = (pLow + pHigh) / 2;
+            }
+            return { price: Math.max(0.5, eqP), qty: Math.max(0, marketDemand(eqP)) };
+        }
+        
+        function generateShock() {
+            const shock = predeterminedShocks.find(s => s.month === currentMonth);
+            let msg = "📊 Markets continue...";
+            let cls = "neutral";
+            
+            if (shock) {
+                const messages = shockMessages[shock.msg];
+                msg = Array.isArray(messages) ? messages[Math.floor(Math.random() * messages.length)] : messages;
+                
+                switch (shock.type) {
+                    case 'priceX':
+                        // Keep priceX between 1.0-4.0 so optimal X stays in 20-80 range with typical income
+                        market.priceX = Math.max(1.0, Math.min(4.0, market.priceX + shock.dir * shock.mag));
+                        cls = shock.dir > 0 ? "bad" : "good";
+                        shockCount++;
+                        break;
+                    case 'priceY':
+                        // Keep priceY between 1.0-4.0 so optimal Y stays in 20-80 range
+                        market.priceY = Math.max(1.0, Math.min(4.0, market.priceY + shock.dir * shock.mag));
+                        cls = shock.dir > 0 ? "bad" : "good";
+                        shockCount++;
+                        break;
+                    case 'income':
+                        // Keep income between 80-160 so optimal bundle stays reasonable
+                        market.income = Math.max(80, Math.min(160, market.income + shock.dir * shock.mag));
+                        cls = shock.dir > 0 ? "good" : "bad";
+                        shockCount++;
+                        break;
+                    case 'mcBase':
+                        market.mcBase = Math.max(0.1, Math.min(3, market.mcBase + shock.dir * shock.mag));
+                        cls = shock.dir > 0 ? "bad" : "good";
+                        shockCount++;
+                        break;
+                    case 'demand':
+                        market.demandIntercept = Math.max(4, Math.min(14, market.demandIntercept + shock.dir * shock.mag));
+                        cls = shock.dir > 0 ? "good" : "bad";
+                        shockCount++;
+                        break;
+                    case 'elasticity':
+                        market.demandSlope = Math.max(0.0004, Math.min(0.003, market.demandSlope + shock.dir * shock.mag));
+                        cls = "neutral";
+                        shockCount++;
+                        break;
+                }
+            }
+            
+            document.getElementById('news-text').textContent = msg;
+            document.getElementById('news-text').className = `news-text ${cls}`;
+        }
+        
+        function drawConsumerGraph() {
+            const ctx = consumerCtx, w = consumerCanvas.width, h = consumerCanvas.height;
+            const m = { t: 40, r: 30, b: 60, l: 80 };
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+            const maxX = 80, maxY = 80;
+            const toX = x => m.l + (x / maxX) * (w - m.l - m.r);
+            const toY = y => m.t + (h - m.t - m.b) - (y / maxY) * (h - m.t - m.b);
+            
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                ctx.beginPath(); ctx.moveTo(m.l + (i/4)*(w-m.l-m.r), m.t); ctx.lineTo(m.l + (i/4)*(w-m.l-m.r), h - m.b); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(m.l, m.t + (i/4)*(h-m.t-m.b)); ctx.lineTo(w - m.r, m.t + (i/4)*(h-m.t-m.b)); ctx.stroke();
+            }
+            
+            const xInt = market.income / market.priceX, yInt = market.income / market.priceY;
+            const yAtMaxX = (market.income - market.priceX * maxX) / market.priceY;
+            
+            let budgetStartX, budgetStartY, budgetEndX, budgetEndY;
+            if (yInt <= maxY) { budgetStartX = 0; budgetStartY = yInt; }
+            else { budgetStartX = (market.income - market.priceY * maxY) / market.priceX; budgetStartY = maxY; }
+            if (xInt <= maxX) { budgetEndX = xInt; budgetEndY = 0; }
+            else { budgetEndX = maxX; budgetEndY = Math.max(0, yAtMaxX); }
+            
+            ctx.fillStyle = 'rgba(72, 187, 120, 0.1)'; ctx.beginPath();
+            ctx.moveTo(toX(0), toY(0));
+            if (yInt <= maxY) ctx.lineTo(toX(0), toY(yInt));
+            else { ctx.lineTo(toX(0), toY(maxY)); ctx.lineTo(toX(budgetStartX), toY(maxY)); }
+            if (xInt <= maxX) ctx.lineTo(toX(xInt), toY(0));
+            else { ctx.lineTo(toX(maxX), toY(Math.max(0, yAtMaxX))); ctx.lineTo(toX(maxX), toY(0)); }
+            ctx.closePath(); ctx.fill();
+            
+            ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 4; ctx.beginPath();
+            ctx.moveTo(toX(budgetStartX), toY(budgetStartY));
+            ctx.lineTo(toX(budgetEndX), toY(budgetEndY)); ctx.stroke();
+            
+            // Player's IC only
+            const playerU = utility(consumerX, consumerY);
+            if (playerU > 0) {
+                ctx.strokeStyle = isAffordable() ? '#3182ce' : '#a0aec0'; ctx.lineWidth = 4; ctx.beginPath();
+                let started = false;
+                for (let x = 1; x <= maxX; x++) { const y = getICY(x, playerU); if (y && y > 0 && y <= maxY) { if (!started) { ctx.moveTo(toX(x), toY(y)); started = true; } else ctx.lineTo(toX(x), toY(y)); } }
+                ctx.stroke();
+            }
+            
+            // Player point only
+            if (consumerX <= maxX && consumerY <= maxY) {
+                ctx.fillStyle = isAffordable() ? 'rgba(49, 130, 206, 0.3)' : 'rgba(229, 62, 62, 0.3)';
+                ctx.beginPath(); ctx.arc(toX(consumerX), toY(consumerY), 18, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = isAffordable() ? '#3182ce' : '#e53e3e';
+                ctx.beginPath(); ctx.arc(toX(consumerX), toY(consumerY), 10, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
+            }
+            
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 3; ctx.beginPath();
+            ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, h - m.b); ctx.lineTo(w - m.r, h - m.b); ctx.stroke();
+            
+            // Axis labels - larger fonts
+            ctx.fillStyle = '#4a5568'; ctx.font = 'bold 18px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText('Good X', w / 2, h - 18);
+            ctx.save(); ctx.translate(22, h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Good Y', 0, 0); ctx.restore();
+            
+            // Axis tick labels
+            ctx.font = '16px Segoe UI'; ctx.fillStyle = '#718096';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`${(i * maxX / 4).toFixed(0)}`, toX(i * maxX / 4), h - m.b + 22);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`${(i * maxY / 4).toFixed(0)}`, m.l - 10, toY(i * maxY / 4) + 6);
+            }
+            
+            // Point label
+            ctx.font = 'bold 16px Segoe UI'; ctx.fillStyle = '#3182ce'; ctx.textAlign = 'left';
+            ctx.fillText('You', toX(consumerX) + 25, toY(consumerY) + 5);
+        }
+        
+        function drawProducerGraph() {
+            const ctx = producerCtx, w = producerCanvas.width, h = producerCanvas.height;
+            const m = { t: 40, r: 30, b: 60, l: 90 };
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+            const eq = findEquilibrium(), maxQ = 120, maxP = 8;
+            const toX = q => m.l + (q / maxQ) * (w - m.l - m.r);
+            const toY = p => m.t + (h - m.t - m.b) - (p / maxP) * (h - m.t - m.b);
+            
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                ctx.beginPath(); ctx.moveTo(m.l + (i/4)*(w-m.l-m.r), m.t); ctx.lineTo(m.l + (i/4)*(w-m.l-m.r), h - m.b); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(m.l, m.t + (i/4)*(h-m.t-m.b)); ctx.lineTo(w - m.r, m.t + (i/4)*(h-m.t-m.b)); ctx.stroke();
+            }
+            
+            if (production > 0 && eq.price <= maxP) {
+                const atc = ATC(production);
+                if (eq.price > atc && atc <= maxP) { ctx.fillStyle = 'rgba(72, 187, 120, 0.2)'; ctx.fillRect(toX(0), toY(eq.price), toX(production) - toX(0), toY(atc) - toY(eq.price)); }
+                else if (eq.price < atc && atc <= maxP) { ctx.fillStyle = 'rgba(229, 62, 62, 0.15)'; ctx.fillRect(toX(0), toY(atc), toX(production) - toX(0), toY(eq.price) - toY(atc)); }
+            }
+            
+            ctx.strokeStyle = '#805ad5'; ctx.lineWidth = 4; ctx.beginPath(); let started = false;
+            for (let q = 5; q <= maxQ; q += 2) { const atc = ATC(q); if (atc <= maxP && atc > 0) { if (!started) { ctx.moveTo(toX(q), toY(atc)); started = true; } else ctx.lineTo(toX(q), toY(atc)); } }
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 4; ctx.beginPath(); started = false;
+            for (let q = 0; q <= maxQ; q += 2) { const mc = marginalCost(q); if (mc <= maxP) { if (!started) { ctx.moveTo(toX(q), toY(mc)); started = true; } else ctx.lineTo(toX(q), toY(mc)); } }
+            ctx.stroke();
+            
+            if (eq.price <= maxP) { ctx.strokeStyle = '#38a169'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(m.l, toY(eq.price)); ctx.lineTo(w - m.r, toY(eq.price)); ctx.stroke(); }
+            
+            // Player point only (no optimal point)
+            if (production <= maxQ && eq.price <= maxP) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.3)'; ctx.beginPath(); ctx.arc(toX(production), toY(eq.price), 18, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#38a169'; ctx.beginPath(); ctx.arc(toX(production), toY(eq.price), 10, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
+            }
+            
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 3; ctx.beginPath();
+            ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, h - m.b); ctx.lineTo(w - m.r, h - m.b); ctx.stroke();
+            
+            // Axis labels - larger fonts
+            ctx.fillStyle = '#4a5568'; ctx.font = 'bold 18px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText('Quantity (q)', w / 2, h - 18);
+            ctx.save(); ctx.translate(22, h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Price / Cost ($)', 0, 0); ctx.restore();
+            
+            // Axis tick labels
+            ctx.font = '16px Segoe UI'; ctx.fillStyle = '#718096';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`${(i * maxQ / 4).toFixed(0)}`, toX(i * maxQ / 4), h - m.b + 22);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`$${(i * maxP / 4).toFixed(0)}`, m.l - 12, toY(i * maxP / 4) + 6);
+            }
+            
+            // Curve labels - larger
+            ctx.font = 'bold 18px Segoe UI'; ctx.textAlign = 'left';
+            ctx.fillStyle = '#e53e3e'; ctx.fillText('MC', toX(maxQ * 0.78), toY(marginalCost(maxQ * 0.78)) - 12);
+            ctx.fillStyle = '#805ad5'; ctx.fillText('ATC', toX(maxQ * 0.85), toY(ATC(maxQ * 0.85)) - 12);
+            ctx.fillStyle = '#38a169'; ctx.fillText('P', w - m.r - 25, toY(eq.price) - 12);
+        }
+        
+        function drawMarketGraph() {
+            const ctx = marketCtx, w = marketCanvas.width, h = marketCanvas.height;
+            const m = { t: 50, r: 50, b: 80, l: 120 };
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+            const eq = findEquilibrium();
+            const maxQ = Math.max(600, eq.qty * 2.5), maxP = Math.max(6, eq.price * 2);
+            const toX = q => m.l + (q / maxQ) * (w - m.l - m.r);
+            const toY = p => m.t + (h - m.t - m.b) - (p / maxP) * (h - m.t - m.b);
+            
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                ctx.beginPath(); ctx.moveTo(m.l + (i/5)*(w-m.l-m.r), m.t); ctx.lineTo(m.l + (i/5)*(w-m.l-m.r), h - m.b); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(m.l, m.t + (i/5)*(h-m.t-m.b)); ctx.lineTo(w - m.r, m.t + (i/5)*(h-m.t-m.b)); ctx.stroke();
+            }
+            
+            if (eq.qty > 0 && eq.price < market.demandIntercept) {
+                ctx.fillStyle = 'rgba(49, 130, 206, 0.2)'; ctx.beginPath();
+                ctx.moveTo(toX(0), toY(eq.price)); ctx.lineTo(toX(eq.qty), toY(eq.price));
+                for (let q = eq.qty; q >= 1; q -= maxQ/50) { const p = market.demandIntercept - market.demandSlope * q; if (p <= maxP) ctx.lineTo(toX(q), toY(p)); }
+                ctx.lineTo(toX(0), toY(Math.min(market.demandIntercept, maxP))); ctx.closePath(); ctx.fill();
+            }
+            
+            if (eq.qty > 0 && eq.price > market.mcBase) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.2)'; ctx.beginPath();
+                ctx.moveTo(toX(0), toY(market.mcBase));
+                for (let p = market.mcBase; p <= eq.price; p += maxP/50) { const q = marketSupply(p); if (q <= maxQ) ctx.lineTo(toX(q), toY(p)); }
+                ctx.lineTo(toX(eq.qty), toY(eq.price)); ctx.lineTo(toX(0), toY(eq.price)); ctx.closePath(); ctx.fill();
+            }
+            
+            ctx.strokeStyle = '#3182ce'; ctx.lineWidth = 5; ctx.beginPath(); let started = false;
+            for (let p = 0.2; p <= maxP; p += 0.1) { const q = marketDemand(p); if (q >= 0 && q <= maxQ) { if (!started) { ctx.moveTo(toX(q), toY(p)); started = true; } else ctx.lineTo(toX(q), toY(p)); } }
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 5; ctx.beginPath(); started = false;
+            for (let p = market.mcBase; p <= maxP; p += 0.1) { const q = marketSupply(p); if (q >= 0 && q <= maxQ) { if (!started) { ctx.moveTo(toX(q), toY(p)); started = true; } else ctx.lineTo(toX(q), toY(p)); } }
+            ctx.stroke();
+            
+            if (eq.qty <= maxQ && eq.price <= maxP) {
+                ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 2; ctx.setLineDash([10, 8]);
+                ctx.beginPath(); ctx.moveTo(toX(eq.qty), toY(eq.price)); ctx.lineTo(toX(eq.qty), toY(0)); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(toX(eq.qty), toY(eq.price)); ctx.lineTo(toX(0), toY(eq.price)); ctx.stroke();
+                ctx.setLineDash([]);
+                const gradient = ctx.createRadialGradient(toX(eq.qty), toY(eq.price), 0, toX(eq.qty), toY(eq.price), 35);
+                gradient.addColorStop(0, 'rgba(49, 151, 149, 0.5)'); gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                ctx.fillStyle = gradient; ctx.beginPath(); ctx.arc(toX(eq.qty), toY(eq.price), 35, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#319795'; ctx.beginPath(); ctx.arc(toX(eq.qty), toY(eq.price), 14, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
+            }
+            
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 3; ctx.beginPath();
+            ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, h - m.b); ctx.lineTo(w - m.r, h - m.b); ctx.stroke();
+            
+            // Axis labels - larger fonts
+            ctx.fillStyle = '#4a5568'; ctx.font = 'bold 22px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText('Market Quantity (Q)', w / 2, h - 25);
+            ctx.save(); ctx.translate(35, h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Price ($)', 0, 0); ctx.restore();
+            
+            // Axis tick labels
+            ctx.font = '18px Segoe UI'; ctx.fillStyle = '#718096';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`${(i * maxQ / 4).toFixed(0)}`, toX(i * maxQ / 4), h - m.b + 28);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                ctx.fillText(`$${(i * maxP / 4).toFixed(1)}`, m.l - 15, toY(i * maxP / 4) + 7);
+            }
+            
+            // Curve labels - larger
+            ctx.font = 'bold 24px Segoe UI'; ctx.textAlign = 'left';
+            ctx.fillStyle = '#3182ce'; ctx.fillText('D', toX(maxQ * 0.1), toY(market.demandIntercept - market.demandSlope * maxQ * 0.1) - 15);
+            ctx.fillStyle = '#e53e3e'; ctx.fillText('S', toX(maxQ * 0.82), toY(market.mcBase + market.mcSlope * (maxQ * 0.82 - production) / market.numOtherFirms) - 15);
+        }
+        
+        function drawMonthlyBarChart(ctx, canvas, data, positiveColor, negativeColor) {
+            const w = canvas.width, h = canvas.height, m = { t: 15, r: 15, b: 28, l: 50 };
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+            if (data.length === 0) { ctx.fillStyle = '#a0aec0'; ctx.font = '14px Segoe UI'; ctx.textAlign = 'center'; ctx.fillText('No data yet', w/2, h/2); return; }
+            
+            let maxV = Math.max(10, ...data.map(Math.abs));
+            let minV = Math.min(0, ...data);
+            if (minV < 0) { maxV = Math.max(maxV, Math.abs(minV)); minV = -maxV; } else minV = 0;
+            maxV *= 1.15; if (minV < 0) minV *= 1.15;
+            const range = maxV - minV;
+            
+            const chartWidth = w - m.l - m.r;
+            const barWidth = Math.max(2, Math.min(8, chartWidth / totalMonths - 1));
+            const barSpacing = chartWidth / totalMonths;
+            const toX = i => m.l + i * barSpacing + (barSpacing - barWidth) / 2;
+            const toY = v => m.t + (h - m.t - m.b) - ((v - minV) / range) * (h - m.t - m.b);
+            const zeroY = toY(0);
+            
+            // Draw zero line
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(m.l, zeroY); ctx.lineTo(w - m.r, zeroY); ctx.stroke();
+            
+            // Draw bars
+            for (let i = 0; i < data.length; i++) {
+                const val = data[i];
+                const x = toX(i);
+                const barHeight = Math.abs(toY(val) - zeroY);
+                
+                if (val >= 0) {
+                    ctx.fillStyle = positiveColor;
+                    ctx.fillRect(x, zeroY - barHeight, barWidth, barHeight);
+                } else {
+                    ctx.fillStyle = negativeColor;
+                    ctx.fillRect(x, zeroY, barWidth, barHeight);
+                }
+            }
+            
+            // Draw Y-axis
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, h - m.b); ctx.stroke();
+            
+            // Y labels - larger font
+            ctx.fillStyle = '#718096'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'right';
+            ctx.fillText(maxV.toFixed(0), m.l - 5, m.t + 10);
+            if (minV < 0) ctx.fillText(minV.toFixed(0), m.l - 5, h - m.b);
+            else ctx.fillText('0', m.l - 5, zeroY + 4);
+            
+            // Month label - larger font
+            ctx.font = '12px Segoe UI'; ctx.textAlign = 'center'; ctx.fillText('Month', w/2, h - 8);
+        }
+        
+        function updateDisplay() {
+            const eq = findEquilibrium(), affordable = isAffordable();
+            const playerU = affordable ? utility(consumerX, consumerY) : 0;
+            const revenue = eq.price * production, cost = totalCost(production), profit = revenue - cost;
+            
+            document.getElementById('consumer-x').textContent = consumerX;
+            document.getElementById('consumer-y').textContent = consumerY;
+            document.getElementById('price-x').textContent = `$${market.priceX.toFixed(2)}`;
+            document.getElementById('price-y').textContent = `$${market.priceY.toFixed(2)}`;
+            document.getElementById('spending').textContent = `$${spending().toFixed(0)}`;
+            document.getElementById('income').textContent = `$${market.income.toFixed(0)}`;
+            const budgetPct = (spending() / market.income) * 100;
+            const budgetBar = document.getElementById('budget-bar');
+            budgetBar.style.width = `${Math.min(budgetPct, 100)}%`;
+            budgetBar.className = 'bar-fill ' + (budgetPct <= 85 ? 'budget-ok' : budgetPct <= 100 ? 'budget-warn' : 'budget-over');
+            document.getElementById('budget-warning').style.display = affordable ? 'none' : 'block';
+            document.getElementById('consumer-ap').textContent = `${consumerAP}/${maxAP}`;
+            document.getElementById('consumer-ap-bar').style.width = `${(consumerAP / maxAP) * 100}%`;
+            document.getElementById('month-utility').textContent = playerU.toFixed(1);
+            
+            document.getElementById('production').textContent = production;
+            document.getElementById('input-price').textContent = `$${market.inputPrice.toFixed(2)}`;
+            document.getElementById('fixed-cost').textContent = `$${market.fixedCost}`;
+            document.getElementById('your-mc').textContent = `$${marginalCost(production).toFixed(2)}`;
+            document.getElementById('revenue').textContent = `$${revenue.toFixed(0)}`;
+            document.getElementById('total-cost').textContent = `$${cost.toFixed(0)}`;
+            document.getElementById('producer-ap').textContent = `${producerAP}/${maxAP}`;
+            document.getElementById('producer-ap-bar').style.width = `${(producerAP / maxAP) * 100}%`;
+            const profitEl = document.getElementById('month-profit');
+            profitEl.textContent = profit >= 0 ? `$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`;
+            profitEl.className = profit >= 0 ? 'result-value' : 'result-value negative';
+            
+            document.getElementById('eq-price').textContent = `$${eq.price.toFixed(2)}`;
+            document.getElementById('eq-qty').textContent = eq.qty.toFixed(0);
+            const cs = playerU * 2, ps = Math.max(0, profit);
+            document.getElementById('your-cs').textContent = `$${cs.toFixed(0)}`;
+            document.getElementById('your-ps').textContent = `$${ps.toFixed(0)}`;
+            document.getElementById('your-welfare').textContent = `$${(cs + ps).toFixed(0)}`;
+            
+            drawConsumerGraph(); drawProducerGraph(); drawMarketGraph();
+            drawMonthlyBarChart(utilityCtx, utilityChart, utilityHistory, 'rgba(49, 130, 206, 0.7)', 'rgba(229, 62, 62, 0.7)');
+            drawMonthlyBarChart(profitCtx, profitChart, profitHistory, 'rgba(56, 161, 105, 0.7)', 'rgba(229, 62, 62, 0.7)');
+            return { u: playerU, profit };
+        }
+        
+        function changeConsumer(dx, dy) {
+            if (consumerAP < 1) return;
+            const newX = consumerX + dx * 5, newY = consumerY + dy * 5;
+            if (newX < 5 || newY < 5) return;
+            consumerAP--; consumerX = newX; consumerY = newY; updateDisplay();
+        }
+        
+        function changeProduction(dir) {
+            if (producerAP < 1) return;
+            const newProd = production + dir * 10;
+            if (newProd < 10 || newProd > 150) return;
+            producerAP--; production = newProd; updateDisplay();
+        }
+        
+        let lastUpdate = Date.now(), monthProgress = 0;
+        const monthDuration = 5000;
+        
+        function gameLoop() {
+            if (!gameRunning) { requestAnimationFrame(gameLoop); return; }
+            const now = Date.now(), delta = now - lastUpdate;
+            lastUpdate = now;
+            if (now - lastConsumerRecharge >= rechargeTime / gameSpeed && consumerAP < maxAP) { consumerAP++; lastConsumerRecharge = now; updateDisplay(); }
+            if (now - lastProducerRecharge >= rechargeTime / gameSpeed && producerAP < maxAP) { producerAP++; lastProducerRecharge = now; updateDisplay(); }
+            monthProgress += delta * gameSpeed;
+            if (monthProgress >= monthDuration) {
+                monthProgress = 0;
+                const { u, profit } = updateDisplay();
+                utilityHistory.push(u); profitHistory.push(profit);
+                totalUtility += u; totalProfit += profit;
+                cumulativeUtilityHistory.push(totalUtility); cumulativeProfitHistory.push(totalProfit);
+                currentMonth++;
+                document.getElementById('current-month').textContent = currentMonth;
+                document.getElementById('total-utility').textContent = totalUtility.toFixed(0);
+                document.getElementById('total-profit').textContent = totalProfit.toFixed(0);
+                document.getElementById('total-score').textContent = (totalUtility + totalProfit).toFixed(0);
+                if (currentMonth > totalMonths) {
+                    gameRunning = false; showResults();
+                    document.getElementById('start-btn').textContent = '▶️';
+                    document.getElementById('start-btn').className = 'game-btn btn-start';
+                } else generateShock();
+                updateDisplay();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function toggleGame() {
+            gameRunning = !gameRunning;
+            const btn = document.getElementById('start-btn');
+            if (gameRunning) {
+                btn.textContent = '⏸️'; btn.className = 'game-btn btn-pause';
+                lastUpdate = Date.now(); lastConsumerRecharge = Date.now(); lastProducerRecharge = Date.now();
+                document.getElementById('news-text').textContent = '🎮 Game started! Manage both consumer and producer!';
+                document.getElementById('news-text').className = 'news-text neutral';
+            } else {
+                btn.textContent = '▶️'; btn.className = 'game-btn btn-start';
+                document.getElementById('news-text').textContent = '⏸️ Paused';
+                document.getElementById('news-text').className = 'news-text neutral';
+            }
+        }
+        
+        function resetGame() {
+            gameRunning = false; currentMonth = 1; totalUtility = 0; totalProfit = 0;
+            consumerAP = maxAP; producerAP = maxAP; consumerX = 25; consumerY = 25; production = 50;
+            utilityHistory = []; profitHistory = []; cumulativeUtilityHistory = []; cumulativeProfitHistory = [];
+            shockCount = 0; monthProgress = 0;
+            market = { priceX: 2.00, priceY: 2.00, income: 120, alpha: 0.5, inputPrice: 8, fixedCost: 14, mcBase: 0.5, mcSlope: 0.05, demandIntercept: 8, demandSlope: 0.001, numConsumers: 100, numOtherFirms: 60 };
+            document.getElementById('start-btn').textContent = '▶️';
+            document.getElementById('start-btn').className = 'game-btn btn-start';
+            document.getElementById('current-month').textContent = '1';
+            document.getElementById('total-utility').textContent = '0';
+            document.getElementById('total-profit').textContent = '0';
+            document.getElementById('total-score').textContent = '0';
+            document.getElementById('news-text').textContent = 'Press Start to begin!';
+            document.getElementById('news-text').className = 'news-text neutral';
+            updateDisplay();
+        }
+        
+        function setSpeed(s) { gameSpeed = s; document.querySelectorAll('.spd-btn').forEach(b => b.classList.toggle('active', b.textContent === `${s}x`)); }
+        
+        function showResults() {
+            document.getElementById('modal-overlay').classList.add('active');
+            const finalU = totalUtility, finalP = totalProfit, finalS = finalU + finalP;
+            document.getElementById('final-utility').textContent = finalU.toFixed(0);
+            document.getElementById('final-profit').textContent = finalP.toFixed(0);
+            document.getElementById('final-score').textContent = finalS.toFixed(0);
+            const months = utilityHistory.length || 1;
+            document.getElementById('avg-monthly').textContent = ((finalU + finalP) / months).toFixed(1);
+            const monthlyTotals = utilityHistory.map((u, i) => u + (profitHistory[i] || 0));
+            document.getElementById('best-month').textContent = Math.max(...monthlyTotals, 0).toFixed(0);
+            document.getElementById('shocks-faced').textContent = shockCount;
+            const name = document.getElementById('player-name').value || 'Anonymous';
+            const hash = btoa(`${name}|${finalU.toFixed(2)}|${finalP.toFixed(2)}|${finalS.toFixed(2)}|${months}|${Date.now()}`).slice(0, 24);
+            document.getElementById('verification-code').textContent = `MM48-${finalS.toFixed(0)}-${hash}`;
+        }
+        
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+        
+        function copyResults() {
+            const name = document.getElementById('player-name').value || 'Anonymous';
+            const text = `🎯 MARKET MASTER RESULTS 🎯\nPlayer: ${name}\n━━━━━━━━━━━━━━━━━━━━━━━\n📊 48-Month Performance\n━━━━━━━━━━━━━━━━━━━━━━━\nTotal Utility:  ${document.getElementById('final-utility').textContent}\nTotal Profit:   ${document.getElementById('final-profit').textContent}\n━━━━━━━━━━━━━━━━━━━━━━━\nCOMBINED SCORE: ${document.getElementById('final-score').textContent}\nAvg per Month:  ${document.getElementById('avg-monthly').textContent}\n━━━━━━━━━━━━━━━━━━━━━━━\nVerification: ${document.getElementById('verification-code').textContent}\n━━━━━━━━━━━━━━━━━━━━━━━\nCan you beat my score? 🏆`;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy Results to Clipboard', 2000);
+            });
+        }
+        
+        updateDisplay();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>

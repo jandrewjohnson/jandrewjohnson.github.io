@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Maximization Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        .utility-display {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .utility-label {
+            font-size: 1rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        
+        .utility-value {
+            font-size: 4.5rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #319795;
+            text-shadow: 0 0 30px rgba(49, 151, 149, 0.3);
+            transition: all 0.1s ease;
+        }
+        
+        .utility-value.infeasible {
+            color: #e53e3e;
+            text-shadow: 0 0 30px rgba(229, 62, 62, 0.3);
+        }
+        
+        .utility-value.optimal {
+            color: #d69e2e;
+            text-shadow: 0 0 40px rgba(214, 158, 46, 0.5);
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
+            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
+        }
+        
+        .error-banner {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .error-banner.visible {
+            opacity: 1;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .error-icon {
+            margin-right: 8px;
+        }
+        
+        .success-banner {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(214, 158, 46, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .success-banner.visible {
+            opacity: 1;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.choice-panel {
+            border: 2px solid #319795;
+            background: linear-gradient(135deg, rgba(49, 151, 149, 0.05) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .panel-title.highlight {
+            color: #319795;
+            font-size: 0.95rem;
+        }
+        
+        .slider-group {
+            margin-bottom: 16px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        .slider-value.large {
+            font-size: 1.1rem;
+            padding: 6px 14px;
+            color: #319795;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+            transition: transform 0.15s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        
+        input[type="range"].choice-slider {
+            height: 10px;
+        }
+        
+        input[type="range"].choice-slider::-webkit-slider-thumb {
+            width: 24px;
+            height: 24px;
+            background: #319795;
+            box-shadow: 0 2px 12px rgba(49, 151, 149, 0.4);
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 3px solid #4299e1;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9rem;
+        }
+        
+        .info-label {
+            color: #718096;
+        }
+        
+        .info-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+        }
+        
+        .info-value.highlight {
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+        
+        .info-value.warning {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .instructions {
+            background: linear-gradient(135deg, rgba(49, 151, 149, 0.08) 0%, rgba(66, 153, 225, 0.05) 100%);
+            border: 1px solid rgba(49, 151, 149, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 0;
+        }
+        
+        .instructions h3 {
+            color: #319795;
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .instructions p {
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+        
+        .score-panel {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .score-label {
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #d69e2e;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .score-optimal {
+            font-size: 0.85rem;
+            color: #2b6cb0;
+            margin-top: 4px;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(49, 151, 149, 0.4);
+        }
+        
+        .hint-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #d69e2e;
+            border-radius: 8px;
+            color: #d69e2e;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        .hint-btn:hover {
+            background: rgba(214, 158, 46, 0.1);
+        }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .proximity-meter {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .proximity-label {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .proximity-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .proximity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e53e3e 0%, #d69e2e 50%, #319795 100%);
+            border-radius: 4px;
+            transition: width 0.1s ease;
+        }
+        
+        .budget-bar {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .budget-label {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .budget-label .over {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .budget-track {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .budget-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #319795 0%, #38b2ac 100%);
+            border-radius: 6px;
+            transition: width 0.15s ease, background 0.15s ease;
+        }
+        
+        .budget-fill.over {
+            background: linear-gradient(90deg, #e53e3e 0%, #fc8181 100%);
+        }
+        
+        .budget-limit {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #1a202c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Utility Maximization Game</h1>
+        <p class="subtitle">Adjust X and Y to maximize your utility while staying within budget!</p>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="utility-display">
+                    <div class="utility-label">Total Utility</div>
+                    <div class="utility-value" id="big-utility">0.0</div>
+                </div>
+                <div class="error-banner" id="error-banner">
+                    <span class="error-icon">⚠️</span> UNAFFORDABLE! Over Budget!
+                </div>
+                <div class="success-banner" id="success-banner">
+                    <span class="error-icon">🎉</span> OPTIMAL! Maximum Utility!
+                </div>
+                <canvas id="graph" width="750" height="650"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel choice-panel">
+                    <div class="panel-title highlight">🎯 Your Choices</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Good X</span>
+                            <span class="slider-value large" id="user-x-value">20</span>
+                        </div>
+                        <input type="range" class="choice-slider" id="user-x" min="0" max="80" value="20" step="0.5">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Good Y</span>
+                            <span class="slider-value large" id="user-y-value">20</span>
+                        </div>
+                        <input type="range" class="choice-slider" id="user-y" min="0" max="80" value="20" step="0.5">
+                    </div>
+                    
+                    <div class="budget-bar">
+                        <div class="budget-label">
+                            <span>Budget Used</span>
+                            <span id="budget-status">$80 / $100</span>
+                        </div>
+                        <div class="budget-track">
+                            <div class="budget-fill" id="budget-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Your Score</div>
+                    <div class="score-panel">
+                        <div class="score-label">Current Utility</div>
+                        <div class="score-value" id="score-value">0.0</div>
+                        <div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div>
+                    </div>
+                    
+                    <div class="proximity-meter">
+                        <div class="proximity-label">
+                            <span>Proximity to Optimal</span>
+                            <span id="proximity-pct">0%</span>
+                        </div>
+                        <div class="proximity-bar">
+                            <div class="proximity-fill" id="proximity-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="reset-btn" onclick="resetGame()">🔄 New Challenge</button>
+                    <button class="hint-btn" onclick="showHint()">💡 Show Optimal</button>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Budget Constraint</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Income (M)</span>
+                            <span class="slider-value" id="income-value">100</span>
+                        </div>
+                        <input type="range" id="income" min="40" max="200" value="100">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price of X (Pₓ)</span>
+                            <span class="slider-value" id="px-value">2</span>
+                        </div>
+                        <input type="range" id="px" min="1" max="10" value="2" step="0.5">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price of Y (Pᵧ)</span>
+                            <span class="slider-value" id="py-value">2</span>
+                        </div>
+                        <input type="range" id="py" min="1" max="10" value="2" step="0.5">
+                    </div>
+                    
+                    <div class="equation-box">
+                        Budget: Pₓ·X + Pᵧ·Y ≤ M
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Preferences</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Preference α</span>
+                            <span class="slider-value" id="alpha-value">0.50</span>
+                        </div>
+                        <input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01">
+                    </div>
+                    
+                    <div class="equation-box">
+                        U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <span>Budget Constraint</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #319795;"></div>
+                            <span>Your Indifference Curve</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #319795;"></div>
+                            <span>Your Bundle</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('graph');
+        const ctx = canvas.getContext('2d');
+        
+        // Get elements
+        const incomeSlider = document.getElementById('income');
+        const pxSlider = document.getElementById('px');
+        const pySlider = document.getElementById('py');
+        const alphaSlider = document.getElementById('alpha');
+        const userXSlider = document.getElementById('user-x');
+        const userYSlider = document.getElementById('user-y');
+        const errorBanner = document.getElementById('error-banner');
+        const successBanner = document.getElementById('success-banner');
+        const bigUtility = document.getElementById('big-utility');
+        
+        // Graph parameters
+        const margin = { top: 100, right: 40, bottom: 60, left: 70 };
+        const maxX = 80;
+        const maxY = 80;
+        
+        // Game state
+        let showOptimal = false;
+        let wasAffordable = true;
+        
+        function getGraphDimensions() {
+            const width = canvas.width - margin.left - margin.right;
+            const height = canvas.height - margin.top - margin.bottom;
+            return { width, height };
+        }
+        
+        function toCanvasX(x) {
+            const { width } = getGraphDimensions();
+            return margin.left + (x / maxX) * width;
+        }
+        
+        function toCanvasY(y) {
+            const { height } = getGraphDimensions();
+            return margin.top + height - (y / maxY) * height;
+        }
+        
+        function calculateOptimal(M, Px, Py, alpha) {
+            const xStar = (alpha * M) / Px;
+            const yStar = ((1 - alpha) * M) / Py;
+            const utility = Math.pow(xStar, alpha) * Math.pow(yStar, 1 - alpha);
+            return { xStar, yStar, utility };
+        }
+        
+        function calculateUtility(x, y, alpha) {
+            if (x <= 0 || y <= 0) return 0;
+            return Math.pow(x, alpha) * Math.pow(y, 1 - alpha);
+        }
+        
+        function getIndifferenceY(x, utility, alpha) {
+            if (x <= 0) return null;
+            const yPower = Math.pow(utility / Math.pow(x, alpha), 1 / (1 - alpha));
+            return yPower;
+        }
+        
+        function isAffordable(x, y, M, Px, Py) {
+            return (Px * x + Py * y) <= M * 1.001;
+        }
+        
+        function drawGraph() {
+            const M = parseFloat(incomeSlider.value);
+            const Px = parseFloat(pxSlider.value);
+            const Py = parseFloat(pySlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const userX = parseFloat(userXSlider.value);
+            const userY = parseFloat(userYSlider.value);
+            
+            // Update display values
+            document.getElementById('income-value').textContent = M;
+            document.getElementById('px-value').textContent = Px;
+            document.getElementById('py-value').textContent = Py;
+            document.getElementById('alpha-value').textContent = alpha.toFixed(2);
+            document.getElementById('user-x-value').textContent = userX.toFixed(1);
+            document.getElementById('user-y-value').textContent = userY.toFixed(1);
+            
+            const { xStar, yStar, utility: optimalUtility } = calculateOptimal(M, Px, Py, alpha);
+            const userUtility = calculateUtility(userX, userY, alpha);
+            const spending = Px * userX + Py * userY;
+            const affordable = isAffordable(userX, userY, M, Px, Py);
+            
+            // Check if near optimal
+            const nearOptimal = affordable && Math.abs(userUtility - optimalUtility) / optimalUtility < 0.02;
+            
+            // Budget bar
+            const budgetPct = Math.min((spending / M) * 100, 150);
+            document.getElementById('budget-fill').style.width = `${Math.min(budgetPct, 100)}%`;
+            document.getElementById('budget-fill').className = 'budget-fill' + (!affordable ? ' over' : '');
+            document.getElementById('budget-status').innerHTML = affordable 
+                ? `$${spending.toFixed(0)} / $${M}` 
+                : `<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
+            
+            // Update UI elements
+            document.getElementById('score-value').textContent = affordable ? userUtility.toFixed(1) : '—';
+            document.getElementById('optimal-utility').textContent = optimalUtility.toFixed(1);
+            
+            // Proximity calculation
+            const proximity = affordable ? Math.min(100, (userUtility / optimalUtility) * 100) : 0;
+            document.getElementById('proximity-pct').textContent = `${proximity.toFixed(0)}%`;
+            document.getElementById('proximity-fill').style.width = `${proximity}%`;
+            
+            // Big utility display
+            bigUtility.textContent = affordable ? userUtility.toFixed(1) : '—';
+            bigUtility.className = 'utility-value' + (!affordable ? ' infeasible' : (nearOptimal ? ' optimal' : ''));
+            
+            // Banners - trigger shake only on transition to unaffordable
+            const nowUnaffordable = !affordable;
+            if (nowUnaffordable && wasAffordable) {
+                errorBanner.classList.remove('visible');
+                void errorBanner.offsetWidth; // Force reflow
+                errorBanner.classList.add('visible');
+            } else if (nowUnaffordable) {
+                errorBanner.classList.add('visible');
+            } else {
+                errorBanner.classList.remove('visible');
+            }
+            wasAffordable = affordable;
+            
+            successBanner.className = 'success-banner' + (nearOptimal ? ' visible' : '');
+            
+            // Clear canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const { width, height } = getGraphDimensions();
+            
+            // Draw grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i <= 8; i++) {
+                const x = margin.left + (i / 8) * width;
+                const y = margin.top + (i / 8) * height;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + width, y);
+                ctx.stroke();
+            }
+            
+            // Draw feasible region (shaded)
+            const xIntercept = M / Px;
+            const yIntercept = M / Py;
+            
+            ctx.fillStyle = 'rgba(49, 151, 149, 0.08)';
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(0), toCanvasY(0));
+            ctx.lineTo(toCanvasX(0), toCanvasY(Math.min(yIntercept, maxY)));
+            if (yIntercept <= maxY && xIntercept <= maxX) {
+                ctx.lineTo(toCanvasX(xIntercept), toCanvasY(0));
+            } else if (yIntercept > maxY && xIntercept <= maxX) {
+                const xAtMaxY = (M - Py * maxY) / Px;
+                ctx.lineTo(toCanvasX(Math.max(0, xAtMaxY)), toCanvasY(maxY));
+                ctx.lineTo(toCanvasX(xIntercept), toCanvasY(0));
+            } else if (yIntercept <= maxY && xIntercept > maxX) {
+                const yAtMaxX = (M - Px * maxX) / Py;
+                ctx.lineTo(toCanvasX(maxX), toCanvasY(Math.max(0, yAtMaxX)));
+                ctx.lineTo(toCanvasX(maxX), toCanvasY(0));
+            }
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+            
+            // Axis labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '14px Segoe UI';
+            ctx.textAlign = 'center';
+            
+            for (let i = 0; i <= 8; i++) {
+                const val = (i / 8) * maxX;
+                ctx.fillText(val.toFixed(0), toCanvasX(val), margin.top + height + 25);
+            }
+            
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 8; i++) {
+                const val = (i / 8) * maxY;
+                ctx.fillText(val.toFixed(0), margin.left - 10, toCanvasY(val) + 5);
+            }
+            
+            // Axis titles
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '16px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Good X', margin.left + width / 2, canvas.height - 10);
+            
+            ctx.save();
+            ctx.translate(20, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Good Y', 0, 0);
+            ctx.restore();
+            
+            // Draw budget constraint
+            ctx.strokeStyle = '#e53e3e';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(0), toCanvasY(Math.min(yIntercept, maxY)));
+            ctx.lineTo(toCanvasX(Math.min(xIntercept, maxX)), toCanvasY(0));
+            ctx.stroke();
+            
+            // Draw user's indifference curve
+            if (userUtility > 0) {
+                ctx.strokeStyle = affordable ? '#319795' : '#e53e3e';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                let started = false;
+                for (let x = 0.5; x <= maxX; x += 0.3) {
+                    const y = getIndifferenceY(x, userUtility, alpha);
+                    if (y !== null && y <= maxY && y >= 0) {
+                        if (!started) {
+                            ctx.moveTo(toCanvasX(x), toCanvasY(y));
+                            started = true;
+                        } else {
+                            ctx.lineTo(toCanvasX(x), toCanvasY(y));
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+            
+            // Draw optimal point and curve if hint is shown
+            if (showOptimal) {
+                // Optimal indifference curve
+                ctx.strokeStyle = 'rgba(214, 158, 46, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 4]);
+                ctx.beginPath();
+                let started = false;
+                for (let x = 0.5; x <= maxX; x += 0.3) {
+                    const y = getIndifferenceY(x, optimalUtility, alpha);
+                    if (y !== null && y <= maxY && y >= 0) {
+                        if (!started) {
+                            ctx.moveTo(toCanvasX(x), toCanvasY(y));
+                            started = true;
+                        } else {
+                            ctx.lineTo(toCanvasX(x), toCanvasY(y));
+                        }
+                    }
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Optimal point
+                ctx.fillStyle = '#d69e2e';
+                ctx.beginPath();
+                ctx.arc(toCanvasX(xStar), toCanvasY(yStar), 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                ctx.fillStyle = '#d69e2e';
+                ctx.font = 'bold 12px Segoe UI';
+                ctx.textAlign = 'left';
+                ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`, toCanvasX(xStar) + 16, toCanvasY(yStar) + 4);
+            }
+            
+            // Draw user's chosen point
+            if (userX > 0 && userY > 0 && userX <= maxX && userY <= maxY) {
+                // Glow effect
+                const gradient = ctx.createRadialGradient(
+                    toCanvasX(userX), toCanvasY(userY), 0,
+                    toCanvasX(userX), toCanvasY(userY), 25
+                );
+                if (affordable) {
+                    gradient.addColorStop(0, nearOptimal ? 'rgba(214, 158, 46, 0.5)' : 'rgba(49, 151, 149, 0.3)');
+                    gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                } else {
+                    gradient.addColorStop(0, 'rgba(229, 62, 62, 0.4)');
+                    gradient.addColorStop(1, 'rgba(229, 62, 62, 0)');
+                }
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(toCanvasX(userX), toCanvasY(userY), 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Point
+                ctx.fillStyle = affordable ? (nearOptimal ? '#d69e2e' : '#319795') : '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(toCanvasX(userX), toCanvasY(userY), 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#1a202c';
+                ctx.font = 'bold 12px Segoe UI';
+                ctx.textAlign = 'left';
+                const labelX = userX < 60 ? toCanvasX(userX) + 16 : toCanvasX(userX) - 80;
+                ctx.fillText(`(${userX.toFixed(1)}, ${userY.toFixed(1)})`, labelX, toCanvasY(userY) - 8);
+            }
+            
+            // Budget constraint labels
+            ctx.fillStyle = '#e53e3e';
+            ctx.font = '12px Segoe UI';
+            
+            if (xIntercept <= maxX) {
+                ctx.textAlign = 'center';
+                ctx.fillText(`M/Pₓ = ${xIntercept.toFixed(1)}`, toCanvasX(xIntercept), toCanvasY(0) + 40);
+            }
+            
+            if (yIntercept <= maxY) {
+                ctx.textAlign = 'left';
+                ctx.fillText(`M/Pᵧ = ${yIntercept.toFixed(1)}`, toCanvasX(0) + 10, toCanvasY(yIntercept) - 10);
+            }
+        }
+        
+        // Event listeners for all sliders
+        [incomeSlider, pxSlider, pySlider, alphaSlider].forEach(slider => {
+            slider.addEventListener('input', () => {
+                showOptimal = false;
+                drawGraph();
+            });
+        });
+        
+        [userXSlider, userYSlider].forEach(slider => {
+            slider.addEventListener('input', drawGraph);
+        });
+        
+        function resetGame() {
+            // Randomize parameters
+            incomeSlider.value = 60 + Math.random() * 100;
+            pxSlider.value = 1 + Math.random() * 6;
+            pySlider.value = 1 + Math.random() * 6;
+            alphaSlider.value = 0.2 + Math.random() * 0.6;
+            
+            // Reset user position
+            userXSlider.value = 10 + Math.random() * 20;
+            userYSlider.value = 10 + Math.random() * 20;
+            
+            showOptimal = false;
+            drawGraph();
+        }
+        
+        function showHint() {
+            showOptimal = !showOptimal;
+            drawGraph();
+        }
+        
+        // Initial draw
+        drawGraph();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demand Derivation: Comparing Utility Functions</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1600px; margin: 0 auto; }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .utility-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .utility-btn {
+            padding: 10px 20px;
+            border: 2px solid #a0aec0;
+            background: #ffffff;
+            color: #4a5568;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .utility-btn:hover {
+            border-color: #319795;
+            background: rgba(49, 151, 149, 0.1);
+        }
+        
+        .utility-btn.active {
+            border-color: #319795;
+            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 320px;
+            gap: 15px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 1fr 1fr; }
+        }
+        
+        @media (max-width: 800px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .graph-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #ffffff;
+            border-radius: 6px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.highlight {
+            border: 2px solid #e53e3e;
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.05) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .panel-title.price { color: #e53e3e; }
+        
+        .slider-group { margin-bottom: 12px; }
+        .slider-group:last-child { margin-bottom: 0; }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        .slider-value.price { color: #e53e3e; }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+        }
+        
+        input[type="range"].price-slider::-webkit-slider-thumb {
+            background: #e53e3e;
+        }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.75rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 12px;
+            border-left: 3px solid #319795;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+        
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco', 'Consolas', monospace; color: #1a202c; }
+        .info-value.highlight { color: #d69e2e; font-weight: 600; }
+        .info-value.changed { color: #319795; }
+        .info-value.unchanged { color: #718096; }
+        
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            transition: all 0.15s;
+        }
+        
+        .btn-animate {
+            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
+            color: #ffffff;
+        }
+        
+        .btn-animate.running {
+            background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #e53e3e;
+            color: #e53e3e;
+        }
+        
+        .insight-box {
+            background: rgba(49, 151, 149, 0.08);
+            border: 1px solid rgba(49, 151, 149, 0.3);
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+        
+        .insight-box strong { color: #319795; }
+        .insight-box .substitutes { color: #e53e3e; }
+        .insight-box .complements { color: #805ad5; }
+        .insight-box .independent { color: #d69e2e; }
+        
+        .cross-price-indicator {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .cross-price-indicator.substitutes {
+            background: rgba(229, 62, 62, 0.1);
+            border: 1px solid rgba(229, 62, 62, 0.3);
+            color: #e53e3e;
+        }
+        
+        .cross-price-indicator.complements {
+            background: rgba(128, 90, 213, 0.1);
+            border: 1px solid rgba(128, 90, 213, 0.3);
+            color: #805ad5;
+        }
+        
+        .cross-price-indicator.independent {
+            background: rgba(214, 158, 46, 0.1);
+            border: 1px solid rgba(214, 158, 46, 0.3);
+            color: #d69e2e;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 16px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            margin-top: 10px;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 6px 4px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .comparison-table th {
+            color: #718096;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .arrow-up { color: #319795; }
+        .arrow-down { color: #e53e3e; }
+        .arrow-none { color: #d69e2e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Deriving Demand: Comparing Utility Functions</h1>
+        <p class="subtitle">See how different preferences create different cross-price effects and demand curves</p>
+        
+        <div class="utility-selector">
+            <button class="utility-btn active" data-utility="cobb-douglas">Cobb-Douglas</button>
+            <button class="utility-btn" data-utility="perfect-substitutes">Perfect Substitutes</button>
+            <button class="utility-btn" data-utility="perfect-complements">Perfect Complements</button>
+            <button class="utility-btn" data-utility="ces">CES (ρ adjustable)</button>
+            <button class="utility-btn" data-utility="quasilinear">Quasilinear</button>
+        </div>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="graph-title">Indifference Curves & Budget Constraint</div>
+                <canvas id="ic-graph" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <div class="graph-title">Demand Curves (X and Y vs Price of X)</div>
+                <canvas id="demand-graph" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title price">🎯 Price of X</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Pₓ</span>
+                            <span class="slider-value price" id="px-value">$2.00</span>
+                        </div>
+                        <input type="range" class="price-slider" id="px" min="0.5" max="8" value="2" step="0.1">
+                    </div>
+                    <button class="btn btn-animate" id="animate-btn" onclick="toggleAnimation()">
+                        ▶️ Animate Price
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHistory()">
+                        🗑️ Clear Points
+                    </button>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Budget</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Income (M)</span>
+                            <span class="slider-value" id="income-value">$100</span>
+                        </div>
+                        <input type="range" id="income" min="40" max="200" value="100">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Pᵧ</span>
+                            <span class="slider-value" id="py-value">$2.00</span>
+                        </div>
+                        <input type="range" id="py" min="0.5" max="8" value="2" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Utility Function Parameters</div>
+                    <div id="param-controls"></div>
+                    <div class="equation-box" id="utility-equation">
+                        U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Optimal Bundle</div>
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-label">X*</span>
+                            <span class="info-value highlight" id="opt-x">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Y*</span>
+                            <span class="info-value" id="opt-y">25.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">ΔY* when Pₓ↑</span>
+                            <span class="info-value" id="cross-effect">—</span>
+                        </div>
+                    </div>
+                    <div class="cross-price-indicator independent" id="cross-indicator">
+                        Zero Cross-Price Effect
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Key Insight</div>
+                    <div class="insight-box" id="insight-text">
+                        <strong>Cobb-Douglas:</strong> Fixed expenditure shares mean Y* = (1-α)M/Pᵧ is <span class="independent">independent of Pₓ</span>. No cross-price effect!
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <span>Budget / X Demand</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #319795;"></div>
+                            <span>IC / Y Demand</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #d69e2e;"></div>
+                            <span>Current Optimum</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const icCanvas = document.getElementById('ic-graph');
+        const demandCanvas = document.getElementById('demand-graph');
+        const icCtx = icCanvas.getContext('2d');
+        const demandCtx = demandCanvas.getContext('2d');
+        
+        // State
+        let currentUtility = 'cobb-douglas';
+        let demandPoints = [];
+        let isAnimating = false;
+        let animationId = null;
+        let prevY = null;
+        
+        // Parameters for different utility functions
+        let params = {
+            alpha: 0.5,      // Cobb-Douglas share
+            a: 1,            // Perfect substitutes coefficient for X
+            b: 1,            // Perfect substitutes coefficient for Y
+            ratio: 1,        // Perfect complements ratio
+            rho: 0.5,        // CES parameter
+            k: 10            // Quasilinear parameter
+        };
+        
+        const margin = { top: 30, right: 30, bottom: 50, left: 60 };
+        
+        // Utility function definitions
+        const utilityFunctions = {
+            'cobb-douglas': {
+                name: 'Cobb-Douglas',
+                equation: 'U(X,Y) = X<sup>α</sup> · Y<sup>(1-α)</sup>',
+                optimal: (M, Px, Py) => {
+                    const x = (params.alpha * M) / Px;
+                    const y = ((1 - params.alpha) * M) / Py;
+                    return { x, y };
+                },
+                utility: (x, y) => Math.pow(x, params.alpha) * Math.pow(y, 1 - params.alpha),
+                indifferenceCurve: (x, u) => Math.pow(u / Math.pow(x, params.alpha), 1 / (1 - params.alpha)),
+                insight: `<strong>Cobb-Douglas:</strong> Fixed expenditure shares mean Y* = (1-α)M/Pᵧ is <span class="independent">independent of Pₓ</span>. No cross-price effect!`,
+                crossEffect: 'independent',
+                params: ['alpha']
+            },
+            'perfect-substitutes': {
+                name: 'Perfect Substitutes',
+                equation: 'U(X,Y) = aX + bY',
+                optimal: (M, Px, Py) => {
+                    const mrsXY = params.a / params.b;
+                    const priceRatio = Px / Py;
+                    if (mrsXY > priceRatio) {
+                        return { x: M / Px, y: 0 };
+                    } else if (mrsXY < priceRatio) {
+                        return { x: 0, y: M / Py };
+                    } else {
+                        return { x: M / (2 * Px), y: M / (2 * Py) };
+                    }
+                },
+                utility: (x, y) => params.a * x + params.b * y,
+                indifferenceCurve: (x, u) => (u - params.a * x) / params.b,
+                insight: `<strong>Perfect Substitutes:</strong> Consumer buys <em>only</em> the cheaper good (per util). When Pₓ rises above threshold, <span class="substitutes">all spending switches to Y</span>!`,
+                crossEffect: 'substitutes',
+                params: ['a', 'b']
+            },
+            'perfect-complements': {
+                name: 'Perfect Complements',
+                equation: 'U(X,Y) = min(X, Y/r)',
+                optimal: (M, Px, Py) => {
+                    const r = params.ratio;
+                    const x = M / (Px + r * Py);
+                    const y = r * x;
+                    return { x, y };
+                },
+                utility: (x, y) => Math.min(x, y / params.ratio),
+                indifferenceCurve: (x, u) => params.ratio * u, // L-shaped, special handling
+                insight: `<strong>Perfect Complements:</strong> Must consume in fixed ratio. When Pₓ rises, buy less of <em>both</em> goods. <span class="complements">X and Y are complements</span>!`,
+                crossEffect: 'complements',
+                params: ['ratio']
+            },
+            'ces': {
+                name: 'CES',
+                equation: 'U = (X<sup>ρ</sup> + Y<sup>ρ</sup>)<sup>1/ρ</sup>',
+                optimal: (M, Px, Py) => {
+                    const r = params.rho;
+                    const sigma = 1 / (1 - r);
+                    const ratio = Math.pow(Py / Px, sigma);
+                    const y = M / (Px * ratio + Py);
+                    const x = ratio * y;
+                    return { x: Math.max(0.01, x), y: Math.max(0.01, y) };
+                },
+                utility: (x, y) => Math.pow(Math.pow(x, params.rho) + Math.pow(y, params.rho), 1 / params.rho),
+                indifferenceCurve: (x, u) => {
+                    const r = params.rho;
+                    const uRho = Math.pow(u, r);
+                    const xRho = Math.pow(x, r);
+                    if (uRho - xRho <= 0) return null;
+                    return Math.pow(uRho - xRho, 1 / r);
+                },
+                insight: `<strong>CES:</strong> Elasticity of substitution σ = 1/(1-ρ). When ρ→1, perfect substitutes. When ρ→-∞, perfect complements. <span class="substitutes">Adjustable substitutability!</span>`,
+                crossEffect: 'substitutes',
+                params: ['rho']
+            },
+            'quasilinear': {
+                name: 'Quasilinear',
+                equation: 'U(X,Y) = k·ln(X) + Y',
+                optimal: (M, Px, Py) => {
+                    const x = Math.min((params.k * Py) / Px, M / Px);
+                    const y = Math.max(0, (M - Px * x) / Py);
+                    return { x, y };
+                },
+                utility: (x, y) => params.k * Math.log(x) + y,
+                indifferenceCurve: (x, u) => u - params.k * Math.log(x),
+                insight: `<strong>Quasilinear:</strong> X demand depends only on Pₓ (not M!). Income effects go entirely to Y. <span class="substitutes">Y increases when Pₓ rises</span> (substitution).`,
+                crossEffect: 'substitutes',
+                params: ['k']
+            }
+        };
+        
+        function setupParamControls() {
+            const container = document.getElementById('param-controls');
+            const utilFunc = utilityFunctions[currentUtility];
+            
+            let html = '';
+            utilFunc.params.forEach(param => {
+                let min, max, step, value, label;
+                switch(param) {
+                    case 'alpha':
+                        min = 0.1; max = 0.9; step = 0.01; value = params.alpha; label = 'α (share on X)';
+                        break;
+                    case 'a':
+                        min = 0.5; max = 3; step = 0.1; value = params.a; label = 'a (X coefficient)';
+                        break;
+                    case 'b':
+                        min = 0.5; max = 3; step = 0.1; value = params.b; label = 'b (Y coefficient)';
+                        break;
+                    case 'ratio':
+                        min = 0.25; max = 4; step = 0.25; value = params.ratio; label = 'r (Y/X ratio)';
+                        break;
+                    case 'rho':
+                        min = -2; max = 0.9; step = 0.1; value = params.rho; label = 'ρ (substitution)';
+                        break;
+                    case 'k':
+                        min = 5; max = 50; step = 1; value = params.k; label = 'k (X utility weight)';
+                        break;
+                }
+                html += `
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>${label}</span>
+                            <span class="slider-value" id="${param}-value">${value}</span>
+                        </div>
+                        <input type="range" id="${param}" min="${min}" max="${max}" step="${step}" value="${value}">
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            
+            // Add event listeners
+            utilFunc.params.forEach(param => {
+                document.getElementById(param).addEventListener('input', (e) => {
+                    params[param] = parseFloat(e.target.value);
+                    document.getElementById(`${param}-value`).textContent = params[param].toFixed(2);
+                    clearHistory();
+                    updateGraphs();
+                });
+            });
+            
+            document.getElementById('utility-equation').innerHTML = utilFunc.equation;
+            document.getElementById('insight-text').innerHTML = utilFunc.insight;
+        }
+        
+        function getOptimal() {
+            const M = parseFloat(document.getElementById('income').value);
+            const Px = parseFloat(document.getElementById('px').value);
+            const Py = parseFloat(document.getElementById('py').value);
+            return utilityFunctions[currentUtility].optimal(M, Px, Py);
+        }
+        
+        function drawICGraph() {
+            const M = parseFloat(document.getElementById('income').value);
+            const Px = parseFloat(document.getElementById('px').value);
+            const Py = parseFloat(document.getElementById('py').value);
+            
+            const { x: xStar, y: yStar } = getOptimal();
+            const utilFunc = utilityFunctions[currentUtility];
+            
+            // Update displays
+            document.getElementById('px-value').textContent = `$${Px.toFixed(2)}`;
+            document.getElementById('py-value').textContent = `$${Py.toFixed(2)}`;
+            document.getElementById('income-value').textContent = `$${M}`;
+            document.getElementById('opt-x').textContent = xStar.toFixed(1);
+            document.getElementById('opt-y').textContent = yStar.toFixed(1);
+            
+            // Cross-price effect
+            if (prevY !== null) {
+                const diff = yStar - prevY;
+                const effectEl = document.getElementById('cross-effect');
+                const indicatorEl = document.getElementById('cross-indicator');
+                
+                if (Math.abs(diff) < 0.1) {
+                    effectEl.textContent = '≈ 0 (no change)';
+                    effectEl.className = 'info-value unchanged';
+                    indicatorEl.className = 'cross-price-indicator independent';
+                    indicatorEl.textContent = '⚖️ Zero Cross-Price Effect';
+                } else if (diff > 0) {
+                    effectEl.textContent = `+${diff.toFixed(1)} (↑ substitutes)`;
+                    effectEl.className = 'info-value changed';
+                    indicatorEl.className = 'cross-price-indicator substitutes';
+                    indicatorEl.textContent = '↗️ Substitutes: Y↑ when Pₓ↑';
+                } else {
+                    effectEl.textContent = `${diff.toFixed(1)} (↓ complements)`;
+                    effectEl.className = 'info-value changed';
+                    indicatorEl.className = 'cross-price-indicator complements';
+                    indicatorEl.textContent = '↘️ Complements: Y↓ when Pₓ↑';
+                }
+            }
+            
+            // Clear canvas
+            icCtx.fillStyle = '#ffffff';
+            icCtx.fillRect(0, 0, icCanvas.width, icCanvas.height);
+            
+            const { width, height } = { width: icCanvas.width - margin.left - margin.right, height: icCanvas.height - margin.top - margin.bottom };
+            const maxX = 80, maxY = 80;
+            
+            const toX = (x) => margin.left + (x / maxX) * width;
+            const toY = (y) => margin.top + height - (y / maxY) * height;
+            
+            // Grid
+            icCtx.strokeStyle = '#edf2f7';
+            icCtx.lineWidth = 1;
+            for (let i = 0; i <= 8; i++) {
+                icCtx.beginPath();
+                icCtx.moveTo(toX(i * 10), margin.top);
+                icCtx.lineTo(toX(i * 10), margin.top + height);
+                icCtx.stroke();
+                icCtx.beginPath();
+                icCtx.moveTo(margin.left, toY(i * 10));
+                icCtx.lineTo(margin.left + width, toY(i * 10));
+                icCtx.stroke();
+            }
+            
+            // Axes
+            icCtx.strokeStyle = '#a0aec0';
+            icCtx.lineWidth = 2;
+            icCtx.beginPath();
+            icCtx.moveTo(margin.left, margin.top);
+            icCtx.lineTo(margin.left, margin.top + height);
+            icCtx.lineTo(margin.left + width, margin.top + height);
+            icCtx.stroke();
+            
+            // Axis labels
+            icCtx.fillStyle = '#718096';
+            icCtx.font = '11px Segoe UI';
+            icCtx.textAlign = 'center';
+            for (let i = 0; i <= 8; i++) icCtx.fillText(i * 10, toX(i * 10), margin.top + height + 18);
+            icCtx.textAlign = 'right';
+            for (let i = 0; i <= 8; i++) icCtx.fillText(i * 10, margin.left - 6, toY(i * 10) + 4);
+            
+            icCtx.fillStyle = '#4a5568';
+            icCtx.font = '13px Segoe UI';
+            icCtx.textAlign = 'center';
+            icCtx.fillText('Good X', margin.left + width / 2, icCanvas.height - 8);
+            icCtx.save();
+            icCtx.translate(14, margin.top + height / 2);
+            icCtx.rotate(-Math.PI / 2);
+            icCtx.fillText('Good Y', 0, 0);
+            icCtx.restore();
+            
+            // Previous budget constraints
+            icCtx.strokeStyle = 'rgba(229, 62, 62, 0.15)';
+            icCtx.lineWidth = 1;
+            demandPoints.forEach(p => {
+                icCtx.beginPath();
+                icCtx.moveTo(toX(0), toY(Math.min(M / Py, maxY)));
+                icCtx.lineTo(toX(Math.min(M / p.px, maxX)), toY(0));
+                icCtx.stroke();
+            });
+            
+            // Price-consumption path
+            if (demandPoints.length > 1) {
+                icCtx.strokeStyle = '#d69e2e';
+                icCtx.lineWidth = 2;
+                icCtx.setLineDash([4, 3]);
+                icCtx.beginPath();
+                const sorted = [...demandPoints].sort((a, b) => a.px - b.px);
+                sorted.forEach((p, i) => {
+                    if (p.x <= maxX && p.y <= maxY) {
+                        if (i === 0) icCtx.moveTo(toX(p.x), toY(p.y));
+                        else icCtx.lineTo(toX(p.x), toY(p.y));
+                    }
+                });
+                icCtx.stroke();
+                icCtx.setLineDash([]);
+            }
+            
+            // Previous optimal points
+            demandPoints.forEach(p => {
+                if (p.x <= maxX && p.y <= maxY) {
+                    icCtx.fillStyle = 'rgba(214, 158, 46, 0.3)';
+                    icCtx.beginPath();
+                    icCtx.arc(toX(p.x), toY(p.y), 4, 0, Math.PI * 2);
+                    icCtx.fill();
+                }
+            });
+            
+            // Current budget constraint
+            const xInt = Math.min(M / Px, maxX);
+            const yInt = Math.min(M / Py, maxY);
+            icCtx.strokeStyle = '#e53e3e';
+            icCtx.lineWidth = 3;
+            icCtx.beginPath();
+            icCtx.moveTo(toX(0), toY(yInt));
+            icCtx.lineTo(toX(xInt), toY(0));
+            icCtx.stroke();
+            
+            // Indifference curve
+            if (xStar > 0 && yStar > 0) {
+                const u = utilFunc.utility(xStar, yStar);
+                
+                if (currentUtility === 'perfect-complements') {
+                    // L-shaped IC
+                    icCtx.strokeStyle = '#319795';
+                    icCtx.lineWidth = 3;
+                    icCtx.beginPath();
+                    icCtx.moveTo(toX(xStar), toY(maxY));
+                    icCtx.lineTo(toX(xStar), toY(yStar));
+                    icCtx.lineTo(toX(maxX), toY(yStar));
+                    icCtx.stroke();
+                } else if (currentUtility === 'perfect-substitutes') {
+                    // Linear IC
+                    icCtx.strokeStyle = '#319795';
+                    icCtx.lineWidth = 3;
+                    const yAtX0 = u / params.b;
+                    const xAtY0 = u / params.a;
+                    icCtx.beginPath();
+                    icCtx.moveTo(toX(0), toY(Math.min(yAtX0, maxY)));
+                    icCtx.lineTo(toX(Math.min(xAtY0, maxX)), toY(0));
+                    icCtx.stroke();
+                } else {
+                    // Curved IC
+                    icCtx.strokeStyle = '#319795';
+                    icCtx.lineWidth = 3;
+                    icCtx.beginPath();
+                    let started = false;
+                    for (let x = 0.5; x <= maxX; x += 0.3) {
+                        try {
+                            const y = utilFunc.indifferenceCurve(x, u);
+                            if (y > 0 && y <= maxY && isFinite(y)) {
+                                if (!started) { icCtx.moveTo(toX(x), toY(y)); started = true; }
+                                else icCtx.lineTo(toX(x), toY(y));
+                            }
+                        } catch(e) {}
+                    }
+                    icCtx.stroke();
+                }
+            }
+            
+            // Optimal point
+            if (xStar <= maxX && yStar <= maxY && xStar >= 0 && yStar >= 0) {
+                const gradient = icCtx.createRadialGradient(toX(xStar), toY(yStar), 0, toX(xStar), toY(yStar), 18);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.4)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                icCtx.fillStyle = gradient;
+                icCtx.beginPath();
+                icCtx.arc(toX(xStar), toY(yStar), 18, 0, Math.PI * 2);
+                icCtx.fill();
+                
+                icCtx.fillStyle = '#d69e2e';
+                icCtx.beginPath();
+                icCtx.arc(toX(xStar), toY(yStar), 7, 0, Math.PI * 2);
+                icCtx.fill();
+                icCtx.strokeStyle = '#ffffff';
+                icCtx.lineWidth = 2;
+                icCtx.stroke();
+            }
+        }
+        
+        function drawDemandGraph() {
+            const Px = parseFloat(document.getElementById('px').value);
+            const { x: xStar, y: yStar } = getOptimal();
+            
+            demandCtx.fillStyle = '#ffffff';
+            demandCtx.fillRect(0, 0, demandCanvas.width, demandCanvas.height);
+            
+            const { width, height } = { width: demandCanvas.width - margin.left - margin.right, height: demandCanvas.height - margin.top - margin.bottom };
+            const maxQ = 80, maxP = 10;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            demandCtx.strokeStyle = '#edf2f7';
+            demandCtx.lineWidth = 1;
+            for (let i = 0; i <= 8; i++) {
+                demandCtx.beginPath();
+                demandCtx.moveTo(toX(i * 10), margin.top);
+                demandCtx.lineTo(toX(i * 10), margin.top + height);
+                demandCtx.stroke();
+            }
+            for (let i = 0; i <= 10; i++) {
+                demandCtx.beginPath();
+                demandCtx.moveTo(margin.left, toY(i));
+                demandCtx.lineTo(margin.left + width, toY(i));
+                demandCtx.stroke();
+            }
+            
+            // Axes
+            demandCtx.strokeStyle = '#a0aec0';
+            demandCtx.lineWidth = 2;
+            demandCtx.beginPath();
+            demandCtx.moveTo(margin.left, margin.top);
+            demandCtx.lineTo(margin.left, margin.top + height);
+            demandCtx.lineTo(margin.left + width, margin.top + height);
+            demandCtx.stroke();
+            
+            // Labels
+            demandCtx.fillStyle = '#718096';
+            demandCtx.font = '11px Segoe UI';
+            demandCtx.textAlign = 'center';
+            for (let i = 0; i <= 8; i++) demandCtx.fillText(i * 10, toX(i * 10), margin.top + height + 18);
+            demandCtx.textAlign = 'right';
+            for (let i = 0; i <= 10; i += 2) demandCtx.fillText(`$${i}`, margin.left - 6, toY(i) + 4);
+            
+            demandCtx.fillStyle = '#4a5568';
+            demandCtx.font = '13px Segoe UI';
+            demandCtx.textAlign = 'center';
+            demandCtx.fillText('Quantity', margin.left + width / 2, demandCanvas.height - 8);
+            demandCtx.save();
+            demandCtx.translate(14, margin.top + height / 2);
+            demandCtx.rotate(-Math.PI / 2);
+            demandCtx.fillText('Price of X (Pₓ)', 0, 0);
+            demandCtx.restore();
+            
+            // Draw traced demand curves
+            if (demandPoints.length > 1) {
+                const sorted = [...demandPoints].sort((a, b) => a.px - b.px);
+                
+                // X demand curve (red)
+                demandCtx.strokeStyle = '#e53e3e';
+                demandCtx.lineWidth = 3;
+                demandCtx.beginPath();
+                sorted.forEach((p, i) => {
+                    if (p.x <= maxQ && p.px <= maxP) {
+                        if (i === 0) demandCtx.moveTo(toX(p.x), toY(p.px));
+                        else demandCtx.lineTo(toX(p.x), toY(p.px));
+                    }
+                });
+                demandCtx.stroke();
+                
+                // Y demand curve (teal)
+                demandCtx.strokeStyle = '#319795';
+                demandCtx.lineWidth = 3;
+                demandCtx.beginPath();
+                sorted.forEach((p, i) => {
+                    if (p.y <= maxQ && p.px <= maxP) {
+                        if (i === 0) demandCtx.moveTo(toX(p.y), toY(p.px));
+                        else demandCtx.lineTo(toX(p.y), toY(p.px));
+                    }
+                });
+                demandCtx.stroke();
+            }
+            
+            // Points
+            demandPoints.forEach(p => {
+                // X point
+                if (p.x <= maxQ) {
+                    demandCtx.fillStyle = 'rgba(229, 62, 62, 0.5)';
+                    demandCtx.beginPath();
+                    demandCtx.arc(toX(p.x), toY(p.px), 4, 0, Math.PI * 2);
+                    demandCtx.fill();
+                }
+                // Y point
+                if (p.y <= maxQ) {
+                    demandCtx.fillStyle = 'rgba(49, 151, 149, 0.5)';
+                    demandCtx.beginPath();
+                    demandCtx.arc(toX(p.y), toY(p.px), 4, 0, Math.PI * 2);
+                    demandCtx.fill();
+                }
+            });
+            
+            // Current points
+            if (Px <= maxP) {
+                // X current
+                if (xStar <= maxQ) {
+                    demandCtx.fillStyle = '#e53e3e';
+                    demandCtx.beginPath();
+                    demandCtx.arc(toX(xStar), toY(Px), 7, 0, Math.PI * 2);
+                    demandCtx.fill();
+                    demandCtx.strokeStyle = '#ffffff';
+                    demandCtx.lineWidth = 2;
+                    demandCtx.stroke();
+                }
+                
+                // Y current
+                if (yStar <= maxQ) {
+                    demandCtx.fillStyle = '#319795';
+                    demandCtx.beginPath();
+                    demandCtx.arc(toX(yStar), toY(Px), 7, 0, Math.PI * 2);
+                    demandCtx.fill();
+                    demandCtx.strokeStyle = '#ffffff';
+                    demandCtx.lineWidth = 2;
+                    demandCtx.stroke();
+                }
+            }
+            
+            // Labels
+            demandCtx.font = 'bold 11px Segoe UI';
+            demandCtx.fillStyle = '#e53e3e';
+            demandCtx.textAlign = 'left';
+            demandCtx.fillText('X Demand', toX(5), toY(9));
+            demandCtx.fillStyle = '#319795';
+            demandCtx.fillText('Y Demand', toX(5), toY(8));
+        }
+        
+        function recordPoint() {
+            const Px = parseFloat(document.getElementById('px').value);
+            const { x, y } = getOptimal();
+            
+            const existing = demandPoints.findIndex(p => Math.abs(p.px - Px) < 0.05);
+            if (existing === -1) {
+                demandPoints.push({ x, y, px: Px });
+            }
+        }
+        
+        function updateGraphs() {
+            const { y: newY } = getOptimal();
+            recordPoint();
+            drawICGraph();
+            drawDemandGraph();
+            prevY = newY;
+        }
+        
+        function clearHistory() {
+            demandPoints = [];
+            prevY = null;
+            document.getElementById('cross-effect').textContent = '—';
+            updateGraphs();
+        }
+        
+        function toggleAnimation() {
+            const btn = document.getElementById('animate-btn');
+            if (isAnimating) {
+                isAnimating = false;
+                btn.classList.remove('running');
+                btn.textContent = '▶️ Animate Price';
+                cancelAnimationFrame(animationId);
+            } else {
+                isAnimating = true;
+                btn.classList.add('running');
+                btn.textContent = '⏹️ Stop';
+                animatePrice();
+            }
+        }
+        
+        let animDir = 1;
+        function animatePrice() {
+            if (!isAnimating) return;
+            let px = parseFloat(document.getElementById('px').value);
+            px += animDir * 0.05;
+            if (px >= 8) { px = 8; animDir = -1; }
+            if (px <= 0.5) { px = 0.5; animDir = 1; }
+            document.getElementById('px').value = px;
+            updateGraphs();
+            animationId = requestAnimationFrame(animatePrice);
+        }
+        
+        // Utility selector
+        document.querySelectorAll('.utility-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.utility-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentUtility = btn.dataset.utility;
+                clearHistory();
+                setupParamControls();
+                updateGraphs();
+            });
+        });
+        
+        // Slider events
+        document.getElementById('px').addEventListener('input', updateGraphs);
+        document.getElementById('py').addEventListener('input', () => { clearHistory(); updateGraphs(); });
+        document.getElementById('income').addEventListener('input', () => { clearHistory(); updateGraphs(); });
+        
+        // Initialize
+        setupParamControls();
+        updateGraphs();
+    </script>
+</body>
+</html>

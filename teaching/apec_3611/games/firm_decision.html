@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firm Decision Making: Profit Maximization</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 340px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .graph-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.highlight {
+            border: 2px solid #38a169;
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.05) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        
+        .panel-title.price {
+            color: #38a169;
+        }
+        
+        .slider-group {
+            margin-bottom: 14px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        .slider-value.price {
+            color: #38a169;
+        }
+        
+        .slider-value.large {
+            font-size: 1rem;
+            padding: 5px 12px;
+            color: #319795;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+        }
+        
+        input[type="range"].price-slider::-webkit-slider-thumb {
+            background: #38a169;
+            box-shadow: 0 2px 6px rgba(56, 161, 105, 0.4);
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 3px solid #319795;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        .info-label {
+            color: #718096;
+        }
+        
+        .info-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+        }
+        
+        .info-value.highlight {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .info-value.profit {
+            color: #38a169;
+            font-weight: 600;
+        }
+        
+        .info-value.loss {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .profit-display {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .profit-display.positive {
+            background: rgba(56, 161, 105, 0.1);
+            border: 1px solid rgba(56, 161, 105, 0.3);
+        }
+        
+        .profit-display.negative {
+            background: rgba(229, 62, 62, 0.1);
+            border: 1px solid rgba(229, 62, 62, 0.3);
+        }
+        
+        .profit-display.zero {
+            background: rgba(214, 158, 46, 0.1);
+            border: 1px solid rgba(214, 158, 46, 0.3);
+        }
+        
+        .profit-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+        
+        .profit-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .profit-value.positive {
+            color: #38a169;
+        }
+        
+        .profit-value.negative {
+            color: #e53e3e;
+        }
+        
+        .profit-value.zero {
+            color: #d69e2e;
+        }
+        
+        .decision-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .decision-box strong {
+            color: #319795;
+        }
+        
+        .decision-box .produce {
+            color: #38a169;
+            font-weight: 600;
+        }
+        
+        .decision-box .shutdown {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 Firm Decision Making: Profit Maximization</h1>
+        <p class="subtitle">See how a competitive firm chooses output to maximize profit where MR = MC</p>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="graph-title">Production Function & Costs</div>
+                <canvas id="production-canvas" width="500" height="450"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <div class="graph-title">Cost Curves & Profit Maximization</div>
+                <canvas id="cost-canvas" width="500" height="450"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title price">📈 Market Price</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price (P)</span>
+                            <span class="slider-value price" id="price-value">$12.00</span>
+                        </div>
+                        <input type="range" class="price-slider" id="price" min="2" max="25" value="12" step="0.5">
+                    </div>
+                    <div class="equation-box">
+                        P = MR = AR (price taker)
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Cost Structure</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Fixed Cost (FC)</span>
+                            <span class="slider-value" id="fc-value">$50</span>
+                        </div>
+                        <input type="range" id="fc" min="0" max="150" value="50" step="5">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Wage (w)</span>
+                            <span class="slider-value" id="wage-value">$10</span>
+                        </div>
+                        <input type="range" id="wage" min="5" max="25" value="10" step="1">
+                    </div>
+                    <div class="equation-box">
+                        TC = FC + VC<br>
+                        VC = w · L
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Production Technology</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Productivity (A)</span>
+                            <span class="slider-value" id="a-value">4.0</span>
+                        </div>
+                        <input type="range" id="a-param" min="2" max="8" value="4" step="0.5">
+                    </div>
+                    <div class="equation-box">
+                        Q = A · L<sup>0.5</sup><br>
+                        (diminishing returns)
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Optimal Decision</div>
+                    <div class="info-box">
+                        <div class="info-row">
+                            <span class="info-label">Optimal Q*</span>
+                            <span class="info-value highlight" id="opt-q">10.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Labor (L*)</span>
+                            <span class="info-value" id="opt-l">6.25</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Total Revenue</span>
+                            <span class="info-value" id="total-revenue">$120</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Total Cost</span>
+                            <span class="info-value" id="total-cost">$112.50</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">ATC at Q*</span>
+                            <span class="info-value" id="atc-at-q">$11.25</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">AVC at Q*</span>
+                            <span class="info-value" id="avc-at-q">$6.25</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profit-display positive" id="profit-display">
+                        <div class="profit-label">Economic Profit</div>
+                        <div class="profit-value positive" id="profit-value">$7.50</div>
+                    </div>
+                    
+                    <div class="decision-box" id="decision-box">
+                        <strong>Decision:</strong> <span class="produce">PRODUCE</span> — Price exceeds AVC, firm covers variable costs and some fixed costs.
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Legend</div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #38a169;"></div>
+                            <span>Price / MR</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <span>MC (Marginal Cost)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #805ad5;"></div>
+                            <span>ATC (Avg Total Cost)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #d69e2e;"></div>
+                            <span>AVC (Avg Variable Cost)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #319795;"></div>
+                            <span>Profit Max Point (MR=MC)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const prodCanvas = document.getElementById('production-canvas');
+        const costCanvas = document.getElementById('cost-canvas');
+        const prodCtx = prodCanvas.getContext('2d');
+        const costCtx = costCanvas.getContext('2d');
+        
+        const margin = { top: 40, right: 30, bottom: 50, left: 60 };
+        
+        // Get slider elements
+        const priceSlider = document.getElementById('price');
+        const fcSlider = document.getElementById('fc');
+        const wageSlider = document.getElementById('wage');
+        const aSlider = document.getElementById('a-param');
+        
+        // Production function: Q = A * L^0.5
+        function production(L, A) {
+            return A * Math.sqrt(L);
+        }
+        
+        // Inverse: L = (Q/A)^2
+        function laborRequired(Q, A) {
+            return Math.pow(Q / A, 2);
+        }
+        
+        // Marginal Product of Labor: MPL = dQ/dL = 0.5 * A * L^(-0.5)
+        function MPL(L, A) {
+            if (L <= 0) return Infinity;
+            return 0.5 * A / Math.sqrt(L);
+        }
+        
+        // Total Cost: TC = FC + w*L
+        function totalCost(Q, FC, w, A) {
+            const L = laborRequired(Q, A);
+            return FC + w * L;
+        }
+        
+        // Variable Cost: VC = w*L
+        function variableCost(Q, w, A) {
+            const L = laborRequired(Q, A);
+            return w * L;
+        }
+        
+        // Marginal Cost: MC = dTC/dQ = w / MPL = w / (0.5 * A * L^(-0.5)) = 2*w*L^0.5/A = 2*w*Q/A^2
+        function marginalCost(Q, w, A) {
+            return (2 * w * Q) / (A * A);
+        }
+        
+        // Average Total Cost
+        function ATC(Q, FC, w, A) {
+            if (Q <= 0) return Infinity;
+            return totalCost(Q, FC, w, A) / Q;
+        }
+        
+        // Average Variable Cost
+        function AVC(Q, w, A) {
+            if (Q <= 0) return Infinity;
+            return variableCost(Q, w, A) / Q;
+        }
+        
+        // Find optimal Q where P = MC
+        // P = 2*w*Q/A^2  =>  Q* = P*A^2 / (2*w)
+        function optimalQ(P, w, A) {
+            return (P * A * A) / (2 * w);
+        }
+        
+        // Find minimum AVC (for shutdown decision)
+        // AVC = w*L/Q = w*(Q/A)^2/Q = w*Q/A^2
+        // dAVC/dQ = w/A^2 > 0, so AVC is increasing. Min AVC is at Q→0
+        // Actually for this production function, AVC = w*Q/A^2, which increases with Q
+        // So min AVC approaches 0 as Q→0
+        
+        function drawProductionGraph() {
+            const A = parseFloat(aSlider.value);
+            const w = parseFloat(wageSlider.value);
+            const P = parseFloat(priceSlider.value);
+            const FC = parseFloat(fcSlider.value);
+            
+            const qStar = optimalQ(P, w, A);
+            const lStar = laborRequired(qStar, A);
+            
+            prodCtx.fillStyle = '#ffffff';
+            prodCtx.fillRect(0, 0, prodCanvas.width, prodCanvas.height);
+            
+            const width = prodCanvas.width - margin.left - margin.right;
+            const height = prodCanvas.height - margin.top - margin.bottom;
+            const maxL = 30;
+            const maxQ = 25;
+            
+            const toX = (l) => margin.left + (l / maxL) * width;
+            const toY = (q) => margin.top + height - (q / maxQ) * height;
+            
+            // Grid
+            prodCtx.strokeStyle = '#edf2f7';
+            prodCtx.lineWidth = 1;
+            for (let i = 0; i <= 6; i++) {
+                const x = margin.left + (i / 6) * width;
+                const y = margin.top + (i / 6) * height;
+                prodCtx.beginPath();
+                prodCtx.moveTo(x, margin.top);
+                prodCtx.lineTo(x, margin.top + height);
+                prodCtx.stroke();
+                prodCtx.beginPath();
+                prodCtx.moveTo(margin.left, y);
+                prodCtx.lineTo(margin.left + width, y);
+                prodCtx.stroke();
+            }
+            
+            // Axes
+            prodCtx.strokeStyle = '#a0aec0';
+            prodCtx.lineWidth = 2;
+            prodCtx.beginPath();
+            prodCtx.moveTo(margin.left, margin.top);
+            prodCtx.lineTo(margin.left, margin.top + height);
+            prodCtx.lineTo(margin.left + width, margin.top + height);
+            prodCtx.stroke();
+            
+            // Axis labels
+            prodCtx.fillStyle = '#718096';
+            prodCtx.font = '11px Segoe UI';
+            prodCtx.textAlign = 'center';
+            for (let i = 0; i <= 6; i++) {
+                const l = (i / 6) * maxL;
+                prodCtx.fillText(l.toFixed(0), toX(l), margin.top + height + 18);
+            }
+            prodCtx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                prodCtx.fillText(q.toFixed(0), margin.left - 8, toY(q) + 4);
+            }
+            
+            // Axis titles
+            prodCtx.fillStyle = '#4a5568';
+            prodCtx.font = '13px Segoe UI';
+            prodCtx.textAlign = 'center';
+            prodCtx.fillText('Labor (L)', margin.left + width / 2, prodCanvas.height - 8);
+            prodCtx.save();
+            prodCtx.translate(16, margin.top + height / 2);
+            prodCtx.rotate(-Math.PI / 2);
+            prodCtx.fillText('Output (Q)', 0, 0);
+            prodCtx.restore();
+            
+            // Production function curve
+            prodCtx.strokeStyle = '#3182ce';
+            prodCtx.lineWidth = 3;
+            prodCtx.beginPath();
+            for (let l = 0; l <= maxL; l += 0.2) {
+                const q = production(l, A);
+                if (q <= maxQ) {
+                    if (l === 0) prodCtx.moveTo(toX(l), toY(q));
+                    else prodCtx.lineTo(toX(l), toY(q));
+                }
+            }
+            prodCtx.stroke();
+            
+            // Optimal point
+            if (lStar <= maxL && qStar <= maxQ) {
+                // Dashed lines to axes
+                prodCtx.strokeStyle = '#a0aec0';
+                prodCtx.lineWidth = 1;
+                prodCtx.setLineDash([5, 3]);
+                prodCtx.beginPath();
+                prodCtx.moveTo(toX(lStar), toY(qStar));
+                prodCtx.lineTo(toX(lStar), toY(0));
+                prodCtx.stroke();
+                prodCtx.beginPath();
+                prodCtx.moveTo(toX(lStar), toY(qStar));
+                prodCtx.lineTo(toX(0), toY(qStar));
+                prodCtx.stroke();
+                prodCtx.setLineDash([]);
+                
+                // Point glow
+                const gradient = prodCtx.createRadialGradient(toX(lStar), toY(qStar), 0, toX(lStar), toY(qStar), 20);
+                gradient.addColorStop(0, 'rgba(49, 151, 149, 0.4)');
+                gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                prodCtx.fillStyle = gradient;
+                prodCtx.beginPath();
+                prodCtx.arc(toX(lStar), toY(qStar), 20, 0, Math.PI * 2);
+                prodCtx.fill();
+                
+                // Point
+                prodCtx.fillStyle = '#319795';
+                prodCtx.beginPath();
+                prodCtx.arc(toX(lStar), toY(qStar), 8, 0, Math.PI * 2);
+                prodCtx.fill();
+                prodCtx.strokeStyle = '#ffffff';
+                prodCtx.lineWidth = 2;
+                prodCtx.stroke();
+                
+                // Label
+                prodCtx.fillStyle = '#1a202c';
+                prodCtx.font = 'bold 11px Segoe UI';
+                prodCtx.textAlign = 'left';
+                prodCtx.fillText(`L*=${lStar.toFixed(1)}, Q*=${qStar.toFixed(1)}`, toX(lStar) + 12, toY(qStar) - 5);
+            }
+            
+            // Title for production function
+            prodCtx.fillStyle = '#3182ce';
+            prodCtx.font = 'bold 12px Segoe UI';
+            prodCtx.textAlign = 'left';
+            prodCtx.fillText(`Q = ${A.toFixed(1)}·L^0.5`, margin.left + 10, margin.top + 20);
+        }
+        
+        function drawCostGraph() {
+            const A = parseFloat(aSlider.value);
+            const w = parseFloat(wageSlider.value);
+            const P = parseFloat(priceSlider.value);
+            const FC = parseFloat(fcSlider.value);
+            
+            const qStar = optimalQ(P, w, A);
+            
+            costCtx.fillStyle = '#ffffff';
+            costCtx.fillRect(0, 0, costCanvas.width, costCanvas.height);
+            
+            const width = costCanvas.width - margin.left - margin.right;
+            const height = costCanvas.height - margin.top - margin.bottom;
+            const maxQ = 25;
+            const maxCost = 30;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (c) => margin.top + height - (c / maxCost) * height;
+            
+            // Grid
+            costCtx.strokeStyle = '#edf2f7';
+            costCtx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const x = margin.left + (i / 5) * width;
+                const y = margin.top + (i / 5) * height;
+                costCtx.beginPath();
+                costCtx.moveTo(x, margin.top);
+                costCtx.lineTo(x, margin.top + height);
+                costCtx.stroke();
+                costCtx.beginPath();
+                costCtx.moveTo(margin.left, y);
+                costCtx.lineTo(margin.left + width, y);
+                costCtx.stroke();
+            }
+            
+            // Axes
+            costCtx.strokeStyle = '#a0aec0';
+            costCtx.lineWidth = 2;
+            costCtx.beginPath();
+            costCtx.moveTo(margin.left, margin.top);
+            costCtx.lineTo(margin.left, margin.top + height);
+            costCtx.lineTo(margin.left + width, margin.top + height);
+            costCtx.stroke();
+            
+            // Axis labels
+            costCtx.fillStyle = '#718096';
+            costCtx.font = '11px Segoe UI';
+            costCtx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                costCtx.fillText(q.toFixed(0), toX(q), margin.top + height + 18);
+            }
+            costCtx.textAlign = 'right';
+            for (let i = 0; i <= 6; i++) {
+                const c = (i / 6) * maxCost;
+                costCtx.fillText(`$${c.toFixed(0)}`, margin.left - 5, toY(c) + 4);
+            }
+            
+            // Axis titles
+            costCtx.fillStyle = '#4a5568';
+            costCtx.font = '13px Segoe UI';
+            costCtx.textAlign = 'center';
+            costCtx.fillText('Quantity (Q)', margin.left + width / 2, costCanvas.height - 8);
+            costCtx.save();
+            costCtx.translate(16, margin.top + height / 2);
+            costCtx.rotate(-Math.PI / 2);
+            costCtx.fillText('$ per unit', 0, 0);
+            costCtx.restore();
+            
+            // Draw profit/loss area first (behind curves)
+            if (qStar > 0 && qStar <= maxQ) {
+                const atcAtQ = ATC(qStar, FC, w, A);
+                const avcAtQ = AVC(qStar, w, A);
+                
+                if (P > atcAtQ && atcAtQ <= maxCost) {
+                    // Profit area (green)
+                    costCtx.fillStyle = 'rgba(56, 161, 105, 0.2)';
+                    costCtx.fillRect(toX(0), toY(P), toX(qStar) - toX(0), toY(atcAtQ) - toY(P));
+                } else if (P < atcAtQ && P >= avcAtQ && atcAtQ <= maxCost) {
+                    // Loss area but still producing (red)
+                    costCtx.fillStyle = 'rgba(229, 62, 62, 0.15)';
+                    costCtx.fillRect(toX(0), toY(atcAtQ), toX(qStar) - toX(0), toY(P) - toY(atcAtQ));
+                }
+            }
+            
+            // Price / MR line (horizontal)
+            if (P <= maxCost) {
+                costCtx.strokeStyle = '#38a169';
+                costCtx.lineWidth = 3;
+                costCtx.beginPath();
+                costCtx.moveTo(margin.left, toY(P));
+                costCtx.lineTo(margin.left + width, toY(P));
+                costCtx.stroke();
+                
+                costCtx.fillStyle = '#38a169';
+                costCtx.font = 'bold 11px Segoe UI';
+                costCtx.textAlign = 'right';
+                costCtx.fillText('P = MR', margin.left + width - 5, toY(P) - 5);
+            }
+            
+            // MC curve
+            costCtx.strokeStyle = '#e53e3e';
+            costCtx.lineWidth = 3;
+            costCtx.beginPath();
+            let started = false;
+            for (let q = 0.5; q <= maxQ; q += 0.2) {
+                const mc = marginalCost(q, w, A);
+                if (mc <= maxCost) {
+                    if (!started) { costCtx.moveTo(toX(q), toY(mc)); started = true; }
+                    else costCtx.lineTo(toX(q), toY(mc));
+                }
+            }
+            costCtx.stroke();
+            
+            // ATC curve
+            costCtx.strokeStyle = '#805ad5';
+            costCtx.lineWidth = 3;
+            costCtx.beginPath();
+            started = false;
+            for (let q = 1; q <= maxQ; q += 0.2) {
+                const atc = ATC(q, FC, w, A);
+                if (atc <= maxCost && atc > 0) {
+                    if (!started) { costCtx.moveTo(toX(q), toY(atc)); started = true; }
+                    else costCtx.lineTo(toX(q), toY(atc));
+                }
+            }
+            costCtx.stroke();
+            
+            // AVC curve
+            costCtx.strokeStyle = '#d69e2e';
+            costCtx.lineWidth = 3;
+            costCtx.beginPath();
+            started = false;
+            for (let q = 0.5; q <= maxQ; q += 0.2) {
+                const avc = AVC(q, w, A);
+                if (avc <= maxCost) {
+                    if (!started) { costCtx.moveTo(toX(q), toY(avc)); started = true; }
+                    else costCtx.lineTo(toX(q), toY(avc));
+                }
+            }
+            costCtx.stroke();
+            
+            // Optimal point (where P = MC)
+            if (qStar > 0 && qStar <= maxQ) {
+                const mcAtQ = marginalCost(qStar, w, A);
+                
+                if (mcAtQ <= maxCost) {
+                    // Dashed line to Q axis
+                    costCtx.strokeStyle = '#a0aec0';
+                    costCtx.lineWidth = 1;
+                    costCtx.setLineDash([5, 3]);
+                    costCtx.beginPath();
+                    costCtx.moveTo(toX(qStar), toY(mcAtQ));
+                    costCtx.lineTo(toX(qStar), toY(0));
+                    costCtx.stroke();
+                    costCtx.setLineDash([]);
+                    
+                    // Point glow
+                    const gradient = costCtx.createRadialGradient(toX(qStar), toY(mcAtQ), 0, toX(qStar), toY(mcAtQ), 18);
+                    gradient.addColorStop(0, 'rgba(49, 151, 149, 0.5)');
+                    gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                    costCtx.fillStyle = gradient;
+                    costCtx.beginPath();
+                    costCtx.arc(toX(qStar), toY(mcAtQ), 18, 0, Math.PI * 2);
+                    costCtx.fill();
+                    
+                    // Point
+                    costCtx.fillStyle = '#319795';
+                    costCtx.beginPath();
+                    costCtx.arc(toX(qStar), toY(mcAtQ), 8, 0, Math.PI * 2);
+                    costCtx.fill();
+                    costCtx.strokeStyle = '#ffffff';
+                    costCtx.lineWidth = 2;
+                    costCtx.stroke();
+                    
+                    // Label
+                    costCtx.fillStyle = '#1a202c';
+                    costCtx.font = 'bold 11px Segoe UI';
+                    costCtx.textAlign = 'left';
+                    costCtx.fillText(`Q*=${qStar.toFixed(1)}`, toX(qStar) + 10, toY(mcAtQ) + 4);
+                }
+            }
+            
+            // Curve labels
+            costCtx.font = 'bold 11px Segoe UI';
+            costCtx.textAlign = 'left';
+            costCtx.fillStyle = '#e53e3e';
+            costCtx.fillText('MC', toX(maxQ * 0.85), toY(marginalCost(maxQ * 0.85, w, A)) - 8);
+            costCtx.fillStyle = '#805ad5';
+            const atcLabelQ = 20;
+            const atcLabel = ATC(atcLabelQ, FC, w, A);
+            if (atcLabel <= maxCost) costCtx.fillText('ATC', toX(atcLabelQ), toY(atcLabel) - 8);
+            costCtx.fillStyle = '#d69e2e';
+            costCtx.fillText('AVC', toX(maxQ * 0.9), toY(AVC(maxQ * 0.9, w, A)) - 8);
+        }
+        
+        function updateDisplay() {
+            const A = parseFloat(aSlider.value);
+            const w = parseFloat(wageSlider.value);
+            const P = parseFloat(priceSlider.value);
+            const FC = parseFloat(fcSlider.value);
+            
+            // Update slider display values
+            document.getElementById('price-value').textContent = `$${P.toFixed(2)}`;
+            document.getElementById('fc-value').textContent = `$${FC}`;
+            document.getElementById('wage-value').textContent = `$${w}`;
+            document.getElementById('a-value').textContent = A.toFixed(1);
+            
+            // Calculate optimal values
+            const qStar = optimalQ(P, w, A);
+            const lStar = laborRequired(qStar, A);
+            const TR = P * qStar;
+            const TC = totalCost(qStar, FC, w, A);
+            const profit = TR - TC;
+            const atcAtQ = ATC(qStar, FC, w, A);
+            const avcAtQ = AVC(qStar, w, A);
+            
+            // Update info box
+            document.getElementById('opt-q').textContent = qStar.toFixed(1);
+            document.getElementById('opt-l').textContent = lStar.toFixed(2);
+            document.getElementById('total-revenue').textContent = `$${TR.toFixed(2)}`;
+            document.getElementById('total-cost').textContent = `$${TC.toFixed(2)}`;
+            document.getElementById('atc-at-q').textContent = `$${atcAtQ.toFixed(2)}`;
+            document.getElementById('avc-at-q').textContent = `$${avcAtQ.toFixed(2)}`;
+            
+            // Update profit display
+            const profitDisplay = document.getElementById('profit-display');
+            const profitValue = document.getElementById('profit-value');
+            
+            if (Math.abs(profit) < 0.5) {
+                profitDisplay.className = 'profit-display zero';
+                profitValue.className = 'profit-value zero';
+                profitValue.textContent = '$0.00';
+            } else if (profit > 0) {
+                profitDisplay.className = 'profit-display positive';
+                profitValue.className = 'profit-value positive';
+                profitValue.textContent = `+$${profit.toFixed(2)}`;
+            } else {
+                profitDisplay.className = 'profit-display negative';
+                profitValue.className = 'profit-value negative';
+                profitValue.textContent = `-$${Math.abs(profit).toFixed(2)}`;
+            }
+            
+            // Update decision box
+            const decisionBox = document.getElementById('decision-box');
+            if (P >= avcAtQ) {
+                if (P >= atcAtQ) {
+                    decisionBox.innerHTML = `<strong>Decision:</strong> <span class="produce">PRODUCE</span> — Price exceeds ATC. Firm earns economic profit!`;
+                } else {
+                    decisionBox.innerHTML = `<strong>Decision:</strong> <span class="produce">PRODUCE</span> — Price exceeds AVC but below ATC. Firm minimizes losses by producing (covers variable costs + some fixed).`;
+                }
+            } else {
+                decisionBox.innerHTML = `<strong>Decision:</strong> <span class="shutdown">SHUTDOWN</span> — Price below AVC. Firm loses less by not producing (only loses FC).`;
+            }
+            
+            // Redraw graphs
+            drawProductionGraph();
+            drawCostGraph();
+        }
+        
+        // Event listeners
+        [priceSlider, fcSlider, wageSlider, aSlider].forEach(slider => {
+            slider.addEventListener('input', updateDisplay);
+        });
+        
+        // Initial draw
+        updateDisplay();
+    </script>
+</body>
+</html>

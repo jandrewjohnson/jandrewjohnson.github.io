@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5D Utility Maximization</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 300;
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 1300px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #0f0f1a;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #2a2a4a;
+            position: relative;
+            min-height: 580px;
+        }
+        
+        #three-canvas {
+            width: 100%;
+            height: 520px;
+            border-radius: 8px;
+        }
+        
+        .utility-display {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .utility-label {
+            font-size: 0.9rem;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+        
+        .utility-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            font-family: 'Monaco', monospace;
+            color: #4ecdc4;
+            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+            transition: all 0.1s ease;
+        }
+        
+        .utility-value.infeasible {
+            color: #ff4757;
+            text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+        }
+        
+        .utility-value.optimal {
+            color: #ffd93d;
+            text-shadow: 0 0 40px rgba(255, 217, 61, 0.7);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
+            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
+        }
+        
+        .error-banner {
+            position: absolute;
+            top: 105px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .error-banner.visible {
+            opacity: 1;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .success-banner {
+            position: absolute;
+            top: 105px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
+            color: #1a1a2e;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(255, 217, 61, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .success-banner.visible {
+            opacity: 1;
+        }
+        
+        .dimension-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: #ccd6f6;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .dim-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .dim-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .gradient-box {
+            width: 40px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .w-gradient {
+            background: linear-gradient(90deg, #3498db 0%, #9b59b6 50%, #e74c3c 100%);
+        }
+        
+        .v-gradient {
+            background: linear-gradient(90deg, #2ecc71 0%, #f1c40f 50%, #e67e22 100%);
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 94vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .control-panel {
+            background: #0f0f1a;
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid #2a2a4a;
+        }
+        
+        .control-panel.choice-panel {
+            border: 2px solid #4ecdc4;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, #0f0f1a 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8892b0;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .panel-title.highlight {
+            color: #4ecdc4;
+            font-size: 0.85rem;
+        }
+        
+        .goods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .goods-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .slider-group {
+            margin-bottom: 10px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-group.compact {
+            margin-bottom: 6px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .slider-value {
+            background: #1a1a2e;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.7rem;
+            color: #64ffda;
+        }
+        
+        .slider-value.large {
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            color: #4ecdc4;
+        }
+        
+        .good-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .good-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #2a2a4a;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+        }
+        
+        input[type="range"].choice-slider {
+            height: 6px;
+        }
+        
+        input[type="range"].choice-slider::-webkit-slider-thumb {
+            width: 16px;
+            height: 16px;
+            background: #4ecdc4;
+        }
+        
+        .slice-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .slice-box {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .slice-box.w-slice {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1) 0%, transparent 100%);
+        }
+        
+        .slice-box.v-slice {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, transparent 100%);
+            border-color: rgba(46, 204, 113, 0.3);
+        }
+        
+        .slice-title {
+            font-size: 0.7rem;
+            color: #bb8fce;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .slice-box.v-slice .slice-title {
+            color: #58d68d;
+        }
+        
+        .budget-bar {
+            margin-top: 10px;
+            padding: 8px;
+            background: #1a1a2e;
+            border-radius: 6px;
+        }
+        
+        .budget-label {
+            font-size: 0.65rem;
+            color: #8892b0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .budget-label .over {
+            color: #ff4757;
+            font-weight: 600;
+        }
+        
+        .budget-track {
+            height: 6px;
+            background: #2a2a4a;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .budget-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4 0%, #64ffda 100%);
+            border-radius: 3px;
+            transition: width 0.15s ease;
+        }
+        
+        .budget-fill.over {
+            background: linear-gradient(90deg, #ff4757 0%, #ff6b6b 100%);
+        }
+        
+        .score-panel {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 0.65rem;
+            color: #8892b0;
+            text-transform: uppercase;
+        }
+        
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd93d;
+            font-family: 'Monaco', monospace;
+        }
+        
+        .score-optimal {
+            font-size: 0.7rem;
+            color: #64ffda;
+        }
+        
+        .proximity-meter {
+            margin-top: 6px;
+            padding: 6px;
+            background: #1a1a2e;
+            border-radius: 6px;
+        }
+        
+        .proximity-label {
+            font-size: 0.65rem;
+            color: #8892b0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .proximity-bar {
+            height: 4px;
+            background: #2a2a4a;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .proximity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4757 0%, #ffd93d 50%, #4ecdc4 100%);
+            border-radius: 2px;
+            transition: width 0.1s ease;
+        }
+        
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .btn {
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: #0f0f1a;
+        }
+        
+        .hint-btn {
+            background: transparent;
+            border: 2px solid #ffd93d !important;
+            color: #ffd93d;
+        }
+        
+        .animate-btn {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            grid-column: span 2;
+        }
+        
+        .animate-btn.active {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .equation-box {
+            background: #1a1a2e;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.65rem;
+            color: #ccd6f6;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
+        .epsilon-display {
+            background: #1a1a2e;
+            border-radius: 6px;
+            padding: 6px;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
+        .epsilon-label {
+            font-size: 0.65rem;
+            color: #8892b0;
+        }
+        
+        .epsilon-value {
+            font-family: 'Monaco', monospace;
+            color: #64ffda;
+            font-size: 0.8rem;
+        }
+        
+        .optimal-bundle {
+            background: rgba(255, 217, 61, 0.1);
+            border: 1px solid rgba(255, 217, 61, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+        }
+        
+        .optimal-bundle-title {
+            color: #ffd93d;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        
+        .optimal-bundle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+        
+        .optimal-item {
+            background: #1a1a2e;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .optimal-item-label {
+            color: #8892b0;
+            font-size: 0.6rem;
+        }
+        
+        .optimal-item-value {
+            color: #ffd93d;
+            font-family: 'Monaco', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 5D Utility Maximization</h1>
+        <p class="subtitle">5 goods: X, Y, Z in space • W as color • V as size/animation. Navigate 5D to find the optimum!</p>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="utility-display">
+                    <div class="utility-label">Total Utility</div>
+                    <div class="utility-value" id="big-utility">0.0</div>
+                </div>
+                <div class="error-banner" id="error-banner">
+                    ⚠️ UNAFFORDABLE!
+                </div>
+                <div class="success-banner" id="success-banner">
+                    🎉 OPTIMAL!
+                </div>
+                <div id="three-canvas"></div>
+                <div class="dimension-legend">
+                    <div class="dim-item"><div class="dim-color" style="background: #ff6b6b;"></div> X</div>
+                    <div class="dim-item"><div class="dim-color" style="background: #6bff6b;"></div> Y</div>
+                    <div class="dim-item"><div class="dim-color" style="background: #6b6bff;"></div> Z</div>
+                    <div class="dim-item"><div class="gradient-box w-gradient"></div> W (color)</div>
+                    <div class="dim-item"><div class="gradient-box v-gradient"></div> V (size)</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel choice-panel">
+                    <div class="panel-title highlight">🎯 Your 5D Bundle</div>
+                    
+                    <div class="goods-grid">
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span class="good-label"><div class="good-indicator" style="background: #ff6b6b;"></div> X</span>
+                                <span class="slider-value large" id="user-x-value">8</span>
+                            </div>
+                            <input type="range" class="choice-slider" id="user-x" min="0" max="30" value="8" step="0.5">
+                        </div>
+                        
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span class="good-label"><div class="good-indicator" style="background: #6bff6b;"></div> Y</span>
+                                <span class="slider-value large" id="user-y-value">8</span>
+                            </div>
+                            <input type="range" class="choice-slider" id="user-y" min="0" max="30" value="8" step="0.5">
+                        </div>
+                        
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span class="good-label"><div class="good-indicator" style="background: #6b6bff;"></div> Z</span>
+                                <span class="slider-value large" id="user-z-value">8</span>
+                            </div>
+                            <input type="range" class="choice-slider" id="user-z" min="0" max="30" value="8" step="0.5">
+                        </div>
+                        
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span class="good-label"><div class="good-indicator" style="background: linear-gradient(90deg, #9b59b6, #e74c3c);"></div> W</span>
+                                <span class="slider-value large" id="user-w-value">8</span>
+                            </div>
+                            <input type="range" class="choice-slider" id="user-w" min="0" max="30" value="8" step="0.5">
+                        </div>
+                    </div>
+                    
+                    <div class="slider-group" style="margin-top: 8px;">
+                        <div class="slider-label">
+                            <span class="good-label"><div class="good-indicator" style="background: linear-gradient(90deg, #2ecc71, #e67e22);"></div> V (5th good)</span>
+                            <span class="slider-value large" id="user-v-value">8</span>
+                        </div>
+                        <input type="range" class="choice-slider" id="user-v" min="0" max="30" value="8" step="0.5">
+                    </div>
+                    
+                    <div class="slice-controls">
+                        <div class="slice-box w-slice">
+                            <div class="slice-title">W Slice = <span id="w-slice-display">8</span></div>
+                            <input type="range" id="w-slice" min="1" max="30" value="8" step="1">
+                        </div>
+                        <div class="slice-box v-slice">
+                            <div class="slice-title">V Slice = <span id="v-slice-display">8</span></div>
+                            <input type="range" id="v-slice" min="1" max="30" value="8" step="1">
+                        </div>
+                    </div>
+                    
+                    <div class="budget-bar">
+                        <div class="budget-label">
+                            <span>Budget</span>
+                            <span id="budget-status">$80 / $100</span>
+                        </div>
+                        <div class="budget-track">
+                            <div class="budget-fill" id="budget-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Score</div>
+                    <div class="score-panel">
+                        <div class="score-label">Current Utility</div>
+                        <div class="score-value" id="score-value">0.0</div>
+                        <div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div>
+                    </div>
+                    
+                    <div class="proximity-meter">
+                        <div class="proximity-label">
+                            <span>Proximity</span>
+                            <span id="proximity-pct">0%</span>
+                        </div>
+                        <div class="proximity-bar">
+                            <div class="proximity-fill" id="proximity-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-row" style="margin-top: 8px;">
+                        <button class="btn reset-btn" onclick="resetGame()">🔄 New</button>
+                        <button class="btn hint-btn" onclick="toggleHint()">💡 Optimal</button>
+                    </div>
+                    <button class="btn animate-btn" id="animate-btn" onclick="toggleAnimation()">▶️ Animate Through V</button>
+                    
+                    <div class="optimal-bundle" id="optimal-bundle" style="display: none;">
+                        <div class="optimal-bundle-title">Optimal Bundle</div>
+                        <div class="optimal-bundle-grid">
+                            <div class="optimal-item"><div class="optimal-item-label">X*</div><div class="optimal-item-value" id="opt-x">0</div></div>
+                            <div class="optimal-item"><div class="optimal-item-label">Y*</div><div class="optimal-item-value" id="opt-y">0</div></div>
+                            <div class="optimal-item"><div class="optimal-item-label">Z*</div><div class="optimal-item-value" id="opt-z">0</div></div>
+                            <div class="optimal-item"><div class="optimal-item-label">W*</div><div class="optimal-item-value" id="opt-w">0</div></div>
+                            <div class="optimal-item"><div class="optimal-item-label">V*</div><div class="optimal-item-value" id="opt-v">0</div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Budget</div>
+                    <div class="goods-grid">
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>M</span><span class="slider-value" id="income-value">100</span></div>
+                            <input type="range" id="income" min="50" max="200" value="100">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>Pₓ</span><span class="slider-value" id="px-value">2</span></div>
+                            <input type="range" id="px" min="1" max="5" value="2" step="0.5">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>Pᵧ</span><span class="slider-value" id="py-value">2</span></div>
+                            <input type="range" id="py" min="1" max="5" value="2" step="0.5">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>Pᵤ</span><span class="slider-value" id="pz-value">2</span></div>
+                            <input type="range" id="pz" min="1" max="5" value="2" step="0.5">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>Pᵥ</span><span class="slider-value" id="pw-value">2</span></div>
+                            <input type="range" id="pw" min="1" max="5" value="2" step="0.5">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>Pᵥ</span><span class="slider-value" id="pv-value">2</span></div>
+                            <input type="range" id="pv" min="1" max="5" value="2" step="0.5">
+                        </div>
+                    </div>
+                    <div class="equation-box">ΣPᵢ·Qᵢ ≤ M</div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Preferences (5-Good Cobb-Douglas)</div>
+                    <div class="goods-grid">
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>α(X)</span><span class="slider-value" id="alpha-value">0.20</span></div>
+                            <input type="range" id="alpha" min="0.08" max="0.35" value="0.20" step="0.01">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>β(Y)</span><span class="slider-value" id="beta-value">0.20</span></div>
+                            <input type="range" id="beta" min="0.08" max="0.35" value="0.20" step="0.01">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>γ(Z)</span><span class="slider-value" id="gamma-value">0.20</span></div>
+                            <input type="range" id="gamma" min="0.08" max="0.35" value="0.20" step="0.01">
+                        </div>
+                        <div class="slider-group compact">
+                            <div class="slider-label"><span>δ(W)</span><span class="slider-value" id="delta-value">0.20</span></div>
+                            <input type="range" id="delta" min="0.08" max="0.35" value="0.20" step="0.01">
+                        </div>
+                    </div>
+                    <div class="epsilon-display">
+                        <span class="epsilon-label">ε(V) = 1 - α - β - γ - δ = </span>
+                        <span class="epsilon-value" id="epsilon-value">0.20</span>
+                    </div>
+                    <div class="equation-box">U = X<sup>α</sup>Y<sup>β</sup>Z<sup>γ</sup>W<sup>δ</sup>V<sup>ε</sup></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer;
+        let budgetMesh, indifferenceMesh, userPoint, optimalPoint;
+        let pointCloud, vSlicePoints;
+        let showOptimal = false;
+        let isAnimating = false;
+        let animationId = null;
+        let wasAffordable = true;
+        
+        const container = document.getElementById('three-canvas');
+        
+        const userXSlider = document.getElementById('user-x');
+        const userYSlider = document.getElementById('user-y');
+        const userZSlider = document.getElementById('user-z');
+        const userWSlider = document.getElementById('user-w');
+        const userVSlider = document.getElementById('user-v');
+        const wSliceSlider = document.getElementById('w-slice');
+        const vSliceSlider = document.getElementById('v-slice');
+        const incomeSlider = document.getElementById('income');
+        const pxSlider = document.getElementById('px');
+        const pySlider = document.getElementById('py');
+        const pzSlider = document.getElementById('pz');
+        const pwSlider = document.getElementById('pw');
+        const pvSlider = document.getElementById('pv');
+        const alphaSlider = document.getElementById('alpha');
+        const betaSlider = document.getElementById('beta');
+        const gammaSlider = document.getElementById('gamma');
+        const deltaSlider = document.getElementById('delta');
+        
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f0f1a);
+            
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(50, 40, 50);
+            camera.lookAt(15, 15, 15);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Orbit controls
+            let isDragging = false;
+            let prev = { x: 0, y: 0 };
+            let spherical = { theta: Math.PI / 4, phi: Math.PI / 3, radius: 70 };
+            
+            function updateCam() {
+                camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta) + 15;
+                camera.position.y = spherical.radius * Math.cos(spherical.phi) + 15;
+                camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta) + 15;
+                camera.lookAt(15, 15, 15);
+            }
+            
+            renderer.domElement.addEventListener('mousedown', e => { isDragging = true; prev = { x: e.clientX, y: e.clientY }; });
+            renderer.domElement.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                spherical.theta -= (e.clientX - prev.x) * 0.01;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - (e.clientY - prev.y) * 0.01));
+                prev = { x: e.clientX, y: e.clientY };
+                updateCam();
+            });
+            renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+            renderer.domElement.addEventListener('mouseleave', () => isDragging = false);
+            renderer.domElement.addEventListener('wheel', e => {
+                e.preventDefault();
+                spherical.radius = Math.max(25, Math.min(120, spherical.radius + e.deltaY * 0.08));
+                updateCam();
+            });
+            
+            // Touch
+            renderer.domElement.addEventListener('touchstart', e => {
+                if (e.touches.length === 1) { isDragging = true; prev = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+            });
+            renderer.domElement.addEventListener('touchmove', e => {
+                if (!isDragging || e.touches.length !== 1) return;
+                e.preventDefault();
+                spherical.theta -= (e.touches[0].clientX - prev.x) * 0.01;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - (e.touches[0].clientY - prev.y) * 0.01));
+                prev = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                updateCam();
+            }, { passive: false });
+            renderer.domElement.addEventListener('touchend', () => isDragging = false);
+            
+            updateCam();
+            
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+            dir.position.set(40, 80, 40);
+            scene.add(dir);
+            
+            createAxes();
+            updateVisualization();
+            animate();
+        }
+        
+        function createAxes() {
+            const len = 35;
+            const axes = [
+                { dir: [len, 0, 0], color: 0xff6b6b },
+                { dir: [0, len, 0], color: 0x6bff6b },
+                { dir: [0, 0, len], color: 0x6b6bff }
+            ];
+            axes.forEach(a => {
+                const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(...a.dir)]);
+                scene.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: a.color })));
+            });
+            const grid = new THREE.GridHelper(30, 6, 0x2a2a4a, 0x1a1a2e);
+            grid.position.set(15, 0, 15);
+            scene.add(grid);
+        }
+        
+        function getWColor(w, max) {
+            const t = Math.min(w / max, 1);
+            return new THREE.Color().setRGB(0.2 + t * 0.7, 0.6 - t * 0.3, 0.86 - t * 0.6);
+        }
+        
+        function getVSize(v, max) {
+            return 0.4 + (v / max) * 1.2;
+        }
+        
+        function getVColor(v, max) {
+            const t = Math.min(v / max, 1);
+            return new THREE.Color().setRGB(0.18 + t * 0.72, 0.8 - t * 0.3, 0.44 - t * 0.3);
+        }
+        
+        function calcOptimal(M, Px, Py, Pz, Pw, Pv, a, b, g, d) {
+            const e = 1 - a - b - g - d;
+            if (e <= 0.01) return { xS: 0, yS: 0, zS: 0, wS: 0, vS: 0, util: 0 };
+            const xS = (a * M) / Px;
+            const yS = (b * M) / Py;
+            const zS = (g * M) / Pz;
+            const wS = (d * M) / Pw;
+            const vS = (e * M) / Pv;
+            const util = Math.pow(xS, a) * Math.pow(yS, b) * Math.pow(zS, g) * Math.pow(wS, d) * Math.pow(vS, e);
+            return { xS, yS, zS, wS, vS, util };
+        }
+        
+        function calcUtil(x, y, z, w, v, a, b, g, d) {
+            const e = 1 - a - b - g - d;
+            if (x <= 0 || y <= 0 || z <= 0 || w <= 0 || v <= 0 || e <= 0.01) return 0;
+            return Math.pow(x, a) * Math.pow(y, b) * Math.pow(z, g) * Math.pow(w, d) * Math.pow(v, e);
+        }
+        
+        function createBudgetSlice(M, Px, Py, Pz, Pw, Pv, wSlice, vSlice) {
+            if (budgetMesh) { scene.remove(budgetMesh); budgetMesh.geometry.dispose(); budgetMesh.material.dispose(); }
+            
+            const remaining = M - Pw * wSlice - Pv * vSlice;
+            if (remaining <= 0) return;
+            
+            const xI = Math.min(remaining / Px, 30);
+            const yI = Math.min(remaining / Py, 30);
+            const zI = Math.min(remaining / Pz, 30);
+            
+            const geom = new THREE.BufferGeometry();
+            geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array([xI,0,0, 0,yI,0, 0,0,zI]), 3));
+            geom.computeVertexNormals();
+            
+            const wCol = getWColor(wSlice, 30);
+            const vCol = getVColor(vSlice, 30);
+            const mixedCol = new THREE.Color().lerpColors(wCol, vCol, 0.5);
+            
+            budgetMesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({
+                color: mixedCol, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false
+            }));
+            scene.add(budgetMesh);
+            
+            const edge = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(xI,0,0), new THREE.Vector3(0,yI,0), new THREE.Vector3(0,0,zI), new THREE.Vector3(xI,0,0)
+            ]);
+            budgetMesh.add(new THREE.Line(edge, new THREE.LineBasicMaterial({ color: mixedCol })));
+        }
+        
+        function createIndifferenceSlice(util, a, b, g, d, wSlice, vSlice, affordable) {
+            if (indifferenceMesh) { scene.remove(indifferenceMesh); indifferenceMesh.geometry.dispose(); indifferenceMesh.material.dispose(); }
+            
+            if (util <= 0) return;
+            const e = 1 - a - b - g - d;
+            if (e <= 0.01 || wSlice <= 0 || vSlice <= 0) return;
+            
+            const reducedU = util / (Math.pow(wSlice, d) * Math.pow(vSlice, e));
+            if (reducedU <= 0) return;
+            
+            const seg = 20;
+            const verts = [], inds = [];
+            const max = 30, min = 0.5;
+            
+            for (let i = 0; i <= seg; i++) {
+                for (let j = 0; j <= seg; j++) {
+                    const x = min + (i / seg) * (max - min);
+                    const y = min + (j / seg) * (max - min);
+                    const base = reducedU / (Math.pow(x, a) * Math.pow(y, b));
+                    const z = Math.pow(base, 1 / g);
+                    verts.push(x, y, (z > 0 && z <= max && isFinite(z)) ? z : 0);
+                }
+            }
+            for (let i = 0; i < seg; i++) {
+                for (let j = 0; j < seg; j++) {
+                    const a = i * (seg + 1) + j;
+                    inds.push(a, a + 1, a + seg + 1, a + 1, a + seg + 2, a + seg + 1);
+                }
+            }
+            
+            const geom = new THREE.BufferGeometry();
+            geom.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+            geom.setIndex(inds);
+            geom.computeVertexNormals();
+            
+            const wCol = getWColor(wSlice, 30);
+            const vCol = getVColor(vSlice, 30);
+            const col = affordable ? new THREE.Color().lerpColors(wCol, vCol, 0.5) : new THREE.Color(0xff4757);
+            
+            indifferenceMesh = new THREE.Mesh(geom, new THREE.MeshPhongMaterial({
+                color: col, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false
+            }));
+            scene.add(indifferenceMesh);
+        }
+        
+        function createPointCloud(util, a, b, g, d, affordable) {
+            if (pointCloud) { scene.remove(pointCloud); pointCloud.geometry.dispose(); pointCloud.material.dispose(); }
+            
+            const e = 1 - a - b - g - d;
+            if (e <= 0.01 || util <= 0) return;
+            
+            const pos = [], cols = [];
+            
+            for (let w = 3; w <= 25; w += 4) {
+                for (let v = 3; v <= 25; v += 4) {
+                    const redU = util / (Math.pow(w, d) * Math.pow(v, e));
+                    if (redU <= 0) continue;
+                    
+                    for (let i = 0; i < 3; i++) {
+                        const x = 2 + Math.random() * 22;
+                        const y = 2 + Math.random() * 22;
+                        const base = redU / (Math.pow(x, a) * Math.pow(y, b));
+                        const z = Math.pow(base, 1 / g);
+                        
+                        if (z > 0 && z <= 30 && isFinite(z)) {
+                            pos.push(x, y, z);
+                            const wCol = getWColor(w, 30);
+                            const vCol = getVColor(v, 30);
+                            const mixed = new THREE.Color().lerpColors(wCol, vCol, 0.5);
+                            cols.push(mixed.r, mixed.g, mixed.b);
+                        }
+                    }
+                }
+            }
+            
+            if (pos.length === 0) return;
+            
+            const geom = new THREE.BufferGeometry();
+            geom.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            geom.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+            
+            pointCloud = new THREE.Points(geom, new THREE.PointsMaterial({ size: 0.6, vertexColors: true, transparent: true, opacity: 0.5 }));
+            scene.add(pointCloud);
+        }
+        
+        function createUserPoint(x, y, z, w, v, affordable, near) {
+            if (userPoint) { scene.remove(userPoint); userPoint.geometry.dispose(); userPoint.material.dispose(); }
+            
+            const size = getVSize(v, 30);
+            const geom = new THREE.SphereGeometry(size, 32, 32);
+            const wCol = getWColor(w, 30);
+            const vCol = getVColor(v, 30);
+            let col = affordable ? (near ? new THREE.Color(0xffd93d) : new THREE.Color().lerpColors(wCol, vCol, 0.5)) : new THREE.Color(0xff4757);
+            
+            userPoint = new THREE.Mesh(geom, new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: 0.4 }));
+            userPoint.position.set(x, y, z);
+            scene.add(userPoint);
+            
+            // Rings for W and V
+            const ringW = new THREE.Mesh(new THREE.TorusGeometry(size + 0.6, 0.08, 8, 32), new THREE.MeshBasicMaterial({ color: wCol }));
+            ringW.rotation.x = Math.PI / 2;
+            userPoint.add(ringW);
+            
+            const ringV = new THREE.Mesh(new THREE.TorusGeometry(size + 1, 0.08, 8, 32), new THREE.MeshBasicMaterial({ color: vCol }));
+            ringV.rotation.y = Math.PI / 2;
+            userPoint.add(ringV);
+        }
+        
+        function createOptimalPoint(x, y, z, w, v) {
+            if (optimalPoint) { scene.remove(optimalPoint); optimalPoint.geometry.dispose(); optimalPoint.material.dispose(); }
+            if (!showOptimal) return;
+            
+            const size = getVSize(v, 30) * 0.8;
+            optimalPoint = new THREE.Mesh(
+                new THREE.SphereGeometry(size, 32, 32),
+                new THREE.MeshPhongMaterial({ color: 0xffd93d, emissive: 0xffd93d, emissiveIntensity: 0.6 })
+            );
+            optimalPoint.position.set(x, y, z);
+            scene.add(optimalPoint);
+            
+            const ring1 = new THREE.Mesh(new THREE.TorusGeometry(size + 0.8, 0.1, 16, 32), new THREE.MeshBasicMaterial({ color: 0xffd93d }));
+            ring1.rotation.x = Math.PI / 2;
+            optimalPoint.add(ring1);
+            
+            const ring2 = new THREE.Mesh(new THREE.TorusGeometry(size + 0.8, 0.1, 16, 32), new THREE.MeshBasicMaterial({ color: 0xffd93d }));
+            ring2.rotation.y = Math.PI / 2;
+            optimalPoint.add(ring2);
+        }
+        
+        function updateVisualization() {
+            const M = +incomeSlider.value;
+            const Px = +pxSlider.value, Py = +pySlider.value, Pz = +pzSlider.value, Pw = +pwSlider.value, Pv = +pvSlider.value;
+            const a = +alphaSlider.value, b = +betaSlider.value, g = +gammaSlider.value, d = +deltaSlider.value;
+            const e = Math.max(0, 1 - a - b - g - d);
+            
+            const uX = +userXSlider.value, uY = +userYSlider.value, uZ = +userZSlider.value, uW = +userWSlider.value, uV = +userVSlider.value;
+            const wSlice = +wSliceSlider.value, vSlice = +vSliceSlider.value;
+            
+            // Update displays
+            document.getElementById('income-value').textContent = M;
+            document.getElementById('px-value').textContent = Px;
+            document.getElementById('py-value').textContent = Py;
+            document.getElementById('pz-value').textContent = Pz;
+            document.getElementById('pw-value').textContent = Pw;
+            document.getElementById('pv-value').textContent = Pv;
+            document.getElementById('alpha-value').textContent = a.toFixed(2);
+            document.getElementById('beta-value').textContent = b.toFixed(2);
+            document.getElementById('gamma-value').textContent = g.toFixed(2);
+            document.getElementById('delta-value').textContent = d.toFixed(2);
+            document.getElementById('epsilon-value').textContent = e.toFixed(2);
+            document.getElementById('user-x-value').textContent = uX.toFixed(1);
+            document.getElementById('user-y-value').textContent = uY.toFixed(1);
+            document.getElementById('user-z-value').textContent = uZ.toFixed(1);
+            document.getElementById('user-w-value').textContent = uW.toFixed(1);
+            document.getElementById('user-v-value').textContent = uV.toFixed(1);
+            document.getElementById('w-slice-display').textContent = wSlice;
+            document.getElementById('v-slice-display').textContent = vSlice;
+            
+            const { xS, yS, zS, wS, vS, util: optUtil } = calcOptimal(M, Px, Py, Pz, Pw, Pv, a, b, g, d);
+            const userUtil = calcUtil(uX, uY, uZ, uW, uV, a, b, g, d);
+            const spending = Px*uX + Py*uY + Pz*uZ + Pw*uW + Pv*uV;
+            const affordable = spending <= M * 1.001;
+            const near = affordable && optUtil > 0 && Math.abs(userUtil - optUtil) / optUtil < 0.05;
+            
+            // Budget
+            const pct = Math.min((spending / M) * 100, 150);
+            document.getElementById('budget-fill').style.width = `${Math.min(pct, 100)}%`;
+            document.getElementById('budget-fill').className = 'budget-fill' + (!affordable ? ' over' : '');
+            document.getElementById('budget-status').innerHTML = affordable ? `$${spending.toFixed(0)} / $${M}` : `<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
+            
+            // Score
+            document.getElementById('score-value').textContent = affordable ? userUtil.toFixed(1) : '—';
+            document.getElementById('optimal-utility').textContent = optUtil.toFixed(1);
+            
+            const prox = affordable && optUtil > 0 ? Math.min(100, (userUtil / optUtil) * 100) : 0;
+            document.getElementById('proximity-pct').textContent = `${prox.toFixed(0)}%`;
+            document.getElementById('proximity-fill').style.width = `${prox}%`;
+            
+            // Big utility
+            const bigU = document.getElementById('big-utility');
+            bigU.textContent = affordable ? userUtil.toFixed(1) : '—';
+            bigU.className = 'utility-value' + (!affordable ? ' infeasible' : (near ? ' optimal' : ''));
+            
+            // Banners
+            const errB = document.getElementById('error-banner');
+            const sucB = document.getElementById('success-banner');
+            if (!affordable && wasAffordable) { errB.classList.remove('visible'); void errB.offsetWidth; errB.classList.add('visible'); }
+            else if (!affordable) errB.classList.add('visible');
+            else errB.classList.remove('visible');
+            wasAffordable = affordable;
+            sucB.className = 'success-banner' + (near ? ' visible' : '');
+            
+            // Optimal bundle display
+            const optBox = document.getElementById('optimal-bundle');
+            if (showOptimal) {
+                optBox.style.display = 'block';
+                document.getElementById('opt-x').textContent = xS.toFixed(1);
+                document.getElementById('opt-y').textContent = yS.toFixed(1);
+                document.getElementById('opt-z').textContent = zS.toFixed(1);
+                document.getElementById('opt-w').textContent = wS.toFixed(1);
+                document.getElementById('opt-v').textContent = vS.toFixed(1);
+            } else {
+                optBox.style.display = 'none';
+            }
+            
+            // 3D
+            createBudgetSlice(M, Px, Py, Pz, Pw, Pv, wSlice, vSlice);
+            createIndifferenceSlice(userUtil, a, b, g, d, wSlice, vSlice, affordable);
+            createPointCloud(userUtil, a, b, g, d, affordable);
+            createUserPoint(uX, uY, uZ, uW, uV, affordable, near);
+            createOptimalPoint(xS, yS, zS, wS, vS);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        
+        function resetGame() {
+            incomeSlider.value = 80 + Math.random() * 80;
+            [pxSlider, pySlider, pzSlider, pwSlider, pvSlider].forEach(s => s.value = 1 + Math.random() * 3);
+            
+            const vals = [0.12 + Math.random() * 0.15, 0.12 + Math.random() * 0.15, 0.12 + Math.random() * 0.15, 0.12 + Math.random() * 0.15];
+            alphaSlider.value = vals[0];
+            betaSlider.value = vals[1];
+            gammaSlider.value = vals[2];
+            deltaSlider.value = vals[3];
+            
+            [userXSlider, userYSlider, userZSlider, userWSlider, userVSlider].forEach(s => s.value = 4 + Math.random() * 10);
+            wSliceSlider.value = Math.round(5 + Math.random() * 12);
+            vSliceSlider.value = Math.round(5 + Math.random() * 12);
+            
+            showOptimal = false;
+            stopAnimation();
+            updateVisualization();
+        }
+        
+        function toggleHint() {
+            showOptimal = !showOptimal;
+            updateVisualization();
+        }
+        
+        function toggleAnimation() {
+            if (isAnimating) {
+                stopAnimation();
+            } else {
+                startAnimation();
+            }
+        }
+        
+        function startAnimation() {
+            isAnimating = true;
+            document.getElementById('animate-btn').classList.add('active');
+            document.getElementById('animate-btn').textContent = '⏹️ Stop Animation';
+            
+            let vVal = 1;
+            let direction = 1;
+            
+            function step() {
+                if (!isAnimating) return;
+                
+                vVal += direction * 0.3;
+                if (vVal >= 30) { vVal = 30; direction = -1; }
+                if (vVal <= 1) { vVal = 1; direction = 1; }
+                
+                vSliceSlider.value = vVal;
+                document.getElementById('v-slice-display').textContent = Math.round(vVal);
+                updateVisualization();
+                
+                animationId = requestAnimationFrame(step);
+            }
+            step();
+        }
+        
+        function stopAnimation() {
+            isAnimating = false;
+            document.getElementById('animate-btn').classList.remove('active');
+            document.getElementById('animate-btn').textContent = '▶️ Animate Through V';
+            if (animationId) cancelAnimationFrame(animationId);
+        }
+        
+        // Events
+        [userXSlider, userYSlider, userZSlider, userWSlider, userVSlider, wSliceSlider, vSliceSlider].forEach(s => {
+            s.addEventListener('input', updateVisualization);
+        });
+        
+        [incomeSlider, pxSlider, pySlider, pzSlider, pwSlider, pvSlider, alphaSlider, betaSlider, gammaSlider, deltaSlider].forEach(s => {
+            s.addEventListener('input', () => { showOptimal = false; updateVisualization(); });
+        });
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+        
+        init();
+    </script>
+</body>
+</html>

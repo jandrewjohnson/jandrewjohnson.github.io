@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Firm Supply to Market Supply</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 300px;
+            gap: 16px;
+        }
+        
+        @media (max-width: 1400px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr 300px;
+            }
+            .firm2-container {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .graph-title {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #1a202c;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .graph-title .firm-label {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        
+        .firm1-label { background: rgba(229, 62, 62, 0.15); color: #c53030; }
+        .firm2-label { background: rgba(49, 130, 206, 0.15); color: #2b6cb0; }
+        .firm3-label { background: rgba(56, 161, 105, 0.15); color: #276749; }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .control-panel.highlight {
+            border: 2px solid #38a169;
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.05) 0%, #ffffff 100%);
+        }
+        
+        .panel-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .panel-title.price {
+            color: #38a169;
+        }
+        
+        .slider-group {
+            margin-bottom: 12px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.75rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        .slider-value.price {
+            color: #38a169;
+            font-size: 0.85rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+        }
+        
+        input[type="range"].price-slider::-webkit-slider-thumb {
+            background: #38a169;
+            width: 18px;
+            height: 18px;
+            box-shadow: 0 2px 6px rgba(56, 161, 105, 0.4);
+        }
+        
+        .firm-section {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .firm-section.firm1 {
+            background: rgba(229, 62, 62, 0.05);
+            border: 1px solid rgba(229, 62, 62, 0.2);
+        }
+        
+        .firm-section.firm2 {
+            background: rgba(49, 130, 206, 0.05);
+            border: 1px solid rgba(49, 130, 206, 0.2);
+        }
+        
+        .firm-section.firm3 {
+            background: rgba(56, 161, 105, 0.05);
+            border: 1px solid rgba(56, 161, 105, 0.2);
+        }
+        
+        .firm-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .firm1 .firm-title { color: #c53030; }
+        .firm2 .firm-title { color: #2b6cb0; }
+        .firm3 .firm-title { color: #276749; }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 3px solid #319795;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+        
+        .info-label {
+            color: #718096;
+        }
+        
+        .info-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+            font-size: 0.75rem;
+        }
+        
+        .info-value.highlight {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .equation-box {
+            background: #f7fafc;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.7rem;
+            color: #4a5568;
+            text-align: center;
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.5;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 16px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .supply-summary {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(49, 151, 149, 0.05) 100%);
+            border: 1px solid rgba(56, 161, 105, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        
+        .supply-summary .title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #276749;
+            margin-bottom: 8px;
+        }
+        
+        .supply-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 0.8rem;
+        }
+        
+        .supply-row .label {
+            color: #4a5568;
+        }
+        
+        .supply-row .value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-weight: 600;
+        }
+        
+        .supply-row.firm1 .value { color: #c53030; }
+        .supply-row.firm2 .value { color: #2b6cb0; }
+        .supply-row.firm3 .value { color: #276749; }
+        .supply-row.total .value { color: #319795; font-size: 1rem; }
+        .supply-row.total { border-top: 1px solid #cbd5e0; padding-top: 6px; margin-top: 4px; }
+        
+        .num-firms-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .num-firms-control label {
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+        
+        .num-firms-control select {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 0.85rem;
+            color: #2d3748;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 From Firm Supply to Market Supply</h1>
+        <p class="subtitle">Each firm's MC curve (above AVC) is its supply curve. Market supply = horizontal sum of all firms' supply curves.</p>
+        
+        <div class="main-content">
+            <div class="graph-container">
+                <div class="graph-title">Firm 1 <span class="firm-label firm1-label">Low Cost</span></div>
+                <canvas id="firm1-canvas" width="400" height="380"></canvas>
+            </div>
+            
+            <div class="graph-container firm2-container">
+                <div class="graph-title">Firm 2 <span class="firm-label firm2-label">Medium Cost</span></div>
+                <canvas id="firm2-canvas" width="400" height="380"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <div class="graph-title">Market Supply <span class="firm-label firm3-label">ΣQ at each P</span></div>
+                <canvas id="market-canvas" width="400" height="380"></canvas>
+            </div>
+            
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title price">📈 Market Price</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Price (P)</span>
+                            <span class="slider-value price" id="price-value">$15.00</span>
+                        </div>
+                        <input type="range" class="price-slider" id="price" min="2" max="35" value="15" step="0.5">
+                    </div>
+                    
+                    <div class="supply-summary">
+                        <div class="title">Quantity Supplied at P = $<span id="summary-price">15.00</span></div>
+                        <div class="supply-row firm1">
+                            <span class="label">Firm 1 (q₁)</span>
+                            <span class="value" id="q1-supply">8.2</span>
+                        </div>
+                        <div class="supply-row firm2">
+                            <span class="label">Firm 2 (q₂)</span>
+                            <span class="value" id="q2-supply">6.5</span>
+                        </div>
+                        <div class="supply-row firm3">
+                            <span class="label">× <span id="num-firms-display">10</span> firms each</span>
+                            <span class="value"></span>
+                        </div>
+                        <div class="supply-row total">
+                            <span class="label">Market Q<sub>S</sub></span>
+                            <span class="value" id="market-supply">147</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Market Structure</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span># of Type-1 Firms</span>
+                            <span class="slider-value" id="n1-value">10</span>
+                        </div>
+                        <input type="range" id="n1" min="1" max="50" value="10" step="1">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span># of Type-2 Firms</span>
+                            <span class="slider-value" id="n2-value">10</span>
+                        </div>
+                        <input type="range" id="n2" min="0" max="50" value="10" step="1">
+                    </div>
+                    <div class="equation-box">
+                        Q<sub>S</sub> = n₁·q₁(P) + n₂·q₂(P)
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="firm-section firm1">
+                        <div class="firm-title">Firm 1 - Low Cost Producer</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC intercept (a₁)</span>
+                                <span class="slider-value" id="a1-value">$2.00</span>
+                            </div>
+                            <input type="range" id="a1" min="0.5" max="8" value="2" step="0.25">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC curvature (c₁)</span>
+                                <span class="slider-value" id="c1-value">0.015</span>
+                            </div>
+                            <input type="range" id="c1" min="0.005" max="0.08" value="0.015" step="0.001">
+                        </div>
+                    </div>
+                    
+                    <div class="firm-section firm2">
+                        <div class="firm-title">Firm 2 - Higher Cost Producer</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC intercept (a₂)</span>
+                                <span class="slider-value" id="a2-value">$5.00</span>
+                            </div>
+                            <input type="range" id="a2" min="0.5" max="12" value="5" step="0.25">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC curvature (c₂)</span>
+                                <span class="slider-value" id="c2-value">0.025</span>
+                            </div>
+                            <input type="range" id="c2" min="0.005" max="0.08" value="0.025" step="0.001">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="panel-title">Legend</div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #38a169;"></div>
+                            <span>Price / MR</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #e53e3e;"></div>
+                            <span>Firm 1 MC / Supply</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #3182ce;"></div>
+                            <span>Firm 2 MC / Supply</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: #319795; height: 4px;"></div>
+                            <span>Market Supply (ΣMC)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #d69e2e;"></div>
+                            <span>Firm's optimal q</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const firm1Canvas = document.getElementById('firm1-canvas');
+        const firm2Canvas = document.getElementById('firm2-canvas');
+        const marketCanvas = document.getElementById('market-canvas');
+        const firm1Ctx = firm1Canvas.getContext('2d');
+        const firm2Ctx = firm2Canvas.getContext('2d');
+        const marketCtx = marketCanvas.getContext('2d');
+        
+        const margin = { top: 35, right: 25, bottom: 45, left: 50 };
+        
+        // Sliders
+        const priceSlider = document.getElementById('price');
+        const n1Slider = document.getElementById('n1');
+        const n2Slider = document.getElementById('n2');
+        const a1Slider = document.getElementById('a1');
+        const c1Slider = document.getElementById('c1');
+        const a2Slider = document.getElementById('a2');
+        const c2Slider = document.getElementById('c2');
+        
+        // Simplified MC: MC = a + cQ² (dropping the linear term for cleaner curves)
+        function marginalCost(Q, a, c) {
+            return a + c * Q * Q;
+        }
+        
+        // Inverse: given P, find Q where MC = P
+        // P = a + cQ² => Q = sqrt((P-a)/c)
+        function optimalQ(P, a, c) {
+            if (P < a) return 0;
+            return Math.sqrt((P - a) / c);
+        }
+        
+        // AVC for reference (integrating MC: VC = aQ + cQ³/3, AVC = a + cQ²/3)
+        function AVC(Q, a, c) {
+            if (Q <= 0) return a;
+            return a + (c * Q * Q) / 3;
+        }
+        
+        function drawFirmGraph(ctx, canvas, firmColor, firmName, a, c, P, isActive) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const width = canvas.width - margin.left - margin.right;
+            const height = canvas.height - margin.top - margin.bottom;
+            const maxQ = 25;
+            const maxP = 40;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const x = margin.left + (i / 5) * width;
+                const y = margin.top + (i / 5) * height;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, margin.top + height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + width, y);
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+            
+            // Axis labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '10px Segoe UI';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                ctx.fillText(q.toFixed(0), toX(q), margin.top + height + 15);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const p = (i / 4) * maxP;
+                ctx.fillText(`$${p.toFixed(0)}`, margin.left - 5, toY(p) + 4);
+            }
+            
+            // Axis titles
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '11px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Quantity (q)', margin.left + width / 2, canvas.height - 8);
+            ctx.save();
+            ctx.translate(14, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('$ / unit', 0, 0);
+            ctx.restore();
+            
+            const qStar = optimalQ(P, a, c);
+            
+            // Shade the supply region (area under MC curve up to qStar)
+            if (qStar > 0 && isActive) {
+                ctx.fillStyle = firmColor.replace(')', ', 0.1)').replace('rgb', 'rgba');
+                ctx.beginPath();
+                ctx.moveTo(toX(0), toY(a));
+                for (let q = 0; q <= qStar; q += 0.3) {
+                    const mc = marginalCost(q, a, c);
+                    if (mc <= maxP) {
+                        ctx.lineTo(toX(q), toY(mc));
+                    }
+                }
+                ctx.lineTo(toX(qStar), toY(P));
+                ctx.lineTo(toX(qStar), toY(0));
+                ctx.lineTo(toX(0), toY(0));
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // Price line
+            if (P <= maxP) {
+                ctx.strokeStyle = '#38a169';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, toY(P));
+                ctx.lineTo(margin.left + width, toY(P));
+                ctx.stroke();
+                
+                ctx.fillStyle = '#38a169';
+                ctx.font = 'bold 10px Segoe UI';
+                ctx.textAlign = 'right';
+                ctx.fillText('P = MR', margin.left + width - 3, toY(P) - 4);
+            }
+            
+            // AVC curve (dashed)
+            ctx.strokeStyle = '#d69e2e';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 3]);
+            ctx.beginPath();
+            let started = false;
+            for (let q = 0.5; q <= maxQ; q += 0.3) {
+                const avc = AVC(q, a, c);
+                if (avc <= maxP) {
+                    if (!started) { ctx.moveTo(toX(q), toY(avc)); started = true; }
+                    else ctx.lineTo(toX(q), toY(avc));
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // MC curve (this IS the supply curve above AVC)
+            ctx.strokeStyle = firmColor;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            started = false;
+            for (let q = 0; q <= maxQ; q += 0.3) {
+                const mc = marginalCost(q, a, c);
+                if (mc <= maxP) {
+                    if (!started) { ctx.moveTo(toX(q), toY(mc)); started = true; }
+                    else ctx.lineTo(toX(q), toY(mc));
+                }
+            }
+            ctx.stroke();
+            
+            // Optimal point
+            if (qStar > 0 && qStar <= maxQ && P <= maxP) {
+                // Dashed line down
+                ctx.strokeStyle = '#a0aec0';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 3]);
+                ctx.beginPath();
+                ctx.moveTo(toX(qStar), toY(P));
+                ctx.lineTo(toX(qStar), toY(0));
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Glow
+                const gradient = ctx.createRadialGradient(toX(qStar), toY(P), 0, toX(qStar), toY(P), 15);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.5)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(toX(qStar), toY(P), 15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Point
+                ctx.fillStyle = '#d69e2e';
+                ctx.beginPath();
+                ctx.arc(toX(qStar), toY(P), 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#1a202c';
+                ctx.font = 'bold 10px Segoe UI';
+                ctx.textAlign = 'left';
+                ctx.fillText(`q=${qStar.toFixed(1)}`, toX(qStar) + 8, toY(P) + 4);
+            }
+            
+            // Labels
+            ctx.font = 'bold 10px Segoe UI';
+            ctx.fillStyle = firmColor;
+            ctx.textAlign = 'left';
+            const labelQ = maxQ * 0.7;
+            const labelMC = marginalCost(labelQ, a, c);
+            if (labelMC <= maxP * 0.9) {
+                ctx.fillText('MC = Supply', toX(labelQ) - 20, toY(labelMC) - 8);
+            }
+            
+            ctx.fillStyle = '#d69e2e';
+            ctx.font = '9px Segoe UI';
+            ctx.fillText('AVC', toX(maxQ * 0.85), toY(AVC(maxQ * 0.85, a, c)) + 12);
+        }
+        
+        function drawMarketGraph() {
+            const P = parseFloat(priceSlider.value);
+            const n1 = parseInt(n1Slider.value);
+            const n2 = parseInt(n2Slider.value);
+            const a1 = parseFloat(a1Slider.value);
+            const c1 = parseFloat(c1Slider.value);
+            const a2 = parseFloat(a2Slider.value);
+            const c2 = parseFloat(c2Slider.value);
+            
+            marketCtx.fillStyle = '#ffffff';
+            marketCtx.fillRect(0, 0, marketCanvas.width, marketCanvas.height);
+            
+            const width = marketCanvas.width - margin.left - margin.right;
+            const height = marketCanvas.height - margin.top - margin.bottom;
+            const maxQ = 500;
+            const maxP = 40;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            marketCtx.strokeStyle = '#edf2f7';
+            marketCtx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const x = margin.left + (i / 5) * width;
+                const y = margin.top + (i / 5) * height;
+                marketCtx.beginPath();
+                marketCtx.moveTo(x, margin.top);
+                marketCtx.lineTo(x, margin.top + height);
+                marketCtx.stroke();
+                marketCtx.beginPath();
+                marketCtx.moveTo(margin.left, y);
+                marketCtx.lineTo(margin.left + width, y);
+                marketCtx.stroke();
+            }
+            
+            // Axes
+            marketCtx.strokeStyle = '#a0aec0';
+            marketCtx.lineWidth = 2;
+            marketCtx.beginPath();
+            marketCtx.moveTo(margin.left, margin.top);
+            marketCtx.lineTo(margin.left, margin.top + height);
+            marketCtx.lineTo(margin.left + width, margin.top + height);
+            marketCtx.stroke();
+            
+            // Axis labels
+            marketCtx.fillStyle = '#718096';
+            marketCtx.font = '10px Segoe UI';
+            marketCtx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                marketCtx.fillText(q.toFixed(0), toX(q), margin.top + height + 15);
+            }
+            marketCtx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const p = (i / 4) * maxP;
+                marketCtx.fillText(`$${p.toFixed(0)}`, margin.left - 5, toY(p) + 4);
+            }
+            
+            // Axis titles
+            marketCtx.fillStyle = '#4a5568';
+            marketCtx.font = '11px Segoe UI';
+            marketCtx.textAlign = 'center';
+            marketCtx.fillText('Market Quantity (Q)', margin.left + width / 2, marketCanvas.height - 8);
+            marketCtx.save();
+            marketCtx.translate(14, margin.top + height / 2);
+            marketCtx.rotate(-Math.PI / 2);
+            marketCtx.fillText('Price ($)', 0, 0);
+            marketCtx.restore();
+            
+            // Calculate market supply at current price
+            const q1 = optimalQ(P, a1, c1);
+            const q2 = optimalQ(P, a2, c2);
+            const Qs = n1 * q1 + n2 * q2;
+            
+            // Price line
+            if (P <= maxP) {
+                marketCtx.strokeStyle = '#38a169';
+                marketCtx.lineWidth = 2;
+                marketCtx.beginPath();
+                marketCtx.moveTo(margin.left, toY(P));
+                marketCtx.lineTo(margin.left + width, toY(P));
+                marketCtx.stroke();
+            }
+            
+            // Individual firm supply curves (scaled by number of firms) - shown faintly
+            // Firm 1 type contribution
+            if (n1 > 0) {
+                marketCtx.strokeStyle = 'rgba(229, 62, 62, 0.3)';
+                marketCtx.lineWidth = 2;
+                marketCtx.setLineDash([4, 3]);
+                marketCtx.beginPath();
+                let started = false;
+                for (let p = a1; p <= maxP; p += 0.5) {
+                    const q = n1 * optimalQ(p, a1, c1);
+                    if (q <= maxQ) {
+                        if (!started) { marketCtx.moveTo(toX(q), toY(p)); started = true; }
+                        else marketCtx.lineTo(toX(q), toY(p));
+                    }
+                }
+                marketCtx.stroke();
+                marketCtx.setLineDash([]);
+            }
+            
+            // Firm 2 type contribution
+            if (n2 > 0) {
+                marketCtx.strokeStyle = 'rgba(49, 130, 206, 0.3)';
+                marketCtx.lineWidth = 2;
+                marketCtx.setLineDash([4, 3]);
+                marketCtx.beginPath();
+                let started = false;
+                for (let p = a2; p <= maxP; p += 0.5) {
+                    const q = n2 * optimalQ(p, a2, c2);
+                    if (q <= maxQ) {
+                        if (!started) { marketCtx.moveTo(toX(q), toY(p)); started = true; }
+                        else marketCtx.lineTo(toX(q), toY(p));
+                    }
+                }
+                marketCtx.stroke();
+                marketCtx.setLineDash([]);
+            }
+            
+            // Market supply curve (horizontal sum)
+            marketCtx.strokeStyle = '#319795';
+            marketCtx.lineWidth = 4;
+            marketCtx.beginPath();
+            let started = false;
+            const minEntry = Math.min(a1, a2);
+            
+            for (let p = minEntry; p <= maxP; p += 0.3) {
+                const q1p = optimalQ(p, a1, c1);
+                const q2p = optimalQ(p, a2, c2);
+                const totalQ = n1 * q1p + n2 * q2p;
+                if (totalQ <= maxQ && totalQ > 0) {
+                    if (!started) { marketCtx.moveTo(toX(totalQ), toY(p)); started = true; }
+                    else marketCtx.lineTo(toX(totalQ), toY(p));
+                }
+            }
+            marketCtx.stroke();
+            
+            // Current market quantity point
+            if (Qs > 0 && Qs <= maxQ && P <= maxP) {
+                // Dashed line down
+                marketCtx.strokeStyle = '#a0aec0';
+                marketCtx.lineWidth = 1;
+                marketCtx.setLineDash([4, 3]);
+                marketCtx.beginPath();
+                marketCtx.moveTo(toX(Qs), toY(P));
+                marketCtx.lineTo(toX(Qs), toY(0));
+                marketCtx.stroke();
+                marketCtx.setLineDash([]);
+                
+                // Glow
+                const gradient = marketCtx.createRadialGradient(toX(Qs), toY(P), 0, toX(Qs), toY(P), 18);
+                gradient.addColorStop(0, 'rgba(49, 151, 149, 0.5)');
+                gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                marketCtx.fillStyle = gradient;
+                marketCtx.beginPath();
+                marketCtx.arc(toX(Qs), toY(P), 18, 0, Math.PI * 2);
+                marketCtx.fill();
+                
+                // Point
+                marketCtx.fillStyle = '#319795';
+                marketCtx.beginPath();
+                marketCtx.arc(toX(Qs), toY(P), 8, 0, Math.PI * 2);
+                marketCtx.fill();
+                marketCtx.strokeStyle = '#ffffff';
+                marketCtx.lineWidth = 2;
+                marketCtx.stroke();
+                
+                // Label
+                marketCtx.fillStyle = '#1a202c';
+                marketCtx.font = 'bold 11px Segoe UI';
+                marketCtx.textAlign = 'left';
+                marketCtx.fillText(`Q=${Qs.toFixed(0)}`, toX(Qs) + 10, toY(P) + 4);
+            }
+            
+            // Labels
+            marketCtx.font = 'bold 11px Segoe UI';
+            marketCtx.fillStyle = '#319795';
+            marketCtx.textAlign = 'left';
+            marketCtx.fillText('Market Supply', toX(maxQ * 0.55), toY(maxP * 0.85));
+            marketCtx.fillText('S = Σ MCᵢ', toX(maxQ * 0.55), toY(maxP * 0.85) + 14);
+            
+            // Show breakdown
+            if (n1 > 0) {
+                marketCtx.fillStyle = 'rgba(229, 62, 62, 0.7)';
+                marketCtx.font = '9px Segoe UI';
+                marketCtx.fillText(`${n1} × Firm 1`, toX(maxQ * 0.02), toY(maxP * 0.15));
+            }
+            if (n2 > 0) {
+                marketCtx.fillStyle = 'rgba(49, 130, 206, 0.7)';
+                marketCtx.font = '9px Segoe UI';
+                marketCtx.fillText(`${n2} × Firm 2`, toX(maxQ * 0.02), toY(maxP * 0.08));
+            }
+        }
+        
+        function updateDisplay() {
+            const P = parseFloat(priceSlider.value);
+            const n1 = parseInt(n1Slider.value);
+            const n2 = parseInt(n2Slider.value);
+            const a1 = parseFloat(a1Slider.value);
+            const c1 = parseFloat(c1Slider.value);
+            const a2 = parseFloat(a2Slider.value);
+            const c2 = parseFloat(c2Slider.value);
+            
+            // Update display values
+            document.getElementById('price-value').textContent = `$${P.toFixed(2)}`;
+            document.getElementById('n1-value').textContent = n1;
+            document.getElementById('n2-value').textContent = n2;
+            document.getElementById('a1-value').textContent = `$${a1.toFixed(2)}`;
+            document.getElementById('c1-value').textContent = c1.toFixed(3);
+            document.getElementById('a2-value').textContent = `$${a2.toFixed(2)}`;
+            document.getElementById('c2-value').textContent = c2.toFixed(3);
+            
+            // Calculate quantities
+            const q1 = optimalQ(P, a1, c1);
+            const q2 = optimalQ(P, a2, c2);
+            const Qs = n1 * q1 + n2 * q2;
+            
+            // Update summary
+            document.getElementById('summary-price').textContent = P.toFixed(2);
+            document.getElementById('q1-supply').textContent = q1.toFixed(1);
+            document.getElementById('q2-supply').textContent = q2.toFixed(1);
+            document.getElementById('num-firms-display').textContent = `${n1}+${n2}`;
+            document.getElementById('market-supply').textContent = Qs.toFixed(0);
+            
+            // Draw graphs
+            drawFirmGraph(firm1Ctx, firm1Canvas, '#e53e3e', 'Firm 1', a1, c1, P, true);
+            drawFirmGraph(firm2Ctx, firm2Canvas, '#3182ce', 'Firm 2', a2, c2, P, n2 > 0);
+            drawMarketGraph();
+        }
+        
+        // Event listeners
+        [priceSlider, n1Slider, n2Slider, a1Slider, c1Slider, a2Slider, c2Slider].forEach(slider => {
+            slider.addEventListener('input', updateDisplay);
+        });
+        
+        // Initial draw
+        updateDisplay();
+    </script>
+</body>
+</html>

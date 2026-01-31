@@ -345,6 +345,19 @@
         const producerCanvas = document.getElementById('producer-canvas');
         const utilityChart = document.getElementById('utility-chart');
         const profitChart = document.getElementById('profit-chart');
+
+        function setHiResCanvas(canvas, scale) {
+            const cssWidth = canvas.width;
+            const cssHeight = canvas.height;
+            canvas.style.width = `${cssWidth}px`;
+            canvas.style.height = `${cssHeight}px`;
+            canvas.width = Math.round(cssWidth * scale);
+            canvas.height = Math.round(cssHeight * scale);
+        }
+
+        setHiResCanvas(utilityChart, 2);
+        setHiResCanvas(profitChart, 2);
+
         const consumerCtx = consumerCanvas.getContext('2d');
         const marketCtx = marketCanvas.getContext('2d');
         const producerCtx = producerCanvas.getContext('2d');
@@ -390,19 +403,19 @@
             { month: 3, type: 'priceX', dir: 1, mag: 0.8, msg: 'priceXUp' },
             { month: 4, type: 'demand', dir: 1, mag: 1.5, msg: 'demandUp' },
             { month: 5, type: 'priceY', dir: -1, mag: 0.6, msg: 'priceYDown' },
-            { month: 6, type: 'mcBase', dir: 1, mag: 0.5, msg: 'inputUp' },
+            { month: 6, type: 'mcBase', dir: 1, mag: 1.5, msg: 'inputUp' },
             { month: 7, type: 'income', dir: -1, mag: 35, msg: 'incomeDown' },
             { month: 8, type: 'priceX', dir: -1, mag: 0.7, msg: 'priceXDown' },
             { month: 9, type: 'demand', dir: -1, mag: 1.8, msg: 'demandDown' },
             { month: 10, type: 'priceY', dir: 1, mag: 0.9, msg: 'priceYUp' },
-            { month: 11, type: 'elasticity', dir: 1, mag: 0.0004, msg: 'elasticityUp' },
+            { month: 11, type: 'elasticity', dir: 1, mag: 0.0024, msg: 'elasticityUp' },
             { month: 12, type: 'income', dir: 1, mag: 40, msg: 'incomeUp' },
             { month: 13, type: 'mcBase', dir: -1, mag: 0.4, msg: 'inputDown' },
             { month: 14, type: 'priceX', dir: 1, mag: 0.6, msg: 'priceXUp' },
             { month: 15, type: 'demand', dir: 1, mag: 2.0, msg: 'demandUp' },
             { month: 16, type: 'priceY', dir: -1, mag: 0.8, msg: 'priceYDown' },
             { month: 17, type: 'income', dir: -1, mag: 30, msg: 'incomeDown' },
-            { month: 18, type: 'mcBase', dir: 1, mag: 0.6, msg: 'inputUp' },
+            { month: 18, type: 'mcBase', dir: 1, mag: 1.6, msg: 'inputUp' },
             { month: 19, type: 'priceX', dir: -1, mag: 0.5, msg: 'priceXDown' },
             { month: 20, type: 'elasticity', dir: -1, mag: 0.0005, msg: 'elasticityDown' },
             { month: 21, type: 'priceY', dir: 1, mag: 0.7, msg: 'priceYUp' },
@@ -422,7 +435,7 @@
             { month: 35, type: 'priceX', dir: 1, mag: 0.7, msg: 'priceXUp' },
             { month: 36, type: 'priceY', dir: -1, mag: 0.5, msg: 'priceYDown' },
             { month: 37, type: 'income', dir: -1, mag: 40, msg: 'incomeDown' },
-            { month: 38, type: 'mcBase', dir: -1, mag: 0.6, msg: 'inputDown' },
+            { month: 38, type: 'mcBase', dir: -1, mag: 1.6, msg: 'inputDown' },
             { month: 39, type: 'demand', dir: 1, mag: 2.2, msg: 'demandUp' },
             { month: 40, type: 'priceX', dir: -1, mag: 0.6, msg: 'priceXDown' },
             { month: 41, type: 'elasticity', dir: -1, mag: 0.0004, msg: 'elasticityDown' },

@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Manager: The Production Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .title-section h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .title-section .subtitle {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin: 0;
+        }
+        
+        .score-section {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .score-box {
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 0.7rem;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .score-value.profit { color: #68d391; }
+        .score-value.loss { color: #fc8181; }
+        .score-value.month { color: #63b3ed; }
+        
+        .game-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .game-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4); }
+        
+        .btn-pause {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        
+        .btn-reset {
+            background: #4a5568;
+            color: white;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            gap: 15px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .panel-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        
+        .panel-badge {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .badge-control { background: rgba(66, 153, 225, 0.15); color: #2b6cb0; }
+        .badge-market { background: rgba(49, 151, 149, 0.15); color: #319795; }
+        .badge-history { background: rgba(128, 90, 213, 0.15); color: #805ad5; }
+        
+        /* Production Controls */
+        .production-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(49, 151, 149, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #319795;
+        }
+        
+        .production-label {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .production-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #319795;
+            font-family: 'Monaco', 'Consolas', monospace;
+            line-height: 1.2;
+        }
+        
+        .production-target {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        .production-target span {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .prod-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .prod-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .prod-btn .label {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        .btn-increase {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .btn-increase:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-decrease {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+        }
+        
+        .btn-decrease:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(252, 129, 129, 0.4);
+        }
+        
+        .action-points {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .ap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .ap-label {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .ap-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #805ad5;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .ap-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .ap-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #805ad5 0%, #b794f4 100%);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .ap-recharge {
+            font-size: 0.7rem;
+            color: #a0aec0;
+            text-align: right;
+            margin-top: 4px;
+        }
+        
+        /* Cost Info */
+        .cost-info {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+        
+        .cost-label { color: #718096; }
+        .cost-value { 
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #1a202c;
+            font-weight: 500;
+        }
+        
+        .cost-value.changing {
+            animation: flash 0.5s ease;
+        }
+        
+        @keyframes flash {
+            0%, 100% { background: transparent; }
+            50% { background: rgba(214, 158, 46, 0.3); }
+        }
+        
+        /* Market Graph */
+        .market-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .stat-box {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-label {
+            font-size: 0.65rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+            margin-top: 2px;
+        }
+        
+        .stat-value.price { color: #38a169; }
+        .stat-value.quantity { color: #3182ce; }
+        .stat-value.revenue { color: #319795; }
+        .stat-value.cost { color: #e53e3e; }
+        
+        /* News Ticker */
+        .news-ticker {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 45px;
+        }
+        
+        .news-icon {
+            font-size: 1.2rem;
+        }
+        
+        .news-text {
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+        
+        .news-text.shock-up { color: #68d391; }
+        .news-text.shock-down { color: #fc8181; }
+        .news-text.shock-neutral { color: #fbd38d; }
+        
+        /* Profit History */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .monthly-profit {
+            text-align: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .monthly-label {
+            font-size: 0.7rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .monthly-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        .monthly-value.positive { color: #38a169; }
+        .monthly-value.negative { color: #e53e3e; }
+        .monthly-value.zero { color: #718096; }
+        
+        .chart-container {
+            flex: 1;
+            min-height: 250px;
+        }
+        
+        .high-score {
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.15) 0%, rgba(236, 201, 75, 0.1) 100%);
+            border: 1px solid rgba(214, 158, 46, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        
+        .hs-label {
+            font-size: 0.7rem;
+            color: #b7791f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hs-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #d69e2e;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        
+        /* Speed control */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        
+        .speed-label {
+            font-size: 0.75rem;
+            color: #718096;
+        }
+        
+        .speed-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .speed-btn {
+            padding: 5px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .speed-btn.active {
+            background: #319795;
+            color: white;
+            border-color: #319795;
+        }
+        
+        .speed-btn:hover:not(.active) {
+            background: #edf2f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-section">
+                <h1>🏭 Market Manager: The Production Game</h1>
+                <p class="subtitle">Adjust production to maximize profit while responding to market shocks!</p>
+            </div>
+            <div class="score-section">
+                <div class="score-box">
+                    <div class="score-label">Month</div>
+                    <div class="score-value month" id="current-month">1</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">Cumulative Profit</div>
+                    <div class="score-value profit" id="cumulative-profit">$0</div>
+                </div>
+                <div class="game-controls">
+                    <button class="game-btn btn-start" id="start-btn" onclick="toggleGame()">▶️ Start</button>
+                    <button class="game-btn btn-reset" onclick="resetGame()">🔄 Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-layout">
+            <!-- Production Controls Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">🎮 Production Control</div>
+                    <span class="panel-badge badge-control">Your Firm</span>
+                </div>
+                
+                <div class="production-display">
+                    <div class="production-label">Your Production Level</div>
+                    <div class="production-value" id="current-production">50</div>
+                    <div class="production-target">Optimal: <span id="optimal-production">50</span> units</div>
+                </div>
+                
+                <div class="control-buttons">
+                    <button class="prod-btn btn-increase" id="btn-increase" onclick="changeProduction(1)">
+                        <span>+10</span>
+                        <span class="label">Increase</span>
+                    </button>
+                    <button class="prod-btn btn-decrease" id="btn-decrease" onclick="changeProduction(-1)">
+                        <span>-10</span>
+                        <span class="label">Decrease</span>
+                    </button>
+                </div>
+                
+                <div class="action-points">
+                    <div class="ap-header">
+                        <span class="ap-label">Action Points</span>
+                        <span class="ap-value" id="ap-value">5 / 5</span>
+                    </div>
+                    <div class="ap-bar">
+                        <div class="ap-fill" id="ap-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="ap-recharge">+1 AP every 3 seconds</div>
+                </div>
+                
+                <div class="cost-info">
+                    <div class="cost-row">
+                        <span class="cost-label">Input Price (w)</span>
+                        <span class="cost-value" id="input-price">$10.00</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Fixed Costs</span>
+                        <span class="cost-value" id="fixed-cost">$200</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Your MC at q</span>
+                        <span class="cost-value" id="your-mc">$2.50</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Your ATC at q</span>
+                        <span class="cost-value" id="your-atc">$6.50</span>
+                    </div>
+                </div>
+                
+                <div class="speed-control">
+                    <span class="speed-label">Game Speed:</span>
+                    <div class="speed-buttons">
+                        <button class="speed-btn" onclick="setSpeed(0.5)">0.5x</button>
+                        <button class="speed-btn active" onclick="setSpeed(1)">1x</button>
+                        <button class="speed-btn" onclick="setSpeed(2)">2x</button>
+                        <button class="speed-btn" onclick="setSpeed(3)">3x</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Market Panel -->
+            <div class="panel market-section">
+                <div class="panel-header">
+                    <div class="panel-title">📊 Market Conditions</div>
+                    <span class="panel-badge badge-market">Supply & Demand</span>
+                </div>
+                
+                <canvas id="market-canvas" width="700" height="320"></canvas>
+                
+                <div class="market-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Market Price</div>
+                        <div class="stat-value price" id="market-price">$4.00</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Your Output</div>
+                        <div class="stat-value quantity" id="your-output">50</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Your Revenue</div>
+                        <div class="stat-value revenue" id="your-revenue">$200</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Your Cost</div>
+                        <div class="stat-value cost" id="your-cost">$175</div>
+                    </div>
+                </div>
+                
+                <div class="news-ticker" id="news-ticker">
+                    <span class="news-icon">📰</span>
+                    <span class="news-text" id="news-text">Game paused. Press Start to begin managing your firm!</span>
+                </div>
+            </div>
+            
+            <!-- Profit History Panel -->
+            <div class="panel history-section">
+                <div class="panel-header">
+                    <div class="panel-title">📈 Profit History</div>
+                    <span class="panel-badge badge-history">Performance</span>
+                </div>
+                
+                <div class="monthly-profit">
+                    <div class="monthly-label">This Month's Profit</div>
+                    <div class="monthly-value positive" id="monthly-profit">$0.00</div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="history-canvas" width="280" height="250"></canvas>
+                </div>
+                
+                <div class="high-score">
+                    <div class="hs-label">🏆 Best Run (12 months)</div>
+                    <div class="hs-value" id="high-score">$0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const marketCanvas = document.getElementById('market-canvas');
+        const historyCanvas = document.getElementById('history-canvas');
+        const marketCtx = marketCanvas.getContext('2d');
+        const historyCtx = historyCanvas.getContext('2d');
+        
+        // Game State
+        let gameRunning = false;
+        let gameSpeed = 1;
+        let currentMonth = 1;
+        let cumulativeProfit = 0;
+        let highScore = 0;
+        let monthlyProfits = [];
+        
+        // Action Points
+        let actionPoints = 5;
+        const maxActionPoints = 5;
+        let lastAPRecharge = Date.now();
+        const apRechargeTime = 3000; // 3 seconds
+        
+        // Player's production
+        let playerProduction = 50;
+        
+        // Market Parameters
+        let marketParams = {
+            // Demand: P = demandIntercept - demandSlope * Q
+            demandIntercept: 12,
+            demandSlope: 0.015,
+            
+            // Supply from other firms: P = supplyIntercept + supplySlope * Q
+            supplyIntercept: 1,
+            supplySlope: 0.01,
+            numOtherFirms: 80,
+            
+            // Player's costs: TC = FC + w*q + c*q^2
+            inputPrice: 10, // wage/input price
+            fixedCost: 200,
+            costCurvature: 0.02,
+            
+            // Consumer income (affects demand)
+            consumerIncome: 100
+        };
+        
+        // Shock news messages
+        const shockMessages = {
+            wageUp: [
+                "⚠️ Labor union negotiates higher wages! Input costs rise.",
+                "⚠️ Minimum wage increase takes effect. Production costs up!",
+                "⚠️ Worker shortage drives up labor costs!"
+            ],
+            wageDown: [
+                "✅ New automation technology reduces labor costs!",
+                "✅ Immigration reform increases labor supply. Wages fall!",
+                "✅ Productivity gains lower per-unit labor costs!"
+            ],
+            demandUp: [
+                "📈 Consumer confidence surges! Demand increases!",
+                "📈 Viral marketing campaign boosts product popularity!",
+                "📈 Competitor recalls product - customers flock to you!",
+                "📈 Economic boom! Consumers spending more!"
+            ],
+            demandDown: [
+                "📉 Recession fears dampen consumer spending.",
+                "📉 New substitute product enters the market!",
+                "📉 Negative press coverage hurts demand.",
+                "📉 Consumer preferences shifting away from your product."
+            ],
+            supplyUp: [
+                "🏭 New competitors enter the market!",
+                "🏭 Foreign imports increase market supply!",
+                "🏭 Industry expansion adds production capacity!"
+            ],
+            supplyDown: [
+                "🔥 Factory fire takes competitor offline!",
+                "🔥 Supply chain disruption reduces market supply!",
+                "🔥 Regulatory changes force some firms to exit!"
+            ],
+            inputShock: [
+                "⚡ Energy price spike increases production costs!",
+                "⚡ Raw material shortage drives up input prices!",
+                "🌿 Commodity prices fall - cheaper inputs!"
+            ]
+        };
+        
+        // Calculate market equilibrium
+        function calculateEquilibrium() {
+            // Other firms' supply: Qs_others = f(P)
+            // Simplified: total market supply = player + others
+            // Demand: Qd = (demandIntercept - P) / demandSlope
+            // At equilibrium: Qd = Qs
+            
+            // For given player production, find market clearing price
+            // Total supply at price P: playerProduction + numOtherFirms * firmSupply(P)
+            // Where firmSupply(P) = sqrt((P - supplyIntercept) / costCurvature) if P > supplyIntercept
+            
+            let pLow = marketParams.supplyIntercept + 0.1;
+            let pHigh = marketParams.demandIntercept - 0.1;
+            let eqPrice = (pLow + pHigh) / 2;
+            
+            for (let i = 0; i < 30; i++) {
+                const qDemand = Math.max(0, (marketParams.demandIntercept - eqPrice) / marketParams.demandSlope);
+                const otherFirmQ = eqPrice > marketParams.supplyIntercept ? 
+                    Math.sqrt((eqPrice - marketParams.supplyIntercept) / (marketParams.costCurvature * 0.5)) : 0;
+                const qSupply = playerProduction + marketParams.numOtherFirms * otherFirmQ;
+                
+                if (Math.abs(qDemand - qSupply) < 1) break;
+                
+                if (qDemand > qSupply) {
+                    pLow = eqPrice;
+                } else {
+                    pHigh = eqPrice;
+                }
+                eqPrice = (pLow + pHigh) / 2;
+            }
+            
+            const eqQuantity = Math.max(0, (marketParams.demandIntercept - eqPrice) / marketParams.demandSlope);
+            return { price: Math.max(0.5, eqPrice), quantity: eqQuantity };
+        }
+        
+        // Calculate player's costs and profit
+        function calculatePlayerFinancials(price) {
+            const q = playerProduction;
+            const variableCost = marketParams.inputPrice * q * 0.1 + marketParams.costCurvature * q * q;
+            const totalCost = marketParams.fixedCost + variableCost;
+            const revenue = price * q;
+            const profit = revenue - totalCost;
+            
+            const mc = marketParams.inputPrice * 0.1 + 2 * marketParams.costCurvature * q;
+            const atc = q > 0 ? totalCost / q : 0;
+            
+            return { revenue, totalCost, profit, mc, atc, variableCost };
+        }
+        
+        // Calculate optimal production (where P = MC)
+        function calculateOptimalProduction(price) {
+            // MC = w*0.1 + 2*c*q = P
+            // q = (P - w*0.1) / (2*c)
+            const optimal = (price - marketParams.inputPrice * 0.1) / (2 * marketParams.costCurvature);
+            return Math.max(0, Math.round(optimal));
+        }
+        
+        // Generate random shock
+        function generateShock() {
+            const shockType = Math.random();
+            let message = "";
+            let messageClass = "shock-neutral";
+            
+            if (shockType < 0.2) {
+                // Wage/input price shock
+                const direction = Math.random() < 0.5 ? 1 : -1;
+                const magnitude = 1 + Math.random() * 3;
+                marketParams.inputPrice = Math.max(5, Math.min(20, marketParams.inputPrice + direction * magnitude));
+                message = direction > 0 ? 
+                    shockMessages.wageUp[Math.floor(Math.random() * shockMessages.wageUp.length)] :
+                    shockMessages.wageDown[Math.floor(Math.random() * shockMessages.wageDown.length)];
+                messageClass = direction > 0 ? "shock-down" : "shock-up";
+            } else if (shockType < 0.5) {
+                // Demand shock
+                const direction = Math.random() < 0.5 ? 1 : -1;
+                const magnitude = 0.5 + Math.random() * 1.5;
+                marketParams.demandIntercept = Math.max(8, Math.min(18, marketParams.demandIntercept + direction * magnitude));
+                message = direction > 0 ?
+                    shockMessages.demandUp[Math.floor(Math.random() * shockMessages.demandUp.length)] :
+                    shockMessages.demandDown[Math.floor(Math.random() * shockMessages.demandDown.length)];
+                messageClass = direction > 0 ? "shock-up" : "shock-down";
+            } else if (shockType < 0.75) {
+                // Supply shock (other firms)
+                const direction = Math.random() < 0.5 ? 1 : -1;
+                const magnitude = 5 + Math.floor(Math.random() * 15);
+                marketParams.numOtherFirms = Math.max(30, Math.min(120, marketParams.numOtherFirms + direction * magnitude));
+                message = direction > 0 ?
+                    shockMessages.supplyUp[Math.floor(Math.random() * shockMessages.supplyUp.length)] :
+                    shockMessages.supplyDown[Math.floor(Math.random() * shockMessages.supplyDown.length)];
+                messageClass = direction > 0 ? "shock-down" : "shock-up";
+            } else {
+                // No shock this month
+                message = "📊 Markets stable this month. No major news.";
+                messageClass = "shock-neutral";
+            }
+            
+            document.getElementById('news-text').textContent = message;
+            document.getElementById('news-text').className = `news-text ${messageClass}`;
+        }
+        
+        // Draw market graph
+        function drawMarketGraph(eqPrice, eqQuantity) {
+            const margin = { top: 25, right: 20, bottom: 40, left: 50 };
+            const width = marketCanvas.width - margin.left - margin.right;
+            const height = marketCanvas.height - margin.top - margin.bottom;
+            
+            marketCtx.fillStyle = '#ffffff';
+            marketCtx.fillRect(0, 0, marketCanvas.width, marketCanvas.height);
+            
+            const maxQ = 800;
+            const maxP = 15;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            marketCtx.strokeStyle = '#edf2f7';
+            marketCtx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const x = margin.left + (i / 4) * width;
+                const y = margin.top + (i / 4) * height;
+                marketCtx.beginPath();
+                marketCtx.moveTo(x, margin.top);
+                marketCtx.lineTo(x, margin.top + height);
+                marketCtx.stroke();
+                marketCtx.beginPath();
+                marketCtx.moveTo(margin.left, y);
+                marketCtx.lineTo(margin.left + width, y);
+                marketCtx.stroke();
+            }
+            
+            // Axes
+            marketCtx.strokeStyle = '#a0aec0';
+            marketCtx.lineWidth = 2;
+            marketCtx.beginPath();
+            marketCtx.moveTo(margin.left, margin.top);
+            marketCtx.lineTo(margin.left, margin.top + height);
+            marketCtx.lineTo(margin.left + width, margin.top + height);
+            marketCtx.stroke();
+            
+            // Labels
+            marketCtx.fillStyle = '#718096';
+            marketCtx.font = '10px Segoe UI';
+            marketCtx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                marketCtx.fillText((i * maxQ / 4).toFixed(0), toX(i * maxQ / 4), margin.top + height + 15);
+            }
+            marketCtx.textAlign = 'right';
+            for (let i = 0; i <= 3; i++) {
+                marketCtx.fillText(`$${(i * maxP / 3).toFixed(0)}`, margin.left - 5, toY(i * maxP / 3) + 4);
+            }
+            
+            marketCtx.fillStyle = '#4a5568';
+            marketCtx.font = '11px Segoe UI';
+            marketCtx.textAlign = 'center';
+            marketCtx.fillText('Market Quantity', margin.left + width / 2, marketCanvas.height - 5);
+            
+            // Demand curve
+            marketCtx.strokeStyle = '#3182ce';
+            marketCtx.lineWidth = 3;
+            marketCtx.beginPath();
+            for (let p = 0.5; p <= maxP; p += 0.2) {
+                const q = (marketParams.demandIntercept - p) / marketParams.demandSlope;
+                if (q >= 0 && q <= maxQ) {
+                    if (p === 0.5) marketCtx.moveTo(toX(q), toY(p));
+                    else marketCtx.lineTo(toX(q), toY(p));
+                }
+            }
+            marketCtx.stroke();
+            
+            // Supply curve (including player)
+            marketCtx.strokeStyle = '#e53e3e';
+            marketCtx.lineWidth = 3;
+            marketCtx.beginPath();
+            let started = false;
+            for (let p = marketParams.supplyIntercept + 0.1; p <= maxP; p += 0.2) {
+                const otherQ = Math.sqrt((p - marketParams.supplyIntercept) / (marketParams.costCurvature * 0.5));
+                const totalQ = playerProduction + marketParams.numOtherFirms * otherQ;
+                if (totalQ <= maxQ) {
+                    if (!started) { marketCtx.moveTo(toX(totalQ), toY(p)); started = true; }
+                    else marketCtx.lineTo(toX(totalQ), toY(p));
+                }
+            }
+            marketCtx.stroke();
+            
+            // Player's contribution highlight
+            marketCtx.fillStyle = 'rgba(49, 151, 149, 0.3)';
+            marketCtx.fillRect(toX(0), toY(eqPrice) - 2, toX(playerProduction) - toX(0), 4);
+            
+            // Equilibrium point
+            if (eqQuantity <= maxQ && eqPrice <= maxP) {
+                // Dashed lines
+                marketCtx.strokeStyle = '#a0aec0';
+                marketCtx.lineWidth = 1;
+                marketCtx.setLineDash([4, 3]);
+                marketCtx.beginPath();
+                marketCtx.moveTo(toX(eqQuantity), toY(eqPrice));
+                marketCtx.lineTo(toX(eqQuantity), toY(0));
+                marketCtx.stroke();
+                marketCtx.beginPath();
+                marketCtx.moveTo(toX(eqQuantity), toY(eqPrice));
+                marketCtx.lineTo(toX(0), toY(eqPrice));
+                marketCtx.stroke();
+                marketCtx.setLineDash([]);
+                
+                // Point
+                const gradient = marketCtx.createRadialGradient(toX(eqQuantity), toY(eqPrice), 0, toX(eqQuantity), toY(eqPrice), 15);
+                gradient.addColorStop(0, 'rgba(49, 151, 149, 0.6)');
+                gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                marketCtx.fillStyle = gradient;
+                marketCtx.beginPath();
+                marketCtx.arc(toX(eqQuantity), toY(eqPrice), 15, 0, Math.PI * 2);
+                marketCtx.fill();
+                
+                marketCtx.fillStyle = '#319795';
+                marketCtx.beginPath();
+                marketCtx.arc(toX(eqQuantity), toY(eqPrice), 6, 0, Math.PI * 2);
+                marketCtx.fill();
+                marketCtx.strokeStyle = '#ffffff';
+                marketCtx.lineWidth = 2;
+                marketCtx.stroke();
+            }
+            
+            // Labels
+            marketCtx.font = 'bold 10px Segoe UI';
+            marketCtx.fillStyle = '#3182ce';
+            marketCtx.textAlign = 'left';
+            marketCtx.fillText('Demand', toX(maxQ * 0.1), toY(marketParams.demandIntercept - marketParams.demandSlope * maxQ * 0.1) - 8);
+            marketCtx.fillStyle = '#e53e3e';
+            marketCtx.fillText('Supply', toX(maxQ * 0.7), toY(marketParams.supplyIntercept + 5) + 15);
+        }
+        
+        // Draw profit history chart
+        function drawHistoryChart() {
+            const margin = { top: 20, right: 15, bottom: 30, left: 45 };
+            const width = historyCanvas.width - margin.left - margin.right;
+            const height = historyCanvas.height - margin.top - margin.bottom;
+            
+            historyCtx.fillStyle = '#ffffff';
+            historyCtx.fillRect(0, 0, historyCanvas.width, historyCanvas.height);
+            
+            const maxMonths = 12;
+            const profits = monthlyProfits.slice(-maxMonths);
+            
+            // Calculate scale
+            let maxProfit = 100;
+            let minProfit = -100;
+            profits.forEach(p => {
+                if (p > maxProfit) maxProfit = p;
+                if (p < minProfit) minProfit = p;
+            });
+            maxProfit = Math.ceil(maxProfit / 50) * 50 + 50;
+            minProfit = Math.floor(minProfit / 50) * 50 - 50;
+            const range = maxProfit - minProfit;
+            
+            const toX = (i) => margin.left + ((i + 0.5) / maxMonths) * width;
+            const toY = (p) => margin.top + height - ((p - minProfit) / range) * height;
+            const barWidth = (width / maxMonths) * 0.7;
+            
+            // Grid
+            historyCtx.strokeStyle = '#edf2f7';
+            historyCtx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = margin.top + (i / 4) * height;
+                historyCtx.beginPath();
+                historyCtx.moveTo(margin.left, y);
+                historyCtx.lineTo(margin.left + width, y);
+                historyCtx.stroke();
+            }
+            
+            // Zero line
+            const zeroY = toY(0);
+            historyCtx.strokeStyle = '#a0aec0';
+            historyCtx.lineWidth = 2;
+            historyCtx.beginPath();
+            historyCtx.moveTo(margin.left, zeroY);
+            historyCtx.lineTo(margin.left + width, zeroY);
+            historyCtx.stroke();
+            
+            // Axes
+            historyCtx.strokeStyle = '#a0aec0';
+            historyCtx.lineWidth = 2;
+            historyCtx.beginPath();
+            historyCtx.moveTo(margin.left, margin.top);
+            historyCtx.lineTo(margin.left, margin.top + height);
+            historyCtx.stroke();
+            
+            // Y-axis labels
+            historyCtx.fillStyle = '#718096';
+            historyCtx.font = '9px Segoe UI';
+            historyCtx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const val = minProfit + (i / 4) * range;
+                historyCtx.fillText(`$${val.toFixed(0)}`, margin.left - 5, toY(val) + 3);
+            }
+            
+            // X-axis label
+            historyCtx.fillStyle = '#4a5568';
+            historyCtx.font = '10px Segoe UI';
+            historyCtx.textAlign = 'center';
+            historyCtx.fillText('Month', margin.left + width / 2, historyCanvas.height - 5);
+            
+            // Draw bars
+            profits.forEach((profit, i) => {
+                const x = toX(i) - barWidth / 2;
+                const barHeight = Math.abs(toY(profit) - zeroY);
+                
+                if (profit >= 0) {
+                    const gradient = historyCtx.createLinearGradient(x, toY(profit), x, zeroY);
+                    gradient.addColorStop(0, '#48bb78');
+                    gradient.addColorStop(1, '#68d391');
+                    historyCtx.fillStyle = gradient;
+                    historyCtx.fillRect(x, toY(profit), barWidth, barHeight);
+                } else {
+                    const gradient = historyCtx.createLinearGradient(x, zeroY, x, toY(profit));
+                    gradient.addColorStop(0, '#fc8181');
+                    gradient.addColorStop(1, '#f56565');
+                    historyCtx.fillStyle = gradient;
+                    historyCtx.fillRect(x, zeroY, barWidth, barHeight);
+                }
+                
+                // Month number
+                historyCtx.fillStyle = '#718096';
+                historyCtx.font = '8px Segoe UI';
+                historyCtx.textAlign = 'center';
+                const monthNum = currentMonth - profits.length + i + 1;
+                if (monthNum > 0) {
+                    historyCtx.fillText(monthNum.toString(), toX(i), margin.top + height + 12);
+                }
+            });
+        }
+        
+        // Update display
+        function updateDisplay() {
+            const eq = calculateEquilibrium();
+            const financials = calculatePlayerFinancials(eq.price);
+            const optimal = calculateOptimalProduction(eq.price);
+            
+            // Update production display
+            document.getElementById('current-production').textContent = playerProduction;
+            document.getElementById('optimal-production').textContent = optimal;
+            
+            // Update market stats
+            document.getElementById('market-price').textContent = `$${eq.price.toFixed(2)}`;
+            document.getElementById('your-output').textContent = playerProduction;
+            document.getElementById('your-revenue').textContent = `$${financials.revenue.toFixed(0)}`;
+            document.getElementById('your-cost').textContent = `$${financials.totalCost.toFixed(0)}`;
+            
+            // Update cost info
+            document.getElementById('input-price').textContent = `$${marketParams.inputPrice.toFixed(2)}`;
+            document.getElementById('fixed-cost').textContent = `$${marketParams.fixedCost}`;
+            document.getElementById('your-mc').textContent = `$${financials.mc.toFixed(2)}`;
+            document.getElementById('your-atc').textContent = `$${financials.atc.toFixed(2)}`;
+            
+            // Update monthly profit display
+            const monthlyEl = document.getElementById('monthly-profit');
+            monthlyEl.textContent = financials.profit >= 0 ? `+$${financials.profit.toFixed(2)}` : `-$${Math.abs(financials.profit).toFixed(2)}`;
+            monthlyEl.className = `monthly-value ${financials.profit >= 0 ? 'positive' : 'negative'}`;
+            
+            // Update action points
+            document.getElementById('ap-value').textContent = `${actionPoints} / ${maxActionPoints}`;
+            document.getElementById('ap-fill').style.width = `${(actionPoints / maxActionPoints) * 100}%`;
+            
+            // Update buttons
+            document.getElementById('btn-increase').disabled = actionPoints < 1 || playerProduction >= 150;
+            document.getElementById('btn-decrease').disabled = actionPoints < 1 || playerProduction <= 10;
+            
+            // Draw graphs
+            drawMarketGraph(eq.price, eq.quantity);
+            drawHistoryChart();
+            
+            return financials.profit;
+        }
+        
+        // Change production
+        function changeProduction(direction) {
+            if (actionPoints < 1) return;
+            if (direction > 0 && playerProduction >= 150) return;
+            if (direction < 0 && playerProduction <= 10) return;
+            
+            actionPoints--;
+            playerProduction = Math.max(10, Math.min(150, playerProduction + direction * 10));
+            updateDisplay();
+        }
+        
+        // Game loop
+        let lastUpdate = Date.now();
+        let monthProgress = 0;
+        const monthDuration = 5000; // 5 seconds per month at 1x speed
+        
+        function gameLoop() {
+            if (!gameRunning) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+            
+            const now = Date.now();
+            const delta = now - lastUpdate;
+            lastUpdate = now;
+            
+            // Recharge action points
+            if (now - lastAPRecharge >= apRechargeTime / gameSpeed) {
+                if (actionPoints < maxActionPoints) {
+                    actionPoints++;
+                    updateDisplay();
+                }
+                lastAPRecharge = now;
+            }
+            
+            // Progress month
+            monthProgress += delta * gameSpeed;
+            
+            if (monthProgress >= monthDuration) {
+                monthProgress = 0;
+                
+                // Calculate this month's profit
+                const eq = calculateEquilibrium();
+                const financials = calculatePlayerFinancials(eq.price);
+                
+                // Record profit
+                monthlyProfits.push(financials.profit);
+                cumulativeProfit += financials.profit;
+                currentMonth++;
+                
+                // Update cumulative display
+                const cumEl = document.getElementById('cumulative-profit');
+                cumEl.textContent = cumulativeProfit >= 0 ? `$${cumulativeProfit.toFixed(0)}` : `-$${Math.abs(cumulativeProfit).toFixed(0)}`;
+                cumEl.className = `score-value ${cumulativeProfit >= 0 ? 'profit' : 'loss'}`;
+                document.getElementById('current-month').textContent = currentMonth;
+                
+                // Check high score at month 12
+                if (currentMonth === 13) {
+                    if (cumulativeProfit > highScore) {
+                        highScore = cumulativeProfit;
+                        document.getElementById('high-score').textContent = `$${highScore.toFixed(0)}`;
+                    }
+                    // Reset for next round
+                    document.getElementById('news-text').textContent = `🎉 Year complete! Final profit: $${cumulativeProfit.toFixed(0)}. Starting new year...`;
+                    document.getElementById('news-text').className = 'news-text shock-up';
+                    currentMonth = 1;
+                    cumulativeProfit = 0;
+                    monthlyProfits = [];
+                } else {
+                    // Generate random shock
+                    generateShock();
+                }
+                
+                updateDisplay();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Toggle game
+        function toggleGame() {
+            gameRunning = !gameRunning;
+            const btn = document.getElementById('start-btn');
+            
+            if (gameRunning) {
+                btn.textContent = '⏸️ Pause';
+                btn.className = 'game-btn btn-pause';
+                lastUpdate = Date.now();
+                lastAPRecharge = Date.now();
+                document.getElementById('news-text').textContent = '🎮 Game started! Adjust production to maximize profit!';
+                document.getElementById('news-text').className = 'news-text shock-neutral';
+            } else {
+                btn.textContent = '▶️ Resume';
+                btn.className = 'game-btn btn-start';
+                document.getElementById('news-text').textContent = '⏸️ Game paused.';
+                document.getElementById('news-text').className = 'news-text shock-neutral';
+            }
+        }
+        
+        // Reset game
+        function resetGame() {
+            gameRunning = false;
+            currentMonth = 1;
+            cumulativeProfit = 0;
+            monthlyProfits = [];
+            actionPoints = maxActionPoints;
+            playerProduction = 50;
+            monthProgress = 0;
+            
+            // Reset market params
+            marketParams = {
+                demandIntercept: 12,
+                demandSlope: 0.015,
+                supplyIntercept: 1,
+                supplySlope: 0.01,
+                numOtherFirms: 80,
+                inputPrice: 10,
+                fixedCost: 200,
+                costCurvature: 0.02,
+                consumerIncome: 100
+            };
+            
+            document.getElementById('start-btn').textContent = '▶️ Start';
+            document.getElementById('start-btn').className = 'game-btn btn-start';
+            document.getElementById('current-month').textContent = '1';
+            document.getElementById('cumulative-profit').textContent = '$0';
+            document.getElementById('cumulative-profit').className = 'score-value profit';
+            document.getElementById('news-text').textContent = 'Game reset. Press Start to begin!';
+            document.getElementById('news-text').className = 'news-text shock-neutral';
+            
+            updateDisplay();
+        }
+        
+        // Set game speed
+        function setSpeed(speed) {
+            gameSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === `${speed}x`) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // Initialize
+        updateDisplay();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>

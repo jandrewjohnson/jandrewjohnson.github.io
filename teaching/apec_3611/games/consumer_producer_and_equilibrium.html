@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Equilibrium: Consumer, Market & Producer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+            color: #1a202c;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 16px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .consumer-title { color: #2b6cb0; }
+        .market-title { color: #319795; }
+        .producer-title { color: #c53030; }
+        
+        .panel-badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .consumer-badge { background: rgba(43, 108, 182, 0.1); color: #2b6cb0; }
+        .market-badge { background: rgba(49, 151, 149, 0.1); color: #319795; }
+        .producer-badge { background: rgba(197, 48, 48, 0.1); color: #c53030; }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .controls-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .control-group {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .control-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .slider-group {
+            margin-bottom: 8px;
+        }
+        
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+        
+        .slider-value {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.7rem;
+            color: #2b6cb0;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .info-item {
+            background: #f7fafc;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .info-item.highlight {
+            border-color: #319795;
+            background: rgba(49, 151, 149, 0.05);
+        }
+        
+        .info-item.consumer-highlight {
+            border-color: #3182ce;
+            background: rgba(49, 130, 206, 0.05);
+        }
+        
+        .info-item.producer-highlight {
+            border-color: #e53e3e;
+            background: rgba(229, 62, 62, 0.05);
+        }
+        
+        .info-label {
+            font-size: 0.65rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+            margin-top: 2px;
+        }
+        
+        .info-value.price { color: #38a169; }
+        .info-value.quantity { color: #319795; }
+        .info-value.surplus { color: #2b6cb0; }
+        .info-value.profit { color: #c53030; }
+        
+        .market-center {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .equilibrium-display {
+            background: linear-gradient(135deg, rgba(49, 151, 149, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+            border: 2px solid #319795;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .eq-title {
+            font-size: 0.75rem;
+            color: #276749;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        
+        .eq-values {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .eq-item {
+            text-align: center;
+        }
+        
+        .eq-label {
+            font-size: 0.7rem;
+            color: #718096;
+        }
+        
+        .eq-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #319795;
+        }
+        
+        .shock-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .shock-btn {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+        
+        .shock-btn:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+        
+        .shock-btn.demand-up { border-left: 3px solid #3182ce; }
+        .shock-btn.demand-down { border-left: 3px solid #3182ce; }
+        .shock-btn.supply-up { border-left: 3px solid #e53e3e; }
+        .shock-btn.supply-down { border-left: 3px solid #e53e3e; }
+        
+        .arrow-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            color: #a0aec0;
+            font-size: 1.2rem;
+        }
+        
+        .welfare-summary {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .welfare-title {
+            font-size: 0.7rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .welfare-bar {
+            display: flex;
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .welfare-cs {
+            background: linear-gradient(90deg, #3182ce 0%, #63b3ed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+        
+        .welfare-ps {
+            background: linear-gradient(90deg, #e53e3e 0%, #fc8181 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+        
+        .welfare-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #718096;
+        }
+        
+        .legend-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: #4a5568;
+        }
+        
+        .legend-line {
+            width: 14px;
+            height: 3px;
+            border-radius: 1px;
+        }
+        
+        .legend-area {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Market Equilibrium: The Circular Flow</h1>
+        <p class="subtitle">See how consumer and producer decisions interact through the market to determine price and quantity</p>
+        
+        <div class="main-layout">
+            <!-- Consumer Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title consumer-title">
+                        👤 Consumer
+                    </div>
+                    <span class="panel-badge consumer-badge">Demand Side</span>
+                </div>
+                
+                <canvas id="consumer-canvas" width="420" height="340"></canvas>
+                
+                <div class="controls-row">
+                    <div class="control-group">
+                        <div class="control-title">Preferences</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Income (M)</span>
+                                <span class="slider-value" id="income-value">$100</span>
+                            </div>
+                            <input type="range" id="income" min="50" max="200" value="100" step="5">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Preference (α)</span>
+                                <span class="slider-value" id="alpha-value">0.50</span>
+                            </div>
+                            <input type="range" id="alpha" min="0.2" max="0.8" value="0.5" step="0.05">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-title">Other Prices</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Price of Y (Pᵧ)</span>
+                                <span class="slider-value" id="py-value">$2.00</span>
+                            </div>
+                            <input type="range" id="py" min="1" max="5" value="2" step="0.25">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span># Consumers</span>
+                                <span class="slider-value" id="num-consumers-value">100</span>
+                            </div>
+                            <input type="range" id="num-consumers" min="10" max="200" value="100" step="10">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item consumer-highlight">
+                        <div class="info-label">Optimal X*</div>
+                        <div class="info-value quantity" id="consumer-x">25.0</div>
+                    </div>
+                    <div class="info-item consumer-highlight">
+                        <div class="info-label">Utility</div>
+                        <div class="info-value surplus" id="consumer-utility">25.0</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Spending on X</div>
+                        <div class="info-value" id="spending-x" style="color: #4a5568;">$50</div>
+                    </div>
+                    <div class="info-item highlight">
+                        <div class="info-label">Consumer Surplus</div>
+                        <div class="info-value surplus" id="consumer-surplus">$125</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Market Panel -->
+            <div class="panel market-center">
+                <div class="panel-header">
+                    <div class="panel-title market-title">
+                        ⚖️ Market for Good X
+                    </div>
+                    <span class="panel-badge market-badge">Equilibrium</span>
+                </div>
+                
+                <div class="equilibrium-display">
+                    <div class="eq-title">Market Equilibrium</div>
+                    <div class="eq-values">
+                        <div class="eq-item">
+                            <div class="eq-label">Price</div>
+                            <div class="eq-value" id="eq-price">$2.00</div>
+                        </div>
+                        <div class="eq-item">
+                            <div class="eq-label">Quantity</div>
+                            <div class="eq-value" id="eq-quantity">2,500</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <canvas id="market-canvas" width="500" height="380"></canvas>
+                
+                <div class="welfare-summary">
+                    <div class="welfare-title">Total Welfare = CS + PS</div>
+                    <div class="welfare-bar">
+                        <div class="welfare-cs" id="cs-bar" style="width: 50%;">CS</div>
+                        <div class="welfare-ps" id="ps-bar" style="width: 50%;">PS</div>
+                    </div>
+                    <div class="welfare-labels">
+                        <span>Consumer: $<span id="total-cs">1250</span></span>
+                        <span>Producer: $<span id="total-ps">1250</span></span>
+                    </div>
+                </div>
+                
+                <div class="shock-buttons">
+                    <button class="shock-btn demand-up" onclick="shockDemand(1)">📈 ↑ Demand</button>
+                    <button class="shock-btn supply-up" onclick="shockSupply(1)">📈 ↑ Supply</button>
+                    <button class="shock-btn demand-down" onclick="shockDemand(-1)">📉 ↓ Demand</button>
+                    <button class="shock-btn supply-down" onclick="shockSupply(-1)">📉 ↓ Supply</button>
+                </div>
+                
+                <div class="legend-row">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #3182ce;"></div>
+                        <span>Demand</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #e53e3e;"></div>
+                        <span>Supply</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-area" style="background: #3182ce;"></div>
+                        <span>CS</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-area" style="background: #e53e3e;"></div>
+                        <span>PS</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Producer Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title producer-title">
+                        🏭 Producer
+                    </div>
+                    <span class="panel-badge producer-badge">Supply Side</span>
+                </div>
+                
+                <canvas id="producer-canvas" width="420" height="340"></canvas>
+                
+                <div class="controls-row">
+                    <div class="control-group">
+                        <div class="control-title">Cost Structure</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Fixed Cost</span>
+                                <span class="slider-value" id="fc-value">$20</span>
+                            </div>
+                            <input type="range" id="fc" min="0" max="50" value="20" step="5">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC Base (a)</span>
+                                <span class="slider-value" id="mc-a-value">$0.50</span>
+                            </div>
+                            <input type="range" id="mc-a" min="0.1" max="2" value="0.5" step="0.1">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-title">Production</div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>MC Curve (c)</span>
+                                <span class="slider-value" id="mc-c-value">0.020</span>
+                            </div>
+                            <input type="range" id="mc-c" min="0.005" max="0.05" value="0.02" step="0.001">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span># Firms</span>
+                                <span class="slider-value" id="num-firms-value">50</span>
+                            </div>
+                            <input type="range" id="num-firms" min="10" max="150" value="50" step="5">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item producer-highlight">
+                        <div class="info-label">Firm Output q*</div>
+                        <div class="info-value quantity" id="firm-q">8.7</div>
+                    </div>
+                    <div class="info-item producer-highlight">
+                        <div class="info-label">Firm Revenue</div>
+                        <div class="info-value" id="firm-revenue" style="color: #38a169;">$17.3</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Firm Cost</div>
+                        <div class="info-value" id="firm-cost" style="color: #4a5568;">$15.1</div>
+                    </div>
+                    <div class="info-item highlight">
+                        <div class="info-label">Firm Profit</div>
+                        <div class="info-value profit" id="firm-profit">$2.20</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const consumerCanvas = document.getElementById('consumer-canvas');
+        const marketCanvas = document.getElementById('market-canvas');
+        const producerCanvas = document.getElementById('producer-canvas');
+        const consumerCtx = consumerCanvas.getContext('2d');
+        const marketCtx = marketCanvas.getContext('2d');
+        const producerCtx = producerCanvas.getContext('2d');
+        
+        const margin = { top: 30, right: 25, bottom: 40, left: 45 };
+        
+        // Sliders
+        const incomeSlider = document.getElementById('income');
+        const alphaSlider = document.getElementById('alpha');
+        const pySlider = document.getElementById('py');
+        const numConsumersSlider = document.getElementById('num-consumers');
+        const fcSlider = document.getElementById('fc');
+        const mcASlider = document.getElementById('mc-a');
+        const mcCSlider = document.getElementById('mc-c');
+        const numFirmsSlider = document.getElementById('num-firms');
+        
+        // ===== CONSUMER FUNCTIONS =====
+        // Cobb-Douglas: U = X^α * Y^(1-α)
+        // Demand for X: x = αM / Px
+        function consumerDemandX(Px, M, alpha) {
+            return (alpha * M) / Px;
+        }
+        
+        function consumerUtility(x, y, alpha) {
+            if (x <= 0 || y <= 0) return 0;
+            return Math.pow(x, alpha) * Math.pow(y, 1 - alpha);
+        }
+        
+        function getIndifferenceY(x, U, alpha) {
+            if (x <= 0) return null;
+            return Math.pow(U / Math.pow(x, alpha), 1 / (1 - alpha));
+        }
+        
+        // ===== PRODUCER FUNCTIONS =====
+        // MC = a + c*q²
+        function marginalCost(q, a, c) {
+            return a + c * q * q;
+        }
+        
+        // Inverse: q given P
+        function firmOptimalQ(P, a, c) {
+            if (P < a) return 0;
+            return Math.sqrt((P - a) / c);
+        }
+        
+        function totalCost(q, FC, a, c) {
+            // TC = FC + ∫MC dq = FC + aq + cq³/3
+            return FC + a * q + (c * q * q * q) / 3;
+        }
+        
+        function AVC(q, a, c) {
+            if (q <= 0) return a;
+            return a + (c * q * q) / 3;
+        }
+        
+        function ATC(q, FC, a, c) {
+            if (q <= 0) return Infinity;
+            return totalCost(q, FC, a, c) / q;
+        }
+        
+        // ===== MARKET EQUILIBRIUM =====
+        function findEquilibrium() {
+            const M = parseFloat(incomeSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const numConsumers = parseInt(numConsumersSlider.value);
+            const a = parseFloat(mcASlider.value);
+            const c = parseFloat(mcCSlider.value);
+            const numFirms = parseInt(numFirmsSlider.value);
+            
+            // Market Demand: Qd = numConsumers * (alpha * M / P) = numConsumers * alpha * M / P
+            // Market Supply: Qs = numFirms * sqrt((P - a) / c)
+            
+            // Find P where Qd = Qs using bisection
+            let pLow = a + 0.01;
+            let pHigh = 20;
+            let pEq = (pLow + pHigh) / 2;
+            
+            for (let i = 0; i < 50; i++) {
+                const qd = numConsumers * alpha * M / pEq;
+                const qs = numFirms * firmOptimalQ(pEq, a, c);
+                
+                if (Math.abs(qd - qs) < 0.1) break;
+                
+                if (qd > qs) {
+                    pLow = pEq;
+                } else {
+                    pHigh = pEq;
+                }
+                pEq = (pLow + pHigh) / 2;
+            }
+            
+            const qEq = numConsumers * alpha * M / pEq;
+            return { price: pEq, quantity: qEq };
+        }
+        
+        // ===== DRAWING FUNCTIONS =====
+        function drawConsumerGraph(Px) {
+            const M = parseFloat(incomeSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const Py = parseFloat(pySlider.value);
+            
+            consumerCtx.fillStyle = '#ffffff';
+            consumerCtx.fillRect(0, 0, consumerCanvas.width, consumerCanvas.height);
+            
+            const width = consumerCanvas.width - margin.left - margin.right;
+            const height = consumerCanvas.height - margin.top - margin.bottom;
+            const maxX = 80;
+            const maxY = 80;
+            
+            const toX = (x) => margin.left + (x / maxX) * width;
+            const toY = (y) => margin.top + height - (y / maxY) * height;
+            
+            // Grid
+            consumerCtx.strokeStyle = '#edf2f7';
+            consumerCtx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const x = margin.left + (i / 4) * width;
+                const y = margin.top + (i / 4) * height;
+                consumerCtx.beginPath();
+                consumerCtx.moveTo(x, margin.top);
+                consumerCtx.lineTo(x, margin.top + height);
+                consumerCtx.stroke();
+                consumerCtx.beginPath();
+                consumerCtx.moveTo(margin.left, y);
+                consumerCtx.lineTo(margin.left + width, y);
+                consumerCtx.stroke();
+            }
+            
+            // Axes
+            consumerCtx.strokeStyle = '#a0aec0';
+            consumerCtx.lineWidth = 2;
+            consumerCtx.beginPath();
+            consumerCtx.moveTo(margin.left, margin.top);
+            consumerCtx.lineTo(margin.left, margin.top + height);
+            consumerCtx.lineTo(margin.left + width, margin.top + height);
+            consumerCtx.stroke();
+            
+            // Labels
+            consumerCtx.fillStyle = '#718096';
+            consumerCtx.font = '10px Segoe UI';
+            consumerCtx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                consumerCtx.fillText((i * maxX / 4).toFixed(0), toX(i * maxX / 4), margin.top + height + 14);
+            }
+            consumerCtx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                consumerCtx.fillText((i * maxY / 4).toFixed(0), margin.left - 5, toY(i * maxY / 4) + 4);
+            }
+            
+            consumerCtx.fillStyle = '#4a5568';
+            consumerCtx.font = '11px Segoe UI';
+            consumerCtx.textAlign = 'center';
+            consumerCtx.fillText('Good X (market good)', margin.left + width / 2, consumerCanvas.height - 5);
+            consumerCtx.save();
+            consumerCtx.translate(12, margin.top + height / 2);
+            consumerCtx.rotate(-Math.PI / 2);
+            consumerCtx.fillText('Good Y', 0, 0);
+            consumerCtx.restore();
+            
+            // Budget constraint
+            const xInt = M / Px;
+            const yInt = M / Py;
+            
+            // Feasible region
+            consumerCtx.fillStyle = 'rgba(49, 130, 206, 0.08)';
+            consumerCtx.beginPath();
+            consumerCtx.moveTo(toX(0), toY(0));
+            consumerCtx.lineTo(toX(0), toY(Math.min(yInt, maxY)));
+            consumerCtx.lineTo(toX(Math.min(xInt, maxX)), toY(0));
+            consumerCtx.closePath();
+            consumerCtx.fill();
+            
+            // Budget line
+            consumerCtx.strokeStyle = '#e53e3e';
+            consumerCtx.lineWidth = 3;
+            consumerCtx.beginPath();
+            consumerCtx.moveTo(toX(0), toY(Math.min(yInt, maxY)));
+            consumerCtx.lineTo(toX(Math.min(xInt, maxX)), toY(0));
+            consumerCtx.stroke();
+            
+            // Optimal point
+            const xStar = consumerDemandX(Px, M, alpha);
+            const yStar = ((1 - alpha) * M) / Py;
+            const U = consumerUtility(xStar, yStar, alpha);
+            
+            // Indifference curve
+            if (U > 0) {
+                consumerCtx.strokeStyle = '#3182ce';
+                consumerCtx.lineWidth = 3;
+                consumerCtx.beginPath();
+                let started = false;
+                for (let x = 0.5; x <= maxX; x += 0.5) {
+                    const y = getIndifferenceY(x, U, alpha);
+                    if (y !== null && y > 0 && y <= maxY) {
+                        if (!started) { consumerCtx.moveTo(toX(x), toY(y)); started = true; }
+                        else consumerCtx.lineTo(toX(x), toY(y));
+                    }
+                }
+                consumerCtx.stroke();
+            }
+            
+            // Optimal point
+            if (xStar <= maxX && yStar <= maxY) {
+                const gradient = consumerCtx.createRadialGradient(toX(xStar), toY(yStar), 0, toX(xStar), toY(yStar), 15);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.5)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                consumerCtx.fillStyle = gradient;
+                consumerCtx.beginPath();
+                consumerCtx.arc(toX(xStar), toY(yStar), 15, 0, Math.PI * 2);
+                consumerCtx.fill();
+                
+                consumerCtx.fillStyle = '#d69e2e';
+                consumerCtx.beginPath();
+                consumerCtx.arc(toX(xStar), toY(yStar), 6, 0, Math.PI * 2);
+                consumerCtx.fill();
+                consumerCtx.strokeStyle = '#ffffff';
+                consumerCtx.lineWidth = 2;
+                consumerCtx.stroke();
+                
+                // Dashed lines
+                consumerCtx.strokeStyle = '#a0aec0';
+                consumerCtx.lineWidth = 1;
+                consumerCtx.setLineDash([4, 3]);
+                consumerCtx.beginPath();
+                consumerCtx.moveTo(toX(xStar), toY(yStar));
+                consumerCtx.lineTo(toX(xStar), toY(0));
+                consumerCtx.stroke();
+                consumerCtx.setLineDash([]);
+            }
+            
+            // Price label
+            consumerCtx.fillStyle = '#e53e3e';
+            consumerCtx.font = 'bold 10px Segoe UI';
+            consumerCtx.textAlign = 'left';
+            consumerCtx.fillText(`Pₓ = $${Px.toFixed(2)}`, margin.left + 5, margin.top + 15);
+            
+            return { xStar, yStar, U };
+        }
+        
+        function drawProducerGraph(Px) {
+            const FC = parseFloat(fcSlider.value);
+            const a = parseFloat(mcASlider.value);
+            const c = parseFloat(mcCSlider.value);
+            
+            producerCtx.fillStyle = '#ffffff';
+            producerCtx.fillRect(0, 0, producerCanvas.width, producerCanvas.height);
+            
+            const width = producerCanvas.width - margin.left - margin.right;
+            const height = producerCanvas.height - margin.top - margin.bottom;
+            const maxQ = 20;
+            const maxP = 10;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            producerCtx.strokeStyle = '#edf2f7';
+            producerCtx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const x = margin.left + (i / 4) * width;
+                const y = margin.top + (i / 4) * height;
+                producerCtx.beginPath();
+                producerCtx.moveTo(x, margin.top);
+                producerCtx.lineTo(x, margin.top + height);
+                producerCtx.stroke();
+                producerCtx.beginPath();
+                producerCtx.moveTo(margin.left, y);
+                producerCtx.lineTo(margin.left + width, y);
+                producerCtx.stroke();
+            }
+            
+            // Axes
+            producerCtx.strokeStyle = '#a0aec0';
+            producerCtx.lineWidth = 2;
+            producerCtx.beginPath();
+            producerCtx.moveTo(margin.left, margin.top);
+            producerCtx.lineTo(margin.left, margin.top + height);
+            producerCtx.lineTo(margin.left + width, margin.top + height);
+            producerCtx.stroke();
+            
+            // Labels
+            producerCtx.fillStyle = '#718096';
+            producerCtx.font = '10px Segoe UI';
+            producerCtx.textAlign = 'center';
+            for (let i = 0; i <= 4; i++) {
+                producerCtx.fillText((i * maxQ / 4).toFixed(0), toX(i * maxQ / 4), margin.top + height + 14);
+            }
+            producerCtx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                producerCtx.fillText(`$${(i * maxP / 4).toFixed(0)}`, margin.left - 5, toY(i * maxP / 4) + 4);
+            }
+            
+            producerCtx.fillStyle = '#4a5568';
+            producerCtx.font = '11px Segoe UI';
+            producerCtx.textAlign = 'center';
+            producerCtx.fillText('Firm Output (q)', margin.left + width / 2, producerCanvas.height - 5);
+            producerCtx.save();
+            producerCtx.translate(12, margin.top + height / 2);
+            producerCtx.rotate(-Math.PI / 2);
+            producerCtx.fillText('$ / unit', 0, 0);
+            producerCtx.restore();
+            
+            const qStar = firmOptimalQ(Px, a, c);
+            
+            // Profit area (if profitable)
+            if (qStar > 0 && Px <= maxP) {
+                const atcStar = ATC(qStar, FC, a, c);
+                if (Px > atcStar) {
+                    producerCtx.fillStyle = 'rgba(56, 161, 105, 0.2)';
+                    producerCtx.fillRect(toX(0), toY(Px), toX(qStar) - toX(0), toY(atcStar) - toY(Px));
+                } else {
+                    producerCtx.fillStyle = 'rgba(229, 62, 62, 0.15)';
+                    producerCtx.fillRect(toX(0), toY(atcStar), toX(qStar) - toX(0), toY(Px) - toY(atcStar));
+                }
+            }
+            
+            // Price line
+            if (Px <= maxP) {
+                producerCtx.strokeStyle = '#38a169';
+                producerCtx.lineWidth = 2;
+                producerCtx.beginPath();
+                producerCtx.moveTo(margin.left, toY(Px));
+                producerCtx.lineTo(margin.left + width, toY(Px));
+                producerCtx.stroke();
+                
+                producerCtx.fillStyle = '#38a169';
+                producerCtx.font = 'bold 9px Segoe UI';
+                producerCtx.textAlign = 'right';
+                producerCtx.fillText('P = MR', margin.left + width - 3, toY(Px) - 4);
+            }
+            
+            // MC curve
+            producerCtx.strokeStyle = '#e53e3e';
+            producerCtx.lineWidth = 3;
+            producerCtx.beginPath();
+            let started = false;
+            for (let q = 0; q <= maxQ; q += 0.3) {
+                const mc = marginalCost(q, a, c);
+                if (mc <= maxP) {
+                    if (!started) { producerCtx.moveTo(toX(q), toY(mc)); started = true; }
+                    else producerCtx.lineTo(toX(q), toY(mc));
+                }
+            }
+            producerCtx.stroke();
+            
+            // ATC curve
+            producerCtx.strokeStyle = '#805ad5';
+            producerCtx.lineWidth = 2;
+            producerCtx.beginPath();
+            started = false;
+            for (let q = 1; q <= maxQ; q += 0.3) {
+                const atc = ATC(q, FC, a, c);
+                if (atc <= maxP && atc > 0) {
+                    if (!started) { producerCtx.moveTo(toX(q), toY(atc)); started = true; }
+                    else producerCtx.lineTo(toX(q), toY(atc));
+                }
+            }
+            producerCtx.stroke();
+            
+            // AVC curve
+            producerCtx.strokeStyle = '#d69e2e';
+            producerCtx.lineWidth = 2;
+            producerCtx.setLineDash([4, 3]);
+            producerCtx.beginPath();
+            started = false;
+            for (let q = 0.5; q <= maxQ; q += 0.3) {
+                const avc = AVC(q, a, c);
+                if (avc <= maxP) {
+                    if (!started) { producerCtx.moveTo(toX(q), toY(avc)); started = true; }
+                    else producerCtx.lineTo(toX(q), toY(avc));
+                }
+            }
+            producerCtx.stroke();
+            producerCtx.setLineDash([]);
+            
+            // Optimal point
+            if (qStar > 0 && qStar <= maxQ && Px <= maxP) {
+                producerCtx.strokeStyle = '#a0aec0';
+                producerCtx.lineWidth = 1;
+                producerCtx.setLineDash([4, 3]);
+                producerCtx.beginPath();
+                producerCtx.moveTo(toX(qStar), toY(Px));
+                producerCtx.lineTo(toX(qStar), toY(0));
+                producerCtx.stroke();
+                producerCtx.setLineDash([]);
+                
+                const gradient = producerCtx.createRadialGradient(toX(qStar), toY(Px), 0, toX(qStar), toY(Px), 15);
+                gradient.addColorStop(0, 'rgba(214, 158, 46, 0.5)');
+                gradient.addColorStop(1, 'rgba(214, 158, 46, 0)');
+                producerCtx.fillStyle = gradient;
+                producerCtx.beginPath();
+                producerCtx.arc(toX(qStar), toY(Px), 15, 0, Math.PI * 2);
+                producerCtx.fill();
+                
+                producerCtx.fillStyle = '#d69e2e';
+                producerCtx.beginPath();
+                producerCtx.arc(toX(qStar), toY(Px), 6, 0, Math.PI * 2);
+                producerCtx.fill();
+                producerCtx.strokeStyle = '#ffffff';
+                producerCtx.lineWidth = 2;
+                producerCtx.stroke();
+            }
+            
+            // Labels
+            producerCtx.font = 'bold 9px Segoe UI';
+            producerCtx.textAlign = 'left';
+            producerCtx.fillStyle = '#e53e3e';
+            producerCtx.fillText('MC', toX(maxQ * 0.75), toY(marginalCost(maxQ * 0.75, a, c)) - 6);
+            producerCtx.fillStyle = '#805ad5';
+            producerCtx.fillText('ATC', toX(maxQ * 0.8), toY(ATC(maxQ * 0.8, FC, a, c)) - 6);
+            
+            return qStar;
+        }
+        
+        function drawMarketGraph(eqPrice, eqQuantity) {
+            const M = parseFloat(incomeSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const numConsumers = parseInt(numConsumersSlider.value);
+            const a = parseFloat(mcASlider.value);
+            const c = parseFloat(mcCSlider.value);
+            const numFirms = parseInt(numFirmsSlider.value);
+            
+            marketCtx.fillStyle = '#ffffff';
+            marketCtx.fillRect(0, 0, marketCanvas.width, marketCanvas.height);
+            
+            const width = marketCanvas.width - margin.left - margin.right;
+            const height = marketCanvas.height - margin.top - margin.bottom;
+            const maxQ = Math.max(5000, eqQuantity * 2);
+            const maxP = 8;
+            
+            const toX = (q) => margin.left + (q / maxQ) * width;
+            const toY = (p) => margin.top + height - (p / maxP) * height;
+            
+            // Grid
+            marketCtx.strokeStyle = '#edf2f7';
+            marketCtx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const x = margin.left + (i / 5) * width;
+                const y = margin.top + (i / 5) * height;
+                marketCtx.beginPath();
+                marketCtx.moveTo(x, margin.top);
+                marketCtx.lineTo(x, margin.top + height);
+                marketCtx.stroke();
+                marketCtx.beginPath();
+                marketCtx.moveTo(margin.left, y);
+                marketCtx.lineTo(margin.left + width, y);
+                marketCtx.stroke();
+            }
+            
+            // Axes
+            marketCtx.strokeStyle = '#a0aec0';
+            marketCtx.lineWidth = 2;
+            marketCtx.beginPath();
+            marketCtx.moveTo(margin.left, margin.top);
+            marketCtx.lineTo(margin.left, margin.top + height);
+            marketCtx.lineTo(margin.left + width, margin.top + height);
+            marketCtx.stroke();
+            
+            // Labels
+            marketCtx.fillStyle = '#718096';
+            marketCtx.font = '10px Segoe UI';
+            marketCtx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                marketCtx.fillText(q >= 1000 ? (q/1000).toFixed(1) + 'k' : q.toFixed(0), toX(q), margin.top + height + 14);
+            }
+            marketCtx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const p = (i / 4) * maxP;
+                marketCtx.fillText(`$${p.toFixed(1)}`, margin.left - 5, toY(p) + 4);
+            }
+            
+            marketCtx.fillStyle = '#4a5568';
+            marketCtx.font = '11px Segoe UI';
+            marketCtx.textAlign = 'center';
+            marketCtx.fillText('Market Quantity (Q)', margin.left + width / 2, marketCanvas.height - 5);
+            marketCtx.save();
+            marketCtx.translate(12, margin.top + height / 2);
+            marketCtx.rotate(-Math.PI / 2);
+            marketCtx.fillText('Price ($)', 0, 0);
+            marketCtx.restore();
+            
+            // Consumer surplus area
+            marketCtx.fillStyle = 'rgba(49, 130, 206, 0.25)';
+            marketCtx.beginPath();
+            marketCtx.moveTo(toX(0), toY(eqPrice));
+            marketCtx.lineTo(toX(eqQuantity), toY(eqPrice));
+            // Follow demand curve up
+            for (let q = eqQuantity; q >= 10; q -= maxQ / 50) {
+                const p = numConsumers * alpha * M / q;
+                if (p <= maxP) {
+                    marketCtx.lineTo(toX(q), toY(p));
+                }
+            }
+            marketCtx.closePath();
+            marketCtx.fill();
+            
+            // Producer surplus area
+            marketCtx.fillStyle = 'rgba(229, 62, 62, 0.25)';
+            marketCtx.beginPath();
+            marketCtx.moveTo(toX(0), toY(a));
+            for (let p = a; p <= eqPrice; p += 0.1) {
+                const qs = numFirms * firmOptimalQ(p, a, c);
+                if (qs <= maxQ) {
+                    marketCtx.lineTo(toX(qs), toY(p));
+                }
+            }
+            marketCtx.lineTo(toX(eqQuantity), toY(eqPrice));
+            marketCtx.lineTo(toX(0), toY(eqPrice));
+            marketCtx.closePath();
+            marketCtx.fill();
+            
+            // Demand curve
+            marketCtx.strokeStyle = '#3182ce';
+            marketCtx.lineWidth = 3;
+            marketCtx.beginPath();
+            let started = false;
+            for (let p = 0.5; p <= maxP; p += 0.1) {
+                const qd = numConsumers * alpha * M / p;
+                if (qd <= maxQ) {
+                    if (!started) { marketCtx.moveTo(toX(qd), toY(p)); started = true; }
+                    else marketCtx.lineTo(toX(qd), toY(p));
+                }
+            }
+            marketCtx.stroke();
+            
+            // Supply curve
+            marketCtx.strokeStyle = '#e53e3e';
+            marketCtx.lineWidth = 3;
+            marketCtx.beginPath();
+            started = false;
+            for (let p = a; p <= maxP; p += 0.1) {
+                const qs = numFirms * firmOptimalQ(p, a, c);
+                if (qs <= maxQ) {
+                    if (!started) { marketCtx.moveTo(toX(qs), toY(p)); started = true; }
+                    else marketCtx.lineTo(toX(qs), toY(p));
+                }
+            }
+            marketCtx.stroke();
+            
+            // Equilibrium point
+            if (eqQuantity <= maxQ && eqPrice <= maxP) {
+                // Dashed lines
+                marketCtx.strokeStyle = '#a0aec0';
+                marketCtx.lineWidth = 1;
+                marketCtx.setLineDash([5, 3]);
+                marketCtx.beginPath();
+                marketCtx.moveTo(toX(eqQuantity), toY(eqPrice));
+                marketCtx.lineTo(toX(eqQuantity), toY(0));
+                marketCtx.stroke();
+                marketCtx.beginPath();
+                marketCtx.moveTo(toX(eqQuantity), toY(eqPrice));
+                marketCtx.lineTo(toX(0), toY(eqPrice));
+                marketCtx.stroke();
+                marketCtx.setLineDash([]);
+                
+                // Glow
+                const gradient = marketCtx.createRadialGradient(toX(eqQuantity), toY(eqPrice), 0, toX(eqQuantity), toY(eqPrice), 20);
+                gradient.addColorStop(0, 'rgba(49, 151, 149, 0.5)');
+                gradient.addColorStop(1, 'rgba(49, 151, 149, 0)');
+                marketCtx.fillStyle = gradient;
+                marketCtx.beginPath();
+                marketCtx.arc(toX(eqQuantity), toY(eqPrice), 20, 0, Math.PI * 2);
+                marketCtx.fill();
+                
+                // Point
+                marketCtx.fillStyle = '#319795';
+                marketCtx.beginPath();
+                marketCtx.arc(toX(eqQuantity), toY(eqPrice), 8, 0, Math.PI * 2);
+                marketCtx.fill();
+                marketCtx.strokeStyle = '#ffffff';
+                marketCtx.lineWidth = 2;
+                marketCtx.stroke();
+            }
+            
+            // Labels
+            marketCtx.font = 'bold 10px Segoe UI';
+            marketCtx.fillStyle = '#3182ce';
+            marketCtx.textAlign = 'left';
+            marketCtx.fillText('D', toX(maxQ * 0.15), toY(numConsumers * alpha * M / (maxQ * 0.15)) - 8);
+            marketCtx.fillStyle = '#e53e3e';
+            const supplyLabelQ = maxQ * 0.7;
+            const supplyLabelP = a + c * Math.pow(supplyLabelQ / numFirms, 2);
+            if (supplyLabelP <= maxP * 0.9) {
+                marketCtx.fillText('S', toX(supplyLabelQ), toY(supplyLabelP) - 8);
+            }
+        }
+        
+        function updateAll() {
+            // Update display values
+            document.getElementById('income-value').textContent = `$${incomeSlider.value}`;
+            document.getElementById('alpha-value').textContent = parseFloat(alphaSlider.value).toFixed(2);
+            document.getElementById('py-value').textContent = `$${parseFloat(pySlider.value).toFixed(2)}`;
+            document.getElementById('num-consumers-value').textContent = numConsumersSlider.value;
+            document.getElementById('fc-value').textContent = `$${fcSlider.value}`;
+            document.getElementById('mc-a-value').textContent = `$${parseFloat(mcASlider.value).toFixed(2)}`;
+            document.getElementById('mc-c-value').textContent = parseFloat(mcCSlider.value).toFixed(3);
+            document.getElementById('num-firms-value').textContent = numFirmsSlider.value;
+            
+            // Find equilibrium
+            const { price: eqPrice, quantity: eqQuantity } = findEquilibrium();
+            
+            // Draw all graphs
+            const consumerResult = drawConsumerGraph(eqPrice);
+            const firmQ = drawProducerGraph(eqPrice);
+            drawMarketGraph(eqPrice, eqQuantity);
+            
+            // Update equilibrium display
+            document.getElementById('eq-price').textContent = `$${eqPrice.toFixed(2)}`;
+            document.getElementById('eq-quantity').textContent = eqQuantity.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            // Update consumer info
+            const M = parseFloat(incomeSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const Py = parseFloat(pySlider.value);
+            const xStar = consumerDemandX(eqPrice, M, alpha);
+            const yStar = ((1 - alpha) * M) / Py;
+            const U = consumerUtility(xStar, yStar, alpha);
+            
+            document.getElementById('consumer-x').textContent = xStar.toFixed(1);
+            document.getElementById('consumer-utility').textContent = U.toFixed(1);
+            document.getElementById('spending-x').textContent = `$${(eqPrice * xStar).toFixed(0)}`;
+            
+            // Consumer surplus (approximate - area under demand above price)
+            const numConsumers = parseInt(numConsumersSlider.value);
+            const CS = numConsumers * alpha * M * Math.log(10 / eqPrice); // Simplified CS calculation
+            document.getElementById('consumer-surplus').textContent = `$${Math.max(0, CS).toFixed(0)}`;
+            document.getElementById('total-cs').textContent = Math.max(0, CS).toFixed(0);
+            
+            // Update producer info
+            const FC = parseFloat(fcSlider.value);
+            const a = parseFloat(mcASlider.value);
+            const c = parseFloat(mcCSlider.value);
+            const numFirms = parseInt(numFirmsSlider.value);
+            const firmRevenue = eqPrice * firmQ;
+            const firmCost = totalCost(firmQ, FC, a, c);
+            const firmProfit = firmRevenue - firmCost;
+            
+            document.getElementById('firm-q').textContent = firmQ.toFixed(1);
+            document.getElementById('firm-revenue').textContent = `$${firmRevenue.toFixed(2)}`;
+            document.getElementById('firm-cost').textContent = `$${firmCost.toFixed(2)}`;
+            document.getElementById('firm-profit').textContent = firmProfit >= 0 ? `$${firmProfit.toFixed(2)}` : `-$${Math.abs(firmProfit).toFixed(2)}`;
+            document.getElementById('firm-profit').style.color = firmProfit >= 0 ? '#38a169' : '#e53e3e';
+            
+            // Producer surplus
+            const PS = numFirms * (eqPrice * firmQ - (a * firmQ + c * Math.pow(firmQ, 3) / 3));
+            document.getElementById('total-ps').textContent = Math.max(0, PS).toFixed(0);
+            
+            // Welfare bar
+            const totalWelfare = Math.max(CS, 0) + Math.max(PS, 0);
+            const csPercent = totalWelfare > 0 ? (Math.max(CS, 0) / totalWelfare) * 100 : 50;
+            document.getElementById('cs-bar').style.width = `${csPercent}%`;
+            document.getElementById('ps-bar').style.width = `${100 - csPercent}%`;
+        }
+        
+        // Shock functions
+        function shockDemand(direction) {
+            const current = parseInt(numConsumersSlider.value);
+            const newVal = Math.max(10, Math.min(200, current + direction * 20));
+            numConsumersSlider.value = newVal;
+            updateAll();
+        }
+        
+        function shockSupply(direction) {
+            const current = parseInt(numFirmsSlider.value);
+            const newVal = Math.max(10, Math.min(150, current + direction * 15));
+            numFirmsSlider.value = newVal;
+            updateAll();
+        }
+        
+        // Event listeners
+        [incomeSlider, alphaSlider, pySlider, numConsumersSlider, fcSlider, mcASlider, mcCSlider, numFirmsSlider].forEach(slider => {
+            slider.addEventListener('input', updateAll);
+        });
+        
+        // Initial draw
+        updateAll();
+    </script>
+</body>
+</html>

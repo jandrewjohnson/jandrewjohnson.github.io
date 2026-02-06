@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 Uniform vs. Firm-Specific Emissions Targets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --firm1: #059669;
+            --firm1-light: #10b981;
+            --firm2: #dc2626;
+            --firm2-light: #ef4444;
+            --optimal: #7c3aed;
+            --savings: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .card-title.firm1::before { background: var(--firm1); }
+        .card-title.firm2::before { background: var(--firm2); }
+
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-label span {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .control-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .control-value.firm1 { color: var(--firm1); }
+        .control-value.firm2 { color: var(--firm2); }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"].firm1::-webkit-slider-thumb { background: var(--firm1); }
+        input[type="range"].firm2::-webkit-slider-thumb { background: var(--firm2); }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .formula-box {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .formula-box.firm1 { border-left-color: var(--firm1); }
+        .formula-box.firm2 { border-left-color: var(--firm2); }
+
+        .results-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fcd34d;
+        }
+
+        .results-card .card-title {
+            color: #92400e;
+        }
+
+        .results-card .card-title::before {
+            background: var(--savings);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #fcd34d;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .result-value {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #b45309;
+        }
+
+        .result-value.savings {
+            color: #047857;
+            font-size: 1.1rem;
+        }
+
+        .graphs-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .graphs-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .graphs-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .graph-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .graph-card.firm1 {
+            border-top: 3px solid var(--firm1);
+        }
+
+        .graph-card.firm2 {
+            border-top: 3px solid var(--firm2);
+        }
+
+        .graph-card.combined {
+            border-top: 3px solid var(--optimal);
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .graph-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .graph-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+        }
+
+        .legend-custom {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .legend-color.line {
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .cost-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .cost-box {
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .cost-box.uniform {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        .cost-box.optimal {
+            background: rgba(5, 150, 105, 0.1);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+        }
+
+        .cost-box-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.25rem;
+        }
+
+        .cost-box.uniform .cost-box-label { color: var(--firm2); }
+        .cost-box.optimal .cost-box-label { color: var(--firm1); }
+
+        .cost-box-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .explanation-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #93c5fd;
+        }
+
+        .explanation-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .explanation-text strong {
+            color: var(--primary);
+        }
+
+        .scenario-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-btn {
+            flex: 1;
+            padding: 0.6rem 0.5rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .scenario-btn:hover {
+            border-color: var(--primary-light);
+        }
+
+        .scenario-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .firm-costs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .firm-cost {
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .firm-cost.firm1 {
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        .firm-cost.firm2 {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .firm-cost-label {
+            font-weight: 600;
+        }
+
+        .firm-cost.firm1 .firm-cost-label { color: var(--firm1); }
+        .firm-cost.firm2 .firm-cost-label { color: var(--firm2); }
+
+        .firm-cost-value {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🏭 Uniform vs. Firm-Specific Emissions Targets</h1>
+        <p>See why cost-effective pollution control requires equating marginal abatement costs across firms, not uniform reductions</p>
+    </header>
+
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <span>Set Firm MAC Curves</span>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <span>Choose Total Abatement Target</span>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <span>Compare Uniform vs. Optimal</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="controls-panel">
+            <div class="card">
+                <div class="card-title">🎯 Policy Target</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Total Abatement Required</span>
+                        <span class="control-value" id="total-abatement-value">60 units</span>
+                    </div>
+                    <input type="range" id="total-abatement" min="10" max="90" value="60" step="5">
+                    <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
+                        Combined baseline emissions: 100 units<br>
+                        Target: reduce by <span id="abatement-pct">60</span>%
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title firm1">🏭 Firm 1 (Low-Cost Abater)</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>MAC Slope (c₁)</span>
+                        <span class="control-value firm1" id="mac1-value">0.5</span>
+                    </div>
+                    <input type="range" class="firm1" id="mac1-slope" min="0.2" max="2" value="0.5" step="0.1">
+                </div>
+                <div class="formula-box firm1">
+                    MAC₁(A₁) = c₁ × A₁ = <span id="mac1-formula">0.5</span> × A₁
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
+                    Baseline emissions: 50 units
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-title firm2">🏭 Firm 2 (High-Cost Abater)</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>MAC Slope (c₂)</span>
+                        <span class="control-value firm2" id="mac2-value">2.0</span>
+                    </div>
+                    <input type="range" class="firm2" id="mac2-slope" min="0.2" max="4" value="2" step="0.1">
+                </div>
+                <div class="formula-box firm2">
+                    MAC₂(A₂) = c₂ × A₂ = <span id="mac2-formula">2.0</span> × A₂
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
+                    Baseline emissions: 50 units
+                </p>
+            </div>
+
+            <div class="card results-card">
+                <div class="card-title">💰 Cost Savings</div>
+                <div class="result-item">
+                    <span class="result-label">Uniform Standard Cost</span>
+                    <span class="result-value" id="uniform-total-cost">$1,125</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Optimal Allocation Cost</span>
+                    <span class="result-value" id="optimal-total-cost">$900</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">💵 Savings from Trading</span>
+                    <span class="result-value savings" id="cost-savings">$225 (20%)</span>
+                </div>
+            </div>
+
+            <div class="card explanation-card">
+                <div class="card-title">💡 Key Insight</div>
+                <p class="explanation-text">
+                    <strong>Cost-effectiveness requires MAC₁ = MAC₂.</strong> 
+                    With a uniform standard, the low-cost firm abates too little and the high-cost firm abates too much.
+                    <br><br>
+                    Tradeable permits (or firm-specific targets) achieve the same total reduction at lower cost by shifting abatement to the low-cost firm.
+                </p>
+            </div>
+        </div>
+
+        <div class="graphs-panel">
+            <div class="graphs-row">
+                <div class="graph-card firm1">
+                    <div class="graph-header">
+                        <div>
+                            <div class="graph-title">Firm 1: Low-Cost Abater</div>
+                            <div class="graph-subtitle">Baseline emissions: 50 units</div>
+                        </div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="firm1-canvas" height="280"></canvas>
+                    </div>
+                    <div class="firm-costs">
+                        <div class="firm-cost firm1">
+                            <span class="firm-cost-label">Uniform A₁:</span>
+                            <span class="firm-cost-value" id="firm1-uniform-a">30</span>
+                        </div>
+                        <div class="firm-cost firm1">
+                            <span class="firm-cost-label">Optimal A₁:</span>
+                            <span class="firm-cost-value" id="firm1-optimal-a">48</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-card firm2">
+                    <div class="graph-header">
+                        <div>
+                            <div class="graph-title">Firm 2: High-Cost Abater</div>
+                            <div class="graph-subtitle">Baseline emissions: 50 units</div>
+                        </div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="firm2-canvas" height="280"></canvas>
+                    </div>
+                    <div class="firm-costs">
+                        <div class="firm-cost firm2">
+                            <span class="firm-cost-label">Uniform A₂:</span>
+                            <span class="firm-cost-value" id="firm2-uniform-a">30</span>
+                        </div>
+                        <div class="firm-cost firm2">
+                            <span class="firm-cost-label">Optimal A₂:</span>
+                            <span class="firm-cost-value" id="firm2-optimal-a">12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graph-card combined">
+                <div class="graph-header">
+                    <div>
+                        <div class="graph-title">Combined: Aggregate MAC and Cost Comparison</div>
+                        <div class="graph-subtitle">Horizontal sum of firm MACs shows industry-wide abatement supply</div>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="combined-canvas" height="300"></canvas>
+                </div>
+                <div class="legend-custom">
+                    <div class="legend-item">
+                        <div class="legend-color line" style="background: var(--firm1);"></div>
+                        <span>MAC₁ (Firm 1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color line" style="background: var(--firm2);"></div>
+                        <span>MAC₂ (Firm 2)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color line" style="background: var(--optimal);"></div>
+                        <span>Aggregate MAC</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: rgba(220, 38, 38, 0.3);"></div>
+                        <span>Deadweight Loss (Uniform)</span>
+                    </div>
+                </div>
+                <div class="cost-comparison">
+                    <div class="cost-box uniform">
+                        <div class="cost-box-label">Uniform Standard</div>
+                        <div class="cost-box-value" id="uniform-cost-display">$1,125</div>
+                    </div>
+                    <div class="cost-box optimal">
+                        <div class="cost-box-label">Cost-Effective Allocation</div>
+                        <div class="cost-box-value" id="optimal-cost-display">$900</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parameters
+        let totalAbatement = 60;
+        let c1 = 0.5;  // Firm 1 MAC slope (low cost)
+        let c2 = 2.0;  // Firm 2 MAC slope (high cost)
+
+        const baseline1 = 50;
+        const baseline2 = 50;
+        const totalBaseline = baseline1 + baseline2;
+
+        // Canvas references
+        const firm1Canvas = document.getElementById('firm1-canvas');
+        const firm2Canvas = document.getElementById('firm2-canvas');
+        const combinedCanvas = document.getElementById('combined-canvas');
+
+        // Colors
+        const colors = {
+            firm1: '#059669',
+            firm2: '#dc2626',
+            optimal: '#7c3aed',
+            grid: '#e2e8f0',
+            text: '#64748b',
+            uniformFill: 'rgba(220, 38, 38, 0.2)',
+            optimalFill: 'rgba(5, 150, 105, 0.2)',
+            dwlFill: 'rgba(220, 38, 38, 0.35)'
+        };
+
+        function init() {
+            setupCanvases();
+            setupEventListeners();
+            updateAll();
+        }
+
+        function setupCanvases() {
+            const dpr = window.devicePixelRatio || 1;
+            
+            [firm1Canvas, firm2Canvas, combinedCanvas].forEach((canvas, i) => {
+                const rect = canvas.getBoundingClientRect();
+                const h = i < 2 ? 280 : 300;
+                canvas.width = rect.width * dpr;
+                canvas.height = h * dpr;
+                canvas.style.height = h + 'px';
+                const ctx = canvas.getContext('2d');
+                ctx.scale(dpr, dpr);
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('total-abatement').addEventListener('input', (e) => {
+                totalAbatement = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            document.getElementById('mac1-slope').addEventListener('input', (e) => {
+                c1 = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            document.getElementById('mac2-slope').addEventListener('input', (e) => {
+                c2 = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            window.addEventListener('resize', () => {
+                setupCanvases();
+                updateAll();
+            });
+        }
+
+        // Economic functions
+        function MAC1(a) { return c1 * a; }
+        function MAC2(a) { return c2 * a; }
+        function TAC1(a) { return 0.5 * c1 * a * a; }
+        function TAC2(a) { return 0.5 * c2 * a * a; }
+
+        // Optimal allocation: equate MACs
+        // c1 * A1 = c2 * A2 and A1 + A2 = totalAbatement
+        // A1 = (c2 / (c1 + c2)) * totalAbatement
+        function getOptimalAllocation() {
+            const a1 = (c2 / (c1 + c2)) * totalAbatement;
+            const a2 = totalAbatement - a1;
+            return { a1, a2 };
+        }
+
+        // Uniform standard: each firm abates half
+        function getUniformAllocation() {
+            const a1 = totalAbatement / 2;
+            const a2 = totalAbatement / 2;
+            return { a1, a2 };
+        }
+
+        function updateAll() {
+            const uniform = getUniformAllocation();
+            const optimal = getOptimalAllocation();
+
+            const uniformCost = TAC1(uniform.a1) + TAC2(uniform.a2);
+            const optimalCost = TAC1(optimal.a1) + TAC2(optimal.a2);
+            const savings = uniformCost - optimalCost;
+            const savingsPct = (savings / uniformCost * 100).toFixed(0);
+
+            // Update displays
+            document.getElementById('total-abatement-value').textContent = `${totalAbatement} units`;
+            document.getElementById('abatement-pct').textContent = totalAbatement;
+            document.getElementById('mac1-value').textContent = c1.toFixed(1);
+            document.getElementById('mac1-formula').textContent = c1.toFixed(1);
+            document.getElementById('mac2-value').textContent = c2.toFixed(1);
+            document.getElementById('mac2-formula').textContent = c2.toFixed(1);
+
+            document.getElementById('uniform-total-cost').textContent = `$${uniformCost.toFixed(0)}`;
+            document.getElementById('optimal-total-cost').textContent = `$${optimalCost.toFixed(0)}`;
+            document.getElementById('cost-savings').textContent = `$${savings.toFixed(0)} (${savingsPct}%)`;
+
+            document.getElementById('firm1-uniform-a').textContent = uniform.a1.toFixed(0);
+            document.getElementById('firm1-optimal-a').textContent = optimal.a1.toFixed(1);
+            document.getElementById('firm2-uniform-a').textContent = uniform.a2.toFixed(0);
+            document.getElementById('firm2-optimal-a').textContent = optimal.a2.toFixed(1);
+
+            document.getElementById('uniform-cost-display').textContent = `$${uniformCost.toFixed(0)}`;
+            document.getElementById('optimal-cost-display').textContent = `$${optimalCost.toFixed(0)}`;
+
+            drawFirmChart(firm1Canvas, 1, uniform.a1, optimal.a1);
+            drawFirmChart(firm2Canvas, 2, uniform.a2, optimal.a2);
+            drawCombinedChart();
+        }
+
+        function drawFirmChart(canvas, firmNum, uniformA, optimalA) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.getBoundingClientRect().width;
+            const height = firmNum < 3 ? 280 : 300;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            const margin = { top: 20, right: 25, bottom: 40, left: 50 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+
+            const maxA = 60;
+            const MAC = firmNum === 1 ? MAC1 : MAC2;
+            const color = firmNum === 1 ? colors.firm1 : colors.firm2;
+            const c = firmNum === 1 ? c1 : c2;
+
+            const maxY = Math.ceil(MAC(maxA) / 10) * 10 + 5;
+
+            const scaleX = (a) => margin.left + (a / maxA) * chartWidth;
+            const scaleY = (y) => margin.top + chartHeight - (y / maxY) * chartHeight;
+
+            // Grid
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 1;
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, scaleY(y));
+                ctx.lineTo(width - margin.right, scaleY(y));
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 11px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Abatement A${firmNum}`, width / 2, height - 8);
+
+            ctx.save();
+            ctx.translate(14, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('$/unit', 0, 0);
+            ctx.restore();
+
+            // Ticks
+            ctx.font = '11px Source Sans Pro';
+            for (let a = 0; a <= maxA; a += 10) {
+                ctx.textAlign = 'center';
+                ctx.fillText(a.toString(), scaleX(a), height - margin.bottom + 15);
+            }
+            ctx.textAlign = 'right';
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.fillText(y.toFixed(0), margin.left - 6, scaleY(y) + 4);
+            }
+
+            // Fill area under MAC for uniform (showing cost)
+            ctx.fillStyle = colors.uniformFill;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            ctx.lineTo(scaleX(uniformA), scaleY(0));
+            ctx.lineTo(scaleX(uniformA), scaleY(MAC(uniformA)));
+            ctx.lineTo(scaleX(0), scaleY(0));
+            ctx.closePath();
+            ctx.fill();
+
+            // MAC line
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            ctx.lineTo(scaleX(maxA), scaleY(MAC(maxA)));
+            ctx.stroke();
+
+            // Optimal price line (horizontal)
+            const optimalPrice = MAC(optimalA);
+            ctx.strokeStyle = colors.optimal;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(margin.left, scaleY(optimalPrice));
+            ctx.lineTo(scaleX(optimalA), scaleY(optimalPrice));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Vertical lines at uniform and optimal
+            ctx.strokeStyle = colors.firm2;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(uniformA), scaleY(0));
+            ctx.lineTo(scaleX(uniformA), scaleY(MAC(uniformA)));
+            ctx.stroke();
+
+            ctx.strokeStyle = colors.optimal;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(optimalA), scaleY(0));
+            ctx.lineTo(scaleX(optimalA), scaleY(optimalPrice));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Points
+            ctx.fillStyle = colors.firm2;
+            ctx.beginPath();
+            ctx.arc(scaleX(uniformA), scaleY(MAC(uniformA)), 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = colors.optimal;
+            ctx.beginPath();
+            ctx.arc(scaleX(optimalA), scaleY(optimalPrice), 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels
+            ctx.font = '600 11px Source Sans Pro';
+            ctx.fillStyle = colors.firm2;
+            ctx.textAlign = 'center';
+            ctx.fillText('Uniform', scaleX(uniformA), height - margin.bottom + 28);
+
+            ctx.fillStyle = colors.optimal;
+            ctx.fillText('Optimal', scaleX(optimalA), scaleY(optimalPrice) - 10);
+
+            // MAC label
+            ctx.fillStyle = color;
+            ctx.font = '600 13px Source Sans Pro';
+            ctx.textAlign = 'left';
+            ctx.fillText(`MAC${firmNum}`, scaleX(maxA * 0.7) + 5, scaleY(MAC(maxA * 0.7)) - 10);
+        }
+
+        function drawCombinedChart() {
+            const ctx = combinedCanvas.getContext('2d');
+            const width = combinedCanvas.getBoundingClientRect().width;
+            const height = 300;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            const margin = { top: 20, right: 30, bottom: 45, left: 55 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+
+            const maxA = 100;
+            const uniform = getUniformAllocation();
+            const optimal = getOptimalAllocation();
+            const optimalPrice = MAC1(optimal.a1); // = MAC2(optimal.a2)
+
+            // Find max Y
+            const maxY = Math.ceil(Math.max(MAC1(60), MAC2(60), optimalPrice * 1.3) / 10) * 10;
+
+            const scaleX = (a) => margin.left + (a / maxA) * chartWidth;
+            const scaleY = (y) => margin.top + chartHeight - (y / maxY) * chartHeight;
+
+            // Grid
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 1;
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, scaleY(y));
+                ctx.lineTo(width - margin.right, scaleY(y));
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText('Total Abatement (A₁ + A₂)', width / 2, height - 8);
+
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('$/unit', 0, 0);
+            ctx.restore();
+
+            // Ticks
+            ctx.font = '11px Source Sans Pro';
+            for (let a = 0; a <= maxA; a += 20) {
+                ctx.textAlign = 'center';
+                ctx.fillText(a.toString(), scaleX(a), height - margin.bottom + 15);
+            }
+            ctx.textAlign = 'right';
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.fillText(y.toFixed(0), margin.left - 8, scaleY(y) + 4);
+            }
+
+            // Draw aggregate MAC (horizontal sum)
+            // At price p: A1 = p/c1, A2 = p/c2, Total A = p/c1 + p/c2 = p(1/c1 + 1/c2)
+            // So p = A / (1/c1 + 1/c2) = A * c1*c2 / (c1 + c2)
+            const aggSlope = (c1 * c2) / (c1 + c2);
+            
+            function aggMAC(a) {
+                return aggSlope * a;
+            }
+
+            // Fill optimal cost area (under aggregate MAC up to total abatement)
+            ctx.fillStyle = colors.optimalFill;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            for (let a = 0; a <= totalAbatement; a += 2) {
+                ctx.lineTo(scaleX(a), scaleY(aggMAC(a)));
+            }
+            ctx.lineTo(scaleX(totalAbatement), scaleY(aggMAC(totalAbatement)));
+            ctx.lineTo(scaleX(totalAbatement), scaleY(0));
+            ctx.closePath();
+            ctx.fill();
+
+            // Show DWL - the MAC gap at uniform allocation
+            // At uniform: each firm abates half, but their MACs differ
+            
+            // Draw individual MAC curves - both upward-sloping from origin
+            // Firm 1 MAC from origin (flatter slope = low cost)
+            ctx.strokeStyle = colors.firm1;
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            const maxA1Draw = Math.min(80, maxA);
+            for (let a = 0; a <= maxA1Draw; a += 2) {
+                if (MAC1(a) <= maxY) ctx.lineTo(scaleX(a), scaleY(MAC1(a)));
+            }
+            ctx.stroke();
+
+            // Firm 2 MAC from origin (steeper slope = high cost)
+            ctx.strokeStyle = colors.firm2;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            const maxA2Draw = Math.min(80, maxA);
+            for (let a = 0; a <= maxA2Draw; a += 2) {
+                if (MAC2(a) <= maxY) ctx.lineTo(scaleX(a), scaleY(MAC2(a)));
+            }
+            ctx.stroke();
+
+            // Aggregate MAC
+            ctx.strokeStyle = colors.optimal;
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(0));
+            for (let a = 0; a <= maxA; a += 2) {
+                ctx.lineTo(scaleX(a), scaleY(aggMAC(a)));
+            }
+            ctx.stroke();
+
+            // Optimal price line
+            ctx.strokeStyle = colors.optimal;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(margin.left, scaleY(optimalPrice));
+            ctx.lineTo(scaleX(totalAbatement), scaleY(optimalPrice));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Vertical line at total abatement
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(totalAbatement), scaleY(0));
+            ctx.lineTo(scaleX(totalAbatement), scaleY(optimalPrice));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Mark uniform MACs - show each firm's MAC at the uniform allocation (half each)
+            // These dots go on the individual MAC curves at the uniform abatement level
+            const uniA = totalAbatement / 2;
+            ctx.fillStyle = colors.firm1;
+            ctx.beginPath();
+            ctx.arc(scaleX(uniA), scaleY(MAC1(uniA)), 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = colors.firm2;
+            ctx.beginPath();
+            ctx.arc(scaleX(uniA), scaleY(MAC2(uniA)), 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Vertical dashed line at uniform abatement level
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(uniA), scaleY(0));
+            ctx.lineTo(scaleX(uniA), scaleY(Math.max(MAC1(uniA), MAC2(uniA))));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Optimal intersection point
+            ctx.fillStyle = colors.optimal;
+            ctx.beginPath();
+            ctx.arc(scaleX(totalAbatement), scaleY(optimalPrice), 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(scaleX(totalAbatement), scaleY(optimalPrice), 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.fillStyle = colors.firm1;
+            ctx.textAlign = 'left';
+            // Label Firm 1 along its curve
+            const label1A = Math.min(50, maxA * 0.55);
+            if (MAC1(label1A) <= maxY) {
+                ctx.fillText('MAC₁', scaleX(label1A) + 3, scaleY(MAC1(label1A)) - 8);
+            }
+
+            ctx.fillStyle = colors.firm2;
+            ctx.textAlign = 'left';
+            // Label Firm 2 along its (steeper) curve
+            const label2A = Math.min(25, maxA * 0.3);
+            if (MAC2(label2A) <= maxY) {
+                ctx.fillText('MAC₂', scaleX(label2A) + 3, scaleY(MAC2(label2A)) - 8);
+            }
+
+            ctx.fillStyle = colors.optimal;
+            ctx.textAlign = 'left';
+            ctx.fillText('Aggregate MAC', scaleX(70) + 5, scaleY(aggMAC(70)) - 8);
+
+            // Price labels
+            ctx.fillStyle = colors.optimal;
+            ctx.font = '11px Source Sans Pro';
+            ctx.textAlign = 'right';
+            ctx.fillText(`p* = $${optimalPrice.toFixed(1)}`, margin.left - 8, scaleY(optimalPrice) - 8);
+
+            // Total abatement label
+            ctx.fillStyle = colors.text;
+            ctx.textAlign = 'center';
+            ctx.font = '600 11px Source Sans Pro';
+            ctx.fillText('Target', scaleX(totalAbatement), height - margin.bottom + 28);
+            ctx.fillText(`A = ${totalAbatement}`, scaleX(totalAbatement), height - margin.bottom + 40);
+
+            // Show uniform vs optimal annotations
+            ctx.font = '10px Source Sans Pro';
+            ctx.fillStyle = colors.firm1;
+            ctx.textAlign = 'left';
+            ctx.fillText(`Uniform: MAC₁ = $${MAC1(uniA).toFixed(1)}`, scaleX(uniA) + 8, scaleY(MAC1(uniA)) + 4);
+            ctx.fillStyle = colors.firm2;
+            ctx.fillText(`Uniform: MAC₂ = $${MAC2(uniA).toFixed(1)}`, scaleX(uniA) + 8, scaleY(MAC2(uniA)) + 4);
+
+            // Arrow showing inefficiency gap between the two MACs at uniform allocation
+            const mac1AtUni = MAC1(uniA);
+            const mac2AtUni = MAC2(uniA);
+            if (Math.abs(mac2AtUni - mac1AtUni) > 3) {
+                ctx.strokeStyle = colors.dwlFill;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(scaleX(uniA) + 3, scaleY(mac1AtUni) + 8);
+                ctx.lineTo(scaleX(uniA) + 3, scaleY(mac2AtUni) - 8);
+                ctx.stroke();
+                
+                // Arrow head
+                ctx.beginPath();
+                ctx.moveTo(scaleX(uniA) + 3, scaleY(mac2AtUni) - 8);
+                ctx.lineTo(scaleX(uniA) - 2, scaleY(mac2AtUni) - 3);
+                ctx.lineTo(scaleX(uniA) + 8, scaleY(mac2AtUni) - 3);
+                ctx.closePath();
+                ctx.fillStyle = colors.dwlFill;
+                ctx.fill();
+
+                ctx.fillStyle = colors.firm2;
+                ctx.font = '600 10px Source Sans Pro';
+                ctx.textAlign = 'center';
+                ctx.fillText('MAC gap', scaleX(uniA) + 30, (scaleY(mac1AtUni) + scaleY(mac2AtUni)) / 2 + 4);
+                ctx.fillText('= DWL', scaleX(uniA) + 30, (scaleY(mac1AtUni) + scaleY(mac2AtUni)) / 2 + 16);
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

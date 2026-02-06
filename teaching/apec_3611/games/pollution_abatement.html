@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 Efficient Pollution Abatement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --benefit: #059669;
+            --benefit-light: #10b981;
+            --cost: #dc2626;
+            --cost-light: #ef4444;
+            --net-benefit: #7c3aed;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-label span {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .control-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .formula-box {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 1px solid #bbf7d0;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #d1fae5;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #166534;
+        }
+
+        .result-value {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #15803d;
+        }
+
+        .graphs-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .graph-card {
+            background: var(--card);
+            border-radius: 0;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .graph-card:first-child {
+            border-radius: 12px 12px 0 0;
+            border-bottom: none;
+        }
+
+        .graph-card:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .graph-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+        }
+
+        .legend-custom {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-color.dashed {
+            background: repeating-linear-gradient(
+                90deg,
+                currentColor 0px,
+                currentColor 5px,
+                transparent 5px,
+                transparent 8px
+            );
+            height: 2px;
+        }
+
+        .explanation-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #93c5fd;
+        }
+
+        .explanation-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .explanation-text strong {
+            color: var(--primary);
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--primary-light);
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .values-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .value-box {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .value-box.benefit {
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        .value-box.cost {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .value-box.net {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .value-box-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.25rem;
+        }
+
+        .value-box.benefit .value-box-label { color: var(--benefit); }
+        .value-box.cost .value-box-label { color: var(--cost); }
+        .value-box.net .value-box-label { color: var(--net-benefit); }
+
+        .value-box-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🏭 Efficient Pollution Abatement</h1>
+        <p>Explore how marginal and total benefits/costs determine the socially optimal level of abatement</p>
+    </header>
+
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <span>Set Cost & Benefit Parameters</span>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <span>Adjust Abatement Level X</span>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <span>Compare Total & Marginal Views</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="controls-panel">
+            <div class="card">
+                <div class="card-title">🎯 Abatement Level</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Abatement (X)</span>
+                        <span class="control-value" id="abatement-value">50</span>
+                    </div>
+                    <input type="range" id="abatement" min="0" max="100" value="50" step="1">
+                </div>
+                <div class="toggle-group">
+                    <button class="toggle-btn" onclick="setAbatement(25)">X<sub>L</sub></button>
+                    <button class="toggle-btn" onclick="setOptimal()">X*</button>
+                    <button class="toggle-btn" onclick="setAbatement(75)">X<sub>H</sub></button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📈 Benefit Function B(X)</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Scale (a)</span>
+                        <span class="control-value" id="benefit-a-value">20</span>
+                    </div>
+                    <input type="range" id="benefit-a" min="10" max="40" value="20" step="1">
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Curvature (b)</span>
+                        <span class="control-value" id="benefit-b-value">0.10</span>
+                    </div>
+                    <input type="range" id="benefit-b" min="0.05" max="0.20" value="0.10" step="0.01">
+                </div>
+                <div class="formula-box">
+                    B(X) = aX - bX²<br>
+                    MB(X) = a - 2bX
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📉 Cost Function C(X)</div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Curvature (c)</span>
+                        <span class="control-value" id="cost-c-value">0.10</span>
+                    </div>
+                    <input type="range" id="cost-c" min="0.05" max="0.20" value="0.10" step="0.01">
+                </div>
+                <div class="formula-box">
+                    C(X) = cX²<br>
+                    MC(X) = 2cX
+                </div>
+            </div>
+
+            <div class="card results-card">
+                <div class="card-title" style="color: #166534;">📊 Optimal Solution</div>
+                <div class="result-item">
+                    <span class="result-label">Optimal X*</span>
+                    <span class="result-value" id="optimal-x">50</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">MB = MC at</span>
+                    <span class="result-value" id="optimal-price">$10.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Max NB</span>
+                    <span class="result-value" id="max-nb">$500</span>
+                </div>
+            </div>
+
+            <div class="card explanation-card">
+                <div class="card-title">💡 Key Insight</div>
+                <p class="explanation-text">
+                    <strong>Net Benefits are maximized where MB = MC.</strong> 
+                    At X*, the slope of B(X) equals the slope of C(X), meaning NB = B - C is at its peak.
+                    <br><br>
+                    Below X*: MB > MC → net benefits increase with more abatement.<br>
+                    Above X*: MC > MB → net benefits increase with less abatement.
+                </p>
+            </div>
+        </div>
+
+        <div class="graphs-panel">
+            <div class="graph-card">
+                <div class="graph-header">
+                    <div>
+                        <div class="graph-title">Total Benefits & Costs</div>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="total-canvas" height="300"></canvas>
+                </div>
+                <div class="legend-custom">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--benefit);"></div>
+                        <span>B(X) - Total Benefit</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--cost);"></div>
+                        <span>C(X) - Total Cost</span>
+                    </div>
+                </div>
+                <div class="values-row">
+                    <div class="value-box benefit">
+                        <div class="value-box-label">B(X)</div>
+                        <div class="value-box-value" id="current-benefit">$750</div>
+                    </div>
+                    <div class="value-box cost">
+                        <div class="value-box-label">C(X)</div>
+                        <div class="value-box-value" id="current-cost">$250</div>
+                    </div>
+                    <div class="value-box net">
+                        <div class="value-box-label">NB = B - C</div>
+                        <div class="value-box-value" id="current-nb">$500</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graph-card">
+                <div class="graph-header">
+                    <div>
+                        <div class="graph-title">Marginal Benefits & Costs</div>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="marginal-canvas" height="300"></canvas>
+                </div>
+                <div class="legend-custom">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--benefit);"></div>
+                        <span>MB(X) - Marginal Benefit</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--cost);"></div>
+                        <span>MC(X) - Marginal Cost</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: rgba(124, 58, 237, 0.3); width: 16px; height: 16px;"></div>
+                        <span>Net Benefits Area</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parameters
+        let X = 50;
+        let a = 20;    // benefit scale
+        let b = 0.10;  // benefit curvature  
+        let c = 0.10;  // cost curvature
+
+        const maxX = 100;
+
+        // Canvas references
+        const totalCanvas = document.getElementById('total-canvas');
+        const marginalCanvas = document.getElementById('marginal-canvas');
+        const totalCtx = totalCanvas.getContext('2d');
+        const marginalCtx = marginalCanvas.getContext('2d');
+
+        // Colors
+        const colors = {
+            benefit: '#059669',
+            cost: '#dc2626',
+            netBenefit: '#7c3aed',
+            grid: '#e2e8f0',
+            text: '#64748b',
+            current: '#2563eb'
+        };
+
+        function init() {
+            setupCanvas();
+            setupEventListeners();
+            updateAll();
+        }
+
+        function setupCanvas() {
+            // Set canvas resolution for crisp lines
+            const dpr = window.devicePixelRatio || 1;
+            
+            [totalCanvas, marginalCanvas].forEach(canvas => {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * dpr;
+                canvas.height = 300 * dpr;
+                canvas.style.height = '300px';
+                const ctx = canvas.getContext('2d');
+                ctx.scale(dpr, dpr);
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('abatement').addEventListener('input', (e) => {
+                X = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            document.getElementById('benefit-a').addEventListener('input', (e) => {
+                a = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            document.getElementById('benefit-b').addEventListener('input', (e) => {
+                b = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            document.getElementById('cost-c').addEventListener('input', (e) => {
+                c = parseFloat(e.target.value);
+                updateAll();
+            });
+
+            window.addEventListener('resize', () => {
+                setupCanvas();
+                updateAll();
+            });
+        }
+
+        function setAbatement(value) {
+            X = value;
+            document.getElementById('abatement').value = value;
+            updateAll();
+        }
+
+        function setOptimal() {
+            const optX = a / (2 * (b + c));
+            X = Math.min(Math.max(Math.round(optX), 0), maxX);
+            document.getElementById('abatement').value = X;
+            updateAll();
+        }
+
+        // Economic functions
+        function B(x) { return a * x - b * x * x; }
+        function C(x) { return c * x * x; }
+        function MB(x) { return a - 2 * b * x; }
+        function MC(x) { return 2 * c * x; }
+        function NB(x) { return B(x) - C(x); }
+
+        function getOptimalX() {
+            return a / (2 * (b + c));
+        }
+
+        function updateAll() {
+            const optX = getOptimalX();
+            const optPrice = MC(optX);
+            const maxNetBenefit = NB(optX);
+
+            // Update displays
+            document.getElementById('abatement-value').textContent = X;
+            document.getElementById('benefit-a-value').textContent = a;
+            document.getElementById('benefit-b-value').textContent = b.toFixed(2);
+            document.getElementById('cost-c-value').textContent = c.toFixed(2);
+            document.getElementById('optimal-x').textContent = optX.toFixed(1);
+            document.getElementById('optimal-price').textContent = `$${optPrice.toFixed(2)}`;
+            document.getElementById('max-nb').textContent = `$${maxNetBenefit.toFixed(0)}`;
+
+            const currentB = B(X);
+            const currentC = C(X);
+            const currentNB = NB(X);
+            document.getElementById('current-benefit').textContent = `$${currentB.toFixed(0)}`;
+            document.getElementById('current-cost').textContent = `$${currentC.toFixed(0)}`;
+            document.getElementById('current-nb').textContent = `$${currentNB.toFixed(0)}`;
+
+            drawTotalChart();
+            drawMarginalChart();
+        }
+
+        function drawTotalChart() {
+            const ctx = totalCtx;
+            const width = totalCanvas.getBoundingClientRect().width;
+            const height = 300;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            // Chart area
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+
+            // Find max Y for scaling
+            let maxY = 0;
+            for (let x = 0; x <= maxX; x++) {
+                maxY = Math.max(maxY, B(x), C(x));
+            }
+            maxY = Math.ceil(maxY / 100) * 100 + 100;
+
+            // Scale functions
+            const scaleX = (x) => margin.left + (x / maxX) * chartWidth;
+            const scaleY = (y) => margin.top + chartHeight - (y / maxY) * chartHeight;
+
+            // Draw grid
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 1;
+            
+            // Horizontal grid lines
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, scaleY(y));
+                ctx.lineTo(width - margin.right, scaleY(y));
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText('abatement X', width / 2, height - 8);
+            
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('$', 0, 0);
+            ctx.restore();
+
+            // X axis ticks
+            ctx.font = '12px Source Sans Pro';
+            for (let x = 0; x <= maxX; x += 20) {
+                ctx.fillText(x.toString(), scaleX(x), height - margin.bottom + 18);
+            }
+
+            // Y axis ticks
+            ctx.textAlign = 'right';
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.fillText(y.toFixed(0), margin.left - 8, scaleY(y) + 4);
+            }
+
+            const optX = getOptimalX();
+
+            // Draw B(X) curve
+            ctx.strokeStyle = colors.benefit;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let x = 0; x <= maxX; x++) {
+                const px = scaleX(x);
+                const py = scaleY(B(x));
+                if (x === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Draw C(X) curve
+            ctx.strokeStyle = colors.cost;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let x = 0; x <= maxX; x++) {
+                const px = scaleX(x);
+                const py = scaleY(C(x));
+                if (x === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Draw NB = B - C vertical line at X*
+            const optBx = scaleX(optX);
+            const optBy = scaleY(B(optX));
+            const optCy = scaleY(C(optX));
+            
+            ctx.strokeStyle = colors.netBenefit;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(optBx, optBy);
+            ctx.lineTo(optBx, optCy);
+            ctx.stroke();
+
+            // Label NB = B - C
+            ctx.fillStyle = colors.netBenefit;
+            ctx.font = '600 13px Source Sans Pro';
+            ctx.textAlign = 'left';
+            ctx.fillText('NB = B - C', optBx + 8, (optBy + optCy) / 2);
+
+            // Draw current X vertical line
+            ctx.strokeStyle = colors.current;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(X), margin.top);
+            ctx.lineTo(scaleX(X), height - margin.bottom);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw points at current X
+            const currBx = scaleX(X);
+            const currBy = scaleY(B(X));
+            const currCy = scaleY(C(X));
+
+            // Point on B(X)
+            ctx.fillStyle = colors.benefit;
+            ctx.beginPath();
+            ctx.arc(currBx, currBy, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Point on C(X)
+            ctx.fillStyle = colors.cost;
+            ctx.beginPath();
+            ctx.arc(currBx, currCy, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Optimal point marker
+            ctx.fillStyle = colors.netBenefit;
+            ctx.beginPath();
+            ctx.arc(optBx, optBy, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(optBx, optCy, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels for curves
+            ctx.font = '600 14px Source Sans Pro';
+            ctx.fillStyle = colors.benefit;
+            ctx.textAlign = 'left';
+            const labelX = maxX * 0.75;
+            ctx.fillText('B(X)', scaleX(labelX) + 5, scaleY(B(labelX)) - 10);
+            
+            ctx.fillStyle = colors.cost;
+            ctx.fillText('C(X)', scaleX(labelX) + 5, scaleY(C(labelX)) + 20);
+
+            // Tangent lines at X* showing equal slopes
+            if (optX > 10 && optX < maxX - 10) {
+                const tangentLen = 15;
+                const mbSlope = MB(optX);
+                const mcSlope = MC(optX);
+                
+                // Tangent at B(X*)
+                ctx.strokeStyle = colors.benefit;
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                const bTangentX1 = optX - tangentLen;
+                const bTangentX2 = optX + tangentLen;
+                ctx.moveTo(scaleX(bTangentX1), scaleY(B(optX) - mbSlope * tangentLen));
+                ctx.lineTo(scaleX(bTangentX2), scaleY(B(optX) + mbSlope * tangentLen));
+                ctx.stroke();
+
+                // Tangent at C(X*)
+                ctx.strokeStyle = colors.cost;
+                ctx.beginPath();
+                ctx.moveTo(scaleX(bTangentX1), scaleY(C(optX) - mcSlope * tangentLen));
+                ctx.lineTo(scaleX(bTangentX2), scaleY(C(optX) + mcSlope * tangentLen));
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Slope labels
+                ctx.font = '11px Source Sans Pro';
+                ctx.fillStyle = colors.text;
+                ctx.textAlign = 'left';
+                ctx.fillText('slope = MB at X*', scaleX(optX) - 70, scaleY(B(optX)) - 25);
+                ctx.fillText('slope = MC at X*', scaleX(optX) - 70, scaleY(C(optX)) + 35);
+            }
+
+            // X* label on axis
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText('X*', scaleX(optX), height - margin.bottom + 18);
+        }
+
+        function drawMarginalChart() {
+            const ctx = marginalCtx;
+            const width = marginalCanvas.getBoundingClientRect().width;
+            const height = 300;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            // Chart area
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+
+            // Find max Y
+            const maxMB = MB(0);
+            const maxMC = MC(maxX);
+            const maxY = Math.ceil(Math.max(maxMB, maxMC) / 5) * 5 + 5;
+
+            // Scale functions
+            const scaleX = (x) => margin.left + (x / maxX) * chartWidth;
+            const scaleY = (y) => margin.top + chartHeight - (y / maxY) * chartHeight;
+
+            // Draw grid
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 1;
+            
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, scaleY(y));
+                ctx.lineTo(width - margin.right, scaleY(y));
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, height - margin.bottom);
+            ctx.lineTo(width - margin.right, height - margin.bottom);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            ctx.fillText('abatement X', width / 2, height - 8);
+            
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('$/unit', 0, 0);
+            ctx.restore();
+
+            // X axis ticks
+            ctx.font = '12px Source Sans Pro';
+            for (let x = 0; x <= maxX; x += 20) {
+                ctx.fillText(x.toString(), scaleX(x), height - margin.bottom + 18);
+            }
+
+            // Y axis ticks
+            ctx.textAlign = 'right';
+            for (let y = 0; y <= maxY; y += maxY / 5) {
+                ctx.fillText(y.toFixed(0), margin.left - 8, scaleY(y) + 4);
+            }
+
+            const optX = getOptimalX();
+
+            // Fill net benefits area (triangle under MB, above MC, up to current X)
+            ctx.fillStyle = 'rgba(124, 58, 237, 0.15)';
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(MB(0)));
+            
+            // Along MB curve to min of X or optX
+            const fillEndX = Math.min(X, optX);
+            ctx.lineTo(scaleX(fillEndX), scaleY(MB(fillEndX)));
+            
+            if (X <= optX) {
+                // Down to MC at current X
+                ctx.lineTo(scaleX(X), scaleY(MC(X)));
+            } else {
+                // To intersection point
+                ctx.lineTo(scaleX(optX), scaleY(MC(optX)));
+            }
+            
+            // Back along MC to origin
+            ctx.lineTo(scaleX(0), scaleY(MC(0)));
+            ctx.closePath();
+            ctx.fill();
+
+            // If X > optX, show the loss area in red
+            if (X > optX) {
+                ctx.fillStyle = 'rgba(220, 38, 38, 0.15)';
+                ctx.beginPath();
+                ctx.moveTo(scaleX(optX), scaleY(MC(optX)));
+                // Along MC to X
+                ctx.lineTo(scaleX(X), scaleY(MC(X)));
+                // Down to MB at X
+                ctx.lineTo(scaleX(X), scaleY(MB(X)));
+                // Back along MB to optX
+                ctx.lineTo(scaleX(optX), scaleY(MB(optX)));
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Draw MB line
+            ctx.strokeStyle = colors.benefit;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(MB(0)));
+            ctx.lineTo(scaleX(maxX), scaleY(MB(maxX)));
+            ctx.stroke();
+
+            // Draw MC line
+            ctx.strokeStyle = colors.cost;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(scaleX(0), scaleY(MC(0)));
+            ctx.lineTo(scaleX(maxX), scaleY(MC(maxX)));
+            ctx.stroke();
+
+            // Draw current X vertical line
+            ctx.strokeStyle = colors.current;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(scaleX(X), margin.top);
+            ctx.lineTo(scaleX(X), height - margin.bottom);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Intersection point (optimal)
+            const optPrice = MC(optX);
+            ctx.fillStyle = colors.netBenefit;
+            ctx.beginPath();
+            ctx.arc(scaleX(optX), scaleY(optPrice), 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(scaleX(optX), scaleY(optPrice), 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Points on curves at current X
+            ctx.fillStyle = colors.benefit;
+            ctx.beginPath();
+            ctx.arc(scaleX(X), scaleY(MB(X)), 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = colors.cost;
+            ctx.beginPath();
+            ctx.arc(scaleX(X), scaleY(MC(X)), 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels for curves
+            ctx.font = '600 14px Source Sans Pro';
+            ctx.fillStyle = colors.benefit;
+            ctx.textAlign = 'right';
+            ctx.fillText('MB(X)', width - margin.right - 5, scaleY(MB(maxX)) - 8);
+            
+            ctx.fillStyle = colors.cost;
+            ctx.textAlign = 'right';
+            ctx.fillText('MC(X)', width - margin.right - 5, scaleY(MC(maxX)) - 8);
+
+            // Label intersection point
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'left';
+            ctx.fillText('c', scaleX(optX) + 10, scaleY(optPrice) - 5);
+
+            // Label points a, b, d, e like in the diagram
+            ctx.font = '600 12px Source Sans Pro';
+            
+            // Point 'a' - MB at X=0 (on y-axis)
+            ctx.fillStyle = colors.benefit;
+            ctx.textAlign = 'right';
+            ctx.fillText('a', scaleX(0) - 5, scaleY(MB(0)) + 4);
+
+            // Point 'b' - on MB somewhere left of optimal
+            const xb = optX * 0.5;
+            ctx.fillText('b', scaleX(xb) + 5, scaleY(MB(xb)) - 10);
+
+            // Point 'd' - on MC at high X
+            const xd = Math.min(optX * 1.5, maxX * 0.85);
+            ctx.fillStyle = colors.cost;
+            ctx.textAlign = 'left';
+            ctx.fillText('d', scaleX(xd) + 5, scaleY(MC(xd)) - 10);
+
+            // Point 'e' - on MB at high X
+            ctx.fillStyle = colors.benefit;
+            ctx.fillText('e', scaleX(xd) + 5, scaleY(MB(xd)) + 15);
+
+            // X labels on axis
+            ctx.fillStyle = colors.text;
+            ctx.font = '600 12px Source Sans Pro';
+            ctx.textAlign = 'center';
+            
+            // X* label
+            ctx.fillText('X*', scaleX(optX), height - margin.bottom + 18);
+
+            // X_L and X_H markers if relevant
+            const xL = 25;
+            const xH = 75;
+            
+            // Dotted vertical lines at X_L and X_H
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            
+            ctx.beginPath();
+            ctx.moveTo(scaleX(xL), scaleY(0));
+            ctx.lineTo(scaleX(xL), scaleY(MB(xL)));
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(scaleX(xH), scaleY(0));
+            ctx.lineTo(scaleX(xH), scaleY(MC(xH)));
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '11px Source Sans Pro';
+            ctx.fillText('X_L', scaleX(xL), height - margin.bottom + 30);
+            ctx.fillText('X_H', scaleX(xH), height - margin.bottom + 30);
+
+            // Arrow annotations for "Net benefits increase"
+            ctx.fillStyle = colors.text;
+            ctx.font = '11px Source Sans Pro';
+            
+            // Left arrow (between X_L and X*)
+            const arrowY = height - margin.bottom - 25;
+            ctx.textAlign = 'center';
+            ctx.fillText('Net benefits', (scaleX(xL) + scaleX(optX)) / 2, arrowY - 5);
+            ctx.fillText('increase →', (scaleX(xL) + scaleX(optX)) / 2, arrowY + 8);
+            
+            // Right arrow (between X* and X_H)
+            ctx.fillText('← Net benefits', (scaleX(optX) + scaleX(xH)) / 2, arrowY - 5);
+            ctx.fillText('increase', (scaleX(optX) + scaleX(xH)) / 2, arrowY + 8);
+
+            // Area label box
+            ctx.fillStyle = 'rgba(124, 58, 237, 0.9)';
+            const areaLabelX = optX * 0.35;
+            const areaLabelY = (MB(areaLabelX) + MC(areaLabelX)) / 2;
+            
+            // Draw label background
+            const labelText = 'Area = NB = B(X*) - C(X*)';
+            ctx.font = '600 11px Source Sans Pro';
+            const textWidth = ctx.measureText(labelText).width;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillRect(scaleX(areaLabelX) - textWidth/2 - 5, scaleY(areaLabelY) - 8, textWidth + 10, 18);
+            ctx.strokeStyle = colors.netBenefit;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(scaleX(areaLabelX) - textWidth/2 - 5, scaleY(areaLabelY) - 8, textWidth + 10, 18);
+            
+            ctx.fillStyle = colors.netBenefit;
+            ctx.textAlign = 'center';
+            ctx.fillText(labelText, scaleX(areaLabelX), scaleY(areaLabelY) + 5);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 Correcting Externalities with a Tax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary:#2563eb;--private:#059669;--social:#dc2626;--demand:#2563eb;--tax:#f59e0b;--dwl:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Source Sans Pro',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        .header{background:linear-gradient(135deg,var(--primary),#1d4ed8);color:#fff;padding:1.5rem;text-align:center}
+        .header h1{font-size:1.75rem;font-weight:700;margin-bottom:.4rem}
+        .header p{font-size:1rem;opacity:.9;max-width:700px;margin:0 auto}
+        .steps{display:flex;justify-content:center;gap:1.5rem;padding:1rem;background:#fff;border-bottom:1px solid var(--border);flex-wrap:wrap}
+        .step{display:flex;align-items:center;gap:.4rem;color:var(--text-light);font-weight:600;font-size:.85rem}
+        .step-number{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+        .container{max-width:1350px;margin:0 auto;padding:1rem;display:grid;grid-template-columns:300px 1fr;gap:1rem}
+        @media(max-width:1000px){.container{grid-template-columns:1fr}}
+        .controls-panel{display:flex;flex-direction:column;gap:.75rem}
+        .card{background:var(--card);border-radius:10px;padding:1rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+        .card-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-light);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+        .card-title::before{content:'';width:3px;height:12px;background:var(--primary);border-radius:2px}
+        .control-group{margin-bottom:.9rem}
+        .control-group:last-child{margin-bottom:0}
+        .control-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem}
+        .control-label span{font-weight:600;font-size:.85rem}
+        .control-value{font-family:'Fira Code',monospace;font-size:.8rem;color:var(--primary);font-weight:500}
+        .control-value.tax{color:var(--tax)}
+        .control-value.damage{color:var(--social)}
+        input[type="range"]{width:100%;height:5px;border-radius:3px;background:var(--border);outline:none;-webkit-appearance:none;cursor:pointer}
+        input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--primary);cursor:pointer}
+        input[type="range"].tax::-webkit-slider-thumb{background:var(--tax)}
+        input[type="range"].damage::-webkit-slider-thumb{background:var(--social)}
+        .formula-box{background:#f1f5f9;border-radius:5px;padding:.5rem .7rem;font-family:'Fira Code',monospace;font-size:.75rem;color:var(--text);margin-top:.35rem;border-left:3px solid var(--primary)}
+        .results-card{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0}
+        .results-card .card-title{color:#166534}
+        .results-card .card-title::before{background:var(--private)}
+        .result-item{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px dashed #d1fae5;font-size:.85rem}
+        .result-item:last-child{border-bottom:none}
+        .result-label{font-weight:600;color:#166534}
+        .result-value{font-family:'Fira Code',monospace;font-weight:600;color:#15803d}
+        .result-value.negative{color:var(--dwl)}
+        .result-value.positive{color:var(--private)}
+        .welfare-card{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fcd34d}
+        .welfare-card .card-title{color:#92400e}
+        .welfare-card .card-title::before{background:var(--tax)}
+        .welfare-card .result-item{border-bottom-color:#fcd34d}
+        .welfare-card .result-label{color:#92400e}
+        .welfare-card .result-value{color:#b45309}
+        .graph-card{background:var(--card);border-radius:10px;padding:1.25rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+        .graph-header{margin-bottom:.5rem}
+        .graph-title{font-size:1rem;font-weight:700;color:var(--text)}
+        .graph-subtitle{font-size:.8rem;color:var(--text-light)}
+        canvas{display:block;width:100%}
+        .legend-custom{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:.5rem;font-size:.7rem}
+        .legend-item{display:flex;align-items:center;gap:.3rem;font-weight:600}
+        .legend-color{width:14px;height:3px;border-radius:2px}
+        .legend-color.area{width:10px;height:10px;border-radius:2px}
+        .explanation-card{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd}
+        .explanation-text{font-size:.85rem;line-height:1.5}
+        .explanation-text strong{color:var(--primary)}
+        .toggle-group{display:flex;gap:.35rem;margin-top:.5rem}
+        .toggle-btn{flex:1;padding:.4rem .15rem;border:2px solid var(--border);background:#fff;border-radius:5px;font-weight:600;font-size:.68rem;cursor:pointer;transition:all .2s}
+        .toggle-btn:hover{border-color:var(--tax)}
+        .toggle-btn.active{background:var(--tax);border-color:var(--tax);color:#fff}
+        .tax-status{margin-top:.5rem;padding:.35rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600;text-align:center}
+        .tax-status.under{background:rgba(239,68,68,.1);color:var(--dwl);border:1px solid rgba(239,68,68,.3)}
+        .tax-status.over{background:rgba(124,58,237,.1);color:#7c3aed;border:1px solid rgba(124,58,237,.3)}
+        .tax-status.optimal{background:rgba(5,150,105,.1);color:var(--private);border:1px solid rgba(5,150,105,.3)}
+        .comparison-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)}
+        .comparison-box{padding:.5rem;border-radius:5px;text-align:center}
+        .comparison-box.market{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25)}
+        .comparison-box.optimal{background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.25)}
+        .comparison-box-label{font-size:.65rem;font-weight:700;text-transform:uppercase;margin-bottom:.15rem}
+        .comparison-box.market .comparison-box-label{color:var(--social)}
+        .comparison-box.optimal .comparison-box-label{color:var(--private)}
+        .comparison-box-value{font-family:'Fira Code',monospace;font-size:.85rem;font-weight:600;color:var(--text)}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🏭 Correcting Externalities with a Pigouvian Tax</h1>
+        <p>See how a tax equal to marginal external damage shifts the market to the socially optimal outcome</p>
+    </header>
+    <div class="steps">
+        <div class="step"><div class="step-number">1</div><span>Set External Damage</span></div>
+        <div class="step"><div class="step-number">2</div><span>Observe Market Failure</span></div>
+        <div class="step"><div class="step-number">3</div><span>Apply Corrective Tax</span></div>
+    </div>
+    <div class="container">
+        <div class="controls-panel">
+            <div class="card">
+                <div class="card-title">💨 External Damage</div>
+                <div class="control-group">
+                    <div class="control-label"><span>Marginal External Cost</span><span class="control-value damage" id="mec-value">$20/unit</span></div>
+                    <input type="range" class="damage" id="mec" min="0" max="50" value="20" step="2">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📐 Market Parameters</div>
+                <div class="control-group">
+                    <div class="control-label"><span>Demand Intercept (a)</span><span class="control-value" id="demand-a-value">100</span></div>
+                    <input type="range" id="demand-a" min="60" max="140" value="100" step="5">
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>Demand Slope</span><span class="control-value" id="demand-slope-value">1.0</span></div>
+                    <input type="range" id="demand-slope" min="0.5" max="2.0" value="1.0" step="0.1">
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>Supply Slope</span><span class="control-value" id="supply-slope-value">1.0</span></div>
+                    <input type="range" id="supply-slope" min="0.5" max="2.0" value="1.0" step="0.1">
+                </div>
+                <div class="formula-box">P = <span id="formula-a">100</span> − <span id="formula-d">1.0</span>Q (Demand)<br>P = <span id="formula-s">1.0</span>Q (PMC)</div>
+            </div>
+            <div class="card">
+                <div class="card-title">💵 Pigouvian Tax</div>
+                <div class="control-group">
+                    <div class="control-label"><span>Tax per Unit (t)</span><span class="control-value tax" id="tax-value">$20/unit</span></div>
+                    <input type="range" class="tax" id="tax" min="0" max="50" value="20" step="2">
+                </div>
+                <div class="toggle-group">
+                    <button class="toggle-btn" onclick="setTax(0)">No Tax</button>
+                    <button class="toggle-btn active" onclick="setOptimalTax()">t* = MEC</button>
+                    <button class="toggle-btn" onclick="overTax()">Over-tax</button>
+                </div>
+                <div class="tax-status optimal" id="tax-status">✓ Tax = MEC — Optimal!</div>
+            </div>
+            <div class="card results-card">
+                <div class="card-title">📊 Equilibrium</div>
+                <div class="result-item"><span class="result-label">Market Qₘ</span><span class="result-value" id="market-q">50</span></div>
+                <div class="result-item"><span class="result-label">Optimal Q*</span><span class="result-value" id="optimal-q">40</span></div>
+                <div class="result-item"><span class="result-label">With Tax Qₜ</span><span class="result-value" id="tax-q">40</span></div>
+            </div>
+            <div class="card welfare-card">
+                <div class="card-title">💰 Welfare</div>
+                <div class="result-item"><span class="result-label">DWL (no tax)</span><span class="result-value negative" id="dwl-no-tax">$100</span></div>
+                <div class="result-item"><span class="result-label">DWL (with tax)</span><span class="result-value" id="dwl-with-tax">$0</span></div>
+                <div class="result-item"><span class="result-label">Tax Revenue</span><span class="result-value" id="tax-revenue">$800</span></div>
+            </div>
+            <div class="card explanation-card">
+                <div class="card-title">💡 Key Insight</div>
+                <p class="explanation-text"><strong>The Pigouvian tax internalizes the externality.</strong> Without tax, firms overproduce (Qₘ > Q*). Setting t = MEC aligns private and social costs.</p>
+            </div>
+        </div>
+        <div class="graphs-panel">
+            <div class="graph-card">
+                <div class="graph-header">
+                    <div class="graph-title">Market with Negative Externality</div>
+                    <div class="graph-subtitle">Private vs. Social Cost and the Corrective Tax</div>
+                </div>
+                <canvas id="main-canvas" height="520"></canvas>
+                <div class="legend-custom">
+                    <div class="legend-item"><div class="legend-color" style="background:var(--demand)"></div><span>Demand (MB)</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background:var(--private)"></div><span>PMC (Supply)</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background:var(--social)"></div><span>SMC = PMC + MEC</span></div>
+                    <div class="legend-item"><div class="legend-color" style="background:var(--tax)"></div><span>PMC + Tax</span></div>
+                    <div class="legend-item"><div class="legend-color area" style="background:rgba(239,68,68,.35)"></div><span>DWL</span></div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-box market"><div class="comparison-box-label">Market (No Tax)</div><div class="comparison-box-value">Qₘ = <span id="market-q-display">50</span>, Pₘ = $<span id="market-p-display">50</span></div></div>
+                    <div class="comparison-box optimal"><div class="comparison-box-label">Social Optimum</div><div class="comparison-box-value">Q* = <span id="optimal-q-display">40</span>, P* = $<span id="optimal-p-display">60</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let mec=20,tax=20,demandIntercept=100,demandSlope=1,supplySlope=1;
+        const supplyIntercept=0,mainCanvas=document.getElementById('main-canvas');
+        const colors={demand:'#2563eb',private:'#059669',social:'#dc2626',tax:'#f59e0b',dwl:'rgba(239,68,68,0.35)',grid:'#e2e8f0',text:'#64748b'};
+
+        function init(){setupCanvas();setupEventListeners();updateAll()}
+        function setupCanvas(){const dpr=window.devicePixelRatio||1,rect=mainCanvas.getBoundingClientRect();mainCanvas.width=rect.width*dpr;mainCanvas.height=520*dpr;mainCanvas.style.height='520px';mainCanvas.getContext('2d').scale(dpr,dpr)}
+        function setupEventListeners(){
+            document.getElementById('mec').addEventListener('input',e=>{mec=parseFloat(e.target.value);updateAll()});
+            document.getElementById('tax').addEventListener('input',e=>{tax=parseFloat(e.target.value);updateToggleButtons();updateAll()});
+            document.getElementById('demand-a').addEventListener('input',e=>{demandIntercept=parseFloat(e.target.value);updateAll()});
+            document.getElementById('demand-slope').addEventListener('input',e=>{demandSlope=parseFloat(e.target.value);updateAll()});
+            document.getElementById('supply-slope').addEventListener('input',e=>{supplySlope=parseFloat(e.target.value);updateAll()});
+            window.addEventListener('resize',()=>{setupCanvas();updateAll()})
+        }
+        function setTax(t){tax=t;document.getElementById('tax').value=t;updateToggleButtons();updateAll()}
+        function setOptimalTax(){tax=mec;document.getElementById('tax').value=tax;updateToggleButtons();updateAll()}
+        function overTax(){tax=Math.min(mec+15,50);document.getElementById('tax').value=tax;updateToggleButtons();updateAll()}
+        function updateToggleButtons(){const btns=document.querySelectorAll('.toggle-btn');btns.forEach(b=>b.classList.remove('active'));if(tax===0)btns[0].classList.add('active');else if(Math.abs(tax-mec)<2)btns[1].classList.add('active');else if(tax>mec+5)btns[2].classList.add('active')}
+
+        function demandP(q){return demandIntercept-demandSlope*q}
+        function privateMC(q){return supplyIntercept+supplySlope*q}
+        function socialMC(q){return supplyIntercept+supplySlope*q+mec}
+        function privateMCWithTax(q){return supplyIntercept+supplySlope*q+tax}
+        function getMarketQ(){return(demandIntercept-supplyIntercept)/(demandSlope+supplySlope)}
+        function getOptimalQ(){return Math.max(0,(demandIntercept-supplyIntercept-mec)/(demandSlope+supplySlope))}
+        function getTaxQ(){return Math.max(0,(demandIntercept-supplyIntercept-tax)/(demandSlope+supplySlope))}
+
+        function updateAll(){
+            const qMarket=getMarketQ(),qOptimal=getOptimalQ(),qTax=getTaxQ(),pMarket=demandP(qMarket),pOptimal=demandP(qOptimal);
+            const dwlNoTax=0.5*Math.abs(qMarket-qOptimal)*mec,dwlWithTax=0.5*Math.abs(qTax-qOptimal)*Math.abs(tax-mec),taxRevenue=tax*qTax;
+            document.getElementById('mec-value').textContent=`$${mec}/unit`;
+            document.getElementById('tax-value').textContent=`$${tax}/unit`;
+            document.getElementById('demand-a-value').textContent=demandIntercept;
+            document.getElementById('demand-slope-value').textContent=demandSlope.toFixed(1);
+            document.getElementById('supply-slope-value').textContent=supplySlope.toFixed(1);
+            document.getElementById('formula-a').textContent=demandIntercept;
+            document.getElementById('formula-d').textContent=demandSlope.toFixed(1);
+            document.getElementById('formula-s').textContent=supplySlope.toFixed(1);
+            document.getElementById('market-q').textContent=qMarket.toFixed(0);
+            document.getElementById('optimal-q').textContent=qOptimal.toFixed(0);
+            document.getElementById('tax-q').textContent=qTax.toFixed(0);
+            document.getElementById('dwl-no-tax').textContent=`$${dwlNoTax.toFixed(0)}`;
+            document.getElementById('dwl-with-tax').textContent=`$${dwlWithTax.toFixed(0)}`;
+            document.getElementById('tax-revenue').textContent=`$${taxRevenue.toFixed(0)}`;
+            document.getElementById('market-q-display').textContent=qMarket.toFixed(0);
+            document.getElementById('market-p-display').textContent=pMarket.toFixed(0);
+            document.getElementById('optimal-q-display').textContent=qOptimal.toFixed(0);
+            document.getElementById('optimal-p-display').textContent=pOptimal.toFixed(0);
+            const taxStatus=document.getElementById('tax-status');
+            if(Math.abs(tax-mec)<2){taxStatus.className='tax-status optimal';taxStatus.textContent='✓ Tax = MEC — Optimal!'}
+            else if(tax<mec){taxStatus.className='tax-status under';taxStatus.textContent='⚠ Tax too low — Overproducing'}
+            else{taxStatus.className='tax-status over';taxStatus.textContent='⚠ Tax too high — Underproducing'}
+            document.getElementById('dwl-with-tax').className=dwlWithTax<1?'result-value positive':'result-value negative';
+            drawMainChart()
+        }
+
+        function drawMainChart(){
+            const ctx=mainCanvas.getContext('2d'),width=mainCanvas.getBoundingClientRect().width,height=520;
+            ctx.clearRect(0,0,width,height);
+            const margin={top:35,right:60,bottom:60,left:70},chartWidth=width-margin.left-margin.right,chartHeight=height-margin.top-margin.bottom;
+            const qMarket=getMarketQ(),qOptimal=getOptimalQ(),qTax=getTaxQ();
+            const maxQ=Math.max(qMarket*1.25,55),maxP=Math.max(demandIntercept*1.1,socialMC(qMarket)*1.05,110);
+            const scaleX=q=>margin.left+(q/maxQ)*chartWidth,scaleY=p=>margin.top+chartHeight-(p/maxP)*chartHeight;
+            const pMarket=demandP(qMarket),pOptimal=demandP(qOptimal),pTax=demandP(qTax);
+
+            // Grid
+            ctx.strokeStyle=colors.grid;ctx.lineWidth=1;
+            const pStep=Math.ceil(maxP/5/10)*10;
+            for(let p=0;p<=maxP;p+=pStep){ctx.beginPath();ctx.moveTo(margin.left,scaleY(p));ctx.lineTo(width-margin.right,scaleY(p));ctx.stroke()}
+            const qStep=Math.ceil(maxQ/5/5)*5;
+            for(let q=0;q<=maxQ;q+=qStep){ctx.beginPath();ctx.moveTo(scaleX(q),margin.top);ctx.lineTo(scaleX(q),height-margin.bottom);ctx.stroke()}
+
+            // Axes
+            ctx.strokeStyle='#475569';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(margin.left,margin.top);ctx.lineTo(margin.left,height-margin.bottom);ctx.lineTo(width-margin.right,height-margin.bottom);ctx.stroke();
+            ctx.fillStyle=colors.text;ctx.font='600 13px Source Sans Pro';ctx.textAlign='center';ctx.fillText('Quantity (Q)',width/2,height-18);
+            ctx.save();ctx.translate(24,height/2);ctx.rotate(-Math.PI/2);ctx.fillText('Price ($)',0,0);ctx.restore();
+            ctx.font='11px Source Sans Pro';ctx.textAlign='center';
+            for(let q=0;q<=maxQ;q+=qStep)ctx.fillText(q.toFixed(0),scaleX(q),height-margin.bottom+16);
+            ctx.textAlign='right';for(let p=0;p<=maxP;p+=pStep)ctx.fillText(p.toFixed(0),margin.left-10,scaleY(p)+4);
+
+            // DWL
+            if(mec>0&&tax<mec){
+                ctx.fillStyle=colors.dwl;ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));
+                const qEnd=tax>0?qTax:qMarket;ctx.lineTo(scaleX(qEnd),scaleY(demandP(qEnd)));ctx.lineTo(scaleX(qEnd),scaleY(socialMC(qEnd)));ctx.closePath();ctx.fill()
+            }
+            if(tax>mec+1){
+                ctx.fillStyle='rgba(124,58,237,0.3)';ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(qTax),scaleY(pTax));ctx.lineTo(scaleX(qTax),scaleY(socialMC(qTax)));ctx.closePath();ctx.fill()
+            }
+
+            // Curves
+            const qDemMax=demandIntercept/demandSlope;
+            ctx.strokeStyle=colors.demand;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(scaleX(0),scaleY(demandIntercept));ctx.lineTo(scaleX(Math.min(qDemMax,maxQ)),scaleY(Math.max(0,demandP(Math.min(qDemMax,maxQ)))));ctx.stroke();
+            ctx.strokeStyle=colors.private;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(scaleX(0),scaleY(0));ctx.lineTo(scaleX(maxQ),scaleY(privateMC(maxQ)));ctx.stroke();
+            ctx.strokeStyle=colors.social;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(scaleX(0),scaleY(mec));ctx.lineTo(scaleX(maxQ),scaleY(socialMC(maxQ)));ctx.stroke();
+            if(tax>0){ctx.strokeStyle=colors.tax;ctx.lineWidth=3;ctx.setLineDash([8,5]);ctx.beginPath();ctx.moveTo(scaleX(0),scaleY(tax));ctx.lineTo(scaleX(maxQ),scaleY(privateMCWithTax(maxQ)));ctx.stroke();ctx.setLineDash([])}
+
+            // Points
+            ctx.fillStyle='#334155';ctx.beginPath();ctx.arc(scaleX(qMarket),scaleY(pMarket),8,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(scaleX(qMarket),scaleY(pMarket),4,0,Math.PI*2);ctx.fill();
+            ctx.fillStyle=colors.private;ctx.beginPath();ctx.arc(scaleX(qOptimal),scaleY(pOptimal),9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(scaleX(qOptimal),scaleY(pOptimal),4,0,Math.PI*2);ctx.fill();
+            if(tax>0){ctx.fillStyle=colors.tax;ctx.beginPath();ctx.arc(scaleX(qTax),scaleY(pTax),7,0,Math.PI*2);ctx.fill()}
+
+            // Dashed lines
+            ctx.setLineDash([5,4]);ctx.lineWidth=1.5;
+            ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(scaleX(qMarket),scaleY(pMarket));ctx.lineTo(scaleX(qMarket),scaleY(0));ctx.stroke();
+            ctx.strokeStyle=colors.private;ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(qOptimal),scaleY(0));ctx.stroke();
+            ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(0),scaleY(pOptimal));ctx.stroke();
+            if(tax>0&&Math.abs(qTax-qOptimal)>2&&Math.abs(qTax-qMarket)>2){ctx.strokeStyle=colors.tax;ctx.beginPath();ctx.moveTo(scaleX(qTax),scaleY(pTax));ctx.lineTo(scaleX(qTax),scaleY(0));ctx.stroke()}
+            ctx.setLineDash([]);
+
+            // MEC Bracket
+            const bracketQ=maxQ*0.12;
+            ctx.strokeStyle=colors.social;ctx.lineWidth=2;ctx.beginPath();
+            ctx.moveTo(scaleX(bracketQ)+4,scaleY(privateMC(bracketQ)));ctx.lineTo(scaleX(bracketQ)-6,scaleY(privateMC(bracketQ)));
+            ctx.lineTo(scaleX(bracketQ)-6,scaleY(socialMC(bracketQ)));ctx.lineTo(scaleX(bracketQ)+4,scaleY(socialMC(bracketQ)));ctx.stroke();
+            ctx.font='700 11px Source Sans Pro';ctx.fillStyle=colors.social;ctx.textAlign='right';
+            ctx.fillText('MEC',scaleX(bracketQ)-10,scaleY((privateMC(bracketQ)+socialMC(bracketQ))/2)+4);
+
+            // Curve labels - RIGHT MARGIN
+            ctx.font='600 11px Source Sans Pro';ctx.textAlign='left';
+            ctx.fillStyle=colors.demand;ctx.fillText('Demand',width-margin.right+8,scaleY(demandP(maxQ*0.95))+4);
+            ctx.fillStyle=colors.private;ctx.fillText('PMC',width-margin.right+8,scaleY(privateMC(maxQ))+4);
+            ctx.fillStyle=colors.social;ctx.fillText('SMC',width-margin.right+8,scaleY(socialMC(maxQ))+4);
+            if(tax>0){ctx.fillStyle=colors.tax;ctx.fillText('PMC+t',width-margin.right+8,scaleY(privateMCWithTax(maxQ))+4)}
+
+            // Q labels
+            ctx.font='700 11px Source Sans Pro';ctx.textAlign='center';
+            ctx.fillStyle='#334155';ctx.fillText('Qₘ',scaleX(qMarket),scaleY(0)+30);
+            ctx.fillStyle=colors.private;ctx.fillText('Q*',scaleX(qOptimal),scaleY(0)+(Math.abs(qMarket-qOptimal)<4?44:30));
+            if(tax>0&&Math.abs(qTax-qOptimal)>3&&Math.abs(qTax-qMarket)>3){ctx.fillStyle=colors.tax;ctx.fillText('Qₜ',scaleX(qTax),scaleY(0)+30)}
+
+            // Point labels
+            ctx.font='600 10px Source Sans Pro';
+            ctx.fillStyle='#334155';ctx.textAlign='left';ctx.fillText('Market Eq.',scaleX(qMarket)+12,scaleY(pMarket)+4);
+            ctx.fillStyle=colors.private;ctx.textAlign='right';ctx.fillText('Social Opt.',scaleX(qOptimal)-12,scaleY(pOptimal)-4);
+
+            // DWL label
+            if(mec>5&&(tax===0||Math.abs(tax-mec)>2)){
+                ctx.fillStyle='#dc2626';ctx.font='700 11px Source Sans Pro';ctx.textAlign='center';
+                const refQ=tax>0?qTax:qMarket,labelQ=(qOptimal+refQ)/2,labelP=(demandP(labelQ)+socialMC(labelQ))/2;
+                ctx.fillText('DWL',scaleX(labelQ),scaleY(labelP)+4)
+            }
+
+            // P* label
+            ctx.font='10px Source Sans Pro';ctx.textAlign='right';ctx.fillStyle=colors.private;
+            ctx.fillText('P*=$'+pOptimal.toFixed(0),margin.left-10,scaleY(pOptimal)-6);
+        }
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1801 @@
+<!-- START OF FILE economic_simulation_mobile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Economic World: Mobile Ready</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --bg-light: #f8f9fa;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --accent-primary: #2563eb;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --consumer-color: #10b981;
+            --producer-color: #ef4444;
+            --good-x-color: #3b82f6;
+            --good-y-color: #8b5cf6;
+        }
+        
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; touch-action: none; }
+        
+        .ui-overlay { position: fixed; z-index: 10; pointer-events: none; }
+        .ui-overlay > * { pointer-events: auto; }
+        
+        /* HEADER & STATS */
+        .header {
+            top: 0; left: 0; right: 0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(248, 249, 250, 0.98), rgba(248, 249, 250, 0.8), transparent);
+        }
+        
+        .title-block h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); }
+        .title-block .subtitle { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
+        
+        .stats-bar { display: flex; gap: 15px; }
+        .stat-item { text-align: center; padding: 8px 16px; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow); }
+        .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .stat-value { font-size: 1.2rem; font-weight: 600; margin-top: 2px; }
+        .stat-value.consumers { color: var(--consumer-color); }
+        .stat-value.producers { color: var(--producer-color); }
+        .stat-value.welfare { color: var(--accent-warning); }
+        
+        /* PANELS */
+        .panel { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); backdrop-filter: blur(4px); }
+        .panel-title { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        
+        /* CONTROLS */
+        .control-panel { bottom: 20px; left: 20px; width: 280px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .control-row { margin-bottom: 12px; }
+        .control-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.7rem; color: var(--text-secondary); }
+        .control-value { color: var(--text-primary); font-weight: 600; }
+        
+        input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; background: #e5e7eb; border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--accent-primary); border-radius: 50%; cursor: pointer; }
+        
+        .btn-row { display: flex; gap: 8px; margin-top: 16px; }
+        .btn { flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); background: white; color: var(--text-primary); font-family: inherit; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .btn:hover, .btn.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+        
+        /* MARKET STATUS */
+        .market-status { bottom: 20px; left: 50%; transform: translateX(-50%); width: 380px; }
+        .price-display { display: flex; justify-content: space-around; margin-bottom: 12px; }
+        .price-item { text-align: center; }
+        .price-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+        .price-value { font-size: 1.5rem; font-weight: 600; color: var(--accent-warning); }
+        .market-activity { display: flex; gap: 10px; font-size: 0.65rem; }
+        .activity-item { flex: 1; padding: 6px; background: #f3f4f6; border-radius: 6px; text-align: center; }
+        .activity-label { color: var(--text-muted); }
+        .activity-value { font-weight: 600; margin-top: 2px; }
+        
+        /* INSPECTOR */
+        .agent-inspector { top: 80px; right: 20px; width: 320px; max-height: calc(100vh - 120px); overflow-y: auto; transition: transform 0.3s; }
+        .agent-inspector.hidden { display: none; }
+        .inspector-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .agent-type { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.6rem; text-transform: uppercase; font-weight: 600; }
+        .agent-type.consumer { background: rgba(16, 185, 129, 0.15); color: var(--consumer-color); }
+        .agent-type.producer { background: rgba(239, 68, 68, 0.15); color: var(--producer-color); }
+        .agent-type.house { background: rgba(37, 99, 235, 0.15); color: var(--accent-primary); }
+        .agent-type.factory { background: rgba(245, 158, 11, 0.15); color: var(--accent-warning); }
+        
+        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 5px; }
+        .agent-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
+        .agent-status { font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 16px; }
+        .inspector-section { margin-bottom: 16px; }
+        .section-title { font-size: 0.65rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .data-item { background: #f9fafb; padding: 8px; border-radius: 6px; }
+        .data-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
+        .data-value { font-size: 0.9rem; font-weight: 600; margin-top: 2px; }
+        .graph-container { background: #f9fafb; border-radius: 6px; padding: 8px; height: 140px; }
+        .graph-canvas { width: 100%; height: 100%; }
+        .equation-box { background: #f0f9ff; padding: 10px; border-radius: 6px; font-size: 0.8rem; text-align: center; border-left: 3px solid var(--accent-primary); }
+        .equation-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        
+        /* LEGEND */
+        .legend { top: 80px; left: 20px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.7rem; color: var(--text-secondary); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-dot.consumer { background: var(--consumer-color); }
+        .legend-dot.producer { background: var(--producer-color); }
+        .legend-dot.good-x { background: var(--good-x-color); }
+        .legend-dot.good-y { background: var(--good-y-color); }
+        
+        .camera-help { bottom: 20px; right: 20px; font-size: 0.6rem; color: var(--text-muted); background: var(--panel-bg); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); }
+        
+        .tooltip { position: fixed; background: var(--panel-bg); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 0.7rem; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tooltip.visible { opacity: 1; }
+        
+        /* MOBILE TOGGLE HANDLE */
+        .panel-handle { display: none; width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 10px auto; }
+        
+        /* MOBILE STYLES */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 15px; background: rgba(248, 249, 250, 0.95); }
+            
+            .stats-bar { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 8px; }
+            .stat-item { padding: 6px 10px; }
+            
+            /* Controls become a bottom sheet */
+            .control-panel { 
+                width: 100%; bottom: 0; left: 0; 
+                border-radius: 16px 16px 0 0; 
+                transform: translateY(calc(100% - 45px)); 
+                padding-bottom: 30px;
+                z-index: 50;
+            }
+            .control-panel.open { transform: translateY(0); }
+            .control-panel .panel-handle { display: block; }
+            
+            /* Market Status floating top */
+            .market-status { width: 94%; top: 140px; bottom: auto; left: 3%; transform: none; padding: 10px; pointer-events: none; opacity: 0.9; }
+            
+            /* Inspector Modal */
+            .agent-inspector { 
+                width: 100%; height: auto; top: auto; bottom: 0; right: 0; 
+                max-height: 75vh; border-radius: 16px 16px 0 0; 
+                z-index: 60; box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            }
+            .agent-inspector.hidden { display: block; transform: translateY(110%); }
+            
+            .legend, .camera-help { display: none; }
+            
+            .btn { padding: 14px; font-size: 0.8rem; }
+            input[type="range"] { height: 12px; }
+            input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
+        }
+        
+        .loading { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-light); display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 1000; transition: opacity 0.5s; }
+        .loading.hidden { opacity: 0; pointer-events: none; }
+        .loading-text { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 16px; }
+        .loading-bar { width: 180px; height: 3px; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+        .loading-bar-fill { height: 100%; background: var(--accent-primary); animation: loading 1.2s ease-in-out infinite; }
+        @keyframes loading { 0% { width: 0; margin-left: 0; } 50% { width: 100%; margin-left: 0; } 100% { width: 0; margin-left: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-text">Initializing Economy</div>
+        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+    </div>
+    
+    <div id="canvas-container"></div>
+    
+    <div class="ui-overlay header">
+        <div class="title-block">
+            <h1>Economic World</h1>
+            <div class="subtitle">Agent-Based Market Simulation</div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-item"><div class="stat-label">Consumers</div><div class="stat-value consumers" id="stat-consumers">0</div></div>
+            <div class="stat-item"><div class="stat-label">Producers</div><div class="stat-value producers" id="stat-producers">0</div></div>
+            <div class="stat-item"><div class="stat-label">Total Welfare</div><div class="stat-value welfare" id="stat-welfare">$0</div></div>
+            <div class="stat-item"><div class="stat-label">Time</div><div class="stat-value" id="stat-time">Day 1</div></div>
+        </div>
+    </div>
+    
+    <div class="ui-overlay legend panel">
+        <div class="panel-title">Legend</div>
+        <div class="legend-item"><div class="legend-dot consumer"></div><span>Consumer (Bright = Happy)</span></div>
+        <div class="legend-item"><div class="legend-dot producer"></div><span>Producer (Gold = Rich)</span></div>
+        <div class="legend-item"><div class="legend-dot good-x"></div><span>Good X (blue box)</span></div>
+        <div class="legend-item"><div class="legend-dot good-y"></div><span>Good Y (purple sphere)</span></div>
+        <div style="margin-top: 10px; font-size: 0.6rem; color: var(--text-muted);">
+            Boxes pile up = Accumulated Wealth<br>Click agent/building to inspect
+        </div>
+    </div>
+    
+    <div class="ui-overlay control-panel" id="control-panel">
+        <div class="panel">
+            <div class="panel-handle" id="panel-handle"></div>
+            <div class="panel-title">Simulation Controls</div>
+            <div class="control-row">
+                <div class="control-label"><span>Speed</span><span class="control-value" id="speed-value">1.0x</span></div>
+                <input type="range" id="speed-slider" min="0.1" max="3" step="0.1" value="1">
+            </div>
+            <div class="control-row">
+                <div class="control-label"><span>Price X</span><span class="control-value">$<span id="price-x-value">2.50</span></span></div>
+                <input type="range" id="price-x-slider" min="0.5" max="5" step="0.1" value="2.5">
+            </div>
+            <div class="control-row">
+                <div class="control-label"><span>Price Y</span><span class="control-value">$<span id="price-y-value">2.50</span></span></div>
+                <input type="range" id="price-y-slider" min="0.5" max="5" step="0.1" value="2.5">
+            </div>
+            <div class="control-row">
+                <div class="control-label"><span>Wage (w)</span><span class="control-value">$<span id="wage-value">10.00</span></span></div>
+                <input type="range" id="wage-slider" min="5" max="25" step="0.5" value="10">
+            </div>
+            <div class="btn-row">
+                <button class="btn active" id="btn-play">▶ Play</button>
+                <button class="btn" id="btn-pause">⏸ Pause</button>
+                <button class="btn" id="btn-reset">↺ Reset</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ui-overlay market-status">
+        <div class="panel">
+            <div class="price-display">
+                <div class="price-item"><div class="price-label">Good X</div><div class="price-value" id="market-price-x">$2.50</div></div>
+                <div class="price-item"><div class="price-label">Good Y</div><div class="price-value" id="market-price-y">$2.50</div></div>
+            </div>
+            <div class="market-activity">
+                <div class="activity-item"><div class="activity-label">Transactions</div><div class="activity-value" id="transactions">0</div></div>
+                <div class="activity-item"><div class="activity-label">Avg Utility</div><div class="activity-value" id="avg-utility">0</div></div>
+                <div class="activity-item"><div class="activity-label">Avg Profit</div><div class="activity-value" id="avg-profit">$0</div></div>
+                <div class="activity-item"><div class="activity-label">Market Goods</div><div class="activity-value" id="goods-count">0</div></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ui-overlay camera-help">
+        <div><kbd>Middle Drag</kbd> Rotate</div>
+        <div><kbd>Right Drag</kbd> Pan</div>
+        <div><kbd>Scroll</kbd> Zoom</div>
+    </div>
+    
+    <div class="ui-overlay agent-inspector hidden" id="agent-inspector">
+        <div class="panel">
+            <div class="inspector-header">
+                <span class="agent-type consumer" id="inspector-type">Consumer</span>
+                <button class="close-btn" id="close-inspector">×</button>
+            </div>
+            <div class="agent-name" id="inspector-name">Agent #1</div>
+            <div class="agent-status" id="inspector-status">Status</div>
+            <div class="inspector-section">
+                <div class="section-title">Data</div>
+                <div class="data-grid" id="inspector-profile"></div>
+            </div>
+            <div class="inspector-section">
+                <div class="section-title" id="function-title">Function</div>
+                <div class="equation-box">
+                    <div class="equation-label" id="equation-label">Type</div>
+                    <div id="equation-display"></div>
+                </div>
+            </div>
+            <div class="inspector-section">
+                <div class="section-title" id="graph-title">Graph</div>
+                <div class="graph-container"><canvas class="graph-canvas" id="inspector-graph"></canvas></div>
+            </div>
+            <div class="inspector-section">
+                <div class="section-title" id="choices-title">Details</div>
+                <div class="data-grid" id="inspector-choices"></div>
+            </div>
+            <div class="inspector-section">
+                <div class="section-title">Optimization</div>
+                <div class="equation-box">
+                    <div class="equation-label" id="optimization-label">Condition</div>
+                    <div id="optimization-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+
+<script>
+// ===== FX PARTICLE SYSTEM =====
+class FXParticle {
+    constructor(x, y, z, color, scene) {
+        this.scene = scene;
+        this.life = 1.0;
+        this.mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(0.12, 0.12, 0.12),
+            new THREE.MeshBasicMaterial({ color: color, transparent: true })
+        );
+        this.mesh.position.set(x, y, z);
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.0 + Math.random() * 2.0;
+        this.vx = Math.cos(angle) * speed * 0.5;
+        this.vz = Math.sin(angle) * speed * 0.5;
+        this.vy = 2.0 + Math.random() * 2.0; 
+        this.rx = (Math.random() - 0.5) * 5;
+        this.ry = (Math.random() - 0.5) * 5;
+        scene.add(this.mesh);
+    }
+    update(dt) {
+        this.life -= dt * 1.5;
+        this.vy -= dt * 8.0; 
+        this.mesh.position.x += this.vx * dt;
+        this.mesh.position.y += this.vy * dt;
+        this.mesh.position.z += this.vz * dt;
+        this.mesh.rotation.x += this.rx * dt;
+        this.mesh.rotation.y += this.ry * dt;
+        this.mesh.scale.setScalar(this.life);
+        this.mesh.material.opacity = this.life;
+        if (this.life <= 0) {
+            this.destroy();
+            return false;
+        }
+        return true;
+    }
+    destroy() {
+        if (this.mesh.parent) this.mesh.parent.remove(this.mesh);
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+    }
+}
+
+// ===== ECONOMIC ENGINE =====
+class EconomicEngine {
+    constructor() {
+        this.priceX = 2.5;
+        this.priceY = 2.5;
+        this.wage = 10.0;
+        // Lower Fixed Cost to ensure profit and wealth boxes appear quickly
+        this.fixedCost = 10.0;
+        this.time = 0;
+        this.transactions = 0;
+        this.totalWelfare = 0;
+    }
+    utility(x, y, alpha) {
+        if (x <= 0 || y <= 0) return 0;
+        return Math.pow(x, alpha) * Math.pow(y, 1 - alpha);
+    }
+    optimalBundle(budget, alpha) {
+        return {
+            x: (alpha * budget) / this.priceX,
+            y: ((1 - alpha) * budget) / this.priceY
+        };
+    }
+    totalCost(q, beta) {
+        const c = 0.5; // Low marginal cost to ensure profit
+        const d = 0.05 / beta; 
+        return this.fixedCost + c * q + d * q * q;
+    }
+    mc(q, beta) {
+        const c = 0.5;
+        const d = 0.05 / beta;
+        return c + 2 * d * q;
+    }
+    atc(q, beta) {
+        if (q <= 0) return 999;
+        return this.totalCost(q, beta) / q;
+    }
+    profit(output, price, beta) {
+        return price * output - this.totalCost(output, beta);
+    }
+    optimalOutput(price, beta) {
+        const c = 0.5;
+        const d = 0.05 / beta;
+        return Math.max(0, (price - c) / (2 * d));
+    }
+}
+
+// ===== GOOD =====
+class Good {
+    constructor(type, x, z, scene) {
+        this.type = type;
+        this.x = x;
+        this.y = 0.3;
+        this.z = z;
+        this.inMarket = false;
+        this.carried = false;
+        this.carrier = null;
+        this.toRemove = false;
+        const geom = type === 'x' 
+            ? new THREE.BoxGeometry(0.5, 0.5, 0.5)
+            : new THREE.SphereGeometry(0.3, 12, 12);
+        const color = type === 'x' ? 0x3b82f6 : 0x8b5cf6;
+        this.mesh = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({ color, roughness: 0.3 }));
+        this.mesh.castShadow = true;
+        this.mesh.position.set(x, this.y, z);
+        scene.add(this.mesh);
+    }
+    update(time) {
+        if (this.carried && this.carrier) {
+            this.x = this.carrier.x;
+            this.z = this.carrier.z;
+            this.y = 2.0;
+        } else if (this.inMarket) {
+            this.y = 0.8 + Math.sin(time * 2 + this.x * 0.5) * 0.15;
+        } else {
+            this.y = 0.3;
+        }
+        this.mesh.position.set(this.x, this.y, this.z);
+        this.mesh.rotation.y += 0.02;
+    }
+    destroy(scene) {
+        scene.remove(this.mesh);
+    }
+}
+
+// ===== CONSUMER =====
+class Consumer {
+    constructor(id, homeX, homeZ) {
+        this.id = id;
+        this.type = 'consumer';
+        this.homeX = homeX;
+        this.homeZ = homeZ;
+        this.x = homeX;
+        this.z = homeZ;
+        this.budget = 80 + Math.random() * 80;
+        this.alpha = 0.3 + Math.random() * 0.4;
+        this.goodsX = 0;
+        this.goodsY = 0;
+        this.restDuration = 1.5 + Math.random() * 2.0;
+        this.speed = 1.0 + (Math.random() - 0.5) * 0.2;
+        this.totalGoodsX = 0;
+        this.totalGoodsY = 0;
+        this.currentUtility = 0;
+        this.lifetimeUtility = 0;
+        this.visualLevel = 0;
+        this.carriedGoods = [];
+        this.consumptionHistory = [];
+        this.state = 'home';
+        this.timer = Math.random() * 2;
+        this.targetX = homeX;
+        this.targetZ = homeZ;
+        this.mesh = null;
+        this.ring = null;
+        this.homeMesh = null;
+        this.wealthGroup = null;
+        const names = ['Alice','Bob','Clara','David','Emma','Frank','Grace','Henry','Ivy','Jack','Kate','Leo'];
+        const surnames = ['Smith','Jones','Brown','Davis','Miller','Wilson'];
+        this.name = names[id % names.length] + ' ' + surnames[id % surnames.length];
+    }
+    update(dt, engine, marketX, marketZ, allGoods, onTransaction) {
+        this.timer += dt;
+        switch (this.state) {
+            case 'home':
+                if (this.timer > this.restDuration) {
+                    this.state = 'toMarket';
+                    this.targetX = marketX + (Math.random() - 0.5) * 6;
+                    this.targetZ = marketZ + (Math.random() - 0.5) * 6;
+                    this.timer = 0;
+                }
+                break;
+            case 'toMarket':
+                if (this.moveToward(this.targetX, this.targetZ, dt * 8 * this.speed)) {
+                    this.state = 'shopping';
+                    this.timer = 0;
+                }
+                break;
+            case 'shopping':
+                const wantX = Math.ceil((this.alpha * this.budget) / engine.priceX);
+                const wantY = Math.ceil(((1 - this.alpha) * this.budget) / engine.priceY);
+                const needX = wantX - this.goodsX;
+                const needY = wantY - this.goodsY;
+                let targetGood = null;
+                for (const g of allGoods) {
+                    if (g.inMarket && !g.carried && !g.toRemove) {
+                        if ((g.type === 'x' && needX > 0) || (g.type === 'y' && needY > 0)) {
+                            targetGood = g;
+                            break;
+                        }
+                    }
+                }
+                if (targetGood) {
+                    if (this.moveToward(targetGood.x, targetGood.z, dt * 6 * this.speed)) {
+                        targetGood.inMarket = false;
+                        targetGood.carried = true;
+                        targetGood.carrier = this;
+                        this.carriedGoods.push(targetGood);
+                        if (targetGood.type === 'x') this.goodsX++;
+                        else this.goodsY++;
+                        engine.transactions++;
+                        if (onTransaction) {
+                            const color = targetGood.type === 'x' ? 0x3b82f6 : 0x8b5cf6;
+                            onTransaction(targetGood.x, targetGood.y, targetGood.z, color);
+                        }
+                    }
+                } else {
+                    if (this.timer > 2 || (this.goodsX > 0 && this.goodsY > 0)) {
+                        this.currentUtility = engine.utility(this.goodsX, this.goodsY, this.alpha);
+                        this.lifetimeUtility += this.currentUtility;
+                        engine.totalWelfare += this.currentUtility;
+                        this.totalGoodsX += this.goodsX;
+                        this.totalGoodsY += this.goodsY;
+                        this.consumptionHistory.push({
+                            x: this.goodsX,
+                            y: this.goodsY,
+                            utility: this.currentUtility,
+                            priceX: engine.priceX,
+                            priceY: engine.priceY
+                        });
+                        if (this.consumptionHistory.length > 15) this.consumptionHistory.shift();
+                        this.state = 'toHome';
+                        this.targetX = this.homeX;
+                        this.targetZ = this.homeZ;
+                        this.timer = 0;
+                        this.updateAgentVisuals();
+                        this.updateHouseVisuals();
+                    } else {
+                        if (Math.random() < 0.02) {
+                            this.targetX = marketX + (Math.random() - 0.5) * 8;
+                            this.targetZ = marketZ + (Math.random() - 0.5) * 8;
+                        }
+                        this.moveToward(this.targetX, this.targetZ, dt * 3 * this.speed);
+                    }
+                }
+                break;
+            case 'toHome':
+                if (this.moveToward(this.homeX, this.homeZ, dt * 8 * this.speed)) {
+                    this.state = 'consuming';
+                    this.timer = 0;
+                }
+                break;
+            case 'consuming':
+                for (const g of this.carriedGoods) {
+                    g.carried = false;
+                    g.carrier = null;
+                    g.toRemove = true;
+                }
+                this.carriedGoods = [];
+                if (this.timer > 2) {
+                    this.state = 'home';
+                    this.timer = 0;
+                    this.goodsX = 0;
+                    this.goodsY = 0;
+                    this.currentUtility = 0;
+                    this.updateAgentVisuals();
+                }
+                break;
+        }
+        if (this.mesh) {
+            this.mesh.position.set(this.x, 0.5, this.z);
+        }
+    }
+    updateAgentVisuals() {
+        if (!this.mesh) return;
+        const satisfaction = Math.min(1, this.currentUtility / 50);
+        const r = 16 + (1 - satisfaction) * 100;
+        const g = 185 + satisfaction * 70;
+        const b = 129 + (1 - satisfaction) * 100;
+        this.mesh.material.color.setRGB(r/255, g/255, b/255);
+        const s = 1 + satisfaction * 0.3;
+        this.mesh.scale.set(s, s, s);
+    }
+    updateHouseVisuals() {
+        if (!this.wealthGroup) return;
+        // Threshold: 150 utility points
+        const level = Math.floor(this.lifetimeUtility / 150);
+        if (level > this.visualLevel) {
+            const geom = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+            const mat = new THREE.MeshStandardMaterial({ color: 0xfcd34d });
+            const block = new THREE.Mesh(geom, mat);
+            // Stack logic
+            const piles = 3;
+            const pileIdx = level % piles;
+            const heightInPile = Math.floor(level / piles);
+            const angle = (pileIdx / piles) * Math.PI * 2;
+            const dist = 2.0;
+            block.position.set(
+                Math.cos(angle) * dist, 
+                0.2 + heightInPile * 0.4, 
+                Math.sin(angle) * dist
+            );
+            block.castShadow = true;
+            this.wealthGroup.add(block);
+            this.visualLevel = level;
+        }
+    }
+    moveToward(tx, tz, speed) {
+        const dx = tx - this.x;
+        const dz = tz - this.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist < 0.5) return true;
+        this.x += (dx / dist) * speed;
+        this.z += (dz / dist) * speed;
+        return false;
+    }
+    getAgentInspectorData(engine) {
+        const opt = engine.optimalBundle(this.budget, this.alpha);
+        return {
+            type: 'consumer',
+            name: this.name,
+            status: this.state,
+            profile: [
+                { label: 'Current State', value: this.state.toUpperCase() },
+                { label: 'Budget', value: '$' + this.budget.toFixed(0) },
+                { label: 'Holding X', value: this.goodsX.toString() },
+                { label: 'Holding Y', value: this.goodsY.toString() }
+            ],
+            equation: `Target: X=${opt.x.toFixed(1)}, Y=${opt.y.toFixed(1)}`,
+            choices: [
+                { label: 'Pref α', value: this.alpha.toFixed(2) },
+                { label: 'Inventory', value: (this.goodsX+this.goodsY) + ' items' }
+            ],
+            optimization: `Max Utility s.t. Budget`,
+            graphData: { type: 'agent', budget: this.budget, alpha: this.alpha, px: engine.priceX, py: engine.priceY, optX: opt.x, optY: opt.y, currX: this.goodsX, currY: this.goodsY }
+        };
+    }
+}
+
+// ===== PRODUCER =====
+class Producer {
+    constructor(id, factoryX, factoryZ, goodType) {
+        this.id = id;
+        this.type = 'producer';
+        this.factoryX = factoryX;
+        this.factoryZ = factoryZ;
+        this.x = factoryX;
+        this.z = factoryZ;
+        this.goodType = goodType;
+        this.beta = 0.6 + Math.random() * 0.2;
+        this.labor = 0;
+        this.output = 0;
+        this.currentProfit = 0;
+        this.lifetimeProfit = 0;
+        this.visualLevel = 0;
+        this.productionSpeed = 1.0 + (Math.random() - 0.5) * 0.3;
+        this.productionInterval = 1.0 + Math.random() * 0.5;
+        this.producedGoods = [];
+        this.profitHistory = []; 
+        this.state = 'producing';
+        this.timer = 0;
+        this.productionTimer = 0;
+        this.targetX = factoryX;
+        this.targetZ = factoryZ;
+        this.mesh = null;
+        this.ring = null;
+        this.factoryGroup = null; 
+        this.wealthGroup = null; 
+        const names = ['Acme','Global','United','Premier','Dynamic','Apex','Nova','Titan'];
+        const suffixes = ['Inc','Corp','Co','Ltd'];
+        this.name = names[id % names.length] + ' ' + suffixes[id % suffixes.length];
+    }
+    update(dt, engine, marketX, marketZ, scene) {
+        this.timer += dt;
+        this.productionTimer += dt;
+        const price = this.goodType === 'x' ? engine.priceX : engine.priceY;
+        switch (this.state) {
+            case 'producing':
+                const optOutput = engine.optimalOutput(price, this.beta);
+                const targetLabor = optOutput; 
+                this.labor = Math.min(this.labor + dt * 2 * this.productionSpeed, targetLabor);
+                this.output = this.labor; 
+                this.currentProfit = engine.profit(this.output, price, this.beta);
+                this.updateAgentVisuals();
+                if (this.productionTimer > this.productionInterval && this.producedGoods.length < 4) {
+                    const gx = this.factoryX + (Math.random() - 0.5) * 3;
+                    const gz = this.factoryZ + (Math.random() - 0.5) * 3;
+                    const good = new Good(this.goodType, gx, gz, scene);
+                    this.producedGoods.push(good);
+                    this.productionTimer = 0;
+                }
+                if (this.producedGoods.length >= 3) {
+                    this.state = 'toMarket';
+                    this.targetX = marketX + (Math.random() - 0.5) * 6;
+                    this.targetZ = marketZ + (Math.random() - 0.5) * 6;
+                    for (const g of this.producedGoods) {
+                        g.carried = true;
+                        g.carrier = this;
+                    }
+                    this.timer = 0;
+                }
+                break;
+            case 'toMarket':
+                if (this.moveToward(this.targetX, this.targetZ, dt * 6 * this.productionSpeed)) {
+                    for (const g of this.producedGoods) {
+                        g.carried = false;
+                        g.carrier = null;
+                        g.inMarket = true;
+                        g.x = marketX + (Math.random() - 0.5) * 8;
+                        g.z = marketZ + (Math.random() - 0.5) * 8;
+                    }
+                    const tripProfit = Math.max(-10, this.currentProfit); 
+                    this.lifetimeProfit += tripProfit;
+                    if(this.lifetimeProfit < 0) this.lifetimeProfit = 0;
+                    engine.totalWelfare += Math.max(0, this.currentProfit);
+                    this.profitHistory.push(tripProfit);
+                    if (this.profitHistory.length > 15) this.profitHistory.shift();
+                    this.producedGoods = [];
+                    this.state = 'toFactory';
+                    this.targetX = this.factoryX;
+                    this.targetZ = this.factoryZ;
+                    this.timer = 0;
+                    this.updateFactoryVisuals();
+                }
+                break;
+            case 'toFactory':
+                if (this.moveToward(this.factoryX, this.factoryZ, dt * 6 * this.productionSpeed)) {
+                    this.state = 'producing';
+                    this.labor = 0;
+                    this.output = 0;
+                    this.timer = 0;
+                    this.productionTimer = 0;
+                }
+                break;
+        }
+        if (this.mesh) {
+            this.mesh.position.set(this.x, 0.6, this.z);
+        }
+    }
+    updateAgentVisuals() {
+        if (!this.mesh) return;
+        if (this.currentProfit < 0) {
+            this.mesh.material.color.setHex(0xef4444); 
+        } else {
+            const p = Math.min(1, this.currentProfit / 50);
+            const r = 1;
+            const g = 0.84 * p;
+            const b = 0;
+            this.mesh.material.color.setRGB(r, g, b); 
+        }
+    }
+    updateFactoryVisuals() {
+        if (!this.wealthGroup) return;
+        // Threshold: $40 profit
+        const level = Math.floor(this.lifetimeProfit / 40);
+        if (level > this.visualLevel && level > 0) {
+            const geom = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+            const mat = new THREE.MeshStandardMaterial({ color: 0x4b5563 }); 
+            const crate = new THREE.Mesh(geom, mat);
+            // Stack logic
+            const piles = 4;
+            const pileIdx = level % piles;
+            const heightInPile = Math.floor(level / piles);
+            const angle = (pileIdx / piles) * Math.PI * 2;
+            const dist = 3.5;
+            crate.position.set(
+                Math.cos(angle) * dist, 
+                0.3 + heightInPile * 0.6, 
+                Math.sin(angle) * dist
+            );
+            crate.castShadow = true;
+            this.wealthGroup.add(crate);
+            this.visualLevel = level;
+        }
+    }
+    moveToward(tx, tz, speed) {
+        const dx = tx - this.x;
+        const dz = tz - this.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist < 0.5) return true;
+        this.x += (dx / dist) * speed;
+        this.z += (dz / dist) * speed;
+        return false;
+    }
+    getInspectorData(engine) {
+        const price = this.goodType === 'x' ? engine.priceX : engine.priceY;
+        const mc = engine.mc(Math.max(0.1, this.output), this.beta);
+        const atc = engine.atc(Math.max(0.1, this.output), this.beta);
+        return {
+            type: 'producer',
+            name: this.name,
+            status: this.state,
+            profile: [
+                { label: 'Produces', value: 'Good ' + this.goodType.toUpperCase() },
+                { label: 'Current Profit', value: '$' + this.currentProfit.toFixed(0) },
+                { label: 'Output', value: this.output.toFixed(1) },
+                { label: 'Tech Factor', value: (1/this.beta).toFixed(1) }
+            ],
+            equation: `TC = ${engine.fixedCost} + 0.5q + d*q^2`,
+            choices: [
+                { label: 'Output', value: this.output.toFixed(1) },
+                { label: 'Price', value: '$' + price.toFixed(2) },
+                { label: 'MC', value: '$' + mc.toFixed(2) },
+                { label: 'ATC', value: '$' + atc.toFixed(2) }
+            ],
+            optimization: `P = MC for max profit`,
+            graphData: { type: 'producer', beta: this.beta, wage: engine.wage, fc: engine.fixedCost, price: price, output: this.output, engine: engine }
+        };
+    }
+}
+
+// ===== CAMERA CONTROLLER (TOUCH SUPPORT) =====
+class CameraController {
+    constructor(camera, element) {
+        this.camera = camera;
+        this.element = element;
+        this.distance = 60;
+        this.theta = Math.PI / 4;
+        this.phi = Math.PI / 3;
+        this.targetX = 0;
+        this.targetZ = 0;
+        this.dragging = false;
+        this.panning = false;
+        this.lastX = 0;
+        this.lastY = 0;
+        this.zooming = false;
+        this.lastPinchDist = 0;
+
+        // Mouse Events
+        element.addEventListener('mousedown', (e) => {
+            if (e.button === 1) this.dragging = true;
+            if (e.button === 2) this.panning = true;
+            this.lastX = e.clientX;
+            this.lastY = e.clientY;
+            e.preventDefault();
+        });
+        window.addEventListener('mouseup', () => {
+            this.dragging = false;
+            this.panning = false;
+        });
+        element.addEventListener('mousemove', (e) => {
+            const dx = e.clientX - this.lastX;
+            const dy = e.clientY - this.lastY;
+            if (this.dragging) {
+                this.theta -= dx * 0.01;
+                this.phi -= dy * 0.01;
+                this.phi = Math.max(0.3, Math.min(Math.PI / 2 - 0.1, this.phi));
+            }
+            if (this.panning) {
+                const panSpeed = this.distance * 0.002;
+                this.targetX -= Math.cos(this.theta) * dy * panSpeed - Math.sin(this.theta) * dx * panSpeed;
+                this.targetZ -= Math.sin(this.theta) * dy * panSpeed + Math.cos(this.theta) * dx * panSpeed;
+            }
+            this.lastX = e.clientX;
+            this.lastY = e.clientY;
+        });
+        element.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            this.distance *= 1 + e.deltaY * 0.001;
+            this.distance = Math.max(20, Math.min(150, this.distance));
+        }, { passive: false });
+        element.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Touch Events
+        element.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                this.dragging = true;
+                this.lastX = e.touches[0].clientX;
+                this.lastY = e.touches[0].clientY;
+            } else if (e.touches.length === 2) {
+                this.zooming = true;
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                this.lastPinchDist = Math.sqrt(dx * dx + dy * dy);
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', () => {
+            this.dragging = false;
+            this.zooming = false;
+        });
+
+        element.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Stop scrolling
+            if (this.dragging && e.touches.length === 1) {
+                const dx = e.touches[0].clientX - this.lastX;
+                const dy = e.touches[0].clientY - this.lastY;
+                this.theta -= dx * 0.01;
+                this.phi -= dy * 0.01;
+                this.phi = Math.max(0.3, Math.min(Math.PI / 2 - 0.1, this.phi));
+                this.lastX = e.touches[0].clientX;
+                this.lastY = e.touches[0].clientY;
+            } else if (this.zooming && e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const delta = dist - this.lastPinchDist;
+                this.distance -= delta * 0.1;
+                this.distance = Math.max(20, Math.min(150, this.distance));
+                this.lastPinchDist = dist;
+            }
+        }, { passive: false });
+    }
+    update() {
+        const x = this.targetX + this.distance * Math.sin(this.phi) * Math.cos(this.theta);
+        const y = this.distance * Math.cos(this.phi);
+        const z = this.targetZ + this.distance * Math.sin(this.phi) * Math.sin(this.theta);
+        this.camera.position.set(x, y, z);
+        this.camera.lookAt(this.targetX, 0, this.targetZ);
+    }
+}
+
+class World {
+    constructor() {
+        this.engine = new EconomicEngine();
+        this.consumers = [];
+        this.producers = [];
+        this.goods = [];
+        this.particles = [];
+        this.marketX = 0;
+        this.marketZ = 0;
+        this.running = true;
+        this.speed = 1;
+        this.time = 0;
+        this.selected = null;
+        this.homeToggleNext = new Map();
+        this.factoryToggleNext = new Map();
+        this.init();
+    }
+    init() {
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0xc5e1a5);
+        this.scene.fog = new THREE.Fog(0xc5e1a5, 60, 150);
+        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(this.renderer.domElement);
+        this.camCtrl = new CameraController(this.camera, this.renderer.domElement);
+        this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+        const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+        sun.position.set(30, 50, 30);
+        sun.castShadow = true;
+        sun.shadow.mapSize.width = 2048;
+        sun.shadow.mapSize.height = 2048;
+        sun.shadow.camera.near = 1;
+        sun.shadow.camera.far = 150;
+        sun.shadow.camera.left = -60;
+        sun.shadow.camera.right = 60;
+        sun.shadow.camera.top = 60;
+        sun.shadow.camera.bottom = -60;
+        this.scene.add(sun);
+        this.createGround();
+        this.createMarket();
+        this.createAgents();
+        window.addEventListener('resize', () => this.onResize());
+        
+        // Handle both click and touch for selection
+        const onSelect = (e) => {
+            let clientX, clientY;
+            if(e.changedTouches) {
+                if(this.camCtrl.dragging || this.camCtrl.zooming) return;
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                if(this.camCtrl.dragging || this.camCtrl.panning) return;
+                if(e.button !== 0) return;
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            this.onClick(clientX, clientY);
+        };
+
+        this.renderer.domElement.addEventListener('click', onSelect);
+        // We use touchend for selection to distinguish from drag
+        // Note: A real app might use a more robust tap detection
+        this.renderer.domElement.addEventListener('touchend', (e) => {
+            // Only select if not dragging/zooming
+            if(!this.camCtrl.dragging && !this.camCtrl.zooming) {
+                onSelect(e);
+            }
+        });
+
+        // Add mobile control panel toggle
+        const handle = document.getElementById('control-panel');
+        handle.addEventListener('click', (e) => {
+            if(window.innerWidth <= 768 && e.target.closest('.panel-handle')) {
+                handle.classList.toggle('open');
+            }
+        });
+
+        this.renderer.domElement.addEventListener('mousemove', (e) => this.onHover(e));
+        this.setupUI();
+        setTimeout(() => document.getElementById('loading').classList.add('hidden'), 500);
+        this.lastTime = performance.now();
+        this.animate();
+    }
+    createGround() {
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(200, 200),
+            new THREE.MeshStandardMaterial({ color: 0x7cb342, roughness: 0.9 })
+        );
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
+        const grid = new THREE.GridHelper(100, 20, 0x5a8f32, 0x6b9b40);
+        grid.position.y = 0.01;
+        this.scene.add(grid);
+        const pathMat = new THREE.MeshStandardMaterial({ color: 0xc9b896, roughness: 0.9 });
+        const path1 = new THREE.Mesh(new THREE.PlaneGeometry(80, 3), pathMat);
+        path1.rotation.x = -Math.PI / 2;
+        path1.position.y = 0.02;
+        this.scene.add(path1);
+        const path2 = new THREE.Mesh(new THREE.PlaneGeometry(3, 80), pathMat);
+        path2.rotation.x = -Math.PI / 2;
+        path2.position.y = 0.02;
+        this.scene.add(path2);
+    }
+    createMarket() {
+        const platform = new THREE.Mesh(
+            new THREE.CylinderGeometry(8, 8, 0.2, 32),
+            new THREE.MeshStandardMaterial({ color: 0xf5efe6, roughness: 0.8 })
+        );
+        platform.position.y = 0.1;
+        platform.receiveShadow = true;
+        platform.userData = { type: 'market' };
+        this.marketMesh = platform;
+        this.scene.add(platform);
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const x = Math.cos(angle) * 5;
+            const z = Math.sin(angle) * 5;
+            const stall = new THREE.Group();
+            const table = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 0.6, 1.2),
+                new THREE.MeshStandardMaterial({ color: 0xc9a87c })
+            );
+            table.position.y = 0.3;
+            table.castShadow = true;
+            stall.add(table);
+            const canopy = new THREE.Mesh(
+                new THREE.BoxGeometry(2.5, 0.08, 1.6),
+                new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? 0xf59e0b : 0x3b82f6 })
+            );
+            canopy.position.y = 1.8;
+            stall.add(canopy);
+            const poleMat = new THREE.MeshStandardMaterial({ color: 0x8b7355 });
+            for (const sx of [-0.9, 0.9]) {
+                const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.8, 8), poleMat);
+                pole.position.set(sx, 0.9, 0.5);
+                stall.add(pole);
+            }
+            stall.position.set(x, 0, z);
+            stall.rotation.y = -angle + Math.PI / 2;
+            this.scene.add(stall);
+        }
+    }
+    createAgents() {
+        this.clickableHomes = [];
+        this.clickableFactories = [];
+        const sphereGeom = new THREE.SphereGeometry(0.5, 16, 16);
+        const boxGeom = new THREE.BoxGeometry(0.7, 1.0, 0.7);
+        const ringGeom = new THREE.RingGeometry(0.6, 1.0, 32);
+        for (let i = 0; i < 10; i++) {
+            const angle = (i / 10) * Math.PI * 2;
+            const radius = 20 + Math.random() * 8;
+            const hx = Math.cos(angle) * radius;
+            const hz = Math.sin(angle) * radius;
+            const consumer = new Consumer(i, hx, hz);
+            consumer.mesh = new THREE.Mesh(sphereGeom, new THREE.MeshStandardMaterial({ color: 0x10b981 }));
+            consumer.mesh.castShadow = true;
+            consumer.mesh.userData = { agent: consumer };
+            this.scene.add(consumer.mesh);
+            consumer.ring = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ 
+                color: 0x10b981, transparent: true, opacity: 0.3, side: THREE.DoubleSide 
+            }));
+            consumer.ring.rotation.x = -Math.PI / 2;
+            this.scene.add(consumer.ring);
+            this.createHome(hx, hz, consumer);
+            this.consumers.push(consumer);
+        }
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2 + Math.PI / 6;
+            const radius = 32 + Math.random() * 5;
+            const fx = Math.cos(angle) * radius;
+            const fz = Math.sin(angle) * radius;
+            const goodType = i < 3 ? 'x' : 'y';
+            const producer = new Producer(i, fx, fz, goodType);
+            producer.mesh = new THREE.Mesh(boxGeom, new THREE.MeshStandardMaterial({ color: 0xef4444 }));
+            producer.mesh.castShadow = true;
+            producer.mesh.userData = { agent: producer };
+            this.scene.add(producer.mesh);
+            producer.ring = new THREE.Mesh(ringGeom, new THREE.MeshBasicMaterial({ 
+                color: 0x10b981, transparent: true, opacity: 0.3, side: THREE.DoubleSide 
+            }));
+            producer.ring.rotation.x = -Math.PI / 2;
+            this.scene.add(producer.ring);
+            this.createFactory(fx, fz, goodType, producer);
+            this.producers.push(producer);
+        }
+        this.updateStats();
+    }
+    createHome(x, z, consumer) {
+        const home = new THREE.Group();
+        const base = new THREE.Mesh(
+            new THREE.BoxGeometry(2.5, 2, 2.5),
+            new THREE.MeshStandardMaterial({ color: 0xfaf8f5, roughness: 0.8 })
+        );
+        base.position.y = 1;
+        base.castShadow = true;
+        home.add(base);
+        const roof = new THREE.Mesh(
+            new THREE.ConeGeometry(2, 1.2, 4),
+            new THREE.MeshStandardMaterial({ color: 0x10b981 })
+        );
+        roof.position.y = 2.6;
+        roof.rotation.y = Math.PI / 4;
+        roof.castShadow = true;
+        home.add(roof);
+        const door = new THREE.Mesh(
+            new THREE.BoxGeometry(0.6, 1.2, 0.1),
+            new THREE.MeshStandardMaterial({ color: 0x8b5a2b })
+        );
+        door.position.set(0, 0.6, 1.26);
+        home.add(door);
+        const wealthGroup = new THREE.Group();
+        home.add(wealthGroup);
+        consumer.wealthGroup = wealthGroup;
+        home.position.set(x, 0, z);
+        home.userData = { type: 'home', consumer: consumer };
+        consumer.homeMesh = home;
+        this.scene.add(home);
+        this.clickableHomes.push(home);
+    }
+    createFactory(x, z, goodType, producer) {
+        const factory = new THREE.Group();
+        const building = new THREE.Mesh(
+            new THREE.BoxGeometry(4, 3, 3.5),
+            new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: 0.7 })
+        );
+        building.position.y = 1.5;
+        building.castShadow = true;
+        factory.add(building);
+        const roofColor = goodType === 'x' ? 0x3b82f6 : 0x8b5cf6;
+        const roof = new THREE.Mesh(
+            new THREE.BoxGeometry(4.5, 0.2, 4),
+            new THREE.MeshStandardMaterial({ color: roofColor })
+        );
+        roof.position.y = 3.1;
+        factory.add(roof);
+        const chimney = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.3, 0.4, 2, 8),
+            new THREE.MeshStandardMaterial({ color: 0x666666 })
+        );
+        chimney.position.set(1.2, 4, 1);
+        factory.add(chimney);
+        const wealthGroup = new THREE.Group();
+        factory.add(wealthGroup);
+        producer.wealthGroup = wealthGroup;
+        factory.position.set(x, 0, z);
+        factory.userData = { type: 'factory', producer: producer };
+        producer.factoryGroup = factory;
+        this.scene.add(factory);
+        this.clickableFactories.push(factory);
+    }
+    spawnFX(x, y, z, color) {
+        for (let i = 0; i < 6; i++) {
+            this.particles.push(new FXParticle(x, y + 0.5, z, color, this.scene));
+        }
+        for (let i = 0; i < 3; i++) {
+            this.particles.push(new FXParticle(x, y + 0.5, z, 0xf59e0b, this.scene));
+        }
+    }
+    setupUI() {
+        document.getElementById('speed-slider').oninput = (e) => {
+            this.speed = parseFloat(e.target.value);
+            document.getElementById('speed-value').textContent = this.speed.toFixed(1) + 'x';
+        };
+        document.getElementById('price-x-slider').oninput = (e) => {
+            this.engine.priceX = parseFloat(e.target.value);
+            document.getElementById('price-x-value').textContent = this.engine.priceX.toFixed(2);
+            document.getElementById('market-price-x').textContent = '$' + this.engine.priceX.toFixed(2);
+        };
+        document.getElementById('price-y-slider').oninput = (e) => {
+            this.engine.priceY = parseFloat(e.target.value);
+            document.getElementById('price-y-value').textContent = this.engine.priceY.toFixed(2);
+            document.getElementById('market-price-y').textContent = '$' + this.engine.priceY.toFixed(2);
+        };
+        document.getElementById('wage-slider').oninput = (e) => {
+            this.engine.wage = parseFloat(e.target.value);
+            document.getElementById('wage-value').textContent = this.engine.wage.toFixed(2);
+        };
+        document.getElementById('btn-play').onclick = () => {
+            this.running = true;
+            document.getElementById('btn-play').classList.add('active');
+            document.getElementById('btn-pause').classList.remove('active');
+        };
+        document.getElementById('btn-pause').onclick = () => {
+            this.running = false;
+            document.getElementById('btn-pause').classList.add('active');
+            document.getElementById('btn-play').classList.remove('active');
+        };
+        document.getElementById('btn-reset').onclick = () => this.reset();
+        document.getElementById('close-inspector').onclick = () => {
+            document.getElementById('agent-inspector').classList.add('hidden');
+            this.selected = null;
+        };
+    }
+    reset() {
+        this.engine.time = 0;
+        this.engine.transactions = 0;
+        this.engine.totalWelfare = 0;
+        this.time = 0;
+        for (const g of this.goods) g.destroy(this.scene);
+        this.goods = [];
+        for (const p of this.particles) p.destroy();
+        this.particles = [];
+        for (const c of this.consumers) {
+            c.x = c.homeX;
+            c.z = c.homeZ;
+            c.state = 'home';
+            c.timer = Math.random() * 2;
+            c.goodsX = 0;
+            c.goodsY = 0;
+            c.totalGoodsX = 0;
+            c.totalGoodsY = 0;
+            c.currentUtility = 0;
+            c.lifetimeUtility = 0;
+            c.visualLevel = 0;
+            c.carriedGoods = [];
+            c.consumptionHistory = [];
+            if(c.wealthGroup) {
+                while(c.wealthGroup.children.length > 0){ 
+                    c.wealthGroup.remove(c.wealthGroup.children[0]); 
+                }
+            }
+        }
+        for (const p of this.producers) {
+            p.x = p.factoryX;
+            p.z = p.factoryZ;
+            p.state = 'producing';
+            p.timer = 0;
+            p.productionTimer = 0;
+            p.labor = 0;
+            p.output = 0;
+            p.currentProfit = 0;
+            p.lifetimeProfit = 0;
+            p.visualLevel = 0;
+            p.producedGoods = [];
+            p.profitHistory = [];
+            if(p.wealthGroup) {
+                while(p.wealthGroup.children.length > 0){ 
+                    p.wealthGroup.remove(p.wealthGroup.children[0]); 
+                }
+            }
+        }
+        this.updateStats();
+    }
+    onClick(clientX, clientY) {
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        const mouse = new THREE.Vector2(
+            ((clientX - rect.left) / rect.width) * 2 - 1,
+            -((clientY - rect.top) / rect.height) * 2 + 1
+        );
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this.camera);
+        const agentMeshes = [...this.consumers.map(c => c.mesh), ...this.producers.map(p => p.mesh)];
+        let hits = raycaster.intersectObjects(agentMeshes);
+        if (hits.length > 0 && hits[0].object.userData.agent) {
+            this.selected = hits[0].object.userData.agent;
+            this.selectedType = 'agent';
+            this.showInspector(this.selected);
+            document.getElementById('agent-inspector').classList.remove('hidden');
+            return;
+        }
+        const homeObjects = [];
+        for (const home of this.clickableHomes) homeObjects.push(...home.children);
+        hits = raycaster.intersectObjects(homeObjects);
+        if (hits.length > 0) {
+            let obj = hits[0].object;
+            while (obj.parent && !obj.userData.consumer) { obj = obj.parent; }
+            if (obj.userData && obj.userData.consumer) {
+                const consumer = obj.userData.consumer;
+                const key = consumer.id;
+                const showAgent = this.homeToggleNext.get(key) === true; // first click defaults to house
+                this.selected = consumer;
+                if (showAgent) {
+                    this.selectedType = 'agent';
+                    this.showInspector(consumer);
+                } else {
+                    this.selectedType = 'home';
+                    this.showHomeInspector(consumer);
+                }
+                this.homeToggleNext.set(key, !showAgent);
+                document.getElementById('agent-inspector').classList.remove('hidden');
+                return;
+            }
+        }
+        const factoryObjects = [];
+        for (const fact of this.clickableFactories) factoryObjects.push(...fact.children);
+        hits = raycaster.intersectObjects(factoryObjects);
+        if (hits.length > 0) {
+            let obj = hits[0].object;
+            while (obj.parent && !obj.userData.producer) { obj = obj.parent; }
+            if (obj.userData && obj.userData.producer) {
+                const producer = obj.userData.producer;
+                const key = producer.id;
+                const showAgent = this.factoryToggleNext.get(key) === true; // first click defaults to factory
+                this.selected = producer;
+                if (showAgent) {
+                    this.selectedType = 'agent';
+                    this.showInspector(producer);
+                } else {
+                    this.selectedType = 'factory';
+                    this.showFactoryInspector(producer);
+                }
+                this.factoryToggleNext.set(key, !showAgent);
+                document.getElementById('agent-inspector').classList.remove('hidden');
+                return;
+            }
+        }
+        hits = raycaster.intersectObject(this.marketMesh);
+        if (hits.length > 0) {
+            this.selected = null;
+            this.selectedType = 'market';
+            this.showMarketInspector();
+            document.getElementById('agent-inspector').classList.remove('hidden');
+            return;
+        }
+    }
+    onHover(e) {
+        if (this.camCtrl.dragging || this.camCtrl.panning) return;
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        const mouse = new THREE.Vector2(
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
+        );
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this.camera);
+        const tooltip = document.getElementById('tooltip');
+        const agentMeshes = [...this.consumers.map(c => c.mesh), ...this.producers.map(p => p.mesh)];
+        let hits = raycaster.intersectObjects(agentMeshes);
+        if (hits.length > 0 && hits[0].object.userData.agent) {
+            const agent = hits[0].object.userData.agent;
+            tooltip.innerHTML = `<strong>${agent.name}</strong><br>${agent.type}<br>Click to inspect activity`;
+            tooltip.style.left = (e.clientX + 15) + 'px';
+            tooltip.style.top = (e.clientY + 15) + 'px';
+            tooltip.classList.add('visible');
+            this.renderer.domElement.style.cursor = 'pointer';
+            return;
+        }
+        const homeObjects = [];
+        for (const home of this.clickableHomes) homeObjects.push(...home.children);
+        hits = raycaster.intersectObjects(homeObjects);
+        if (hits.length > 0) {
+            let obj = hits[0].object;
+            while (obj.parent && !obj.userData.consumer) { obj = obj.parent; }
+            if (obj.userData && obj.userData.consumer) {
+                const consumer = obj.userData.consumer;
+                tooltip.innerHTML = `<strong>${consumer.name}'s Home</strong><br>Click for history`;
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY + 15) + 'px';
+                tooltip.classList.add('visible');
+                this.renderer.domElement.style.cursor = 'pointer';
+                return;
+            }
+        }
+        const factoryObjects = [];
+        for (const fact of this.clickableFactories) factoryObjects.push(...fact.children);
+        hits = raycaster.intersectObjects(factoryObjects);
+        if (hits.length > 0) {
+            let obj = hits[0].object;
+            while (obj.parent && !obj.userData.producer) { obj = obj.parent; }
+            if (obj.userData && obj.userData.producer) {
+                const producer = obj.userData.producer;
+                tooltip.innerHTML = `<strong>${producer.name}'s Factory</strong><br>Click for P&L`;
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY + 15) + 'px';
+                tooltip.classList.add('visible');
+                this.renderer.domElement.style.cursor = 'pointer';
+                return;
+            }
+        }
+        hits = raycaster.intersectObject(this.marketMesh);
+        if (hits.length > 0) {
+            tooltip.innerHTML = `<strong>Central Market</strong><br>Click for S&D curves`;
+            tooltip.style.left = (e.clientX + 15) + 'px';
+            tooltip.style.top = (e.clientY + 15) + 'px';
+            tooltip.classList.add('visible');
+            this.renderer.domElement.style.cursor = 'pointer';
+            return;
+        }
+        tooltip.classList.remove('visible');
+        this.renderer.domElement.style.cursor = 'default';
+    }
+    showInspector(agent) {
+        let data;
+        if(agent.type === 'consumer') {
+             data = agent.getAgentInspectorData(this.engine);
+        } else {
+             data = agent.getInspectorData(this.engine);
+        }
+        document.getElementById('inspector-type').textContent = data.type;
+        document.getElementById('inspector-type').className = 'agent-type ' + data.type;
+        document.getElementById('inspector-name').textContent = data.name;
+        document.getElementById('inspector-status').textContent = 'State: ' + data.status;
+        document.getElementById('inspector-profile').innerHTML = data.profile.map(p => 
+            `<div class="data-item"><div class="data-label">${p.label}</div><div class="data-value">${p.value}</div></div>`
+        ).join('');
+        document.getElementById('function-title').textContent = data.type === 'consumer' ? 'Utility Function' : 'Production Function';
+        document.getElementById('equation-label').textContent = 'Objective';
+        document.getElementById('equation-display').textContent = data.equation;
+        document.getElementById('graph-title').textContent = data.type === 'consumer' ? 'Immediate Optimization' : 'Cost Curves';
+        this.drawGraph(data.graphData);
+        document.getElementById('choices-title').textContent = 'Details';
+        document.getElementById('inspector-choices').innerHTML = data.choices.map(c => 
+            `<div class="data-item"><div class="data-label">${c.label}</div><div class="data-value">${c.value}</div></div>`
+        ).join('');
+        document.getElementById('optimization-label').textContent = data.type === 'consumer' ? 'Rationality' : 'Profit Max';
+        document.getElementById('optimization-display').textContent = data.optimization;
+    }
+    showHomeInspector(consumer) {
+        document.getElementById('inspector-type').textContent = 'Household';
+        document.getElementById('inspector-type').className = 'agent-type house';
+        document.getElementById('inspector-name').textContent = consumer.name + "'s Home";
+        document.getElementById('inspector-status').textContent = 'Occupant is ' + (consumer.state === 'home' || consumer.state === 'consuming' ? 'present' : 'away');
+        const avgU = consumer.consumptionHistory.length > 0 ? (consumer.lifetimeUtility / consumer.consumptionHistory.length).toFixed(1) : 0;
+        document.getElementById('inspector-profile').innerHTML = [
+            { label: 'Total X', value: consumer.totalGoodsX.toString() },
+            { label: 'Total Y', value: consumer.totalGoodsY.toString() },
+            { label: 'Trips', value: consumer.consumptionHistory.length.toString() },
+            { label: 'Lifetime U', value: consumer.lifetimeUtility.toFixed(0) }
+        ].map(p => `<div class="data-item"><div class="data-label">${p.label}</div><div class="data-value">${p.value}</div></div>`).join('');
+        document.getElementById('function-title').textContent = 'Welfare Statistics';
+        document.getElementById('equation-label').textContent = 'Average Utility per Trip';
+        document.getElementById('equation-display').textContent = avgU;
+        document.getElementById('graph-title').textContent = 'Utility per Trip (Last 15)';
+        this.drawBarChart(consumer.consumptionHistory.map(h => h.utility), 'Utility', '#10b981');
+        document.getElementById('choices-title').textContent = 'Cumulative Set';
+        document.getElementById('inspector-choices').innerHTML = [
+             { label: 'Total X Consumed', value: consumer.totalGoodsX },
+             { label: 'Total Y Consumed', value: consumer.totalGoodsY },
+             { label: 'Budget', value: '$' + consumer.budget.toFixed(0) },
+             { label: 'Alpha', value: consumer.alpha.toFixed(2) }
+        ].map(c => `<div class="data-item"><div class="data-label">${c.label}</div><div class="data-value">${c.value}</div></div>`).join('');
+        document.getElementById('optimization-label').textContent = 'Summary';
+        document.getElementById('optimization-display').textContent = `Tracking cumulative welfare`;
+    }
+    showFactoryInspector(producer) {
+        document.getElementById('inspector-type').textContent = 'Factory';
+        document.getElementById('inspector-type').className = 'agent-type factory';
+        document.getElementById('inspector-name').textContent = producer.name + " Factory";
+        document.getElementById('inspector-status').textContent = 'Production ' + (producer.state === 'producing' ? 'active' : 'halted (delivering)');
+        document.getElementById('inspector-profile').innerHTML = [
+            { label: 'Lifetime Profit', value: '$' + producer.lifetimeProfit.toFixed(0) },
+            { label: 'Efficiency', value: (producer.productionSpeed * 100).toFixed(0) + '%' },
+            { label: 'Product', value: producer.goodType.toUpperCase() },
+            { label: 'Expansions', value: producer.visualLevel.toString() }
+        ].map(p => `<div class="data-item"><div class="data-label">${p.label}</div><div class="data-value">${p.value}</div></div>`).join('');
+        document.getElementById('function-title').textContent = 'Financials';
+        document.getElementById('equation-label').textContent = 'Beta (Tech Factor)';
+        document.getElementById('equation-display').textContent = producer.beta.toFixed(2);
+        document.getElementById('graph-title').textContent = 'Profit per Trip (Last 15)';
+        this.drawBarChart(producer.profitHistory, 'Profit', '#f59e0b', true);
+        document.getElementById('choices-title').textContent = 'Facility Specs';
+        document.getElementById('inspector-choices').innerHTML = [
+             { label: 'Cycle Time', value: producer.productionInterval.toFixed(1) + 's' },
+             { label: 'Cost Slope', value: (0.05/producer.beta).toFixed(3) }
+        ].map(c => `<div class="data-item"><div class="data-label">${c.label}</div><div class="data-value">${c.value}</div></div>`).join('');
+        document.getElementById('optimization-label').textContent = 'Status';
+        document.getElementById('optimization-display').textContent = producer.lifetimeProfit > 0 ? "Solvent" : "At Risk";
+    }
+    showMarketInspector() {
+        document.getElementById('inspector-type').textContent = 'Market';
+        document.getElementById('inspector-type').className = 'agent-type';
+        document.getElementById('inspector-type').style.background = 'rgba(245, 158, 11, 0.15)';
+        document.getElementById('inspector-type').style.color = '#f59e0b';
+        document.getElementById('inspector-name').textContent = 'Central Market';
+        document.getElementById('inspector-status').textContent = this.goods.filter(g => g.inMarket).length + ' goods available';
+        const totalDemandX = this.consumers.reduce((s, c) => s + (c.alpha * c.budget) / this.engine.priceX, 0);
+        const totalDemandY = this.consumers.reduce((s, c) => s + ((1-c.alpha) * c.budget) / this.engine.priceY, 0);
+        const avgProfit = this.producers.reduce((s, p) => s + p.currentProfit, 0) / this.producers.length;
+        document.getElementById('inspector-profile').innerHTML = [
+            { label: 'Price X', value: '$' + this.engine.priceX.toFixed(2) },
+            { label: 'Price Y', value: '$' + this.engine.priceY.toFixed(2) },
+            { label: 'Demand X', value: totalDemandX.toFixed(0) },
+            { label: 'Demand Y', value: totalDemandY.toFixed(0) }
+        ].map(p => `<div class="data-item"><div class="data-label">${p.label}</div><div class="data-value">${p.value}</div></div>`).join('');
+        document.getElementById('function-title').textContent = 'Market Analysis';
+        document.getElementById('equation-label').textContent = 'Aggregate Demand';
+        document.getElementById('equation-display').textContent = `Qd = Σ(αᵢBᵢ/Pₓ)`;
+        document.getElementById('graph-title').textContent = 'Supply & Demand Curves';
+        this.drawMarketGraph();
+        document.getElementById('choices-title').textContent = 'Stats';
+        document.getElementById('inspector-choices').innerHTML = [
+            { label: 'Transactions', value: this.engine.transactions.toString() },
+            { label: 'Total Welfare', value: '$' + this.engine.totalWelfare.toFixed(0) },
+            { label: 'Avg Profit', value: '$' + avgProfit.toFixed(0) },
+            { label: 'Goods in Mkt', value: this.goods.filter(g => g.inMarket).length.toString() }
+        ].map(c => `<div class="data-item"><div class="data-label">${c.label}</div><div class="data-value">${c.value}</div></div>`).join('');
+        document.getElementById('optimization-label').textContent = 'Equilibrium';
+        document.getElementById('optimization-display').textContent = `Market clearing at current prices`;
+    }
+    drawBarChart(dataArray, label, color, allowNegative = false) {
+        const canvas = document.getElementById('inspector-graph');
+        const ctx = canvas.getContext('2d');
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width - 16;
+        canvas.height = rect.height - 16;
+        const w = canvas.width, h = canvas.height, pad = 20;
+        ctx.fillStyle = '#f9fafb';
+        ctx.fillRect(0, 0, w, h);
+        if(dataArray.length === 0) {
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('No data yet', w/2 - 30, h/2);
+            return;
+        }
+        let maxVal = 0;
+        let minVal = 0;
+        dataArray.forEach(v => {
+            maxVal = Math.max(maxVal, v);
+            if(allowNegative) minVal = Math.min(minVal, v);
+        });
+        if(maxVal === 0 && minVal === 0) maxVal = 10;
+        const range = maxVal - minVal;
+        const zeroY = allowNegative ? h - pad - (Math.abs(minVal) / range) * (h - 2*pad) : h - pad;
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pad, zeroY); 
+        ctx.lineTo(w - pad, zeroY);
+        ctx.moveTo(pad, h - pad);
+        ctx.lineTo(pad, pad);
+        ctx.stroke();
+        const barWidth = (w - 2*pad) / 15 - 2;
+        dataArray.forEach((val, i) => {
+            let barHeight = (Math.abs(val) / range) * (h - 2*pad);
+            if(range === 0) barHeight = 0;
+            const x = pad + i * (barWidth + 2) + 2;
+            let y;
+            if (val >= 0) {
+                y = zeroY - barHeight;
+                ctx.fillStyle = color;
+                ctx.strokeStyle = color;
+            } else {
+                y = zeroY;
+                ctx.fillStyle = '#ef4444';
+                ctx.strokeStyle = '#ef4444';
+            }
+            ctx.fillRect(x, y, barWidth, barHeight);
+            ctx.strokeRect(x, y, barWidth, barHeight);
+        });
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('Recent Cycles', w/2 - 30, h - 5);
+        ctx.save();
+        ctx.translate(10, h/2);
+        ctx.rotate(-Math.PI/2);
+        ctx.fillText(label, -15, 0);
+        ctx.restore();
+    }
+    drawMarketGraph() {
+        const canvas = document.getElementById('inspector-graph');
+        const ctx = canvas.getContext('2d');
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width - 16;
+        canvas.height = rect.height - 16;
+        const w = canvas.width, h = canvas.height, pad = 25;
+        ctx.fillStyle = '#f9fafb';
+        ctx.fillRect(0, 0, w, h);
+        const demandPoints = [];
+        const supplyPoints = [];
+        for (let p = 0.5; p <= 5; p += 0.25) {
+            let qd = 0;
+            for (const c of this.consumers) {
+                qd += (c.alpha * c.budget) / p;
+            }
+            demandPoints.push({ p, q: qd });
+            let qs = 0;
+            for (const prod of this.producers) {
+                if (prod.goodType === 'x') {
+                    const optQ = this.engine.optimalOutput(p, prod.beta);
+                    qs += optQ;
+                }
+            }
+            supplyPoints.push({ p, q: qs });
+        }
+        const maxQ = Math.max(...demandPoints.map(d => d.q), ...supplyPoints.map(s => s.q)) * 1.1;
+        const maxP = 5;
+        const sx = (w - 2 * pad) / maxQ;
+        const sy = (h - 2 * pad) / maxP;
+        const tq = q => pad + q * sx;
+        const tp = p => h - pad - p * sy;
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pad, h - pad);
+        ctx.lineTo(w - pad, h - pad);
+        ctx.moveTo(pad, h - pad);
+        ctx.lineTo(pad, pad);
+        ctx.stroke();
+        ctx.fillStyle = '#666';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('Q', w - pad - 10, h - pad + 15);
+        ctx.fillText('P', pad - 5, pad - 5);
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        demandPoints.forEach((d, i) => {
+            if (i === 0) ctx.moveTo(tq(d.q), tp(d.p));
+            else ctx.lineTo(tq(d.q), tp(d.p));
+        });
+        ctx.stroke();
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        supplyPoints.forEach((s, i) => {
+            if (i === 0) ctx.moveTo(tq(s.q), tp(s.p));
+            else ctx.lineTo(tq(s.q), tp(s.p));
+        });
+        ctx.stroke();
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(pad, tp(this.engine.priceX));
+        ctx.lineTo(w - pad, tp(this.engine.priceX));
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '9px sans-serif';
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillText('Demand', w - pad - 45, pad + 10);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillText('Supply', w - pad - 45, pad + 22);
+    }
+    drawGraph(data) {
+        const canvas = document.getElementById('inspector-graph');
+        const ctx = canvas.getContext('2d');
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width - 16;
+        canvas.height = rect.height - 16;
+        const w = canvas.width, h = canvas.height, p = 25;
+        ctx.fillStyle = '#f9fafb';
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p, h - p);
+        ctx.lineTo(w - p, h - p);
+        ctx.moveTo(p, h - p);
+        ctx.lineTo(p, p);
+        ctx.stroke();
+        if (data.type === 'agent') {
+            const maxX = data.budget / data.px * 1.2;
+            const maxY = data.budget / data.py * 1.2;
+            const sx = (w - 2 * p) / maxX;
+            const sy = (h - 2 * p) / maxY;
+            const tx = x => p + x * sx;
+            const ty = y => h - p - y * sy;
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(tx(0), ty(data.budget / data.py));
+            ctx.lineTo(tx(data.budget / data.px), ty(0));
+            ctx.stroke();
+            const U = Math.pow(data.optX, data.alpha) * Math.pow(data.optY, 1 - data.alpha);
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            let started = false;
+            for (let x = 0.5; x < maxX; x += 0.3) {
+                const y = Math.pow(U / Math.pow(x, data.alpha), 1 / (1 - data.alpha));
+                if (y > 0 && y < maxY) {
+                    if (!started) { ctx.moveTo(tx(x), ty(y)); started = true; }
+                    else ctx.lineTo(tx(x), ty(y));
+                }
+            }
+            ctx.stroke();
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(tx(data.optX), ty(data.optY), 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(tx(data.currX), ty(data.currY), 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#10b981';
+            ctx.font = '9px sans-serif';
+            ctx.fillText('Target', w - 40, 10);
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillText('Current', w - 40, 22);
+        } else if (data.type === 'producer') {
+            const maxQ = 20; 
+            const maxC = 15; 
+            const sx = (w - 2 * p) / maxQ;
+            const sy = (h - 2 * p) / maxC;
+            const tx = q => p + q * sx;
+            const ty = c => h - p - c * sy;
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let q = 0.5; q < maxQ; q += 0.5) {
+                const mc = data.engine.mc(q, data.beta);
+                if (mc < maxC) {
+                    if (q === 0.5) ctx.moveTo(tx(q), ty(mc));
+                    else ctx.lineTo(tx(q), ty(mc));
+                }
+            }
+            ctx.stroke();
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let started = false;
+            for (let q = 0.5; q < maxQ; q += 0.2) {
+                const atc = data.engine.atc(q, data.beta);
+                if (atc < maxC) {
+                    if (!started) { ctx.moveTo(tx(q), ty(atc)); started = true; }
+                    else ctx.lineTo(tx(q), ty(atc));
+                }
+            }
+            ctx.stroke();
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(p, ty(data.price));
+            ctx.lineTo(w - p, ty(data.price));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            if (data.output > 0) {
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.arc(tx(data.output), ty(data.price), 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.fillStyle = '#ef4444';
+            ctx.font = '9px sans-serif';
+            ctx.fillText('MC', tx(maxQ-2), ty(data.engine.mc(maxQ-2, data.beta)) - 5);
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillText('ATC', tx(2), ty(data.engine.atc(2, data.beta)) - 5);
+        }
+    }
+    updateStats() {
+        document.getElementById('stat-consumers').textContent = this.consumers.length;
+        document.getElementById('stat-producers').textContent = this.producers.length;
+        document.getElementById('stat-welfare').textContent = '$' + this.engine.totalWelfare.toFixed(0);
+        document.getElementById('stat-time').textContent = 'Day ' + Math.floor(this.time / 10 + 1);
+        document.getElementById('transactions').textContent = this.engine.transactions;
+        const avgU = this.consumers.reduce((s, c) => s + c.lifetimeUtility, 0) / this.consumers.length;
+        document.getElementById('avg-utility').textContent = avgU.toFixed(1);
+        const avgP = this.producers.reduce((s, p) => s + p.lifetimeProfit, 0) / this.producers.length;
+        document.getElementById('avg-profit').textContent = '$' + avgP.toFixed(0);
+        document.getElementById('goods-count').textContent = this.goods.filter(g => g.inMarket).length;
+    }
+    onResize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        const now = performance.now();
+        const dt = Math.min(0.1, (now - this.lastTime) / 1000) * this.speed;
+        this.lastTime = now;
+        if (this.running) {
+            this.time += dt;
+            this.engine.time = this.time;
+            for (const c of this.consumers) {
+                c.update(dt, this.engine, this.marketX, this.marketZ, this.goods, (x, y, z, color) => {
+                    this.spawnFX(x, y, z, color);
+                });
+            }
+            for (const p of this.producers) {
+                p.update(dt, this.engine, this.marketX, this.marketZ, this.scene);
+                for (const g of p.producedGoods) {
+                    if (!this.goods.includes(g)) this.goods.push(g);
+                }
+            }
+            for (const g of this.goods) {
+                g.update(this.time);
+            }
+            this.goods = this.goods.filter(g => {
+                if (g.toRemove) {
+                    g.destroy(this.scene);
+                    return false;
+                }
+                return true;
+            });
+            this.particles = this.particles.filter(p => p.update(dt));
+            if (Math.floor(this.time * 5) !== Math.floor((this.time - dt) * 5)) {
+                this.updateStats();
+                if (this.selected) {
+                    if (this.selectedType === 'home') this.showHomeInspector(this.selected);
+                    else if (this.selectedType === 'factory') this.showFactoryInspector(this.selected);
+                    else if (this.selectedType === 'agent') this.showInspector(this.selected);
+                    else if (this.selectedType === 'market') this.showMarketInspector();
+                }
+            }
+        }
+        this.camCtrl.update();
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => new World());
+</script>
+</body>
+</html>
+<!-- END OF FILE -->

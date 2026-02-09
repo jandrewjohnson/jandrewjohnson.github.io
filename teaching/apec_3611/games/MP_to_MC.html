@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP → MC: How Productivity Determines Cost</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 4px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 18px; font-size: 0.92rem; }
+        .graph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; }
+        @media (max-width: 800px) { .graph-grid { grid-template-columns: 1fr; } }
+        .graph-container { background: #fff; border-radius: 12px; padding: 14px 16px 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .graph-title { text-align: center; font-size: 0.95rem; color: #1a202c; margin-bottom: 8px; font-weight: 500; }
+        .graph-title .hint { color: #a0aec0; font-weight: 400; font-size: 0.8rem; }
+        canvas { display: block; width: 100%; height: auto; border-radius: 6px; cursor: crosshair; }
+        .legend { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 6px; padding: 5px 6px; background: #f7fafc; border-radius: 6px; font-size: 0.75rem; }
+        .legend-item { display: flex; align-items: center; gap: 5px; color: #4a5568; }
+        .legend-color { width: 18px; height: 3px; border-radius: 2px; }
+        .controls-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        @media (max-width: 700px) { .controls-row { grid-template-columns: 1fr; } }
+        .control-panel { background: #fff; border-radius: 12px; padding: 14px 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .control-panel.highlight { background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 100%); border-color: #bee3f8; }
+        .panel-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 10px; }
+        .slider-group { margin-bottom: 10px; }
+        .slider-group:last-child { margin-bottom: 0; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+        .slider-label span:first-child { font-size: 0.82rem; color: #4a5568; }
+        .slider-value { font-weight: 600; color: #2d3748; font-family: 'Monaco','Consolas', monospace; font-size: 0.82rem; }
+        input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; border-radius: 3px; background: #e2e8f0; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 4px rgba(66,153,225,0.3); }
+        .formula { font-size: 0.75rem; color: #a0aec0; font-family: 'Monaco','Consolas', monospace; text-align: center; margin-top: 6px; padding-top: 6px; border-top: 1px solid #edf2f7; line-height: 1.5; }
+        .connection-callout { background: linear-gradient(135deg, #ebf8ff 0%, #f0fff4 100%); border: 1px solid #bee3f8; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; line-height: 1.6; color: #2d3748; }
+        .connection-callout strong { color: #2b6cb0; }
+        #hover-annotation { display:none; background:linear-gradient(135deg,#fff8f0,#f0f8ff); border:1px solid #d69e2e; border-radius:8px; padding:8px 14px; margin-bottom:12px; font-size:0.85rem; line-height:1.6; text-align:center; font-family:'Monaco','Consolas',monospace; color:#2d3748; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>&#x2699; MP &#x2192; MC: How Productivity Determines Cost</h1>
+        <p class="subtitle">When Marginal Product rises, Marginal Cost falls &mdash; and vice versa. MC = w &divide; MP</p>
+        <div class="graph-grid">
+            <div class="graph-container">
+                <div class="graph-title">Marginal &amp; Average Product <span class="hint">vs L &mdash; hover to explore &#x1F50D;</span></div>
+                <canvas id="mp-canvas"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e"></div> MP (Marginal Product)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#d69e2e"></div> AP (Average Product)</div>
+                </div>
+            </div>
+            <div class="graph-container">
+                <div class="graph-title">Marginal &amp; Average Variable Cost <span class="hint">vs Q &mdash; hover to explore &#x1F50D;</span></div>
+                <canvas id="cc-canvas"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e"></div> MC (Marginal Cost)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#d69e2e"></div> AVC (Average Variable Cost)</div>
+                </div>
+            </div>
+        </div>
+        <div id="hover-annotation"></div>
+        <div class="controls-row">
+            <div class="control-panel highlight">
+                <div class="panel-title">&#x1F525; Input Price</div>
+                <div class="slider-group">
+                    <div class="slider-label"><span>Wage (w)</span><span class="slider-value" id="wage-val">$30</span></div>
+                    <input type="range" id="wage-slider" min="1" max="50" step="1" value="30">
+                </div>
+                <div class="formula" style="color:#e53e3e;font-weight:600;">Wage shifts cost curves &mdash; not product curves!</div>
+                <div class="formula">MC = w &divide; MP &nbsp;&nbsp;|&nbsp;&nbsp; AVC = w &divide; AP</div>
+            </div>
+            <div class="control-panel">
+                <div class="panel-title">&#x1F527; Technology (shapes both sides)</div>
+                <div class="slider-group">
+                    <div class="slider-label"><span>&#x03B1; (linear)</span><span class="slider-value" id="alpha-val">2.15</span></div>
+                    <input type="range" id="alpha-slider" min="0.1" max="3.0" step="0.05" value="2.15">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-label"><span>&#x03B2; (quadratic)</span><span class="slider-value" id="beta-val">-0.130</span></div>
+                    <input type="range" id="beta-slider" min="-0.15" max="0.15" step="0.005" value="-0.130">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-label"><span>&#x03B3; (cubic)</span><span class="slider-value" id="gamma-val">0.0038</span></div>
+                    <input type="range" id="gamma-slider" min="0.0005" max="0.015" step="0.0001" value="0.0038">
+                </div>
+                <div class="formula">L(Q) = &#x03B1;Q + &#x03B2;Q&sup2; + &#x03B3;Q&sup3;</div>
+            </div>
+            <div class="control-panel connection-callout" id="connection-box">
+                <strong>Key connection:</strong><br>
+                MC = w &divide; MP and AVC = w &divide; AP
+            </div>
+        </div>
+    </div>
+<script>
+// ===== CANVAS SETUP =====
+var CW = 520, CH = 400;
+var canvasIds = ['mp','cc'], cvs = {}, ctx = {};
+canvasIds.forEach(function(id){
+    cvs[id] = document.getElementById(id+'-canvas');
+    ctx[id] = cvs[id].getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    cvs[id].width = CW*dpr; cvs[id].height = CH*dpr;
+    ctx[id].scale(dpr, dpr);
+    cvs[id].style.width = CW+'px'; cvs[id].style.height = CH+'px';
+});
+
+var mg = {top: 22, right: 18, bottom: 36, left: 54};
+var GW = CW - mg.left - mg.right, GH = CH - mg.top - mg.bottom;
+
+// ===== SLIDERS =====
+var sW = document.getElementById('wage-slider');
+var sAlpha = document.getElementById('alpha-slider');
+var sBeta = document.getElementById('beta-slider');
+var sGamma = document.getElementById('gamma-slider');
+
+// ===== CORE MATH =====
+// L(Q) = αQ + βQ² + γQ³
+// MC = w(α + 2βQ + 3γQ²), AVC = w(α + βQ + γQ²)
+// MP = 1/(α + 2βQ + 3γQ²), AP = 1/(α + βQ + γQ²)
+
+function Lfn(Q, al, be, ga) { return al*Q + be*Q*Q + ga*Q*Q*Q; }
+function MCfn(Q, w, al, be, ga) { return w * (al + 2*be*Q + 3*ga*Q*Q); }
+function AVCfn(Q, w, al, be, ga) { return Q > 0 ? w * (al + be*Q + ga*Q*Q) : Infinity; }
+function dLdQ(Q, al, be, ga) { return al + 2*be*Q + 3*ga*Q*Q; }
+function MPfn(Q, al, be, ga) { var d = dLdQ(Q, al, be, ga); return d > 0 ? 1/d : Infinity; }
+function APfn(Q, al, be, ga) { var l = Lfn(Q, al, be, ga); return (Q > 0 && l > 0) ? Q/l : Infinity; }
+
+function maxValidQ(al, be, ga) {
+    if (be >= 0) return 200;
+    var disc = 4*be*be - 12*ga*al;
+    if (disc < 0) return 200;
+    var q = (-2*be - Math.sqrt(disc)) / (6*ga);
+    return q > 0 ? q : 200;
+}
+
+function qAtMPpeak(al, be, ga) {
+    if (ga <= 0) return 0;
+    var q = -be/(3*ga);
+    return q > 0 ? q : 0;
+}
+
+function qAtMPeqAP(al, be, ga) {
+    if (ga <= 0) return 0;
+    var q = -be/(2*ga);
+    return q > 0 ? q : 0;
+}
+
+function minMCval(w, al, be, ga) {
+    var q = qAtMPpeak(al, be, ga);
+    if (q <= 0) return { q: 0, v: MCfn(0, w, al, be, ga) };
+    return { q: q, v: MCfn(q, w, al, be, ga) };
+}
+
+function minAVCval(w, al, be, ga) {
+    var q = qAtMPeqAP(al, be, ga);
+    if (q <= 0) return { q: 0.5, v: AVCfn(0.5, w, al, be, ga) };
+    return { q: q, v: AVCfn(q, w, al, be, ga) };
+}
+
+// ===== DRAW HELPERS =====
+function drawAx(c, maxX, maxY, xL, yL, yP) {
+    yP = yP || '';
+    c.strokeStyle='#edf2f7'; c.lineWidth=1;
+    for (var i=1; i<=4; i++) { var y=mg.top+(i/5)*GH; c.beginPath(); c.moveTo(mg.left,y); c.lineTo(mg.left+GW,y); c.stroke(); }
+    c.strokeStyle='#a0aec0'; c.lineWidth=2;
+    c.beginPath(); c.moveTo(mg.left,mg.top); c.lineTo(mg.left,mg.top+GH); c.lineTo(mg.left+GW,mg.top+GH); c.stroke();
+    c.fillStyle='#718096'; c.font='11px Segoe UI'; c.textAlign='center';
+    for (var i=0; i<=5; i++) c.fillText(((i/5)*maxX).toFixed(0), mg.left+(i/5)*GW, mg.top+GH+16);
+    c.textAlign='right';
+    for (var i=0; i<=5; i++) c.fillText(yP+((i/5)*maxY).toFixed(0), mg.left-5, mg.top+GH-(i/5)*GH+4);
+    c.fillStyle='#4a5568'; c.font='12px Segoe UI'; c.textAlign='center';
+    c.fillText(xL, mg.left+GW/2, CH-6);
+    c.save(); c.translate(14, mg.top+GH/2); c.rotate(-Math.PI/2); c.fillText(yL,0,0); c.restore();
+}
+function px(v, mx) { return mg.left + (v/mx)*GW; }
+function py(v, mx) { return mg.top + GH - (v/mx)*GH; }
+
+// ===== PANEL 1: MP & AP vs L =====
+function drawMPPanel(w, al, be, ga) {
+    var C = ctx.mp; C.clearRect(0,0,CW,CH);
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQplot = Math.min(40, mxQ * 1.05);
+    var maxL = 0, maxMP = 0, pts = [];
+    for (var q = 0.3; q <= maxQplot; q += maxQplot/300) {
+        var l = Lfn(q, al, be, ga);
+        var mp = MPfn(q, al, be, ga);
+        var ap = APfn(q, al, be, ga);
+        if (l >= 0 && isFinite(l) && isFinite(mp) && mp > 0 && isFinite(ap) && ap > 0) {
+            pts.push({l:l, mp:mp, ap:ap, q:q});
+            if (l > maxL) maxL = l;
+            if (mp > maxMP) maxMP = mp;
+            if (ap > maxMP) maxMP = ap;
+        }
+    }
+    maxL = Math.max(maxL * 1.15, 5);
+    var maxY = maxMP * 1.25;
+    drawAx(C, maxL, maxY, 'Labor (L)', 'Output per Worker');
+
+    // MP curve
+    if (pts.length > 1) {
+        C.strokeStyle='#e53e3e'; C.lineWidth=3; C.beginPath(); var s=false;
+        for (var i=0; i<pts.length; i++) {
+            var p = pts[i];
+            if (p.mp >= 0 && p.mp <= maxY) {
+                if (!s) { C.moveTo(px(p.l,maxL), py(p.mp,maxY)); s=true; }
+                else C.lineTo(px(p.l,maxL), py(p.mp,maxY));
+            }
+        }
+        C.stroke();
+    }
+    // AP curve
+    if (pts.length > 1) {
+        C.strokeStyle='#d69e2e'; C.lineWidth=3; C.beginPath(); var s=false;
+        for (var i=0; i<pts.length; i++) {
+            var p = pts[i];
+            if (p.ap >= 0 && p.ap <= maxY) {
+                if (!s) { C.moveTo(px(p.l,maxL), py(p.ap,maxY)); s=true; }
+                else C.lineTo(px(p.l,maxL), py(p.ap,maxY));
+            }
+        }
+        C.stroke();
+    }
+
+    // MP peak annotation — placed in upper-right area of chart
+    var qMP = qAtMPpeak(al, be, ga);
+    if (qMP > 0 && qMP < maxQplot) {
+        var lP = Lfn(qMP, al, be, ga), mpP = MPfn(qMP, al, be, ga);
+        if (lP > 0 && lP < maxL && mpP > 0 && mpP <= maxY) {
+            var dotX = px(lP,maxL), dotY = py(mpP,maxY);
+            C.fillStyle='rgba(229,62,62,0.12)'; C.beginPath(); C.arc(dotX, dotY, 10, 0, Math.PI*2); C.fill();
+            C.fillStyle='#e53e3e'; C.beginPath(); C.arc(dotX, dotY, 5, 0, Math.PI*2); C.fill();
+            C.fillStyle='#fff'; C.beginPath(); C.arc(dotX, dotY, 2, 0, Math.PI*2); C.fill();
+            // Place label in upper-right where the chart is empty
+            var lblX = mg.left + GW * 0.42, lblY = mg.top + 16;
+            C.strokeStyle='rgba(229,62,62,0.35)'; C.lineWidth=1;
+            C.beginPath(); C.moveTo(dotX + 4, dotY - 6); C.lineTo(lblX - 4, lblY + 10); C.stroke();
+            C.font='bold 10px Segoe UI'; C.textAlign='left'; C.fillStyle='#e53e3e';
+            C.fillText('MP peak = '+mpP.toFixed(2), lblX, lblY);
+            var mcAtPeak = w / mpP;
+            C.font='9px Segoe UI'; C.fillStyle='#718096';
+            C.fillText('\u2194 MC min = $'+w+'/'+mpP.toFixed(2)+' = $'+mcAtPeak.toFixed(2), lblX, lblY + 13);
+        }
+    }
+
+    // MP=AP crossing annotation — placed in the right area where curves are flat
+    var qCross = qAtMPeqAP(al, be, ga);
+    if (qCross > 0 && qCross < maxQplot) {
+        var lC = Lfn(qCross, al, be, ga), apC = APfn(qCross, al, be, ga);
+        if (lC > 0 && lC < maxL && apC > 0 && apC <= maxY) {
+            var dotX = px(lC,maxL), dotY = py(apC,maxY);
+            C.fillStyle='rgba(128,90,213,0.12)'; C.beginPath(); C.arc(dotX, dotY, 10, 0, Math.PI*2); C.fill();
+            C.fillStyle='#805ad5'; C.beginPath(); C.arc(dotX, dotY, 5, 0, Math.PI*2); C.fill();
+            C.fillStyle='#fff'; C.beginPath(); C.arc(dotX, dotY, 2, 0, Math.PI*2); C.fill();
+            // Place label above and to the right
+            var lblX = dotX + 20, lblY = dotY - 35;
+            // If too far right, flip to left
+            if (lblX + 140 > mg.left + GW) { lblX = dotX - 150; }
+            if (lblY < mg.top + 10) lblY = mg.top + 10;
+            C.strokeStyle='rgba(128,90,213,0.35)'; C.lineWidth=1;
+            C.beginPath(); C.moveTo(dotX + 5, dotY - 6); C.lineTo(lblX + (lblX > dotX ? 0 : 130), lblY + 10); C.stroke();
+            C.font='bold 10px Segoe UI'; C.textAlign='left'; C.fillStyle='#805ad5';
+            C.fillText('MP = AP = '+apC.toFixed(2), lblX, lblY);
+            var avcAtCross = w / apC;
+            C.font='9px Segoe UI'; C.fillStyle='#718096';
+            C.fillText('\u2194 MC=AVC = $'+w+'/'+apC.toFixed(2)+' = $'+avcAtCross.toFixed(2), lblX, lblY + 13);
+        }
+    }
+
+    // Curve labels at left end
+    if (pts.length > 5) {
+        var lb = pts[Math.floor(pts.length*0.15)];
+        C.font='bold 11px Segoe UI'; C.textAlign='left';
+        C.fillStyle='#e53e3e'; C.fillText('MP', px(lb.l,maxL)+6, py(lb.mp,maxY)-10);
+        C.fillStyle='#d69e2e'; C.fillText('AP', px(lb.l,maxL)+6, py(lb.ap,maxY)+16);
+    }
+}
+
+// ===== PANEL 2: MC & AVC vs Q =====
+function drawCCPanel(w, al, be, ga) {
+    var C = ctx.cc; C.clearRect(0,0,CW,CH);
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQ = Math.min(40, mxQ * 1.05);
+    var maxCst = 0;
+    for (var q=0.5; q<=maxQ; q+=0.5) {
+        var m = MCfn(q,w,al,be,ga), av = AVCfn(q,w,al,be,ga);
+        if (m > 0 && m < 500) maxCst = Math.max(maxCst, m);
+        if (av > 0 && av < 500) maxCst = Math.max(maxCst, av);
+    }
+    maxCst = Math.min(maxCst * 1.2, 300);
+    drawAx(C, maxQ, maxCst, 'Quantity (Q)', '$ per unit', '$');
+
+    // MC curve
+    C.strokeStyle='#e53e3e'; C.lineWidth=3; C.beginPath(); var s=false;
+    for (var q=0.3; q<=maxQ; q+=maxQ/300) {
+        var m = MCfn(q,w,al,be,ga);
+        if (m <= maxCst && m >= 0) { if(!s){C.moveTo(px(q,maxQ),py(m,maxCst));s=true;} else C.lineTo(px(q,maxQ),py(m,maxCst)); }
+    }
+    C.stroke();
+
+    // AVC curve
+    C.strokeStyle='#d69e2e'; C.lineWidth=3; C.beginPath(); s=false;
+    for (var q=0.5; q<=maxQ; q+=maxQ/300) {
+        var av = AVCfn(q,w,al,be,ga);
+        if (av <= maxCst && av >= 0) { if(!s){C.moveTo(px(q,maxQ),py(av,maxCst));s=true;} else C.lineTo(px(q,maxQ),py(av,maxCst)); }
+    }
+    C.stroke();
+
+    // MC trough annotation — offset to lower-left
+    var mcm = minMCval(w, al, be, ga);
+    if (mcm.q > 0 && mcm.q <= maxQ && mcm.v >= 0 && mcm.v <= maxCst) {
+        var dotX = px(mcm.q,maxQ), dotY = py(mcm.v,maxCst);
+        C.fillStyle='rgba(229,62,62,0.12)'; C.beginPath(); C.arc(dotX, dotY, 10, 0, Math.PI*2); C.fill();
+        C.fillStyle='#e53e3e'; C.beginPath(); C.arc(dotX, dotY, 5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(dotX, dotY, 2, 0, Math.PI*2); C.fill();
+        // Place label below and to the left
+        var lblX = Math.max(mg.left + 4, dotX - 120), lblY = dotY + 25;
+        if (lblY + 18 > mg.top + GH - 10) lblY = dotY - 30;
+        C.strokeStyle='rgba(229,62,62,0.35)'; C.lineWidth=1;
+        C.beginPath(); C.moveTo(dotX - 4, dotY + 6); C.lineTo(lblX + 60, lblY - 4); C.stroke();
+        C.font='bold 10px Segoe UI'; C.textAlign='left'; C.fillStyle='#e53e3e';
+        C.fillText('MC min = $'+mcm.v.toFixed(2), lblX, lblY);
+        var mpAtPeak = MPfn(mcm.q, al, be, ga);
+        C.font='9px Segoe UI'; C.fillStyle='#718096';
+        C.fillText('\u2194 MP peak = '+mpAtPeak.toFixed(2), lblX, lblY + 13);
+    }
+
+    // Min AVC annotation — offset to upper-right
+    var mav = minAVCval(w, al, be, ga);
+    if (mav.q > 0 && mav.q <= maxQ && mav.v <= maxCst && mav.v > 0) {
+        var dotX = px(mav.q,maxQ), dotY = py(mav.v,maxCst);
+        C.fillStyle='rgba(128,90,213,0.12)'; C.beginPath(); C.arc(dotX, dotY, 10, 0, Math.PI*2); C.fill();
+        C.fillStyle='#805ad5'; C.beginPath(); C.arc(dotX, dotY, 5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(dotX, dotY, 2, 0, Math.PI*2); C.fill();
+        // Dashed line to y-axis
+        C.strokeStyle='#805ad5'; C.lineWidth=1; C.setLineDash([3,3]);
+        C.beginPath(); C.moveTo(mg.left, dotY); C.lineTo(dotX, dotY); C.stroke(); C.setLineDash([]);
+        // Place label above and to the right
+        var lblX = dotX + 18, lblY = dotY - 30;
+        if (lblX + 160 > mg.left + GW) { lblX = mg.left + GW - 170; }
+        if (lblY < mg.top + 10) lblY = mg.top + 10;
+        C.strokeStyle='rgba(128,90,213,0.35)'; C.lineWidth=1;
+        C.beginPath(); C.moveTo(dotX + 5, dotY - 6); C.lineTo(lblX, lblY + 10); C.stroke();
+        C.font='bold 10px Segoe UI'; C.textAlign='left'; C.fillStyle='#805ad5';
+        C.fillText('Min AVC = $'+mav.v.toFixed(2)+' (shutdown)', lblX, lblY);
+        var apAtCross = APfn(mav.q, al, be, ga);
+        C.font='9px Segoe UI'; C.fillStyle='#718096';
+        C.fillText('\u2194 MP=AP = '+apAtCross.toFixed(2), lblX, lblY + 13);
+    }
+
+    // Curve labels
+    C.font='bold 11px Segoe UI';
+    for (var q=maxQ*0.85; q>=2; q-=2) { var m=MCfn(q,w,al,be,ga); if(m>0 && m<maxCst*0.82){C.fillStyle='#e53e3e';C.textAlign='left';C.fillText('MC',px(q,maxQ)+8,py(m,maxCst)-12);break;} }
+    for (var q=maxQ*0.80; q>=2; q-=2) { var av=AVCfn(q,w,al,be,ga); if(av>0 && av<maxCst*0.78){C.fillStyle='#d69e2e';C.textAlign='left';C.fillText('AVC',px(q,maxQ)+8,py(av,maxCst)-12);break;} }
+}
+
+// ===== SHARED STATE =====
+var lastParams = {};
+
+function updateDisplay() {
+    var w = parseFloat(sW.value);
+    var al = parseFloat(sAlpha.value), be = parseFloat(sBeta.value), ga = parseFloat(sGamma.value);
+
+    document.getElementById('wage-val').textContent = '$'+w;
+    document.getElementById('alpha-val').textContent = al.toFixed(2);
+    document.getElementById('beta-val').textContent = be.toFixed(3);
+    document.getElementById('gamma-val').textContent = ga.toFixed(4);
+
+    lastParams = {w:w, al:al, be:be, ga:ga};
+
+    // Update connection box
+    var cb = document.getElementById('connection-box');
+    var qMP = qAtMPpeak(al, be, ga);
+    var mpPeak = MPfn(qMP, al, be, ga);
+    var mcMin = MCfn(qMP, w, al, be, ga);
+    var qCross = qAtMPeqAP(al, be, ga);
+    var apCross = APfn(qCross, al, be, ga);
+    var avcMin = AVCfn(qCross, w, al, be, ga);
+    if (isFinite(mpPeak) && isFinite(apCross)) {
+        cb.innerHTML =
+            '<strong>Key correspondences:</strong><br>' +
+            '<span style="color:#e53e3e">\u25CF</span> MP peak = '+mpPeak.toFixed(2)+' \u2194 MC min = $'+w+' \u00F7 '+mpPeak.toFixed(2)+' = <strong style="color:#e53e3e">$'+mcMin.toFixed(2)+'</strong><br>' +
+            '<span style="color:#805ad5">\u25CF</span> MP=AP = '+apCross.toFixed(2)+' \u2194 MC=AVC = $'+w+' \u00F7 '+apCross.toFixed(2)+' = <strong style="color:#805ad5">$'+avcMin.toFixed(2)+'</strong>';
+    }
+
+    drawMPPanel(w, al, be, ga);
+    drawCCPanel(w, al, be, ga);
+}
+
+// ===== HOVER INTERACTION =====
+var hoverQ = null;
+
+function mpCanvasToQ(mouseX) {
+    var rect = cvs.mp.getBoundingClientRect();
+    var scaleX = CW / rect.width;
+    var canvasX = (mouseX - rect.left) * scaleX;
+    var al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQplot = Math.min(40, mxQ*1.05);
+    var maxL = 0;
+    for (var q=0; q<=maxQplot; q+=1) { var l=Lfn(q,al,be,ga); if(l>=0 && isFinite(l) && l>maxL) maxL=l; }
+    maxL = Math.max(maxL*1.15, 5);
+    var lVal = ((canvasX - mg.left) / GW) * maxL;
+    if (lVal < 0) return null;
+    for (var q=0.3; q<=maxQplot; q+=0.15) {
+        if (Lfn(q,al,be,ga) >= lVal) return q;
+    }
+    return null;
+}
+
+function ccCanvasToQ(mouseX) {
+    var rect = cvs.cc.getBoundingClientRect();
+    var scaleX = CW / rect.width;
+    var canvasX = (mouseX - rect.left) * scaleX;
+    var al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQ = Math.min(40, mxQ*1.05);
+    var qVal = ((canvasX - mg.left) / GW) * maxQ;
+    return qVal > 0.3 ? qVal : null;
+}
+
+function drawHoverOnMP(q) {
+    var al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQplot = Math.min(40, mxQ*1.05);
+    var maxL = 0, maxMP = 0;
+    for (var qq=0.3; qq<=maxQplot; qq+=0.3) {
+        var l=Lfn(qq,al,be,ga), mp=MPfn(qq,al,be,ga), ap=APfn(qq,al,be,ga);
+        if (l>=0 && isFinite(l) && isFinite(mp) && mp>0) {
+            if(l>maxL) maxL=l; if(mp>maxMP) maxMP=mp; if(isFinite(ap) && ap>maxMP) maxMP=ap;
+        }
+    }
+    maxL = Math.max(maxL*1.15, 5); var maxY = maxMP*1.25;
+    var C = ctx.mp;
+    var l = Lfn(q,al,be,ga), mp = MPfn(q,al,be,ga), ap = APfn(q,al,be,ga);
+    if (!isFinite(l) || !isFinite(mp) || l<=0 || l>maxL) return;
+
+    C.strokeStyle='rgba(128,90,213,0.4)'; C.lineWidth=1.5; C.setLineDash([3,3]);
+    C.beginPath(); C.moveTo(px(l,maxL), mg.top); C.lineTo(px(l,maxL), mg.top+GH); C.stroke(); C.setLineDash([]);
+
+    if (mp>=0 && mp<=maxY) {
+        C.fillStyle='#e53e3e'; C.beginPath(); C.arc(px(l,maxL), py(mp,maxY), 7, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(px(l,maxL), py(mp,maxY), 3.5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#e53e3e'; C.font='bold 10px Segoe UI'; C.textAlign='left';
+        C.fillText('MP='+mp.toFixed(2), px(l,maxL)+10, py(mp,maxY)-4);
+    }
+    if (isFinite(ap) && ap>=0 && ap<=maxY) {
+        C.fillStyle='#d69e2e'; C.beginPath(); C.arc(px(l,maxL), py(ap,maxY), 7, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(px(l,maxL), py(ap,maxY), 3.5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#d69e2e'; C.font='bold 10px Segoe UI'; C.textAlign='left';
+        C.fillText('AP='+ap.toFixed(2), px(l,maxL)+10, py(ap,maxY)+14);
+    }
+}
+
+function drawHoverOnCC(q) {
+    var w=lastParams.w, al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    var mxQ = maxValidQ(al, be, ga);
+    var maxQ = Math.min(40, mxQ*1.05);
+    var maxCst = 0;
+    for (var qq=0.5; qq<=maxQ; qq+=0.5) {
+        var m=MCfn(qq,w,al,be,ga), av=AVCfn(qq,w,al,be,ga);
+        if(m>0 && m<500) maxCst=Math.max(maxCst,m);
+        if(av>0 && av<500) maxCst=Math.max(maxCst,av);
+    }
+    maxCst = Math.min(maxCst*1.2, 300);
+    var C = ctx.cc;
+    var mc = MCfn(q,w,al,be,ga), avcV = AVCfn(q,w,al,be,ga);
+    if (q<=0 || q>maxQ) return;
+
+    C.strokeStyle='rgba(128,90,213,0.4)'; C.lineWidth=1.5; C.setLineDash([3,3]);
+    C.beginPath(); C.moveTo(px(q,maxQ), mg.top); C.lineTo(px(q,maxQ), mg.top+GH); C.stroke(); C.setLineDash([]);
+
+    if (mc>=0 && mc<=maxCst) {
+        C.fillStyle='#e53e3e'; C.beginPath(); C.arc(px(q,maxQ), py(mc,maxCst), 7, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(px(q,maxQ), py(mc,maxCst), 3.5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#e53e3e'; C.font='bold 10px Segoe UI'; C.textAlign='left';
+        C.fillText('MC=$'+mc.toFixed(2), px(q,maxQ)+10, py(mc,maxCst)-4);
+    }
+    if (avcV>=0 && avcV<=maxCst) {
+        C.fillStyle='#d69e2e'; C.beginPath(); C.arc(px(q,maxQ), py(avcV,maxCst), 7, 0, Math.PI*2); C.fill();
+        C.fillStyle='#fff'; C.beginPath(); C.arc(px(q,maxQ), py(avcV,maxCst), 3.5, 0, Math.PI*2); C.fill();
+        C.fillStyle='#d69e2e'; C.font='bold 10px Segoe UI'; C.textAlign='left';
+        C.fillText('AVC=$'+avcV.toFixed(2), px(q,maxQ)+10, py(avcV,maxCst)+14);
+    }
+}
+
+function updateHoverAnnotation(q) {
+    var ann = document.getElementById('hover-annotation');
+    if (q === null) { ann.style.display='none'; return; }
+    var w=lastParams.w, al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    var mc = MCfn(q,w,al,be,ga), avcV = AVCfn(q,w,al,be,ga);
+    var mp = MPfn(q,al,be,ga), ap = APfn(q,al,be,ga);
+    var l = Lfn(q,al,be,ga);
+    if (!isFinite(mp) || !isFinite(ap) || mc<=0) { ann.style.display='none'; return; }
+    ann.style.display='block';
+    ann.innerHTML =
+        '<span style="color:#e53e3e;font-weight:700">MP = '+mp.toFixed(2)+'</span>' +
+        ' &nbsp;\u2192&nbsp; MC = w \u00F7 MP = $'+w+' \u00F7 '+mp.toFixed(2)+' = ' +
+        '<span style="color:#e53e3e;font-weight:700">$'+mc.toFixed(2)+'</span>' +
+        ' &nbsp;&nbsp;|&nbsp;&nbsp; ' +
+        '<span style="color:#d69e2e;font-weight:700">AP = '+ap.toFixed(2)+'</span>' +
+        ' &nbsp;\u2192&nbsp; AVC = w \u00F7 AP = $'+w+' \u00F7 '+ap.toFixed(2)+' = ' +
+        '<span style="color:#d69e2e;font-weight:700">$'+avcV.toFixed(2)+'</span>' +
+        ' &nbsp;&nbsp;<span style="color:#718096">(Q='+q.toFixed(1)+', L='+l.toFixed(1)+')</span>';
+}
+
+function handleHover(q) {
+    hoverQ = q;
+    var w=lastParams.w, al=lastParams.al, be=lastParams.be, ga=lastParams.ga;
+    drawMPPanel(w, al, be, ga);
+    drawCCPanel(w, al, be, ga);
+    if (q !== null) {
+        drawHoverOnMP(q);
+        drawHoverOnCC(q);
+    }
+    updateHoverAnnotation(q);
+}
+
+cvs.mp.addEventListener('mousemove', function(e) { handleHover(mpCanvasToQ(e.clientX)); });
+cvs.mp.addEventListener('mouseleave', function() { handleHover(null); });
+cvs.cc.addEventListener('mousemove', function(e) { handleHover(ccCanvasToQ(e.clientX)); });
+cvs.cc.addEventListener('mouseleave', function() { handleHover(null); });
+
+[sW, sAlpha, sBeta, sGamma].forEach(function(s){ s.addEventListener('input', updateDisplay); });
+updateDisplay();
+</script>
+</body></html>

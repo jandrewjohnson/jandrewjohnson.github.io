@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Prisoner's Dilemma</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        h1 { text-align: center; color: #1a202c; font-size: 1.7rem; font-weight: 700; margin-bottom: 2px; }
+        .subtitle { text-align: center; color: #718096; font-size: 0.92rem; margin-bottom: 16px; }
+
+        .app-grid {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr 1fr;
+            gap: 14px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .panel-title {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            color: #718096;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .controls-panel { grid-row: 1 / 5; }
+
+        .full-width { grid-column: 2 / 4; }
+
+        /* Sliders */
+        .slider-group { margin-bottom: 12px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .slider-label span:first-child { font-size: 0.8rem; color: #4a5568; font-weight: 500; }
+        .slider-value {
+            background: #edf2f7; color: #2b6cb0; padding: 2px 8px; border-radius: 6px;
+            font-size: 0.76rem; font-weight: 600; font-family: 'Consolas', monospace; min-width: 28px; text-align: center;
+        }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px; background: #e2e8f0; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 1px 3px rgba(66,153,225,0.4); }
+        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #4299e1; cursor: pointer; border: none; }
+
+        .section-divider { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+
+        .info-box { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.78rem; line-height: 1.5; color: #4a5568; }
+        .info-box.highlight { border-left: 3px solid #4299e1; }
+        .info-box.warning { border-left: 3px solid #e53e3e; background: #fff5f5; }
+        .info-box.success { border-left: 3px solid #38a169; background: #f0fff4; }
+        .info-box strong { color: #1a202c; }
+
+        .equation-box {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 7px 10px; font-family: 'Consolas', monospace; font-size: 0.72rem;
+            color: #4a5568; margin: 6px 0; line-height: 1.6;
+        }
+
+        /* Payoff matrix */
+        .payoff-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 8px 0; }
+        .payoff-table th { padding: 6px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.6px; color: #718096; font-weight: 600; }
+        .payoff-table td { padding: 10px 8px; text-align: center; border: 1px solid #e2e8f0; font-family: 'Consolas', monospace; font-size: 0.88rem; transition: all 0.15s; }
+        .payoff-table td .p1 { color: #2b6cb0; font-weight: 700; }
+        .payoff-table td .p2 { color: #e53e3e; font-weight: 700; }
+        .payoff-table td.nash { background: #fff5f5; border-color: #e53e3e; box-shadow: inset 0 0 0 2px rgba(229,62,62,0.15); }
+        .payoff-table td.pareto { position: relative; }
+        .payoff-table td.pareto::after { content: '★'; position: absolute; top: 2px; right: 4px; font-size: 0.55rem; color: #d69e2e; }
+        .payoff-table .row-label { text-align: right; padding-right: 10px; border: none; font-weight: 600; color: #2b6cb0; font-family: 'Segoe UI'; font-size: 0.8rem; }
+        .payoff-table .col-header { text-align: center; color: #e53e3e; }
+        .payoff-table .corner { border: none; }
+        .payoff-table td.last-outcome { box-shadow: inset 0 0 0 2px rgba(66,153,225,0.5); }
+
+        /* Action buttons */
+        .action-buttons { display: flex; gap: 10px; margin: 12px 0; }
+        .action-btn {
+            flex: 1; padding: 14px 8px; border: 2px solid #e2e8f0; border-radius: 10px;
+            background: #fff; cursor: pointer; text-align: center; transition: all 0.12s; font-family: 'Segoe UI';
+        }
+        .action-btn:hover { transform: translateY(-1px); }
+        .action-btn:active { transform: translateY(0); }
+        .action-btn.cooperate:hover { border-color: #38a169; background: #f0fff4; }
+        .action-btn.defect:hover { border-color: #e53e3e; background: #fff5f5; }
+        .action-btn .btn-label { font-size: 0.92rem; font-weight: 700; color: #1a202c; display: block; }
+        .action-btn .btn-sub { font-size: 0.68rem; color: #718096; margin-top: 2px; display: block; }
+
+        .round-flash {
+            padding: 10px; border-radius: 8px; margin: 8px 0; text-align: center;
+            font-size: 0.85rem; line-height: 1.5; display: none; animation: fadeIn 0.2s;
+        }
+        .round-flash.show { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Score bar */
+        .score-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 10px;
+        }
+        .score-item { text-align: center; }
+        .score-item .sc-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.8px; color: #718096; }
+        .score-item .sc-value { font-size: 1.2rem; font-weight: 700; font-family: 'Consolas', monospace; }
+        .sc-value.blue { color: #2b6cb0; } .sc-value.red { color: #e53e3e; } .sc-value.gray { color: #718096; }
+
+        /* Strategy select */
+        .strat-select {
+            width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f7fafc; font-size: 0.82rem; color: #2d3748; cursor: pointer; margin-bottom: 6px;
+            font-family: 'Segoe UI';
+        }
+
+        /* History strip */
+        .history-strip {
+            display: flex; gap: 3px; flex-wrap: wrap; margin: 8px 0; min-height: 20px;
+        }
+        .history-dot {
+            width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center;
+            justify-content: center; font-size: 0.55rem; font-weight: 700; color: #fff; cursor: default;
+            position: relative;
+        }
+        .history-dot[title]:hover::after {
+            content: attr(title); position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+            background: #1a202c; color: #fff; padding: 3px 7px; border-radius: 4px; font-size: 0.65rem;
+            white-space: nowrap; z-index: 10; font-weight: 500;
+        }
+        .hd-cc { background: #38a169; } .hd-cd { background: #d69e2e; } .hd-dc { background: #805ad5; } .hd-dd { background: #e53e3e; }
+
+        /* Canvas */
+        .chart-panel canvas { width: 100%; display: block; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: #4a5568; }
+        .legend-swatch { width: 12px; height: 4px; border-radius: 2px; }
+
+        /* Tournament */
+        .tourney-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px; margin-top: 8px;
+        }
+        .tourney-card {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; text-align: center; transition: all 0.15s;
+        }
+        .tourney-card.rank-1 { border-color: #d69e2e; background: #fffff0; }
+        .tourney-card.rank-2 { border-color: #a0aec0; background: #f7fafc; }
+        .tourney-card.rank-3 { border-color: #c27753; background: #fffaf5; }
+        .tourney-card .tc-rank { font-size: 0.65rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.8px; }
+        .tourney-card .tc-name { font-size: 0.82rem; font-weight: 700; color: #1a202c; margin: 3px 0; }
+        .tourney-card .tc-score { font-size: 1rem; font-weight: 700; font-family: 'Consolas', monospace; color: #2b6cb0; }
+        .tourney-card .tc-coop { font-size: 0.68rem; color: #718096; }
+
+        .reset-btn {
+            width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 0.78rem; color: #718096; font-weight: 600;
+            transition: all 0.15s; font-family: 'Segoe UI';
+        }
+        .reset-btn:hover { border-color: #e53e3e; color: #e53e3e; background: #fff5f5; }
+
+        .run-tourney-btn {
+            width: 100%; padding: 10px; border: 1px solid #4299e1; border-radius: 8px;
+            background: #ebf8ff; cursor: pointer; font-size: 0.82rem; color: #2b6cb0; font-weight: 700;
+            transition: all 0.15s; font-family: 'Segoe UI'; margin-top: 8px;
+        }
+        .run-tourney-btn:hover { background: #bee3f8; }
+
+        @media (max-width: 1100px) {
+            .app-grid { grid-template-columns: 1fr; }
+            .controls-panel { grid-row: auto; }
+            .full-width { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <h1>The Prisoner's Dilemma</h1>
+    <p class="subtitle">Why rational self-interest leads to collective disaster — and what makes cooperation possible</p>
+
+    <div class="app-grid">
+        <!-- LEFT CONTROLS -->
+        <div class="panel controls-panel">
+            <div class="panel-title">Payoff Parameters</div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Mutual Cooperation (R)</span><span class="slider-value" id="vR">3</span></div>
+                <input type="range" id="sR" min="0" max="10" value="3" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Temptation to Defect (T)</span><span class="slider-value" id="vT">5</span></div>
+                <input type="range" id="sT" min="0" max="10" value="5" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Sucker's Payoff (S)</span><span class="slider-value" id="vS">0</span></div>
+                <input type="range" id="sS" min="-5" max="10" value="0" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Mutual Defection (P)</span><span class="slider-value" id="vP">1</span></div>
+                <input type="range" id="sP" min="-5" max="10" value="1" step="1">
+            </div>
+
+            <div id="pdCheck" class="info-box success">
+                <strong>✓ Valid PD:</strong> T &gt; R &gt; P &gt; S
+            </div>
+
+            <div class="equation-box">
+                PD requires: T &gt; R &gt; P &gt; S<br>
+                Iterated PD also: 2R &gt; T + S<br>
+                (cooperation must beat alternating)
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Opponent Strategy</div>
+
+            <select class="strat-select" id="stratSelect">
+                <option value="tft">Tit-for-Tat</option>
+                <option value="always_c">Always Cooperate</option>
+                <option value="always_d">Always Defect</option>
+                <option value="random">Random (50/50)</option>
+                <option value="grudger">Grim Trigger</option>
+                <option value="pavlov">Pavlov (Win-Stay Lose-Shift)</option>
+                <option value="suspicious_tft">Suspicious Tit-for-Tat</option>
+                <option value="generous_tft">Generous TfT (10% forgive)</option>
+                <option value="tft2">Tit-for-Two-Tats</option>
+                <option value="adaptive">Adaptive (learns your rate)</option>
+            </select>
+            <div class="info-box" id="stratDesc" style="margin-top:6px;">
+                <strong>Tit-for-Tat:</strong> Cooperates first, then mirrors your last move. Nice, retaliatory, forgiving, clear.
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Shadow of the Future</div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Discount factor (δ)</span><span class="slider-value" id="vDelta">0.90</span></div>
+                <input type="range" id="sDelta" min="0" max="0.99" value="0.90" step="0.01">
+            </div>
+            <div class="info-box highlight" id="deltaInsight">
+                Cooperation is sustainable in a repeated PD when δ ≥ (T−R)/(T−P). Currently δ* = <strong>0.50</strong>. Your δ = 0.90 — cooperation can be sustained.
+            </div>
+
+            <hr class="section-divider">
+            <button class="reset-btn" id="resetBtn">↺ Reset Game</button>
+            <button class="run-tourney-btn" id="tourneyBtn">🏆 Run Strategy Tournament</button>
+        </div>
+
+        <!-- CENTER: Play Area -->
+        <div class="panel">
+            <div class="panel-title">Play the Game</div>
+
+            <div class="score-bar">
+                <div class="score-item"><div class="sc-label">Your Total</div><div class="sc-value blue" id="scoreYou">0</div></div>
+                <div class="score-item"><div class="sc-label">Your Avg</div><div class="sc-value blue" id="avgYou">—</div></div>
+                <div class="score-item"><div class="sc-label">Round</div><div class="sc-value gray" id="roundNum">0</div></div>
+                <div class="score-item"><div class="sc-label">Opp Avg</div><div class="sc-value red" id="avgOpp">—</div></div>
+                <div class="score-item"><div class="sc-label">Opp Total</div><div class="sc-value red" id="scoreOpp">0</div></div>
+            </div>
+
+            <table class="payoff-table" id="payoffTable">
+                <tr><th class="corner"></th><th class="col-header">Opp: Cooperate</th><th class="col-header">Opp: Defect</th></tr>
+                <tr><td class="row-label">You: Cooperate</td><td id="cell_CC"><span class="p1">3</span>, <span class="p2">3</span></td><td id="cell_CD"><span class="p1">0</span>, <span class="p2">5</span></td></tr>
+                <tr><td class="row-label">You: Defect</td><td id="cell_DC"><span class="p1">5</span>, <span class="p2">0</span></td><td id="cell_DD"><span class="p1">1</span>, <span class="p2">1</span></td></tr>
+            </table>
+
+            <div style="font-size:0.68rem; color:#a0aec0; text-align:center; margin-bottom:4px;">
+                <span style="color:#e53e3e;">■</span> Nash Eq (D,D) &nbsp; <span style="color:#d69e2e;">★</span> Pareto Optimal (C,C) &nbsp; <span style="color:#4299e1;">◆</span> Last outcome
+            </div>
+
+            <div class="action-buttons">
+                <div class="action-btn cooperate" id="btnCoop">
+                    <span class="btn-label">🤝 Cooperate</span>
+                    <span class="btn-sub">Risk the sucker's payoff for mutual gain</span>
+                </div>
+                <div class="action-btn defect" id="btnDefect">
+                    <span class="btn-label">🗡️ Defect</span>
+                    <span class="btn-sub">Dominant strategy in a one-shot game</span>
+                </div>
+            </div>
+
+            <div class="round-flash" id="roundFlash"></div>
+
+            <div class="panel-title" style="margin-top:12px;">Round History</div>
+            <div style="display:flex; gap:12px; margin-bottom:4px;">
+                <div class="legend-item" style="font-size:0.7rem;"><div class="legend-swatch" style="background:#38a169; width:10px; height:10px; border-radius:3px;"></div> Both C</div>
+                <div class="legend-item" style="font-size:0.7rem;"><div class="legend-swatch" style="background:#d69e2e; width:10px; height:10px; border-radius:3px;"></div> You C, Opp D</div>
+                <div class="legend-item" style="font-size:0.7rem;"><div class="legend-swatch" style="background:#805ad5; width:10px; height:10px; border-radius:3px;"></div> You D, Opp C</div>
+                <div class="legend-item" style="font-size:0.7rem;"><div class="legend-swatch" style="background:#e53e3e; width:10px; height:10px; border-radius:3px;"></div> Both D</div>
+            </div>
+            <div class="history-strip" id="historyStrip"></div>
+
+            <div class="info-box highlight" id="insightBox">
+                In a one-shot PD, Defect is the dominant strategy — it's better regardless of what the opponent does.
+                But in a repeated game, the shadow of the future can sustain cooperation. Choose your move!
+            </div>
+        </div>
+
+        <!-- RIGHT: Charts -->
+        <div class="panel chart-panel">
+            <div class="panel-title">Cumulative Score &amp; Cooperation Rate</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your Cum. Score</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Opponent Cum. Score</div>
+            </div>
+            <canvas id="scoreCanvas" width="520" height="170"></canvas>
+
+            <div class="panel-title" style="margin-top:14px;">Cooperation Rate Over Time</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your Coop %</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Opp Coop %</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169;"></div> Mutual Coop %</div>
+            </div>
+            <canvas id="coopCanvas" width="520" height="170"></canvas>
+        </div>
+
+        <!-- FULL WIDTH: Payoff Landscape -->
+        <div class="panel full-width chart-panel">
+            <div class="panel-title">One-Shot Payoff Landscape — Why Defection Dominates</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your payoff if you Cooperate</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Your payoff if you Defect</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169; height:8px; width:8px; border-radius:50%;"></div> Temptation gap</div>
+            </div>
+            <canvas id="landscapeCanvas" width="700" height="200"></canvas>
+        </div>
+
+        <!-- FULL WIDTH: Tournament -->
+        <div class="panel full-width" id="tourneyPanel" style="display:none;">
+            <div class="panel-title">🏆 Axelrod-Style Strategy Tournament (<span id="tourneyRounds">200</span> rounds each matchup)</div>
+            <div class="tourney-grid" id="tourneyGrid"></div>
+            <div class="info-box highlight" style="margin-top:10px;" id="tourneyInsight"></div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // State
+        let R = 3, T = 5, S = 0, P = 1;
+        let delta = 0.9;
+        let history = [];
+        let yourScore = 0, oppScore = 0;
+
+        // DOM
+        const sR = document.getElementById('sR'), sT = document.getElementById('sT');
+        const sS = document.getElementById('sS'), sP = document.getElementById('sP');
+        const sDelta = document.getElementById('sDelta');
+        const vR = document.getElementById('vR'), vT = document.getElementById('vT');
+        const vS = document.getElementById('vS'), vP = document.getElementById('vP');
+        const vDelta = document.getElementById('vDelta');
+
+        const scoreCanvas = document.getElementById('scoreCanvas');
+        const coopCanvas = document.getElementById('coopCanvas');
+        const landscapeCanvas = document.getElementById('landscapeCanvas');
+        const sCtx = scoreCanvas.getContext('2d');
+        const cCtx = coopCanvas.getContext('2d');
+        const lCtx = landscapeCanvas.getContext('2d');
+
+        const stratDescs = {
+            tft: '<strong>Tit-for-Tat:</strong> Cooperates first, then mirrors your last move. Nice, retaliatory, forgiving, clear. Won Axelrod\'s original tournament.',
+            always_c: '<strong>Always Cooperate:</strong> Unconditional cooperation. Maximizes joint payoff but is exploitable.',
+            always_d: '<strong>Always Defect:</strong> Unconditional defection. Exploits cooperators, but gets locked into (P,P) against itself.',
+            random: '<strong>Random:</strong> Cooperates 50% of the time. Unpredictable — a noisy baseline.',
+            grudger: '<strong>Grim Trigger:</strong> Cooperates until you defect once, then defects <em>forever</em>. Maximum deterrence, zero forgiveness.',
+            pavlov: '<strong>Pavlov:</strong> Repeats its action if it got a good payoff (R or T), switches otherwise. Corrects mutual defection unlike TfT.',
+            suspicious_tft: '<strong>Suspicious TfT:</strong> Defects first, then mirrors you. Tests before trusting.',
+            generous_tft: '<strong>Generous TfT:</strong> Like TfT but 10% chance of cooperating even after you defect. Breaks retaliatory cycles.',
+            tft2: '<strong>Tit-for-Two-Tats:</strong> Only retaliates after you defect <em>twice in a row</em>. Very forgiving — resists noise.',
+            adaptive: '<strong>Adaptive:</strong> Starts cooperating, then cooperates proportionally to your historical cooperation rate. Rewards consistent cooperators.',
+        };
+
+        document.getElementById('stratSelect').addEventListener('change', function() {
+            document.getElementById('stratDesc').innerHTML = stratDescs[this.value] || '';
+        });
+
+        // Sliders
+        [sR, sT, sS, sP].forEach(s => s.addEventListener('input', () => {
+            R = parseInt(sR.value); T = parseInt(sT.value); S = parseInt(sS.value); P = parseInt(sP.value);
+            updateAll();
+        }));
+        sDelta.addEventListener('input', () => {
+            delta = parseFloat(sDelta.value);
+            vDelta.textContent = delta.toFixed(2);
+            updateDeltaInsight();
+        });
+
+        // Opponent strategies
+        function opponentMove(strat, hist) {
+            const n = hist.length;
+            if (strat === 'always_c') return 'C';
+            if (strat === 'always_d') return 'D';
+            if (strat === 'random') return Math.random() < 0.5 ? 'C' : 'D';
+            if (strat === 'tft') return n === 0 ? 'C' : hist[n-1].you;
+            if (strat === 'suspicious_tft') return n === 0 ? 'D' : hist[n-1].you;
+            if (strat === 'grudger') return hist.some(h => h.you === 'D') ? 'D' : 'C';
+            if (strat === 'pavlov') {
+                if (n === 0) return 'C';
+                const last = hist[n-1];
+                // Opp repeats if it got R or T (good), switches if S or P
+                const oppGot = last.oppPay;
+                return oppGot >= R ? last.opp : (last.opp === 'C' ? 'D' : 'C');
+            }
+            if (strat === 'generous_tft') {
+                if (n === 0) return 'C';
+                if (hist[n-1].you === 'C') return 'C';
+                return Math.random() < 0.1 ? 'C' : 'D';
+            }
+            if (strat === 'tft2') {
+                if (n < 2) return 'C';
+                return (hist[n-1].you === 'D' && hist[n-2].you === 'D') ? 'D' : 'C';
+            }
+            if (strat === 'adaptive') {
+                if (n === 0) return 'C';
+                const coopRate = hist.filter(h => h.you === 'C').length / n;
+                return Math.random() < coopRate ? 'C' : 'D';
+            }
+            return 'C';
+        }
+
+        function payoffs(you, opp) {
+            if (you === 'C' && opp === 'C') return [R, R];
+            if (you === 'C' && opp === 'D') return [S, T];
+            if (you === 'D' && opp === 'C') return [T, S];
+            return [P, P];
+        }
+
+        // Play
+        function playRound(yourAction) {
+            const strat = document.getElementById('stratSelect').value;
+            const oppAction = opponentMove(strat, history);
+            const [yPay, oPay] = payoffs(yourAction, oppAction);
+            history.push({ you: yourAction, opp: oppAction, youPay: yPay, oppPay: oPay });
+            yourScore += yPay; oppScore += oPay;
+
+            const flash = document.getElementById('roundFlash');
+            const youL = yourAction === 'C' ? 'Cooperated' : 'Defected';
+            const oppL = oppAction === 'C' ? 'Cooperated' : 'Defected';
+            const yc = yourAction === 'C' ? '#38a169' : '#e53e3e';
+            const oc = oppAction === 'C' ? '#38a169' : '#e53e3e';
+            const bg = (yourAction === 'C' && oppAction === 'C') ? '#f0fff4' :
+                       (yourAction === 'D' && oppAction === 'D') ? '#fff5f5' : '#fffff0';
+            flash.style.background = bg;
+            flash.style.border = `1px solid #e2e8f0`;
+            flash.innerHTML = `Round ${history.length}: <span style="color:${yc}; font-weight:700;">You ${youL}</span> vs <span style="color:${oc}; font-weight:700;">Opp ${oppL}</span> → <span style="color:#2b6cb0; font-weight:700;">+${yPay}</span> / <span style="color:#e53e3e; font-weight:700;">+${oPay}</span>`;
+            flash.className = 'round-flash show';
+
+            updateScores();
+            updateHistoryStrip();
+            drawScoreChart();
+            drawCoopChart();
+            updateMatrix();
+            updateInsight();
+        }
+
+        document.getElementById('btnCoop').addEventListener('click', () => playRound('C'));
+        document.getElementById('btnDefect').addEventListener('click', () => playRound('D'));
+
+        function resetGame() {
+            history = []; yourScore = 0; oppScore = 0;
+            updateScores();
+            document.getElementById('historyStrip').innerHTML = '';
+            document.getElementById('roundFlash').className = 'round-flash';
+            drawScoreChart(); drawCoopChart(); updateMatrix(); updateInsight();
+        }
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+        // Scores
+        function updateScores() {
+            document.getElementById('scoreYou').textContent = yourScore;
+            document.getElementById('scoreOpp').textContent = oppScore;
+            document.getElementById('roundNum').textContent = history.length;
+            const n = history.length;
+            document.getElementById('avgYou').textContent = n ? (yourScore / n).toFixed(1) : '—';
+            document.getElementById('avgOpp').textContent = n ? (oppScore / n).toFixed(1) : '—';
+        }
+
+        function updateHistoryStrip() {
+            const strip = document.getElementById('historyStrip');
+            const h = history[history.length - 1];
+            const dot = document.createElement('div');
+            const cls = h.you === 'C' ? (h.opp === 'C' ? 'hd-cc' : 'hd-cd') : (h.opp === 'C' ? 'hd-dc' : 'hd-dd');
+            dot.className = 'history-dot ' + cls;
+            dot.textContent = history.length;
+            dot.title = `R${history.length}: You ${h.you}, Opp ${h.opp} → ${h.youPay},${h.oppPay}`;
+            strip.appendChild(dot);
+        }
+
+        // Matrix
+        function updateMatrix() {
+            vR.textContent = R; vT.textContent = T; vS.textContent = S; vP.textContent = P;
+            document.getElementById('cell_CC').innerHTML = `<span class="p1">${R}</span>, <span class="p2">${R}</span>`;
+            document.getElementById('cell_CD').innerHTML = `<span class="p1">${S}</span>, <span class="p2">${T}</span>`;
+            document.getElementById('cell_DC').innerHTML = `<span class="p1">${T}</span>, <span class="p2">${S}</span>`;
+            document.getElementById('cell_DD').innerHTML = `<span class="p1">${P}</span>, <span class="p2">${P}</span>`;
+
+            ['cell_CC', 'cell_CD', 'cell_DC', 'cell_DD'].forEach(id => {
+                document.getElementById(id).className = '';
+            });
+
+            // Nash: (D,D) in PD
+            if (T > R && P > S) document.getElementById('cell_DD').classList.add('nash');
+            // Pareto: (C,C) if R > P
+            if (R > P) document.getElementById('cell_CC').classList.add('pareto');
+
+            // Highlight last outcome
+            if (history.length > 0) {
+                const last = history[history.length - 1];
+                const cellId = 'cell_' + last.you + last.opp;
+                const el = document.getElementById(cellId);
+                if (el) el.classList.add('last-outcome');
+            }
+        }
+
+        function updateDeltaInsight() {
+            const box = document.getElementById('deltaInsight');
+            // Cooperation sustainable when δ >= (T-R)/(T-P)
+            const dStar = (T > P) ? (T - R) / (T - P) : 0;
+            const sustainable = delta >= dStar && dStar > 0 && dStar < 1;
+            box.innerHTML = `Cooperation is sustainable in a repeated PD when δ ≥ (T−R)/(T−P). Currently δ* = <strong>${dStar.toFixed(2)}</strong>. Your δ = ${delta.toFixed(2)} — ` +
+                (sustainable
+                    ? `<span style="color:#38a169; font-weight:700;">cooperation can be sustained ✓</span>`
+                    : (dStar >= 1 ? `<span style="color:#e53e3e; font-weight:700;">cooperation impossible (δ* ≥ 1)</span>`
+                       : `<span style="color:#e53e3e; font-weight:700;">too impatient, cooperation collapses ✗</span>`));
+            box.className = sustainable ? 'info-box success' : 'info-box warning';
+        }
+
+        // PD validity check
+        function updatePDCheck() {
+            const box = document.getElementById('pdCheck');
+            const valid = T > R && R > P && P > S;
+            const iterated = 2 * R > T + S;
+            if (valid && iterated) {
+                box.className = 'info-box success';
+                box.innerHTML = '<strong>✓ Valid PD:</strong> T > R > P > S and 2R > T+S';
+            } else if (valid) {
+                box.className = 'info-box highlight';
+                box.innerHTML = '<strong>~ PD:</strong> T > R > P > S ✓ but 2R > T+S ✗ (alternating exploitation beats cooperation)';
+            } else {
+                box.className = 'info-box warning';
+                let violations = [];
+                if (T <= R) violations.push('T ≤ R');
+                if (R <= P) violations.push('R ≤ P');
+                if (P <= S) violations.push('P ≤ S');
+                box.innerHTML = `<strong>✗ Not a PD:</strong> ${violations.join(', ')}. Adjust payoffs to restore T > R > P > S.`;
+            }
+        }
+
+        function updateInsight() {
+            const box = document.getElementById('insightBox');
+            const n = history.length;
+            if (n === 0) {
+                box.innerHTML = 'In a one-shot PD, Defect is the <strong>dominant strategy</strong> — it yields a higher payoff no matter what the opponent does. Yet both players defecting gives payoff P=' + P + ', while mutual cooperation gives R=' + R + '. This is the dilemma. Make your first move!';
+                box.className = 'info-box highlight';
+                return;
+            }
+
+            const coopY = history.filter(h => h.you === 'C').length;
+            const coopO = history.filter(h => h.opp === 'C').length;
+            const mutual_c = history.filter(h => h.you === 'C' && h.opp === 'C').length;
+            const mutual_d = history.filter(h => h.you === 'D' && h.opp === 'D').length;
+            const avgY = (yourScore / n).toFixed(2);
+            const avgO = (oppScore / n).toFixed(2);
+
+            // Compare to theoretical benchmarks
+            const benchCC = R;
+            const benchDD = P;
+
+            let analysis = `<strong>${n} rounds played.</strong> `;
+            if (parseFloat(avgY) >= benchCC - 0.1 && parseFloat(avgO) >= benchCC - 0.1) {
+                analysis += `Both averaging near R=${R} — <span style="color:#38a169; font-weight:600;">sustained cooperation!</span> `;
+            } else if (parseFloat(avgY) <= benchDD + 0.3 && parseFloat(avgO) <= benchDD + 0.3) {
+                analysis += `Both stuck near P=${P} — <span style="color:#e53e3e; font-weight:600;">mutual defection trap.</span> `;
+            } else if (parseFloat(avgY) > parseFloat(avgO) + 0.5) {
+                analysis += `You're exploiting the opponent (avg ${avgY} vs ${avgO}). `;
+            } else if (parseFloat(avgO) > parseFloat(avgY) + 0.5) {
+                analysis += `Opponent is exploiting you (avg ${avgO} vs ${avgY}). `;
+            } else {
+                analysis += `Mixed outcomes. `;
+            }
+
+            analysis += `<br>Mutual coop: ${mutual_c}/${n} (${(mutual_c/n*100).toFixed(0)}%) · Mutual defect: ${mutual_d}/${n} (${(mutual_d/n*100).toFixed(0)}%) · Joint payoff: ${yourScore + oppScore} (vs ${n * 2 * R} if all cooperated)`;
+
+            box.innerHTML = analysis;
+            box.className = 'info-box highlight';
+        }
+
+        // Charts
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+        function drawScoreChart() {
+            const { w, h } = setupCanvas(scoreCanvas, sCtx);
+            const ctx = sCtx;
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+            if (history.length === 0) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Play rounds to see cumulative scores', w / 2, h / 2);
+                return;
+            }
+            const pad = { top: 10, right: 12, bottom: 22, left: 38 };
+            let cumY = [], cumO = [], sy = 0, so = 0;
+            history.forEach(h => { sy += h.youPay; so += h.oppPay; cumY.push(sy); cumO.push(so); });
+            const maxV = Math.max(...cumY, ...cumO, 1);
+            const minV = Math.min(...cumY, ...cumO, 0);
+            const rng = maxV - minV || 1;
+            function X(i) { return pad.left + (i / Math.max(history.length - 1, 1)) * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - ((v - minV) / rng) * (h - pad.top - pad.bottom); }
+
+            // Reference line for mutual cooperation
+            ctx.setLineDash([4, 3]); ctx.strokeStyle = '#c6f6d5'; ctx.lineWidth = 1;
+            for (let i = 1; i < history.length; i++) {
+                const ideal = (i + 1) * R;
+                if (i === 1) { ctx.beginPath(); ctx.moveTo(X(i), Y(ideal)); }
+                else ctx.lineTo(X(i), Y(ideal));
+            }
+            ctx.stroke(); ctx.setLineDash([]);
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const v = minV + rng * i / 4;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), pad.left - 3, Y(v) + 3);
+            }
+
+            function drawLine(data, color) {
+                ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+                data.forEach((v, i) => { i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); });
+                ctx.stroke();
+            }
+            drawLine(cumY, '#2b6cb0'); drawLine(cumO, '#e53e3e');
+        }
+
+        function drawCoopChart() {
+            const { w, h } = setupCanvas(coopCanvas, cCtx);
+            const ctx = cCtx;
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+            if (history.length < 2) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Play rounds to see cooperation rates', w / 2, h / 2);
+                return;
+            }
+            const pad = { top: 10, right: 12, bottom: 22, left: 38 };
+            function X(i) { return pad.left + (i / (history.length - 1)) * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - v * (h - pad.top - pad.bottom); }
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const v = i / 4;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText((v * 100).toFixed(0) + '%', pad.left - 3, Y(v) + 3);
+            }
+
+            // Running cooperation rates
+            let yC = 0, oC = 0, mC = 0;
+            const yRates = [], oRates = [], mRates = [];
+            history.forEach((h, i) => {
+                if (h.you === 'C') yC++;
+                if (h.opp === 'C') oC++;
+                if (h.you === 'C' && h.opp === 'C') mC++;
+                yRates.push(yC / (i + 1));
+                oRates.push(oC / (i + 1));
+                mRates.push(mC / (i + 1));
+            });
+
+            function drawLine(data, color, dash) {
+                ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash(dash || []);
+                ctx.beginPath();
+                data.forEach((v, i) => { i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); });
+                ctx.stroke(); ctx.setLineDash([]);
+            }
+            drawLine(yRates, '#2b6cb0');
+            drawLine(oRates, '#e53e3e');
+            drawLine(mRates, '#38a169', [4, 3]);
+        }
+
+        function drawLandscapeChart() {
+            const { w, h } = setupCanvas(landscapeCanvas, lCtx);
+            const ctx = lCtx;
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+
+            const pad = { top: 14, right: 20, bottom: 30, left: 48 };
+            const allV = [R, T, S, P];
+            const maxP = Math.max(...allV) + 1;
+            const minP = Math.min(...allV) - 1;
+            const rng = maxP - minP;
+
+            function X(q) { return pad.left + q * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - ((v - minP) / rng) * (h - pad.top - pad.bottom); }
+
+            // Axes
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.2;
+            ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, h - pad.bottom);
+            ctx.lineTo(w - pad.right, h - pad.bottom); ctx.stroke();
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 5; i++) {
+                const v = minP + rng * i / 5;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '10px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), pad.left - 5, Y(v) + 3);
+            }
+            for (let i = 0; i <= 10; i++) {
+                const q = i / 10;
+                const x = X(q);
+                ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, h - pad.bottom); ctx.stroke();
+                if (i % 2 === 0) {
+                    ctx.fillStyle = '#a0aec0'; ctx.font = '10px Consolas'; ctx.textAlign = 'center';
+                    ctx.fillText(q.toFixed(1), x, h - pad.bottom + 14);
+                }
+            }
+
+            ctx.fillStyle = '#4a5568'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText("Opponent's probability of cooperating (q)", (pad.left + w - pad.right) / 2, h - 2);
+            ctx.save(); ctx.translate(14, (pad.top + h - pad.bottom) / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Your expected payoff', 0, 0); ctx.restore();
+
+            // Shade gap: temptation gap where D > C
+            for (let qi = 0; qi < 200; qi++) {
+                const q = qi / 200;
+                const ec = q * R + (1 - q) * S;
+                const ed = q * T + (1 - q) * P;
+                if (ed > ec) {
+                    const x1 = X(q), x2 = X((qi + 1) / 200);
+                    ctx.fillStyle = 'rgba(229, 62, 62, 0.06)';
+                    ctx.fillRect(x1, Y(ed), x2 - x1, Y(ec) - Y(ed));
+                }
+            }
+
+            // E[C] line
+            ctx.strokeStyle = '#2b6cb0'; ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.moveTo(X(0), Y(S)); ctx.lineTo(X(1), Y(R)); ctx.stroke();
+
+            // E[D] line
+            ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.moveTo(X(0), Y(P)); ctx.lineTo(X(1), Y(T)); ctx.stroke();
+
+            // Labels
+            ctx.font = 'bold 11px Segoe UI';
+            ctx.fillStyle = '#2b6cb0'; ctx.textAlign = 'left';
+            ctx.fillText(`E[Cooperate]`, X(1) + 4, Y(R) + 4);
+            ctx.textAlign = 'right';
+            ctx.fillText(`S = ${S}`, X(0) - 5, Y(S) + 4);
+            ctx.textAlign = 'left';
+            ctx.fillText(`R = ${R}`, X(1) + 4, Y(R) + 18);
+
+            ctx.fillStyle = '#e53e3e'; ctx.textAlign = 'left';
+            ctx.fillText(`E[Defect]`, X(1) + 4, Y(T) + 4);
+            ctx.textAlign = 'right';
+            ctx.fillText(`P = ${P}`, X(0) - 5, Y(P) + 4);
+            ctx.textAlign = 'left';
+            ctx.fillText(`T = ${T}`, X(1) + 4, Y(T) + 18);
+
+            // In a valid PD, D line is always above C line
+            if (T > R && P > S) {
+                ctx.fillStyle = '#718096'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Defect dominates for ALL values of q — this is why the PD is a dilemma', (pad.left + w - pad.right) / 2, pad.top + 14);
+
+                // Annotate the gaps
+                const q = 0.5;
+                const ec = q * R + (1 - q) * S;
+                const ed = q * T + (1 - q) * P;
+                const midY = (Y(ec) + Y(ed)) / 2;
+                ctx.strokeStyle = '#38a169'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(X(q) + 2, Y(ec)); ctx.lineTo(X(q) + 2, Y(ed)); ctx.stroke();
+                // Arrow heads
+                ctx.beginPath(); ctx.moveTo(X(q) - 2, Y(ec) + 5); ctx.lineTo(X(q) + 2, Y(ec)); ctx.lineTo(X(q) + 6, Y(ec) + 5); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(X(q) - 2, Y(ed) - 5); ctx.lineTo(X(q) + 2, Y(ed)); ctx.lineTo(X(q) + 6, Y(ed) - 5); ctx.stroke();
+
+                ctx.fillStyle = '#38a169'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'left';
+                ctx.fillText(`Gap = ${(ed - ec).toFixed(1)}`, X(q) + 10, midY + 3);
+            }
+        }
+
+        // Tournament
+        document.getElementById('tourneyBtn').addEventListener('click', runTournament);
+
+        function runTournament() {
+            const panel = document.getElementById('tourneyPanel');
+            panel.style.display = 'block';
+
+            const strategies = [
+                'tft', 'always_c', 'always_d', 'random', 'grudger',
+                'pavlov', 'suspicious_tft', 'generous_tft', 'tft2', 'adaptive'
+            ];
+
+            const names = {
+                tft: 'Tit-for-Tat', always_c: 'Always Coop', always_d: 'Always Defect',
+                random: 'Random', grudger: 'Grim Trigger', pavlov: 'Pavlov',
+                suspicious_tft: 'Suspicious TfT', generous_tft: 'Generous TfT',
+                tft2: 'TfT-2', adaptive: 'Adaptive'
+            };
+
+            const rounds = 200;
+            document.getElementById('tourneyRounds').textContent = rounds;
+            const scores = {};
+            strategies.forEach(s => scores[s] = 0);
+
+            // Round-robin: every pair plays
+            for (let i = 0; i < strategies.length; i++) {
+                for (let j = i; j < strategies.length; j++) {
+                    const s1 = strategies[i], s2 = strategies[j];
+                    let hist1 = [], hist2 = [];
+                    let sc1 = 0, sc2 = 0;
+
+                    for (let r = 0; r < rounds; r++) {
+                        const m1 = opponentMove(s1, hist2.map((h, idx) => ({ you: hist2[idx]?.opp || 'C', opp: hist2[idx]?.you || 'C', youPay: 0, oppPay: 0 })).length ? formatHist(hist1, true) : []);
+                        const m2 = opponentMove(s2, formatHist(hist2, true));
+
+                        const [p1, p2] = payoffs(m1, m2);
+                        sc1 += p1; sc2 += p2;
+                        hist1.push({ you: m1, opp: m2, youPay: p1, oppPay: p2 });
+                        hist2.push({ you: m2, opp: m1, youPay: p2, oppPay: p1 });
+                    }
+
+                    if (i === j) {
+                        scores[s1] += sc1;
+                    } else {
+                        scores[s1] += sc1;
+                        scores[s2] += sc2;
+                    }
+                }
+            }
+
+            // Simple format helper for tournament
+            function formatHist(h, swap) {
+                return h;
+            }
+
+            // Rank
+            const ranked = strategies.map(s => ({
+                strat: s,
+                name: names[s],
+                score: scores[s],
+                avgPerRound: scores[s] / (strategies.length * rounds),
+            })).sort((a, b) => b.score - a.score);
+
+            const grid = document.getElementById('tourneyGrid');
+            grid.innerHTML = ranked.map((r, i) => {
+                const rankClass = i === 0 ? 'rank-1' : (i === 1 ? 'rank-2' : (i === 2 ? 'rank-3' : ''));
+                const medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : `#${i + 1}`));
+                return `<div class="tourney-card ${rankClass}">
+                    <div class="tc-rank">${medal}</div>
+                    <div class="tc-name">${r.name}</div>
+                    <div class="tc-score">${r.score}</div>
+                    <div class="tc-coop">avg ${r.avgPerRound.toFixed(2)}/round</div>
+                </div>`;
+            }).join('');
+
+            const winner = ranked[0];
+            const loser = ranked[ranked.length - 1];
+            const insight = document.getElementById('tourneyInsight');
+            insight.innerHTML = `<strong>${winner.name}</strong> wins the tournament with ${winner.score} points (avg ${winner.avgPerRound.toFixed(2)}/round). ` +
+                `<strong>${loser.name}</strong> finishes last with ${loser.score} points. ` +
+                `Axelrod's key finding: <em>nice</em> strategies (that never defect first) tend to outperform exploitative ones in round-robin play. ` +
+                `The winning strategy is typically simple, retaliatory, forgiving, and clear.`;
+        }
+
+        // Master update
+        function updateAll() {
+            updateMatrix();
+            updatePDCheck();
+            updateDeltaInsight();
+            updateInsight();
+            drawScoreChart();
+            drawCoopChart();
+            drawLandscapeChart();
+        }
+
+        updateAll();
+        window.addEventListener('resize', () => { drawScoreChart(); drawCoopChart(); drawLandscapeChart(); });
+    })();
+    </script>
+</body>
+</html>

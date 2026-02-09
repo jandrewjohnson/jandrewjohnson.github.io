@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Production Function Explorer</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 340px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 800px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .graph-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .control-panel.highlight {
+            background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%);
+            border-color: #bee3f8;
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .slider-group { margin-bottom: 12px; }
+        .slider-group:last-child { margin-bottom: 0; }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .slider-label span:first-child {
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .slider-value {
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(66,153,225,0.3);
+        }
+
+        .formula {
+            font-size: 0.78rem;
+            color: #a0aec0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            text-align: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #edf2f7;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-item {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 8px 10px;
+            border: 1px solid #edf2f7;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+
+        .insight-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 1px solid #e2e8f0;
+        }
+
+        .insight-box strong {
+            color: #319795;
+        }
+
+        .phase-increasing { color: #38a169; font-weight: 600; }
+        .phase-decreasing { color: #d69e2e; font-weight: 600; }
+        .phase-negative { color: #e53e3e; font-weight: 600; }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .stage-display {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+
+        .stage-display.stage1 {
+            background: rgba(56,161,105,0.1);
+            border: 1px solid rgba(56,161,105,0.3);
+        }
+        .stage-display.stage2 {
+            background: rgba(214,158,46,0.1);
+            border: 1px solid rgba(214,158,46,0.3);
+        }
+        .stage-display.stage3 {
+            background: rgba(229,62,62,0.1);
+            border: 1px solid rgba(229,62,62,0.3);
+        }
+
+        .stage-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stage-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .note {
+            font-size: 0.75rem;
+            color: #718096;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Production Function Explorer</h1>
+        <p class="subtitle">How labor inputs translate to output — and why diminishing returns matter</p>
+
+        <div class="main-content">
+            <!-- Left: Total Product -->
+            <div class="graph-container">
+                <div class="graph-title">Total Product: Q = f(L)</div>
+                <canvas id="tp-canvas" width="500" height="450"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#2b6cb0"></div> Total Product</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#38a169;height:2px;border-top:2px dashed #38a169;background:none"></div> Inflection Point</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e;height:2px;border-top:2px dashed #e53e3e;background:none"></div> Maximum TP</div>
+                </div>
+            </div>
+
+            <!-- Center: MP and AP -->
+            <div class="graph-container">
+                <div class="graph-title">Marginal Product & Average Product</div>
+                <canvas id="mp-canvas" width="500" height="450"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e"></div> MP (Marginal Product)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#d69e2e"></div> AP (Average Product)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#4299e1"></div> Selected L</div>
+                </div>
+            </div>
+
+            <!-- Right: Controls -->
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title">👷 Labor Input</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Workers (L)</span>
+                            <span class="slider-value" id="l-val">12</span>
+                        </div>
+                        <input type="range" id="l-slider" min="0" max="25" step="0.5" value="12">
+                    </div>
+                    <div class="note">Drag to see how output changes with more labor</div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">🔧 Production Technology</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Productivity (α)</span>
+                            <span class="slider-value" id="alpha-val">5.00</span>
+                        </div>
+                        <input type="range" id="alpha-slider" min="1" max="12" step="0.25" value="5">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Diminishing factor (β)</span>
+                            <span class="slider-value" id="beta-val">0.150</span>
+                        </div>
+                        <input type="range" id="beta-slider" min="0.02" max="0.5" step="0.005" value="0.15">
+                    </div>
+                    <div class="formula">
+                        Q = αL² − βL³<br>
+                        MP = 2αL − 3βL²<br>
+                        AP = αL − βL²
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">📊 At Current L</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Total Product</div>
+                            <div class="stat-value" id="stat-tp">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Marginal Product</div>
+                            <div class="stat-value" id="stat-mp">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Average Product</div>
+                            <div class="stat-value" id="stat-ap">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">MP vs AP</div>
+                            <div class="stat-value" id="stat-relation">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">🔑 Key Points</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Inflection (MP peak)</div>
+                            <div class="stat-value" id="stat-inflection">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">AP peak (MP=AP)</div>
+                            <div class="stat-value" id="stat-ap-peak">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Max TP (MP=0)</div>
+                            <div class="stat-value" id="stat-max-tp">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Max Output</div>
+                            <div class="stat-value" id="stat-max-q">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stage-container" class="stage-display stage2">
+                    <div class="stage-label">Stage of Production</div>
+                    <div class="stage-value" id="stage-value">—</div>
+                </div>
+
+                <div class="insight-box" id="insight-box">
+                    <strong>Insight:</strong> Adjust sliders to explore.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const tpCanvas = document.getElementById('tp-canvas');
+        const tpCtx = tpCanvas.getContext('2d');
+        const mpCanvas = document.getElementById('mp-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = 500 * dpr;
+            canvas.height = 450 * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = '500px';
+            canvas.style.height = '450px';
+        }
+        setupCanvas(tpCanvas, tpCtx);
+        setupCanvas(mpCanvas, mpCtx);
+
+        // Sliders
+        const lSlider = document.getElementById('l-slider');
+        const alphaSlider = document.getElementById('alpha-slider');
+        const betaSlider = document.getElementById('beta-slider');
+
+        // Production functions: Q = αL² − βL³
+        function totalProduct(L, alpha, beta) {
+            const q = alpha * L * L - beta * L * L * L;
+            return Math.max(q, 0);
+        }
+
+        // MP = dQ/dL = 2αL − 3βL²
+        function marginalProduct(L, alpha, beta) {
+            return 2 * alpha * L - 3 * beta * L * L;
+        }
+
+        // AP = Q/L = αL − βL²
+        function averageProduct(L, alpha, beta) {
+            if (L <= 0) return 0;
+            return alpha * L - beta * L * L;
+        }
+
+        // Key points
+        function inflectionL(alpha, beta) {
+            // MP peak: dMP/dL = 2α − 6βL = 0 => L = α/(3β)
+            return alpha / (3 * beta);
+        }
+
+        function apPeakL(alpha, beta) {
+            // AP peak: dAP/dL = α − 2βL = 0 => L = α/(2β)
+            return alpha / (2 * beta);
+        }
+
+        function maxTPL(alpha, beta) {
+            // MP = 0: 2αL − 3βL² = 0 => L = 2α/(3β)
+            return 2 * alpha / (3 * beta);
+        }
+
+        function drawTPGraph() {
+            const L = parseFloat(lSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const beta = parseFloat(betaSlider.value);
+
+            const ctx = tpCtx;
+            ctx.clearRect(0, 0, 500, 450);
+
+            const margin = { top: 20, right: 20, bottom: 35, left: 55 };
+            const width = 500 - margin.left - margin.right;
+            const height = 450 - margin.top - margin.bottom;
+
+            const maxL = Math.max(25, maxTPL(alpha, beta) * 1.15);
+            const lMaxTP = maxTPL(alpha, beta);
+            const maxQ = totalProduct(lMaxTP, alpha, beta) * 1.15;
+
+            const toX = (l) => margin.left + (l / maxL) * width;
+            const toY = (q) => margin.top + height - (q / maxQ) * height;
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 5; i++) {
+                const y = margin.top + (i / 6) * height;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + width, y);
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '11px Segoe UI';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const l = (i / 5) * maxL;
+                ctx.fillText(l.toFixed(0), toX(l), margin.top + height + 18);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 5; i++) {
+                const q = (i / 5) * maxQ;
+                ctx.fillText(q.toFixed(0), margin.left - 5, toY(q) + 4);
+            }
+
+            // Axis titles
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '13px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Labor (L)', margin.left + width / 2, 450 - 5);
+            ctx.save();
+            ctx.translate(16, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Output (Q)', 0, 0);
+            ctx.restore();
+
+            // Stage shading
+            const lInflection = inflectionL(alpha, beta);
+            const lAPPeak = apPeakL(alpha, beta);
+
+            // Stage I: 0 to AP peak (increasing returns dominate)
+            if (lAPPeak > 0 && lAPPeak <= maxL) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.06)';
+                ctx.fillRect(toX(0), margin.top, toX(Math.min(lAPPeak, maxL)) - toX(0), height);
+            }
+
+            // Stage II: AP peak to Max TP (diminishing but positive returns)
+            if (lAPPeak < maxL && lMaxTP > lAPPeak) {
+                ctx.fillStyle = 'rgba(214, 158, 46, 0.06)';
+                ctx.fillRect(toX(lAPPeak), margin.top, toX(Math.min(lMaxTP, maxL)) - toX(lAPPeak), height);
+            }
+
+            // Stage III: Beyond Max TP (negative returns)
+            if (lMaxTP < maxL) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.06)';
+                ctx.fillRect(toX(lMaxTP), margin.top, toX(maxL) - toX(lMaxTP), height);
+            }
+
+            // Stage labels at top
+            ctx.font = '10px Segoe UI';
+            ctx.textAlign = 'center';
+            if (lAPPeak > 0 && lAPPeak <= maxL) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.5)';
+                ctx.fillText('Stage I', toX(lAPPeak / 2), margin.top + 14);
+            }
+            if (lAPPeak < maxL && lMaxTP > lAPPeak) {
+                ctx.fillStyle = 'rgba(214, 158, 46, 0.6)';
+                ctx.fillText('Stage II', toX((lAPPeak + Math.min(lMaxTP, maxL)) / 2), margin.top + 14);
+            }
+            if (lMaxTP < maxL) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.5)';
+                ctx.fillText('Stage III', toX((lMaxTP + maxL) / 2), margin.top + 14);
+            }
+
+            // TP curve
+            ctx.strokeStyle = '#2b6cb0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let started = false;
+            for (let l = 0; l <= maxL; l += 0.2) {
+                const q = totalProduct(l, alpha, beta);
+                if (q >= 0) {
+                    if (!started) { ctx.moveTo(toX(l), toY(q)); started = true; }
+                    else ctx.lineTo(toX(l), toY(q));
+                }
+            }
+            ctx.stroke();
+
+            // Inflection point marker
+            if (lInflection > 0 && lInflection <= maxL) {
+                const qInf = totalProduct(lInflection, alpha, beta);
+                ctx.strokeStyle = '#38a169';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([5, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(lInflection), margin.top);
+                ctx.lineTo(toX(lInflection), margin.top + height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#38a169';
+                ctx.beginPath();
+                ctx.arc(toX(lInflection), toY(qInf), 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '10px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Inflection', toX(lInflection), toY(qInf) - 10);
+            }
+
+            // Max TP marker
+            if (lMaxTP > 0 && lMaxTP <= maxL) {
+                const qMax = totalProduct(lMaxTP, alpha, beta);
+                ctx.strokeStyle = '#e53e3e';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([5, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(lMaxTP), margin.top);
+                ctx.lineTo(toX(lMaxTP), margin.top + height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(toX(lMaxTP), toY(qMax), 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '10px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Max TP', toX(lMaxTP), toY(qMax) - 10);
+            }
+
+            // Current L indicator
+            if (L > 0 && L <= maxL) {
+                const qAtL = totalProduct(L, alpha, beta);
+
+                // Vertical line
+                ctx.strokeStyle = '#4299e1';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([6, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(L), toY(qAtL));
+                ctx.lineTo(toX(L), margin.top + height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Point
+                ctx.fillStyle = '#4299e1';
+                ctx.beginPath();
+                ctx.arc(toX(L), toY(qAtL), 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(toX(L), toY(qAtL), 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Slope line (tangent = MP)
+                const mp = marginalProduct(L, alpha, beta);
+                const tangentLen = 2.5;
+                const l1 = L - tangentLen;
+                const l2 = L + tangentLen;
+                const q1 = qAtL - mp * tangentLen;
+                const q2 = qAtL + mp * tangentLen;
+                if (q1 >= 0 && q2 >= 0 && q1 <= maxQ && q2 <= maxQ) {
+                    ctx.strokeStyle = '#e53e3e';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(toX(l1), toY(q1));
+                    ctx.lineTo(toX(l2), toY(q2));
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    ctx.fillStyle = '#e53e3e';
+                    ctx.font = '10px Segoe UI';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`slope = MP = ${mp.toFixed(1)}`, toX(l2) + 4, toY(q2) - 2);
+                }
+
+                // Ray from origin (slope = AP)
+                const ap = averageProduct(L, alpha, beta);
+                if (ap > 0) {
+                    ctx.strokeStyle = '#d69e2e';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(toX(0), toY(0));
+                    ctx.lineTo(toX(L), toY(qAtL));
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Extend ray slightly past point
+                    const extL = L * 1.12;
+                    const extQ = ap * extL;
+                    if (extQ <= maxQ && extQ >= 0) {
+                        ctx.strokeStyle = '#d69e2e';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([2, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(toX(L), toY(qAtL));
+                        ctx.lineTo(toX(extL), toY(extQ));
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        ctx.fillStyle = '#d69e2e';
+                        ctx.font = '10px Segoe UI';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(`ray slope = AP = ${ap.toFixed(1)}`, toX(extL) + 4, toY(extQ));
+                    }
+                }
+
+                // Label
+                ctx.fillStyle = '#4299e1';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText(`L = ${L.toFixed(1)}, Q = ${qAtL.toFixed(1)}`, toX(L), margin.top + height - 5);
+            }
+
+            // Curve label
+            ctx.fillStyle = '#2b6cb0';
+            ctx.font = 'bold 11px Segoe UI';
+            ctx.textAlign = 'left';
+            const lblL = maxL * 0.3;
+            const lblQ = totalProduct(lblL, alpha, beta);
+            if (lblQ > 0 && lblQ < maxQ) {
+                ctx.fillText('TP = f(L)', toX(lblL) + 5, toY(lblQ) - 8);
+            }
+        }
+
+        function drawMPGraph() {
+            const L = parseFloat(lSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const beta = parseFloat(betaSlider.value);
+
+            const ctx = mpCtx;
+            ctx.clearRect(0, 0, 500, 450);
+
+            const margin = { top: 20, right: 20, bottom: 35, left: 55 };
+            const width = 500 - margin.left - margin.right;
+            const height = 450 - margin.top - margin.bottom;
+
+            const lMaxTP = maxTPL(alpha, beta);
+            const maxL = Math.max(25, lMaxTP * 1.15);
+
+            // Max MP is at inflection
+            const lInf = inflectionL(alpha, beta);
+            const maxMP = marginalProduct(lInf, alpha, beta);
+            const maxY = maxMP * 1.2;
+
+            // We want to show negative MP too
+            const minMP = Math.min(marginalProduct(maxL, alpha, beta), 0);
+            const minY = Math.min(minMP * 1.1, -maxY * 0.15);
+
+            const yRange = maxY - minY;
+            const toX = (l) => margin.left + (l / maxL) * width;
+            const toY = (v) => margin.top + height - ((v - minY) / yRange) * height;
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 5; i++) {
+                const y = margin.top + (i / 6) * height;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(margin.left + width, y);
+                ctx.stroke();
+            }
+
+            // Zero line
+            if (minY < 0) {
+                ctx.strokeStyle = '#cbd5e0';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, toY(0));
+                ctx.lineTo(margin.left + width, toY(0));
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin.left, margin.top);
+            ctx.lineTo(margin.left, margin.top + height);
+            ctx.lineTo(margin.left + width, margin.top + height);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#718096';
+            ctx.font = '11px Segoe UI';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 5; i++) {
+                const l = (i / 5) * maxL;
+                ctx.fillText(l.toFixed(0), toX(l), margin.top + height + 18);
+            }
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 6; i++) {
+                const v = minY + (i / 6) * yRange;
+                ctx.fillText(v.toFixed(0), margin.left - 5, toY(v) + 4);
+            }
+
+            // Axis titles
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '13px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('Labor (L)', margin.left + width / 2, 450 - 5);
+            ctx.save();
+            ctx.translate(16, margin.top + height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Output per Worker', 0, 0);
+            ctx.restore();
+
+            // Stage shading
+            const lAPPeak = apPeakL(alpha, beta);
+
+            if (lAPPeak > 0 && lAPPeak <= maxL) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.06)';
+                ctx.fillRect(toX(0), margin.top, toX(Math.min(lAPPeak, maxL)) - toX(0), height);
+            }
+            if (lAPPeak < maxL && lMaxTP > lAPPeak) {
+                ctx.fillStyle = 'rgba(214, 158, 46, 0.06)';
+                ctx.fillRect(toX(lAPPeak), margin.top, toX(Math.min(lMaxTP, maxL)) - toX(lAPPeak), height);
+            }
+            if (lMaxTP < maxL) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.06)';
+                ctx.fillRect(toX(lMaxTP), margin.top, toX(maxL) - toX(lMaxTP), height);
+            }
+
+            // Stage labels
+            ctx.font = '10px Segoe UI';
+            ctx.textAlign = 'center';
+            if (lAPPeak > 0 && lAPPeak <= maxL) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.5)';
+                ctx.fillText('Stage I', toX(lAPPeak / 2), margin.top + 14);
+            }
+            if (lAPPeak < maxL && lMaxTP > lAPPeak) {
+                ctx.fillStyle = 'rgba(214, 158, 46, 0.6)';
+                ctx.fillText('Stage II', toX((lAPPeak + Math.min(lMaxTP, maxL)) / 2), margin.top + 14);
+            }
+            if (lMaxTP < maxL) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.5)';
+                ctx.fillText('Stage III', toX((lMaxTP + maxL) / 2), margin.top + 14);
+            }
+
+            // MP curve
+            ctx.strokeStyle = '#e53e3e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let started = false;
+            for (let l = 0; l <= maxL; l += 0.2) {
+                const mp = marginalProduct(l, alpha, beta);
+                if (mp >= minY && mp <= maxY) {
+                    if (!started) { ctx.moveTo(toX(l), toY(mp)); started = true; }
+                    else ctx.lineTo(toX(l), toY(mp));
+                } else if (started) {
+                    ctx.lineTo(toX(l), toY(Math.max(minY, Math.min(maxY, mp))));
+                }
+            }
+            ctx.stroke();
+
+            // AP curve
+            ctx.strokeStyle = '#d69e2e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            started = false;
+            for (let l = 0.2; l <= maxL; l += 0.2) {
+                const ap = averageProduct(l, alpha, beta);
+                if (ap >= minY && ap <= maxY) {
+                    if (!started) { ctx.moveTo(toX(l), toY(ap)); started = true; }
+                    else ctx.lineTo(toX(l), toY(ap));
+                } else if (started) {
+                    ctx.lineTo(toX(l), toY(Math.max(minY, Math.min(maxY, ap))));
+                }
+            }
+            ctx.stroke();
+
+            // MP peak marker
+            if (lInf > 0 && lInf <= maxL) {
+                const mpPeak = marginalProduct(lInf, alpha, beta);
+                ctx.fillStyle = '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(toX(lInf), toY(mpPeak), 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '10px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('MP peak', toX(lInf), toY(mpPeak) - 8);
+            }
+
+            // AP peak / MP=AP crossing marker
+            if (lAPPeak > 0 && lAPPeak <= maxL) {
+                const apPeak = averageProduct(lAPPeak, alpha, beta);
+                ctx.fillStyle = '#805ad5';
+                ctx.beginPath();
+                ctx.arc(toX(lAPPeak), toY(apPeak), 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '10px Segoe UI';
+                ctx.fillStyle = '#805ad5';
+                ctx.textAlign = 'center';
+                ctx.fillText('MP = AP', toX(lAPPeak), toY(apPeak) - 10);
+            }
+
+            // MP = 0 crossing
+            if (lMaxTP > 0 && lMaxTP <= maxL) {
+                ctx.fillStyle = '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(toX(lMaxTP), toY(0), 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '10px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('MP = 0', toX(lMaxTP), toY(0) + 15);
+            }
+
+            // Current L indicator
+            if (L > 0 && L <= maxL) {
+                const mpAtL = marginalProduct(L, alpha, beta);
+                const apAtL = averageProduct(L, alpha, beta);
+
+                // Vertical line
+                ctx.strokeStyle = '#4299e1';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([6, 4]);
+                ctx.beginPath();
+                ctx.moveTo(toX(L), margin.top);
+                ctx.lineTo(toX(L), margin.top + height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // MP point
+                if (mpAtL >= minY && mpAtL <= maxY) {
+                    ctx.fillStyle = '#e53e3e';
+                    ctx.beginPath();
+                    ctx.arc(toX(L), toY(mpAtL), 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(toX(L), toY(mpAtL), 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // AP point
+                if (apAtL >= minY && apAtL <= maxY) {
+                    ctx.fillStyle = '#d69e2e';
+                    ctx.beginPath();
+                    ctx.arc(toX(L), toY(apAtL), 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(toX(L), toY(apAtL), 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = '#4299e1';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText(`L = ${L.toFixed(1)}`, toX(L), margin.top + height - 5);
+            }
+
+            // Curve labels
+            ctx.font = 'bold 11px Segoe UI';
+            const lblL2 = maxL * 0.2;
+            const mpLbl = marginalProduct(lblL2, alpha, beta);
+            if (mpLbl >= minY && mpLbl <= maxY) {
+                ctx.fillStyle = '#e53e3e';
+                ctx.textAlign = 'left';
+                ctx.fillText('MP', toX(lblL2) + 5, toY(mpLbl) - 5);
+            }
+            const apLbl = averageProduct(lblL2, alpha, beta);
+            if (apLbl >= minY && apLbl <= maxY) {
+                ctx.fillStyle = '#d69e2e';
+                ctx.textAlign = 'left';
+                ctx.fillText('AP', toX(lblL2) + 5, toY(apLbl) + 15);
+            }
+        }
+
+        function updateDisplay() {
+            const L = parseFloat(lSlider.value);
+            const alpha = parseFloat(alphaSlider.value);
+            const beta = parseFloat(betaSlider.value);
+
+            // Update slider labels
+            document.getElementById('l-val').textContent = L.toFixed(1);
+            document.getElementById('alpha-val').textContent = alpha.toFixed(2);
+            document.getElementById('beta-val').textContent = beta.toFixed(3);
+
+            // Current values
+            const tp = totalProduct(L, alpha, beta);
+            const mp = marginalProduct(L, alpha, beta);
+            const ap = averageProduct(L, alpha, beta);
+
+            document.getElementById('stat-tp').textContent = tp.toFixed(1);
+            document.getElementById('stat-mp').textContent = mp.toFixed(1);
+            document.getElementById('stat-ap').textContent = ap.toFixed(1);
+
+            if (Math.abs(mp - ap) < 0.5) {
+                document.getElementById('stat-relation').textContent = 'MP ≈ AP';
+                document.getElementById('stat-relation').style.color = '#805ad5';
+            } else if (mp > ap) {
+                document.getElementById('stat-relation').textContent = 'MP > AP ↑';
+                document.getElementById('stat-relation').style.color = '#38a169';
+            } else {
+                document.getElementById('stat-relation').textContent = 'MP < AP ↓';
+                document.getElementById('stat-relation').style.color = '#e53e3e';
+            }
+
+            // Key points
+            const lInf = inflectionL(alpha, beta);
+            const lAP = apPeakL(alpha, beta);
+            const lMax = maxTPL(alpha, beta);
+            const qMax = totalProduct(lMax, alpha, beta);
+
+            document.getElementById('stat-inflection').textContent = `L = ${lInf.toFixed(1)}`;
+            document.getElementById('stat-ap-peak').textContent = `L = ${lAP.toFixed(1)}`;
+            document.getElementById('stat-max-tp').textContent = `L = ${lMax.toFixed(1)}`;
+            document.getElementById('stat-max-q').textContent = qMax.toFixed(0);
+
+            // Stage of production
+            const stageContainer = document.getElementById('stage-container');
+            const stageValue = document.getElementById('stage-value');
+
+            if (L <= lAP) {
+                stageContainer.className = 'stage-display stage1';
+                stageValue.innerHTML = '<span class="phase-increasing">Stage I — Increasing Returns</span>';
+                stageValue.style.color = '#38a169';
+            } else if (L <= lMax) {
+                stageContainer.className = 'stage-display stage2';
+                stageValue.innerHTML = '<span class="phase-decreasing">Stage II — Diminishing Returns</span>';
+                stageValue.style.color = '#d69e2e';
+            } else {
+                stageContainer.className = 'stage-display stage3';
+                stageValue.innerHTML = '<span class="phase-negative">Stage III — Negative Returns</span>';
+                stageValue.style.color = '#e53e3e';
+            }
+
+            // Insight
+            const insightBox = document.getElementById('insight-box');
+            if (L <= 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> Move the labor slider to see how output responds to additional workers.`;
+            } else if (L < lInf - 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> MP is still <span class="phase-increasing">rising</span> — each additional worker adds <em>more</em> output than the last. The TP curve is getting steeper (convex). This is the region of <em>increasing marginal returns</em>.`;
+            } else if (L < lInf + 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> You're near the <span class="phase-increasing">inflection point</span> — MP is at its peak. The TP curve is switching from convex to concave. Beyond here, each worker still adds output, but less than the one before.`;
+            } else if (L < lAP - 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> MP is falling but still above AP, which means AP is still <span class="phase-increasing">rising</span>. As long as MP > AP, the average is pulled up — just like scoring above your average raises your GPA.`;
+            } else if (L < lAP + 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> MP = AP — average product peaks here. This is the boundary between <span class="phase-increasing">Stage I</span> and <span class="phase-decreasing">Stage II</span>. A rational firm operates in Stage II.`;
+            } else if (L < lMax - 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> <span class="phase-decreasing">Stage II</span> — diminishing but positive returns. MP < AP so average product is falling. This is where a profit-maximizing firm operates.`;
+            } else if (L < lMax + 0.5) {
+                insightBox.innerHTML = `<strong>Insight:</strong> MP ≈ 0 — total product is at its <span class="phase-decreasing">maximum</span>. Adding one more worker would actually reduce total output. This is the boundary of Stage III.`;
+            } else {
+                insightBox.innerHTML = `<strong>Insight:</strong> <span class="phase-negative">Stage III</span> — negative marginal product! Workers are getting in each other's way. Total output is falling. No rational firm operates here.`;
+            }
+
+            drawTPGraph();
+            drawMPGraph();
+        }
+
+        // Event listeners
+        [lSlider, alphaSlider, betaSlider].forEach(slider => {
+            slider.addEventListener('input', updateDisplay);
+        });
+
+        // Initial draw
+        updateDisplay();
+    </script>
+</body>
+</html>

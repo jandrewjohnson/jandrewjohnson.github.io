@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Goods &amp; Market Failure</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a202c;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 18px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 16px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #718096;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .controls-panel {
+            grid-row: 1 / 3;
+        }
+
+        .graph-panel canvas {
+            width: 100%;
+            display: block;
+        }
+
+        /* Slider styles */
+        .slider-group {
+            margin-bottom: 16px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .slider-label span:first-child {
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .slider-value {
+            background: #edf2f7;
+            color: #2b6cb0;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(66,153,225,0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 1px 4px rgba(66,153,225,0.4);
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .info-box.highlight {
+            border-left: 3px solid #4299e1;
+        }
+
+        .info-box.warning {
+            border-left: 3px solid #e53e3e;
+            background: #fff5f5;
+        }
+
+        .info-box.success {
+            border-left: 3px solid #38a169;
+            background: #f0fff4;
+        }
+
+        .info-box strong {
+            color: #1a202c;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label { color: #718096; font-size: 0.8rem; }
+        .metric-value { font-weight: 600; color: #2b6cb0; font-size: 0.85rem; font-family: 'Consolas', monospace; }
+        .metric-value.bad { color: #e53e3e; }
+        .metric-value.good { color: #38a169; }
+
+        /* Equation box */
+        .equation-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.78rem;
+            color: #4a5568;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        /* Section dividers */
+        .section-divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 16px 0;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.78rem;
+            color: #4a5568;
+        }
+
+        .legend-swatch {
+            width: 14px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-swatch.dashed {
+            background: repeating-linear-gradient(90deg, currentColor 0px, currentColor 4px, transparent 4px, transparent 8px);
+            height: 2px;
+        }
+
+        /* Policy selector */
+        .policy-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .policy-tab {
+            flex: 1;
+            padding: 8px 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .policy-tab:hover {
+            border-color: #4299e1;
+            color: #2b6cb0;
+        }
+
+        .policy-tab.active {
+            background: #ebf8ff;
+            border-color: #4299e1;
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+
+        .policy-controls {
+            display: none;
+        }
+
+        .policy-controls.active {
+            display: block;
+        }
+
+        /* Bottom panel spanning full width */
+        .bottom-panel {
+            grid-column: 1 / -1;
+        }
+
+        .welfare-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .welfare-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .welfare-card .wc-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #718096;
+            margin-bottom: 6px;
+        }
+
+        .welfare-card .wc-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Consolas', monospace;
+        }
+
+        .welfare-card .wc-sub {
+            font-size: 0.72rem;
+            color: #a0aec0;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 1100px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .controls-panel { grid-row: auto; }
+            .welfare-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Public Goods: Market Failure &amp; Policy Correction</h1>
+    <p class="subtitle">Non-excludable, non-rival goods are underprovided by markets — explore why and how to fix it</p>
+
+    <div class="app-container">
+        <!-- LEFT: Controls -->
+        <div class="panel controls-panel">
+            <div class="panel-title">Market Parameters</div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Number of Consumers (N)</span>
+                    <span class="slider-value" id="nVal">5</span>
+                </div>
+                <input type="range" id="nSlider" min="2" max="20" value="5" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Max WTP per person (a)</span>
+                    <span class="slider-value" id="aVal">20</span>
+                </div>
+                <input type="range" id="aSlider" min="5" max="50" value="20" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Demand slope (b)</span>
+                    <span class="slider-value" id="bVal">2.0</span>
+                </div>
+                <input type="range" id="bSlider" min="0.5" max="5" value="2" step="0.1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Marginal Cost (c)</span>
+                    <span class="slider-value" id="cVal">5</span>
+                </div>
+                <input type="range" id="cSlider" min="1" max="40" value="5" step="0.5">
+            </div>
+
+            <div class="equation-box">
+                Individual: P = a − b·Q<br>
+                Social: P = N·a − N·b·Q<br>
+                MC = c (constant)
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="panel-title">Policy Instrument</div>
+
+            <div class="policy-tabs">
+                <div class="policy-tab active" data-policy="none">No Policy</div>
+                <div class="policy-tab" data-policy="subsidy">Subsidy</div>
+                <div class="policy-tab" data-policy="provision">Public Provision</div>
+            </div>
+
+            <div class="policy-controls active" id="ctrl-none">
+                <div class="info-box warning">
+                    <strong>Free-rider problem:</strong> Each person only considers their own marginal benefit, ignoring others' benefits. The market underprovides.
+                </div>
+            </div>
+
+            <div class="policy-controls" id="ctrl-subsidy">
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Subsidy per unit (s)</span>
+                        <span class="slider-value" id="sVal">0</span>
+                    </div>
+                    <input type="range" id="sSlider" min="0" max="100" value="0" step="0.5">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Per-unit subsidy:</strong> Reduces effective MC faced by the market to MC − s. Set s to close the gap between private and social value.
+                </div>
+                <div id="subsidyOptimalHint" class="info-box success" style="margin-top:8px; display:none;"></div>
+            </div>
+
+            <div class="policy-controls" id="ctrl-provision">
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Government Quantity (G)</span>
+                        <span class="slider-value" id="gVal">0</span>
+                    </div>
+                    <input type="range" id="gSlider" min="0" max="20" value="0" step="0.1">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Direct provision:</strong> Government provides quantity G, funded by taxes. Set G to the socially optimal level.
+                </div>
+                <div id="provisionOptimalHint" class="info-box success" style="margin-top:8px; display:none;"></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="panel-title">Key Insight</div>
+            <div class="info-box" id="insightBox">
+                For public goods, the social demand is the <strong>vertical sum</strong> of individual demands (unlike private goods which sum horizontally). This means the social marginal benefit at any quantity is the sum of every person's marginal benefit.
+            </div>
+        </div>
+
+        <!-- TOP-CENTER: Demand & Supply Graph -->
+        <div class="panel graph-panel">
+            <div class="panel-title">Demand Aggregation &amp; Market Outcome</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Individual Demand (MB<sub>i</sub>)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Social Demand (ΣMB)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#718096;"></div> MC / Supply</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169;"></div> Effective MC (w/ policy)</div>
+            </div>
+            <canvas id="demandCanvas" width="540" height="400"></canvas>
+        </div>
+
+        <!-- TOP-RIGHT: Welfare / DWL Graph -->
+        <div class="panel graph-panel">
+            <div class="panel-title">Welfare Analysis &amp; Deadweight Loss</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(43,108,176,0.25);"></div> Realized Social Surplus</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(229,62,62,0.3);"></div> Deadweight Loss</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(56,161,105,0.25);"></div> Surplus from Policy</div>
+            </div>
+            <canvas id="welfareCanvas" width="540" height="400"></canvas>
+        </div>
+
+        <!-- BOTTOM: Welfare Metrics -->
+        <div class="panel bottom-panel">
+            <div class="panel-title">Welfare Comparison</div>
+            <div class="welfare-grid">
+                <div class="welfare-card">
+                    <div class="wc-label">Market Quantity</div>
+                    <div class="wc-value" id="wcQm" style="color:#e53e3e;">—</div>
+                    <div class="wc-sub">Private equilibrium</div>
+                </div>
+                <div class="welfare-card">
+                    <div class="wc-label">Optimal Quantity</div>
+                    <div class="wc-value" id="wcQs" style="color:#2b6cb0;">—</div>
+                    <div class="wc-sub">Socially efficient</div>
+                </div>
+                <div class="welfare-card">
+                    <div class="wc-label">Deadweight Loss</div>
+                    <div class="wc-value" id="wcDWL" style="color:#e53e3e;">—</div>
+                    <div class="wc-sub" id="wcDWLsub">Welfare lost</div>
+                </div>
+                <div class="welfare-card">
+                    <div class="wc-label">Policy Quantity</div>
+                    <div class="wc-value" id="wcQp" style="color:#38a169;">—</div>
+                    <div class="wc-sub" id="wcQpsub">With intervention</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---- State ----
+        let policy = 'none';
+
+        // ---- DOM refs ----
+        const nSlider = document.getElementById('nSlider');
+        const aSlider = document.getElementById('aSlider');
+        const bSlider = document.getElementById('bSlider');
+        const cSlider = document.getElementById('cSlider');
+        const sSlider = document.getElementById('sSlider');
+        const gSlider = document.getElementById('gSlider');
+
+        const nVal = document.getElementById('nVal');
+        const aVal = document.getElementById('aVal');
+        const bVal = document.getElementById('bVal');
+        const cVal = document.getElementById('cVal');
+        const sVal = document.getElementById('sVal');
+        const gVal = document.getElementById('gVal');
+
+        const demandCanvas = document.getElementById('demandCanvas');
+        const welfareCanvas = document.getElementById('welfareCanvas');
+        const dCtx = demandCanvas.getContext('2d');
+        const wCtx = welfareCanvas.getContext('2d');
+
+        // ---- Policy tabs ----
+        document.querySelectorAll('.policy-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.policy-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.policy-controls').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                policy = tab.dataset.policy;
+                document.getElementById('ctrl-' + policy).classList.add('active');
+                update();
+            });
+        });
+
+        // ---- Economics ----
+        function getParams() {
+            const N = parseInt(nSlider.value);
+            const a = parseFloat(aSlider.value);
+            const b = parseFloat(bSlider.value);
+            const c = parseFloat(cSlider.value);
+            const s = parseFloat(sSlider.value);
+            const G = parseFloat(gSlider.value);
+            return { N, a, b, c, s, G };
+        }
+
+        // Individual inverse demand: P = a - b*Q  =>  Q = (a - P)/b,  max Q = a/b
+        // Social (vertical sum): P_social = N*a - N*b*Q  =>  at Q, social MB = N*(a - b*Q)
+        // MC = c (constant)
+
+        function privateEquilibrium(a, b, c) {
+            // Individual: a - b*Q = c  =>  Q = (a - c)/b
+            if (c >= a) return 0;
+            return (a - c) / b;
+        }
+
+        function socialOptimum(N, a, b, c) {
+            // Social: N*(a - b*Q) = c  =>  Q = (N*a - c) / (N*b)
+            const Q = (N * a - c) / (N * b);
+            return Math.max(0, Q);
+        }
+
+        function policyQuantity(p) {
+            const { N, a, b, c, s, G } = p;
+            if (policy === 'none') return privateEquilibrium(a, b, c);
+            if (policy === 'subsidy') {
+                // Effective MC = c - s, individual chooses a - b*Q = max(c - s, 0)
+                const effMC = Math.max(c - s, 0);
+                if (effMC >= a) return 0;
+                return (a - effMC) / b;
+            }
+            if (policy === 'provision') {
+                return G;
+            }
+            return privateEquilibrium(a, b, c);
+        }
+
+        function optimalSubsidy(N, a, b, c) {
+            // We need individual to choose Q* = (N*a - c)/(N*b)
+            // Individual chooses where a - b*Q = MC_eff
+            // So MC_eff = a - b*Q* = a - b*(N*a - c)/(N*b) = a - (N*a - c)/N = a - a + c/N = c/N
+            // subsidy s = c - c/N = c*(N-1)/N
+            return c * (N - 1) / N;
+        }
+
+        // ---- Drawing helpers ----
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+        function drawAxes(ctx, w, h, pad, maxQ, maxP, xLabel, yLabel) {
+            ctx.strokeStyle = '#a0aec0';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(pad.left, pad.top);
+            ctx.lineTo(pad.left, h - pad.bottom);
+            ctx.lineTo(w - pad.right, h - pad.bottom);
+            ctx.stroke();
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7';
+            ctx.lineWidth = 0.7;
+            const nGridY = 5, nGridX = 5;
+            for (let i = 1; i <= nGridY; i++) {
+                const y = h - pad.bottom - (i / nGridY) * (h - pad.top - pad.bottom);
+                ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '11px Consolas, monospace'; ctx.textAlign = 'right';
+                ctx.fillText((maxP * i / nGridY).toFixed(0), pad.left - 6, y + 4);
+            }
+            for (let i = 1; i <= nGridX; i++) {
+                const x = pad.left + (i / nGridX) * (w - pad.left - pad.right);
+                ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, h - pad.bottom); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '11px Consolas, monospace'; ctx.textAlign = 'center';
+                ctx.fillText((maxQ * i / nGridX).toFixed(1), x, h - pad.bottom + 16);
+            }
+
+            // Labels
+            ctx.fillStyle = '#4a5568'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText(xLabel, (pad.left + w - pad.right) / 2, h - 4);
+            ctx.save();
+            ctx.translate(14, (pad.top + h - pad.bottom) / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(yLabel, 0, 0);
+            ctx.restore();
+
+            // Origin
+            ctx.fillStyle = '#a0aec0'; ctx.font = '11px Consolas'; ctx.textAlign = 'right';
+            ctx.fillText('0', pad.left - 6, h - pad.bottom + 4);
+        }
+
+        function toX(q, pad, w, maxQ) { return pad.left + (q / maxQ) * (w - pad.left - pad.right); }
+        function toY(p, pad, h, maxP) { return h - pad.bottom - (p / maxP) * (h - pad.top - pad.bottom); }
+
+        // ---- Main draw ----
+        function drawDemandGraph(p) {
+            const { N, a, b, c, s, G } = p;
+            const { w, h } = setupCanvas(demandCanvas, dCtx);
+            const ctx = dCtx;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+
+            const maxQ_individual = a / b;
+            const maxQ_social = socialOptimum(N, a, b, 0); // max Q when MC = 0
+            const maxQ = Math.max(maxQ_individual, maxQ_social) * 1.15;
+            const maxP = N * a * 1.1;
+            const pad = { top: 20, right: 30, bottom: 36, left: 52 };
+
+            drawAxes(ctx, w, h, pad, maxQ, maxP, 'Quantity of Public Good (Q)', 'Price / Marginal Benefit ($)');
+
+            function qToX(q) { return toX(q, pad, w, maxQ); }
+            function pToY(p) { return toY(p, pad, h, maxP); }
+
+            // Individual demand curve
+            ctx.strokeStyle = '#e53e3e';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            for (let q = 0; q <= maxQ_individual; q += maxQ / 300) {
+                const price = Math.max(a - b * q, 0);
+                const method = q === 0 ? 'moveTo' : 'lineTo';
+                ctx[method](qToX(q), pToY(price));
+            }
+            ctx.lineTo(qToX(maxQ_individual), pToY(0));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Social demand curve (vertical sum)
+            ctx.strokeStyle = '#2b6cb0';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            const maxQ_soc = (N * a) / (N * b); // where social demand hits 0 = a/b same as individual
+            for (let q = 0; q <= maxQ_individual; q += maxQ / 300) {
+                const price = Math.max(N * (a - b * q), 0);
+                const method = q === 0 ? 'moveTo' : 'lineTo';
+                ctx[method](qToX(q), pToY(price));
+            }
+            ctx.stroke();
+
+            // MC line
+            ctx.strokeStyle = '#718096';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(qToX(0), pToY(c));
+            ctx.lineTo(qToX(maxQ), pToY(c));
+            ctx.stroke();
+
+            // Effective MC (with policy)
+            let effMC = c;
+            if (policy === 'subsidy') {
+                effMC = Math.max(c - s, 0);
+                if (effMC !== c) {
+                    ctx.strokeStyle = '#38a169';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(qToX(0), pToY(effMC));
+                    ctx.lineTo(qToX(maxQ), pToY(effMC));
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            // Mark private equilibrium
+            const Qm = privateEquilibrium(a, b, c);
+            if (Qm > 0) {
+                ctx.setLineDash([3, 3]);
+                ctx.strokeStyle = '#e53e3e';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(qToX(Qm), pToY(0));
+                ctx.lineTo(qToX(Qm), pToY(c));
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#e53e3e';
+                ctx.beginPath();
+                ctx.arc(qToX(Qm), pToY(c), 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#e53e3e';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Q_m', qToX(Qm), pToY(0) + 28);
+            }
+
+            // Mark social optimum
+            const Qs = socialOptimum(N, a, b, c);
+            if (Qs > 0) {
+                const socialP = N * (a - b * Qs);
+                ctx.setLineDash([3, 3]);
+                ctx.strokeStyle = '#2b6cb0';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(qToX(Qs), pToY(0));
+                ctx.lineTo(qToX(Qs), pToY(socialP));
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#2b6cb0';
+                ctx.beginPath();
+                ctx.arc(qToX(Qs), pToY(c), 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                ctx.fillStyle = '#2b6cb0';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Q*', qToX(Qs), pToY(0) + 28);
+            }
+
+            // Mark policy quantity
+            const Qp = policyQuantity(p);
+            if (policy !== 'none' && Qp > 0 && Math.abs(Qp - Qm) > 0.01) {
+                ctx.setLineDash([2, 2]);
+                ctx.strokeStyle = '#38a169';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(qToX(Qp), pToY(0));
+                ctx.lineTo(qToX(Qp), pToY(N * Math.max(a - b * Qp, 0)));
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#38a169';
+                ctx.beginPath();
+                ctx.arc(qToX(Qp), pToY(policy === 'subsidy' ? effMC : c), 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#38a169';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Q_p', qToX(Qp), pToY(0) + 28);
+            }
+
+            // Labels on curves
+            ctx.font = '11px Segoe UI';
+            const labelQ = maxQ_individual * 0.35;
+            ctx.fillStyle = '#e53e3e'; ctx.textAlign = 'left';
+            ctx.fillText('MB_i (individual)', qToX(labelQ) + 4, pToY(a - b * labelQ) + 14);
+
+            ctx.fillStyle = '#2b6cb0';
+            ctx.fillText('ΣMB (social)', qToX(labelQ * 0.6) + 4, pToY(N * (a - b * labelQ * 0.6)) - 6);
+
+            ctx.fillStyle = '#718096';
+            ctx.fillText('MC = ' + c.toFixed(1), qToX(maxQ * 0.7), pToY(c) - 8);
+
+            if (policy === 'subsidy' && effMC !== c) {
+                ctx.fillStyle = '#38a169';
+                ctx.fillText('MC − s = ' + effMC.toFixed(1), qToX(maxQ * 0.7), pToY(effMC) - 8);
+            }
+        }
+
+        function drawWelfareGraph(p) {
+            const { N, a, b, c, s, G } = p;
+            const { w, h } = setupCanvas(welfareCanvas, wCtx);
+            const ctx = wCtx;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+
+            const maxQ_individual = a / b;
+            const maxQ_social = socialOptimum(N, a, b, 0);
+            const maxQ = Math.max(maxQ_individual, maxQ_social) * 1.15;
+            const maxP = N * a * 1.1;
+            const pad = { top: 20, right: 30, bottom: 36, left: 52 };
+
+            drawAxes(ctx, w, h, pad, maxQ, maxP, 'Quantity of Public Good (Q)', 'Social Marginal Benefit ($)');
+
+            function qToX(q) { return toX(q, pad, w, maxQ); }
+            function pToY(p) { return toY(p, pad, h, maxP); }
+
+            const Qm = privateEquilibrium(a, b, c);
+            const Qs = socialOptimum(N, a, b, c);
+            const Qp = policyQuantity(p);
+            const effectiveQ = (policy === 'none') ? Qm : Qp;
+
+            // Shade: Realized social surplus (0 to effectiveQ, social demand above MC)
+            ctx.fillStyle = 'rgba(43, 108, 176, 0.15)';
+            ctx.beginPath();
+            ctx.moveTo(qToX(0), pToY(c));
+            const stepQ = maxQ / 400;
+            for (let q = 0; q <= Math.min(effectiveQ, maxQ_individual); q += stepQ) {
+                const smb = N * (a - b * q);
+                if (smb < c) break;
+                ctx.lineTo(qToX(q), pToY(smb));
+            }
+            const qCap = Math.min(effectiveQ, Qs);
+            ctx.lineTo(qToX(qCap), pToY(c));
+            ctx.closePath();
+            ctx.fill();
+
+            // Shade: DWL (triangle between effectiveQ and Qs if effectiveQ < Qs)
+            if (effectiveQ < Qs - 0.01) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(qToX(effectiveQ), pToY(c));
+                for (let q = effectiveQ; q <= Qs; q += stepQ) {
+                    const smb = N * (a - b * q);
+                    ctx.lineTo(qToX(q), pToY(Math.max(smb, c)));
+                }
+                ctx.lineTo(qToX(Qs), pToY(c));
+                ctx.closePath();
+                ctx.fill();
+
+                // DWL label
+                const midQ = (effectiveQ + Qs) / 2;
+                const midSMB = N * (a - b * midQ);
+                ctx.fillStyle = '#e53e3e';
+                ctx.font = 'bold 12px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('DWL', qToX(midQ), pToY((midSMB + c) / 2) + 4);
+            }
+
+            // If policy overshoots (effectiveQ > Qs), shade overproduction DWL
+            if (effectiveQ > Qs + 0.01) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(qToX(Qs), pToY(c));
+                for (let q = Qs; q <= Math.min(effectiveQ, maxQ_individual); q += stepQ) {
+                    const smb = N * (a - b * q);
+                    ctx.lineTo(qToX(q), pToY(Math.min(smb, c)));
+                }
+                ctx.lineTo(qToX(Math.min(effectiveQ, maxQ_individual)), pToY(c));
+                ctx.closePath();
+                ctx.fill();
+
+                const midQ = (Qs + effectiveQ) / 2;
+                ctx.fillStyle = '#e53e3e';
+                ctx.font = 'bold 11px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('Overproduction', qToX(midQ), pToY(c) - 10);
+                ctx.fillText('DWL', qToX(midQ), pToY(c) + 4);
+            }
+
+            // If policy recovers surplus vs no-policy
+            if (policy !== 'none' && effectiveQ > Qm + 0.01 && effectiveQ <= Qs + 0.05) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.15)';
+                ctx.beginPath();
+                ctx.moveTo(qToX(Qm), pToY(c));
+                for (let q = Qm; q <= effectiveQ; q += stepQ) {
+                    const smb = N * (a - b * q);
+                    if (smb < c) break;
+                    ctx.lineTo(qToX(q), pToY(smb));
+                }
+                ctx.lineTo(qToX(Math.min(effectiveQ, Qs)), pToY(c));
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Social demand curve
+            ctx.strokeStyle = '#2b6cb0';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let q = 0; q <= maxQ_individual; q += stepQ) {
+                const price = Math.max(N * (a - b * q), 0);
+                const method = q === 0 ? 'moveTo' : 'lineTo';
+                ctx[method](qToX(q), pToY(price));
+            }
+            ctx.stroke();
+
+            // MC line
+            ctx.strokeStyle = '#718096';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(qToX(0), pToY(c));
+            ctx.lineTo(qToX(maxQ), pToY(c));
+            ctx.stroke();
+
+            // Vertical markers
+            // Qm
+            if (Qm > 0) {
+                ctx.setLineDash([3, 3]); ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 1.2;
+                ctx.beginPath(); ctx.moveTo(qToX(Qm), pToY(0)); ctx.lineTo(qToX(Qm), pToY(N * (a - b * Qm))); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#e53e3e'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Q_m', qToX(Qm), pToY(0) + 28);
+            }
+
+            // Qs
+            if (Qs > 0) {
+                ctx.setLineDash([3, 3]); ctx.strokeStyle = '#2b6cb0'; ctx.lineWidth = 1.2;
+                ctx.beginPath(); ctx.moveTo(qToX(Qs), pToY(0)); ctx.lineTo(qToX(Qs), pToY(c)); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#2b6cb0';
+                ctx.beginPath(); ctx.arc(qToX(Qs), pToY(c), 6, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+                ctx.fillStyle = '#2b6cb0'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Q*', qToX(Qs), pToY(0) + 28);
+            }
+
+            // Policy Q
+            if (policy !== 'none' && Math.abs(effectiveQ - Qm) > 0.01) {
+                ctx.setLineDash([2, 2]); ctx.strokeStyle = '#38a169'; ctx.lineWidth = 1.2;
+                ctx.beginPath(); ctx.moveTo(qToX(effectiveQ), pToY(0));
+                ctx.lineTo(qToX(effectiveQ), pToY(Math.max(N * (a - b * effectiveQ), c))); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#38a169'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Q_p', qToX(effectiveQ), pToY(0) + 28);
+            }
+
+            // Labels
+            ctx.font = '11px Segoe UI'; ctx.fillStyle = '#2b6cb0'; ctx.textAlign = 'left';
+            ctx.fillText('ΣMB', qToX(maxQ_individual * 0.5), pToY(N * (a - b * maxQ_individual * 0.5)) - 8);
+            ctx.fillStyle = '#718096';
+            ctx.fillText('MC', qToX(maxQ * 0.8), pToY(c) - 8);
+        }
+
+        // ---- Welfare calculations ----
+        function calcSurplus(N, a, b, c, Q) {
+            // Social surplus = integral of (N*(a - b*q) - c) from 0 to Q
+            // = N*a*Q - N*b*Q^2/2 - c*Q
+            if (Q <= 0) return 0;
+            return N * a * Q - N * b * Q * Q / 2 - c * Q;
+        }
+
+        // ---- Update ----
+        function update() {
+            const p = getParams();
+            const { N, a, b, c, s, G } = p;
+
+            nVal.textContent = N;
+            aVal.textContent = a;
+            bVal.textContent = parseFloat(b).toFixed(1);
+            cVal.textContent = c;
+            sVal.textContent = s.toFixed(1);
+            gVal.textContent = G.toFixed(1);
+
+            // Update slider max for subsidy
+            sSlider.max = (c * 2).toFixed(0);
+            gSlider.max = (a / b * 1.3).toFixed(1);
+
+            const Qm = privateEquilibrium(a, b, c);
+            const Qs = socialOptimum(N, a, b, c);
+            const Qp = policyQuantity(p);
+            const effectiveQ = (policy === 'none') ? Qm : Qp;
+
+            const surplusOptimal = calcSurplus(N, a, b, c, Qs);
+            const surplusMarket = calcSurplus(N, a, b, c, Qm);
+            const surplusPolicy = calcSurplus(N, a, b, c, Math.min(effectiveQ, a / b));
+            // If overshooting, surplus decreases
+            const actualSurplusPolicy = (effectiveQ > a / b) ? calcSurplus(N, a, b, c, a / b) : surplusPolicy;
+
+            const dwlMarket = surplusOptimal - surplusMarket;
+            const dwlPolicy = surplusOptimal - Math.max(actualSurplusPolicy, 0);
+
+            // Cards
+            document.getElementById('wcQm').textContent = Qm.toFixed(2);
+            document.getElementById('wcQs').textContent = Qs.toFixed(2);
+
+            const dwlDisplay = (policy === 'none') ? dwlMarket : dwlPolicy;
+            document.getElementById('wcDWL').textContent = '$' + dwlDisplay.toFixed(1);
+            document.getElementById('wcDWL').className = 'wc-value ' + (dwlDisplay < 0.5 ? 'good' : 'bad');
+            document.getElementById('wcDWLsub').textContent = (policy === 'none') ? 'Without policy' : 'Remaining with policy';
+
+            document.getElementById('wcQp').textContent = (policy === 'none') ? '—' : Qp.toFixed(2);
+            document.getElementById('wcQp').style.color = (policy === 'none') ? '#a0aec0' : '#38a169';
+            document.getElementById('wcQpsub').textContent = (policy === 'none') ? 'Select a policy' : (policy === 'subsidy' ? 'With subsidy' : 'Gov. provision');
+
+            // Optimal hints
+            const optS = optimalSubsidy(N, a, b, c);
+            const subsidyHint = document.getElementById('subsidyOptimalHint');
+            if (policy === 'subsidy') {
+                const diff = Math.abs(s - optS);
+                if (diff < 0.6) {
+                    subsidyHint.style.display = 'block';
+                    subsidyHint.innerHTML = `<strong>✓ Optimal!</strong> s* = c·(N−1)/N = ${optS.toFixed(1)}. DWL eliminated.`;
+                } else {
+                    subsidyHint.style.display = 'block';
+                    subsidyHint.className = 'info-box highlight';
+                    subsidyHint.innerHTML = `<strong>Hint:</strong> Optimal subsidy s* = c·(N−1)/N = <strong>${optS.toFixed(1)}</strong>`;
+                    if (s < optS) subsidyHint.innerHTML += '. ↑ Increase subsidy.';
+                    else subsidyHint.innerHTML += '. ↓ Decrease subsidy (overshooting).';
+                }
+                if (diff < 0.6) subsidyHint.className = 'info-box success';
+            } else {
+                subsidyHint.style.display = 'none';
+            }
+
+            const provHint = document.getElementById('provisionOptimalHint');
+            if (policy === 'provision') {
+                const diff = Math.abs(G - Qs);
+                if (diff < 0.15) {
+                    provHint.style.display = 'block';
+                    provHint.className = 'info-box success';
+                    provHint.innerHTML = `<strong>✓ Optimal!</strong> G* = Q* = ${Qs.toFixed(2)}. DWL eliminated.`;
+                } else {
+                    provHint.style.display = 'block';
+                    provHint.className = 'info-box highlight';
+                    provHint.innerHTML = `<strong>Hint:</strong> Optimal provision G* = Q* = <strong>${Qs.toFixed(2)}</strong>`;
+                    if (G < Qs) provHint.innerHTML += '. ↑ Provide more.';
+                    else provHint.innerHTML += '. ↓ Providing too much.';
+                }
+            } else {
+                provHint.style.display = 'none';
+            }
+
+            // Insight box
+            const insightBox = document.getElementById('insightBox');
+            const underprovision = ((Qs - Qm) / Qs * 100).toFixed(0);
+            if (policy === 'none') {
+                insightBox.innerHTML = `The market provides only <strong>${Qm.toFixed(1)}</strong> units vs. the social optimum of <strong>${Qs.toFixed(1)}</strong> — an underprovision of <strong>${underprovision}%</strong>. Each free rider consumes without paying, so no individual has incentive to provide the full social quantity.`;
+            } else if (policy === 'subsidy') {
+                const pctRecov = Math.min(100, ((1 - dwlPolicy / dwlMarket) * 100)).toFixed(0);
+                insightBox.innerHTML = `The subsidy of <strong>${s.toFixed(1)}</strong> shifts effective MC down, expanding private provision to <strong>${Qp.toFixed(1)}</strong>. This recovers <strong>${pctRecov}%</strong> of the deadweight loss.`;
+            } else {
+                const pctRecov = Math.min(100, ((1 - dwlPolicy / dwlMarket) * 100)).toFixed(0);
+                insightBox.innerHTML = `Direct government provision of <strong>${G.toFixed(1)}</strong> units bypasses the free-rider problem entirely. This recovers <strong>${isFinite(pctRecov) ? pctRecov : 0}%</strong> of the deadweight loss. Funded by lump-sum taxation.`;
+            }
+
+            drawDemandGraph(p);
+            drawWelfareGraph(p);
+        }
+
+        // ---- Event listeners ----
+        [nSlider, aSlider, bSlider, cSlider, sSlider, gSlider].forEach(el => {
+            el.addEventListener('input', update);
+        });
+
+        // Handle resize
+        window.addEventListener('resize', update);
+
+        // Initial
+        update();
+    </script>
+</body>
+</html>

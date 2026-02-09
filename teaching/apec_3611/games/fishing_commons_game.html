@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐟 Fishing Commons 3D</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ui-bg:rgba(11,29,53,0.92);--ui-border:rgba(79,195,247,0.25);--text:#e0e8f0;--text-dim:#7a9ab5;--boat-you:#4fc3f7;--boat-bot:#ef5350;--gold:#f6c643;--green:#4caf50;--red:#ef5350;--sidebar:210px;--rbar:195px}
+body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overflow:hidden;height:100vh;touch-action:none;user-select:none}
+#c{display:block;position:absolute;top:0;left:var(--sidebar);width:calc(100% - var(--sidebar) - var(--rbar));height:100%}
+.sidebar,.rbar{position:absolute;top:0;height:100vh;background:var(--ui-bg);z-index:10;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;backdrop-filter:blur(8px)}
+.sidebar{left:0;width:var(--sidebar);border-right:1px solid var(--ui-border)}
+.rbar{right:0;width:var(--rbar);border-left:1px solid var(--ui-border)}
+.sidebar::-webkit-scrollbar,.rbar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb,.rbar::-webkit-scrollbar-thumb{background:rgba(79,195,247,.2);border-radius:2px}
+.sb-section{padding:5px 7px;border-bottom:1px solid rgba(79,195,247,.1)}
+.sb-title{font-size:.46rem;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:3px}
+.sb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.sb-label{font-size:.48rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.2px}
+.sb-val{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700}
+.stock-bar-outer{width:100%;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;position:relative;margin:2px 0}
+.stock-bar-inner{height:100%;border-radius:4px;transition:width .3s,background .3s}
+.allee-marker{position:absolute;top:0;height:100%;width:2px;background:rgba(255,165,0,.6);z-index:2}
+.set-group{display:flex;align-items:center;gap:2px;margin-bottom:1px}
+.set-label{font-size:.44rem;color:var(--text-dim);letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;min-width:42px}
+.set-btn{width:18px;height:18px;border:1px solid var(--ui-border);border-radius:3px;background:rgba(255,255,255,.06);color:var(--text);font-family:'Fredoka';font-size:.6rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.set-btn:hover{background:rgba(79,195,247,.2);border-color:var(--boat-you)}
+.set-val{font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;min-width:20px;text-align:center;color:var(--boat-you)}
+.policy-grid{display:flex;flex-wrap:wrap;gap:2px}
+.policy-btn{padding:2px 5px;border:1px solid var(--ui-border);border-radius:3px;background:rgba(255,255,255,.05);color:var(--text-dim);font-family:'Fredoka';font-size:.44rem;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.policy-btn:hover{background:rgba(79,195,247,.15);color:var(--text)}
+.policy-btn.active{background:rgba(79,195,247,.2);border-color:var(--boat-you);color:var(--boat-you)}
+.chk-group{display:flex;align-items:center;gap:3px;margin-top:1px}
+.chk-group label{font-size:.44rem;color:var(--text-dim);text-transform:uppercase;cursor:pointer}
+.chk-group input[type="checkbox"]{accent-color:var(--boat-you);cursor:pointer;width:12px;height:12px}
+.graph-box{margin-bottom:3px}
+.graph-title{font-size:.4rem;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:1px;display:flex;justify-content:space-between}
+.graph-title .gt-val{color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.44rem}
+.graph-box canvas{width:100%;height:38px;display:block;border-radius:2px;background:rgba(15,40,71,.3)}
+.welfare-box{background:rgba(246,198,67,.06);border:1px solid rgba(246,198,67,.25);border-radius:5px;padding:4px 6px}
+.welfare-box .wf-val{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--gold)}
+.timer-bar{width:100%;height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin:2px 0;overflow:hidden}
+.timer-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--boat-you),var(--gold));transition:width .5s}
+.insight-text{font-size:.44rem;line-height:1.2;color:var(--text-dim)}.insight-text strong{color:var(--gold)}
+.controls-hint{font-size:.42rem;color:var(--text-dim);line-height:1.2;padding:4px 7px}
+.controls-hint kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:2px;padding:0 2px;font-family:'JetBrains Mono';font-size:.4rem}
+.placing-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(76,175,80,.2);border:2px solid var(--green);border-radius:12px;padding:14px 24px;font-size:.9rem;font-weight:600;color:var(--green);pointer-events:none;display:none;z-index:15;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.game-alert{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ui-bg);border:2px solid var(--gold);border-radius:14px;padding:20px 28px;text-align:center;backdrop-filter:blur(12px);display:none;pointer-events:auto;z-index:20;max-width:420px;min-width:280px}
+.game-alert.show{display:block;animation:popIn .3s ease}
+@keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.game-alert h2{font-size:1.05rem;margin-bottom:6px}
+.game-alert p{color:var(--text-dim);font-size:.68rem;margin-bottom:6px;line-height:1.3}
+.game-alert .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;text-align:left;margin:8px 0;font-size:.6rem}
+.game-alert .sg-label{color:var(--text-dim);text-transform:uppercase;font-size:.44rem;letter-spacing:.4px}
+.game-alert .sg-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.7rem}
+.game-alert .verify{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:var(--text-dim);background:rgba(255,255,255,.05);padding:3px 6px;border-radius:3px;margin-top:6px;word-break:break-all}
+.game-alert .highscore{color:var(--gold);font-weight:700;font-size:.62rem;margin-top:4px}
+.restart-btn{padding:6px 16px;border:2px solid var(--boat-you);border-radius:6px;background:rgba(79,195,247,.15);color:var(--boat-you);font-family:'Fredoka';font-size:.72rem;font-weight:700;cursor:pointer;margin-top:6px}
+.restart-btn:hover{background:rgba(79,195,247,.3)}
+.boat-info{position:absolute;pointer-events:auto;z-index:15;background:var(--ui-bg);border:1px solid var(--ui-border);border-radius:8px;padding:8px 12px;backdrop-filter:blur(8px);display:none;min-width:200px;font-size:.6rem;line-height:1.3}
+.boat-info.show{display:block}
+.boat-info h3{font-size:.75rem;margin-bottom:3px;color:var(--boat-you)}
+.boat-info .bi-row{display:flex;justify-content:space-between;gap:6px}
+.boat-info .bi-label{color:var(--text-dim);text-transform:uppercase;font-size:.42rem}
+.boat-info .bi-val{font-family:'JetBrains Mono',monospace;font-weight:700}
+.boat-info .bi-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin:2px 0}
+.boat-info .bi-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.boat-info .bi-close{position:absolute;top:3px;right:5px;cursor:pointer;color:var(--text-dim);font-size:.8rem}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="sidebar">
+    <div class="sb-section">
+        <div class="sb-title">Scenarios</div>
+        <div class="policy-grid" id="scenarioGrid">
+            <div class="policy-btn active" data-scenario="solo">1: Solo</div>
+            <div class="policy-btn" data-scenario="freeentry">2: Free Entry</div>
+            <div class="policy-btn" data-scenario="fast">3: Speed</div>
+            <div class="policy-btn" data-scenario="allee">4: Allee</div>
+            <div class="policy-btn" data-scenario="tax">5: Tax</div>
+            <div class="policy-btn" data-scenario="sanctuary">6: Sanctuary</div>
+            <div class="policy-btn" data-scenario="hype">7: Hype</div>
+        </div>
+    </div>
+    <div class="sb-section">
+        <div class="sb-title">Parameters</div>
+        <div class="set-group"><span class="set-label">Boats</span><div class="set-btn" id="boatMinus">−</div><span class="set-val" id="boatVal">2</span><div class="set-btn" id="boatPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Speed</span><div class="set-btn" id="spdMinus">−</div><span class="set-val" id="spdVal">9</span><div class="set-btn" id="spdPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Momentum</span><div class="set-btn" id="momMinus">−</div><span class="set-val" id="momVal">2</span><div class="set-btn" id="momPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Size</span><div class="set-btn" id="sizeMinus">−</div><span class="set-val" id="sizeVal">6</span><div class="set-btn" id="sizePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Fish Spd</span><div class="set-btn" id="fishSpdMinus">−</div><span class="set-val" id="fishSpdVal">3</span><div class="set-btn" id="fishSpdPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Greed</span><div class="set-btn" id="greedMinus">−</div><span class="set-val" id="greedVal">5</span><div class="set-btn" id="greedPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Hype</span><div class="set-btn" id="hypeMinus">−</div><span class="set-val" id="hypeVal">3</span><div class="set-btn" id="hypePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Growth</span><div class="set-btn" id="growMinus">−</div><span class="set-val" id="growVal">3</span><div class="set-btn" id="growPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Cap</span><div class="set-btn" id="capMinus">−</div><span class="set-val" id="capVal">200</span><div class="set-btn" id="capPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Allee</span><div class="set-btn" id="alleeMinus">−</div><span class="set-val" id="alleeVal">15%</span><div class="set-btn" id="alleePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Tax</span><div class="set-btn" id="taxMinus">−</div><span class="set-val" id="taxVal">$0</span><div class="set-btn" id="taxPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Demand</span><div class="set-btn" id="demMinus">−</div><span class="set-val" id="demVal">5</span><div class="set-btn" id="demPlus">+</div></div>
+        <div class="set-group"><span class="set-label">School</span><div class="set-btn" id="schoolMinus">−</div><span class="set-val" id="schoolVal">1</span><div class="set-btn" id="schoolPlus">+</div></div>
+        <div class="chk-group"><input type="checkbox" id="spawnChk"><label for="spawnChk">Allow firms to enter</label></div>
+        <div style="margin-top:3px"><div class="set-btn" id="resetFishBtn" style="width:auto;padding:2px 7px;font-size:.44rem">🔄 Reset Fish</div></div>
+    </div>
+    <div class="sb-section">
+        <div class="sb-title">Policy</div>
+        <div class="policy-grid">
+            <div class="policy-btn active" data-policy="open">🌊 Open</div>
+            <div class="policy-btn" data-policy="tax">💰 Tax</div>
+            <div class="policy-btn" data-policy="quota">📋 Quota</div>
+            <div class="policy-btn" data-policy="sanctuary">🏝️ Sanctuary</div>
+        </div>
+    </div>
+    <div class="sb-section"><div class="insight-text" id="insightPanel"></div></div>
+    <div class="controls-hint"><kbd>WASD</kbd> move · <kbd>MMB</kbd> rotate · <kbd>Scroll</kbd> zoom · Click boat</div>
+</div>
+<div class="rbar">
+    <div class="sb-section">
+        <div class="sb-title">⏱️ Scenario</div>
+        <div class="sb-row"><span class="sb-label" id="scenarioName">Solo Fisher</span><span class="sb-val" id="scenarioTimer" style="color:var(--boat-you)">0:30</span></div>
+        <div class="timer-bar"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div>
+        <div class="sb-row"><span class="sb-label">High Score</span><span class="sb-val" style="color:var(--gold)" id="highScore">—</span></div>
+    </div>
+    <div class="sb-section">
+        <div class="sb-title">Outputs</div>
+        <div class="sb-row"><span class="sb-label">Catch</span><span class="sb-val" style="color:var(--boat-you)" id="yourCatch">0</span></div>
+        <div class="sb-row"><span class="sb-label">Profit</span><span class="sb-val" style="color:var(--gold)" id="yourProfit">$0</span></div>
+        <div class="sb-row"><span class="sb-label">$/sec</span><span class="sb-val" style="color:var(--gold)" id="profitRate">0</span></div>
+        <div class="sb-row"><span class="sb-label">Time</span><span class="sb-val" id="gameTime">0:00</span></div>
+        <div class="sb-row"><span class="sb-label">Boats</span><span class="sb-val" style="color:var(--boat-bot)" id="activeBoats">0</span></div>
+        <div class="sb-row"><span class="sb-label">Price</span><span class="sb-val" style="color:var(--green)" id="fishPrice">$5.0</span></div>
+    </div>
+    <div class="sb-section">
+        <div class="welfare-box">
+            <div class="sb-row"><span class="sb-label">Total Welfare</span><span class="wf-val" id="totalWelfare">$0</span></div>
+            <div style="font-size:.38rem;color:var(--text-dim)">All fishers combined</div>
+        </div>
+    </div>
+    <div class="sb-section">
+        <div class="sb-title">Fish Stock</div>
+        <div class="stock-bar-outer"><div class="stock-bar-inner" id="stockBar"></div><div class="allee-marker" id="alleeMarker" style="left:15%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.42rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)"><span id="stockCount" style="color:var(--text);font-weight:700">200/200</span><span id="stockStatus">🟢</span></div>
+    </div>
+    <div class="sb-section">
+        <div class="sb-title">Charts</div>
+        <div class="graph-box"><div class="graph-title"><span>Welfare $/s</span><span class="gt-val" id="gWelfareVal">0</span></div><canvas id="gWelfare"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Your $/s</span><span class="gt-val" id="gProfitVal">0</span></div><canvas id="gProfit"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Fish</span><span class="gt-val" id="gStockVal">200</span></div><canvas id="gStock"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Growth</span><span class="gt-val" id="gGrowthVal">0</span></div><canvas id="gGrowth"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>S&amp;D</span><span class="gt-val" id="gMarketVal">$5</span></div><canvas id="gMarket" style="height:48px"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Price</span><span class="gt-val" id="gPriceVal">$5</span></div><canvas id="gPrice"></canvas></div>
+    </div>
+</div>
+<div class="placing-indicator" id="placingIndicator">🏝️ Click ocean to place sanctuary</div>
+<div class="boat-info" id="boatInfo">
+    <span class="bi-close" id="biClose">✕</span>
+    <h3 id="biName">Boat #1</h3>
+    <div class="bi-row"><span class="bi-label">Status</span><span class="bi-val" id="biStatus">Fishing</span></div>
+    <div class="bi-row"><span class="bi-label">Catch</span><span class="bi-val" id="biCatch">0</span></div>
+    <div class="bi-row"><span class="bi-label">Revenue/s</span><span class="bi-val" id="biRevenue">$0</span></div>
+    <div class="bi-row"><span class="bi-label">Cost/s</span><span class="bi-val" id="biCost">$3</span></div>
+    <div class="bi-row"><span class="bi-label">Econ Profit/s</span><span class="bi-val" id="biProfit">$0</span></div>
+    <div class="bi-row"><span class="bi-label">Greed</span><span class="bi-val" id="biGreed">0.5</span></div>
+    <div style="margin-top:3px"><span class="bi-label">Shutdown Risk</span>
+        <div class="bi-bar"><div class="bi-bar-fill" id="biShutdownBar" style="width:0%;background:#ef5350"></div></div>
+    </div>
+    <div><span class="bi-label">Exit Risk</span>
+        <div class="bi-bar"><div class="bi-bar-fill" id="biExitBar" style="width:0%;background:#ff9800"></div></div>
+    </div>
+    <div style="margin-top:2px;font-size:.42rem;color:var(--text-dim)" id="biHistory"></div>
+</div>
+<div class="game-alert" id="collapseAlert"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+// ════════════════════════════════════════════════
+//  THREE.JS SETUP
+// ════════════════════════════════════════════════
+const W3=800, H3=800;
+const WORLD_CX=W3/2, WORLD_CZ=H3/2, WORLD_R=380;
+const SIDEBAR_W=210,RBAR_W=195;
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
+renderer.setClearColor(0x0b1d35);
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x0b1d35,0.0008);
+
+const camera=new THREE.PerspectiveCamera(50,(window.innerWidth-SIDEBAR_W-RBAR_W)/window.innerHeight,1,5000);
+camera.position.set(W3/2,700,H3/2+500);
+camera.lookAt(W3/2,0,H3/2);
+
+window.addEventListener('resize',()=>{
+    camera.aspect=(window.innerWidth-SIDEBAR_W-RBAR_W)/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
+});
+
+// ── Sound system ──
+let audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+function playTone(freq,vol,dur,type){
+    try{initAudio();const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    osc.type=type||'sine';osc.frequency.value=freq;
+    gain.gain.setValueAtTime(vol,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+    osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+dur);}catch(e){}
+}
+function playCatchSound(isPlayer){
+    if(isPlayer){playTone(880,0.15,0.12,'sine');setTimeout(()=>playTone(1100,0.12,0.15,'sine'),60);setTimeout(()=>playTone(1320,0.08,0.2,'sine'),120);}
+    else{playTone(440,0.03,0.06,'triangle');}
+}
+
+// ── Camera controls (manual: MMB rotate, RMB pan, scroll zoom) ──
+const camTarget=new THREE.Vector3(W3/2,0,H3/2);
+let camDist=550, camTheta=0, camPhi=Math.PI/4.5;
+let dragging=0; // 0=none,1=middle(rotate),2=right(pan)
+let dragStart={x:0,y:0};
+let camFollowPlayer=true; // snap camera to player when moving
+
+function updateCamera(){
+    const x=camTarget.x+camDist*Math.sin(camPhi)*Math.sin(camTheta);
+    const y=camTarget.y+camDist*Math.cos(camPhi);
+    const z=camTarget.z+camDist*Math.sin(camPhi)*Math.cos(camTheta);
+    camera.position.set(x,y,z);
+    camera.lookAt(camTarget);
+}
+updateCamera();
+
+const cvs=renderer.domElement;
+cvs.addEventListener('mousedown',e=>{
+    if(e.button===1){dragging=1;dragStart={x:e.clientX,y:e.clientY};camFollowPlayer=false;e.preventDefault();}
+    if(e.button===2){dragging=2;dragStart={x:e.clientX,y:e.clientY};camFollowPlayer=false;e.preventDefault();}
+});
+window.addEventListener('mousemove',e=>{
+    if(dragging===1){
+        camTheta+=(e.clientX-dragStart.x)*0.005;
+        camPhi=Math.max(0.1,Math.min(Math.PI/2-0.05,camPhi-(e.clientY-dragStart.y)*0.005));
+        dragStart={x:e.clientX,y:e.clientY};
+        updateCamera();
+    }
+    if(dragging===2){
+        const right=new THREE.Vector3();camera.getWorldDirection(right);
+        right.y=0;right.normalize();
+        const fwd=right.clone().cross(new THREE.Vector3(0,1,0)).normalize();
+        // Actually: right is camera right, fwd is camera "up" projected
+        const camRight=new THREE.Vector3();
+        camRight.crossVectors(camera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(0,1,0)).normalize();
+        const camFwd=new THREE.Vector3();
+        camFwd.crossVectors(new THREE.Vector3(0,1,0),camRight).normalize();
+        const dx=-(e.clientX-dragStart.x)*camDist*0.002;
+        const dz=-(e.clientY-dragStart.y)*camDist*0.002;
+        camTarget.add(camRight.multiplyScalar(dx));
+        camTarget.add(camFwd.multiplyScalar(dz));
+        dragStart={x:e.clientX,y:e.clientY};
+        updateCamera();
+    }
+});
+window.addEventListener('mouseup',()=>{dragging=0;});
+cvs.addEventListener('wheel',e=>{
+    camDist=Math.max(150,Math.min(2500,camDist+e.deltaY*0.5));
+    camFollowPlayer=false;
+    updateCamera();e.preventDefault();
+},{passive:false});
+cvs.addEventListener('contextmenu',e=>e.preventDefault());
+
+// ── Lights ──
+scene.add(new THREE.AmbientLight(0x8899bb,0.6));
+const sun=new THREE.DirectionalLight(0xffeedd,0.9);
+sun.position.set(300,500,200);scene.add(sun);
+const hemi=new THREE.HemisphereLight(0x88bbff,0x225588,0.3);scene.add(hemi);
+
+// ── Water: circular disc ──
+const waterGeo=new THREE.CircleGeometry(WORLD_R+30,80);
+const waterMat=new THREE.MeshStandardMaterial({color:0x1a6a8a,transparent:true,opacity:0.32,roughness:0.15,metalness:0.1,side:THREE.DoubleSide});
+const waterMesh=new THREE.Mesh(waterGeo,waterMat);
+waterMesh.rotation.x=-Math.PI/2;waterMesh.position.set(WORLD_CX,-2,WORLD_CZ);
+scene.add(waterMesh);
+
+// Sea floor with radial gradient via vertex colors
+const floorGeo=new THREE.CircleGeometry(WORLD_R+50,64);
+const floorColors=new Float32Array(floorGeo.attributes.position.count*3);
+for(let i=0;i<floorGeo.attributes.position.count;i++){
+    const px=floorGeo.attributes.position.getX(i),py=floorGeo.attributes.position.getY(i);
+    const d=Math.hypot(px,py)/(WORLD_R+50);
+    // Deep blue center → teal edge
+    floorColors[i*3]=0.02+d*0.04; floorColors[i*3+1]=0.08+d*0.12; floorColors[i*3+2]=0.12+d*0.08;
+}
+floorGeo.setAttribute('color',new THREE.BufferAttribute(floorColors,3));
+const floorMat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.9});
+const floorMesh=new THREE.Mesh(floorGeo,floorMat);
+floorMesh.rotation.x=-Math.PI/2;floorMesh.position.set(WORLD_CX,-30,WORLD_CZ);
+scene.add(floorMesh);
+
+// Seabed details: rocks, sand patches, kelp
+const seabedGroup=new THREE.Group();scene.add(seabedGroup);
+function addSeabedDetails(){
+    const rockMat=new THREE.MeshStandardMaterial({color:0x3a4a3a,roughness:0.95});
+    const rockMat2=new THREE.MeshStandardMaterial({color:0x4a5a4a,roughness:0.9});
+    const kelpMat=new THREE.MeshStandardMaterial({color:0x1a5a2a,roughness:0.7,transparent:true,opacity:0.7});
+    const kelpMat2=new THREE.MeshStandardMaterial({color:0x2a6a3a,roughness:0.7,transparent:true,opacity:0.6});
+    const kelpMat3=new THREE.MeshStandardMaterial({color:0x1a7a3a,roughness:0.6,transparent:true,opacity:0.5});
+    // Scatter rocks
+    for(let i=0;i<40;i++){
+        const p=randomInCircle();
+        const sz=1.5+Math.random()*4;
+        const geo=new THREE.DodecahedronGeometry(sz,0);
+        const m=new THREE.Mesh(geo,Math.random()>0.5?rockMat:rockMat2);
+        m.position.set(p.x,-28+Math.random()*3,p.z);
+        m.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,Math.random()*Math.PI);
+        m.scale.set(1,0.4+Math.random()*0.4,1);
+        seabedGroup.add(m);
+    }
+    // Kelp/seaweed clusters (75)
+    for(let i=0;i<75;i++){
+        const p=randomInCircle();
+        const cluster=new THREE.Group();
+        const blades=2+Math.floor(Math.random()*5);
+        const mats=[kelpMat,kelpMat2,kelpMat3];
+        for(let j=0;j<blades;j++){
+            const h=5+Math.random()*12;
+            const geo=new THREE.PlaneGeometry(1.2+Math.random()*0.8,h);
+            const m=new THREE.Mesh(geo,mats[Math.floor(Math.random()*3)]);
+            m.position.set((Math.random()-.5)*4,-28+h/2,(Math.random()-.5)*4);
+            m.rotation.y=Math.random()*Math.PI;
+            m.rotation.x=(Math.random()-.5)*0.3;
+            cluster.add(m);
+        }
+        cluster.position.set(p.x,0,p.z);
+        cluster.userData.swayOffset=Math.random()*Math.PI*2;
+        seabedGroup.add(cluster);
+    }
+}
+addSeabedDetails();
+
+// Boundary ring so you can see the edge
+const ringOuterGeo=new THREE.RingGeometry(WORLD_R-2,WORLD_R+2,96);
+const ringOuterMat=new THREE.MeshBasicMaterial({color:0x2277aa,transparent:true,opacity:0.3,side:THREE.DoubleSide});
+const ringOuter=new THREE.Mesh(ringOuterGeo,ringOuterMat);
+ringOuter.rotation.x=-Math.PI/2;ringOuter.position.set(WORLD_CX,0.2,WORLD_CZ);
+scene.add(ringOuter);
+
+// ── Helper: 3D mesh builders ──
+function makeBoatMesh(color){
+    // Boat faces -Z by default (matches angle=0 → vx=0, vz=-1)
+    // rotation.y = angle directly
+    const g=new THREE.Group();
+    const hullMat=new THREE.MeshStandardMaterial({color,roughness:0.4,metalness:0.15});
+    const whiteMat=new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.5});
+    const darkMat=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.7});
+
+    // Hull: top-down profile in XZ plane, bow at -Z, stern at +Z
+    // Build as extruded shape in XY, then rotate to lie in XZ
+    const hullShape=new THREE.Shape();
+    hullShape.moveTo(-2.5,6);   // stern-left (wide)
+    hullShape.lineTo(2.5,6);    // stern-right
+    hullShape.quadraticCurveTo(3.5,-2, 0,-8); // right side tapers to bow
+    hullShape.quadraticCurveTo(-3.5,-2, -2.5,6); // left side back
+    const hullGeo=new THREE.ExtrudeGeometry(hullShape,{depth:3,bevelEnabled:true,bevelThickness:0.3,bevelSize:0.2,bevelSegments:2});
+    const hull=new THREE.Mesh(hullGeo,hullMat);
+    hull.rotation.x=Math.PI/2; // lay flat: XY shape → XZ world, extrude goes -Y (into water)
+    hull.position.set(0,0,0);
+    g.add(hull);
+
+    // Deck
+    const deckGeo=new THREE.BoxGeometry(5,0.3,12);
+    const deck=new THREE.Mesh(deckGeo,whiteMat);
+    deck.position.set(0,2.8,0);g.add(deck);
+
+    // Cabin (slightly aft = +Z)
+    const cabGeo=new THREE.BoxGeometry(3.5,3,4);
+    const cab=new THREE.Mesh(cabGeo,new THREE.MeshStandardMaterial({color:0xdddddd,roughness:0.5}));
+    cab.position.set(0,4.5,1.5);g.add(cab);
+
+    // Roof
+    const roofGeo=new THREE.BoxGeometry(3.9,0.3,4.4);
+    const roof=new THREE.Mesh(roofGeo,darkMat);
+    roof.position.set(0,6.05,1.5);g.add(roof);
+
+    // Windows facing bow (-Z)
+    const winMat=new THREE.MeshStandardMaterial({color:0xaaddff,emissive:0x88bbff,emissiveIntensity:0.4,transparent:true,opacity:0.8});
+    for(let i=-1;i<=1;i++){
+        const win=new THREE.Mesh(new THREE.PlaneGeometry(0.8,1.2),winMat);
+        win.position.set(i*1.1,4.7,-0.52);
+        // face -Z
+        g.add(win);
+    }
+
+    // Mast (forward of cabin)
+    const mastGeo=new THREE.CylinderGeometry(0.12,0.15,8,6);
+    const mast=new THREE.Mesh(mastGeo,new THREE.MeshStandardMaterial({color:0xaaaaaa,roughness:0.6}));
+    mast.position.set(0,7,-2);g.add(mast);
+
+    // Flag
+    const flagGeo=new THREE.PlaneGeometry(2.5,1.5);
+    const flagMat=new THREE.MeshStandardMaterial({color,side:THREE.DoubleSide,emissive:color,emissiveIntensity:0.3});
+    const flag=new THREE.Mesh(flagGeo,flagMat);
+    flag.position.set(1.5,10.5,-2);g.add(flag);
+    g.userData.flag=flag;
+
+    // Bow rail
+    const rail=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,2.5,4),new THREE.MeshStandardMaterial({color:0x999999,metalness:0.3}));
+    rail.position.set(0,4,-5);g.add(rail);
+
+    return g;
+}
+
+function makeFishMesh(color){
+    // Fish faces -Z at rotation.y=0
+    const g=new THREE.Group();
+    const bodyMat=new THREE.MeshStandardMaterial({color,roughness:0.3,metalness:0.15,emissive:color,emissiveIntensity:0.3});
+    // Body: elongated sphere, long axis = Z
+    const bodyGeo=new THREE.SphereGeometry(1,10,8);
+    bodyGeo.scale(1.1,0.9,2.5); // wide on Z
+    const body=new THREE.Mesh(bodyGeo,bodyMat);g.add(body);
+    // Tail fin — at +Z (rear)
+    const tailGeo=new THREE.ConeGeometry(1.2,2.5,4);
+    const tail=new THREE.Mesh(tailGeo,bodyMat);
+    tail.rotation.x=-Math.PI/2; // point +Z
+    tail.position.set(0,0,3.5);g.add(tail);
+    // Dorsal fin (points up)
+    const finMat=new THREE.MeshStandardMaterial({color,roughness:0.4,transparent:true,opacity:0.8});
+    const dorsal=new THREE.Mesh(new THREE.ConeGeometry(0.6,1.8,4),finMat);
+    dorsal.position.set(0,1.2,0.3);g.add(dorsal);
+    // Eyes (on sides, near front = -Z)
+    const eyeWhiteMat=new THREE.MeshStandardMaterial({color:0xffffff});
+    const eyePupilMat=new THREE.MeshStandardMaterial({color:0x111111});
+    const eyeR=new THREE.Mesh(new THREE.SphereGeometry(0.3,6,6),eyeWhiteMat);eyeR.position.set(0.8,0.3,-1.8);g.add(eyeR);
+    const pupilR=new THREE.Mesh(new THREE.SphereGeometry(0.15,6,6),eyePupilMat);pupilR.position.set(0.95,0.3,-2.0);g.add(pupilR);
+    const eyeL=eyeR.clone();eyeL.position.x=-0.8;g.add(eyeL);
+    const pupilL=pupilR.clone();pupilL.position.x=-0.95;g.add(pupilL);
+    return g;
+}
+
+// ── Game Constants ──
+let FISH_CAPACITY=200,ALLEE_FRAC=0.15,initialBotCount=2;
+const GROWTH_LEVELS=[0.00008,0.00015,0.0003,0.0005,0.0008,0.001,0.0015,0.002,0.003,0.005,0.008,0.012,0.018,0.025,0.04];
+let growthIdx=0;let GROWTH_RATE=GROWTH_LEVELS[0];
+const SPEED_LEVELS=[1.5,2,2.8,3.5,4.2,5,6,7.5,9,11,13,15,18,22,28];
+let speedIdx=8; // default speed 10
+const MOMENTUM_LEVELS=[0.92,0.94,0.96,0.975,0.985,0.99,0.994,0.997];
+let momentumIdx=1; // default 2
+const SIZE_LEVELS=[0.5,0.7,1,1.4,1.9,2.5,3.2,4];
+let sizeIdx=5;
+let taxRate=0,schoolStrength=1;
+const FISH_SPEED_LEVELS=[0.15,0.3,0.5,0.7,1.0,1.4,1.8,2.5];
+let fishSpeedIdx=2; // default 3
+const GREED_LEVELS=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
+let greedIdx=4; // default 5 (avg greed 0.5)
+const HYPE_LEVELS=[0.2,0.5,0.8,1.0,1.5,2.0,3.0,4.0,6.0,10.0];
+let hypeIdx=4; // default 5 → multiplier 1.5 on prior
+let allowSpawn=true;
+
+const COLLAPSE_THRESHOLD=3,BASE_FISH_PRICE=5,QUOTA_LIMIT=50,SANCTUARY_RADIUS=60;
+const BASE_CATCH_RADIUS=16,BOAT_COST_PER_SEC=2;
+const DEMAND_LEVELS=[4,6,8,10,12,16,20,26,35,50];
+let demandIdx=4;
+let DEMAND_INTERCEPT=DEMAND_LEVELS[4];
+const DEMAND_SLOPE=0.15;
+
+function getCatchR(){return BASE_CATCH_RADIUS*SIZE_LEVELS[sizeIdx];}
+
+// Circular world helpers
+function randomInCircle(){
+    const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*WORLD_R*0.92;
+    return{x:WORLD_CX+Math.cos(a)*r,z:WORLD_CZ+Math.sin(a)*r};
+}
+function clampToCircle(x,z){
+    const dx=x-WORLD_CX,dz=z-WORLD_CZ,d=Math.hypot(dx,dz);
+    if(d>WORLD_R){return{x:WORLD_CX+dx/d*WORLD_R,z:WORLD_CZ+dz/d*WORLD_R};}
+    return{x,z};
+}
+function distFromCenter(x,z){return Math.hypot(x-WORLD_CX,z-WORLD_CZ);}
+
+// ── State ──
+let fish=[],player,bots=[],policy='open',gameTime=0,collapsed=false;
+let particles3d=[],catchLines=[],botTotalCatch=0,sanctuaries=[];
+let placingSanctuary=false;
+let currentPrice=BASE_FISH_PRICE,supplySmooth=0,totalHarvestRate=0;
+const GRAPH_LEN=90;
+let profitHist=[],stockHist=[],priceHist=[];
+let profitThisSec=0,harvestThisSec=0,lastHarvest=0;
+let profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=30*60;scenarioActive=true; // last 30 seconds of profit for moving average
+const PROFIT_AVG_WINDOW=30;
+
+// 3D containers
+const fishGroup=new THREE.Group();scene.add(fishGroup);
+const boatGroup=new THREE.Group();scene.add(boatGroup);
+const effectGroup=new THREE.Group();scene.add(effectGroup);
+const sanctGroup=new THREE.Group();scene.add(sanctGroup);
+
+// ── Raycaster for click-to-place ──
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+const waterPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+
+function $(id){return document.getElementById(id)}
+const keys={};
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;keys[e.code]=true;});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys[e.code]=false;});
+
+// ── Settings ──
+$('boatMinus').onclick=()=>{
+    if(bots.length>0){
+        const b=bots[bots.length-1];if(b.mesh)boatGroup.remove(b.mesh);if(b.dockMesh)sanctGroup.remove(b.dockMesh);bots.pop();
+    }
+    initialBotCount=Math.max(0,bots.length);
+    $('boatVal').textContent=bots.length;
+};
+$('boatPlus').onclick=()=>{
+    const nb=makeBotData();bots.push(nb);addBot3D(nb);
+    initialBotCount=bots.length;
+    $('boatVal').textContent=bots.length;
+};
+$('spdMinus').onclick=()=>{speedIdx=Math.max(0,speedIdx-1);$('spdVal').textContent=speedIdx+1;};
+$('spdPlus').onclick=()=>{speedIdx=Math.min(SPEED_LEVELS.length-1,speedIdx+1);$('spdVal').textContent=speedIdx+1;};
+$('momMinus').onclick=()=>{momentumIdx=Math.max(0,momentumIdx-1);$('momVal').textContent=momentumIdx+1;};
+$('momPlus').onclick=()=>{momentumIdx=Math.min(MOMENTUM_LEVELS.length-1,momentumIdx+1);$('momVal').textContent=momentumIdx+1;};
+$('sizeMinus').onclick=()=>{sizeIdx=Math.max(0,sizeIdx-1);$('sizeVal').textContent=sizeIdx+1;};
+$('sizePlus').onclick=()=>{sizeIdx=Math.min(SIZE_LEVELS.length-1,sizeIdx+1);$('sizeVal').textContent=sizeIdx+1;};
+$('growMinus').onclick=()=>{growthIdx=Math.max(0,growthIdx-1);GROWTH_RATE=GROWTH_LEVELS[growthIdx];$('growVal').textContent=growthIdx+1;};
+$('growPlus').onclick=()=>{growthIdx=Math.min(GROWTH_LEVELS.length-1,growthIdx+1);GROWTH_RATE=GROWTH_LEVELS[growthIdx];$('growVal').textContent=growthIdx+1;};
+$('capMinus').onclick=()=>{FISH_CAPACITY=Math.max(50,FISH_CAPACITY-50);$('capVal').textContent=FISH_CAPACITY;$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
+$('capPlus').onclick=()=>{FISH_CAPACITY=Math.min(800,FISH_CAPACITY+50);$('capVal').textContent=FISH_CAPACITY;$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
+$('alleeMinus').onclick=()=>{ALLEE_FRAC=Math.max(0,Math.round((ALLEE_FRAC-.05)*100)/100);$('alleeVal').textContent=Math.round(ALLEE_FRAC*100)+'%';$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
+$('alleePlus').onclick=()=>{ALLEE_FRAC=Math.min(.5,Math.round((ALLEE_FRAC+.05)*100)/100);$('alleeVal').textContent=Math.round(ALLEE_FRAC*100)+'%';$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
+$('taxMinus').onclick=()=>{taxRate=Math.max(0,Math.round((taxRate-0.5)*10)/10);$('taxVal').textContent='$'+taxRate;};
+$('taxPlus').onclick=()=>{taxRate=Math.min(50,Math.round((taxRate+0.5)*10)/10);$('taxVal').textContent='$'+taxRate;};
+$('demMinus').onclick=()=>{demandIdx=Math.max(0,demandIdx-1);DEMAND_INTERCEPT=DEMAND_LEVELS[demandIdx];$('demVal').textContent=demandIdx+1;};
+$('demPlus').onclick=()=>{demandIdx=Math.min(DEMAND_LEVELS.length-1,demandIdx+1);DEMAND_INTERCEPT=DEMAND_LEVELS[demandIdx];$('demVal').textContent=demandIdx+1;};
+$('resetFishBtn').onclick=()=>{
+    // Replenish fish to capacity without resetting anything else
+    while(fish.length<FISH_CAPACITY){const f=spawnFishData();fish.push(f);addFish3D(f);}
+    collapsed=false;$('collapseAlert').classList.remove('show');
+};
+
+// ── Scenarios & Timer ──
+let currentScenario='solo';
+const SCENARIO_DURATION=30*60; // 30 seconds at 60fps
+const highScores={}; // keyed by scenario name
+
+const SCENARIOS={
+    solo:{name:'Solo Fisher',spawn:false,speed:8,mom:1,growth:2,hype:2,allee:0.15,desc:'Just you. Maximize your profit.'},
+    freeentry:{name:'Free Entry',spawn:true,speed:8,mom:1,growth:2,hype:5,allee:0.15,desc:'Firms can enter. Manage the commons.'},
+    fast:{name:'Speed Race',spawn:true,speed:12,mom:4,growth:3,hype:6,allee:0.15,desc:'Fast boats, high stakes.'},
+    allee:{name:'Allee Danger',spawn:true,speed:8,mom:1,growth:2,hype:5,allee:0.35,desc:'High Allee threshold. Don\'t collapse!'},
+    tax:{name:'Tax Policy',spawn:true,speed:8,mom:1,growth:2,hype:6,allee:0.15,taxStart:3,desc:'Use tax policy to maximize welfare.'},
+    sanctuary:{name:'Sanctuary',spawn:true,speed:8,mom:1,growth:3,hype:5,allee:0.15,policySanctuary:true,desc:'Place sanctuaries. Protect the stock.'},
+    hype:{name:'Hype Bubble',spawn:true,speed:8,mom:1,growth:1,hype:9,allee:0.15,desc:'Extreme hype! Survive the bubble.'}
+};
+
+function applyScenario(s){
+    currentScenario=s;
+    const sc=SCENARIOS[s];
+    document.querySelectorAll('[data-scenario]').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`[data-scenario="${s}"]`).classList.add('active');
+    allowSpawn=sc.spawn;$('spawnChk').checked=sc.spawn;
+    speedIdx=sc.speed;$('spdVal').textContent=sc.speed+1;
+    momentumIdx=sc.mom;$('momVal').textContent=sc.mom+1;
+    growthIdx=sc.growth;GROWTH_RATE=GROWTH_LEVELS[sc.growth];$('growVal').textContent=sc.growth+1;
+    hypeIdx=sc.hype;$('hypeVal').textContent=sc.hype+1;
+    ALLEE_FRAC=sc.allee;$('alleeVal').textContent=Math.round(sc.allee*100)+'%';
+    if(sc.taxStart){taxRate=sc.taxStart;$('taxVal').textContent='$'+sc.taxStart;}else{taxRate=0;$('taxVal').textContent='$0';}
+    if(sc.policySanctuary){policy='sanctuary';placingSanctuary=true;$('placingIndicator').style.display='block';}
+    $('scenarioName').textContent=sc.name;
+    $('highScore').textContent=highScores[s]?'$'+highScores[s].toFixed(0):'—';
+    initGame();
+}
+
+function makeVerifyCode(scenario,profit,welfare,catch_n,fishLeft){
+    // Simple hash: combine inputs into a verification string
+    const raw=`${scenario}|${Math.round(profit*100)}|${Math.round(welfare*100)}|${catch_n}|${fishLeft}|FC3D`;
+    let h=0;for(let i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0;}
+    return 'FC3D-'+Math.abs(h).toString(36).toUpperCase().slice(0,4)+'-'+Math.abs(h*7+catch_n).toString(36).toUpperCase().slice(0,4);
+}
+
+function endScenario(){
+    scenarioActive=false;
+    const sc=SCENARIOS[currentScenario];
+    const isNew=!highScores[currentScenario]||player.profit>highScores[currentScenario];
+    if(isNew)highScores[currentScenario]=player.profit;
+    $('highScore').textContent='$'+(highScores[currentScenario]||0).toFixed(0);
+    const code=makeVerifyCode(currentScenario,player.profit,totalWelfare,player.catch,fish.length);
+    const al=$('collapseAlert');
+    al.innerHTML=`
+        <h2 style="color:var(--gold)">⏱️ Scenario Complete!</h2>
+        <p>${sc.name}: ${sc.desc}</p>
+        <div class="score-grid">
+            <span class="sg-label">Your Profit</span><span class="sg-val" style="color:var(--gold)">$${player.profit.toFixed(0)}</span>
+            <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${totalWelfare.toFixed(0)}</span>
+            <span class="sg-label">Your Catch</span><span class="sg-val" style="color:var(--boat-you)">${player.catch}</span>
+            <span class="sg-label">Fish Remaining</span><span class="sg-val">${fish.length}/${FISH_CAPACITY}</span>
+            <span class="sg-label">Avg $/sec</span><span class="sg-val" style="color:var(--gold)">$${(player.profit/30).toFixed(1)}</span>
+            <span class="sg-label">Boats (final)</span><span class="sg-val">${bots.length}</span>
+        </div>
+        ${isNew?'<div class="highscore">🏆 New High Score!</div>':''}
+        <div class="verify">Verify: ${code}</div>
+        <button class="restart-btn" onclick="applyScenario('${currentScenario}')">🔄 Retry</button>
+        <button class="restart-btn" style="margin-left:8px;border-color:var(--gold);color:var(--gold)" onclick="document.getElementById('collapseAlert').classList.remove('show')">Continue Playing</button>
+    `;
+    al.classList.add('show');
+}
+
+document.querySelectorAll('[data-scenario]').forEach(b=>{
+    b.addEventListener('click',()=>applyScenario(b.dataset.scenario));
+});
+$('schoolMinus').onclick=()=>{schoolStrength=Math.max(0,schoolStrength-1);$('schoolVal').textContent=schoolStrength;};
+$('schoolPlus').onclick=()=>{schoolStrength=Math.min(20,schoolStrength+1);$('schoolVal').textContent=schoolStrength;};
+$('fishSpdMinus').onclick=()=>{fishSpeedIdx=Math.max(0,fishSpeedIdx-1);$('fishSpdVal').textContent=fishSpeedIdx+1;};
+$('fishSpdPlus').onclick=()=>{fishSpeedIdx=Math.min(FISH_SPEED_LEVELS.length-1,fishSpeedIdx+1);$('fishSpdVal').textContent=fishSpeedIdx+1;};
+$('greedMinus').onclick=()=>{greedIdx=Math.max(0,greedIdx-1);$('greedVal').textContent=greedIdx+1;bots.forEach(b=>{b.greed=GREED_LEVELS[greedIdx]*(0.7+Math.random()*0.6);});};
+$('greedPlus').onclick=()=>{greedIdx=Math.min(GREED_LEVELS.length-1,greedIdx+1);$('greedVal').textContent=greedIdx+1;bots.forEach(b=>{b.greed=GREED_LEVELS[greedIdx]*(0.7+Math.random()*0.6);});};
+$('hypeMinus').onclick=()=>{hypeIdx=Math.max(0,hypeIdx-1);$('hypeVal').textContent=hypeIdx+1;};
+$('hypePlus').onclick=()=>{hypeIdx=Math.min(HYPE_LEVELS.length-1,hypeIdx+1);$('hypeVal').textContent=hypeIdx+1;};
+const spawnChkEl=$('spawnChk');
+spawnChkEl.onchange=function(){allowSpawn=this.checked;};
+spawnChkEl.onclick=function(){allowSpawn=this.checked;};
+
+// Policy
+document.querySelectorAll('.policy-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const p=btn.dataset.policy;
+        if(p==='sanctuary'){placingSanctuary=!placingSanctuary;$('placingIndicator').style.display=placingSanctuary?'block':'none';if(placingSanctuary){document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}return;}
+        placingSanctuary=false;$('placingIndicator').style.display='none';
+        document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');policy=p;
+        if(p==='open'){sanctuaries=[];while(sanctGroup.children.length)sanctGroup.remove(sanctGroup.children[0]);}
+    });
+});
+
+// Click handler: inspect boats or place sanctuaries
+let selectedBot=null;
+$('biClose').onclick=()=>{$('boatInfo').classList.remove('show');selectedBot=null;};
+
+cvs.addEventListener('click',e=>{
+    if(dragging)return;
+    mouse.x=((e.clientX-SIDEBAR_W)/(window.innerWidth-SIDEBAR_W-RBAR_W))*2-1;
+    mouse.y=-(e.clientY/window.innerHeight)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+
+    // Try to hit a boat first
+    if(!placingSanctuary){
+        const allEntries=[];
+        if(playerMesh)allEntries.push({mesh:playerMesh,bot:null,isPlayer:true});
+        bots.forEach((b,i)=>{if(b.mesh)allEntries.push({mesh:b.mesh,bot:b,idx:i,isPlayer:false});});
+        let closest=null,closestDist=Infinity;
+        for(const entry of allEntries){
+            const hits=raycaster.intersectObject(entry.mesh,true);
+            if(hits.length>0&&hits[0].distance<closestDist){closestDist=hits[0].distance;closest=entry;}
+        }
+        if(closest){
+            selectedBot=closest.isPlayer?'player':closest.bot;
+            updateBoatInfoPanel();
+            $('boatInfo').classList.add('show');
+            $('boatInfo').style.left=Math.min(e.clientX+10,window.innerWidth-240)+'px';
+            $('boatInfo').style.top=Math.min(e.clientY+10,window.innerHeight-300)+'px';
+            return;
+        }
+    }
+
+    // Otherwise: sanctuary placement
+    if(placingSanctuary){
+        const pt=new THREE.Vector3();
+        if(raycaster.ray.intersectPlane(waterPlane,pt)){
+            sanctuaries.push({x:pt.x,z:pt.z,r:SANCTUARY_RADIUS});policy='sanctuary';
+            const ringGeo2=new THREE.RingGeometry(SANCTUARY_RADIUS-1,SANCTUARY_RADIUS,48);
+            const ringMat2=new THREE.MeshBasicMaterial({color:0x4caf50,transparent:true,opacity:0.4,side:THREE.DoubleSide});
+            const ring2=new THREE.Mesh(ringGeo2,ringMat2);ring2.rotation.x=-Math.PI/2;ring2.position.set(pt.x,0.5,pt.z);sanctGroup.add(ring2);
+            const discGeo2=new THREE.CircleGeometry(SANCTUARY_RADIUS,48);
+            const discMat2=new THREE.MeshBasicMaterial({color:0x4caf50,transparent:true,opacity:0.06,side:THREE.DoubleSide});
+            const disc2=new THREE.Mesh(discGeo2,discMat2);disc2.rotation.x=-Math.PI/2;disc2.position.set(pt.x,0.3,pt.z);sanctGroup.add(disc2);
+        }
+    } else {
+        // Clicked empty water — close info panel
+        $('boatInfo').classList.remove('show');selectedBot=null;
+    }
+});
+
+function updateBoatInfoPanel(){
+    if(!selectedBot)return;
+    if(selectedBot==='player'){
+        $('biName').textContent='⛵ Your Boat';$('biName').style.color='var(--boat-you)';
+        const secs=Math.max(1,Math.floor(gameTime/60));
+        $('biStatus').textContent='Fishing';$('biStatus').style.color='var(--green)';
+        $('biCatch').textContent=player.catch;
+        const avgP=profitWindow.length>0?profitWindow.reduce((a,b)=>a+b,0)/profitWindow.length:0;
+        $('biRevenue').textContent='$'+avgP.toFixed(1)+'/s';
+        $('biCost').textContent='N/A';
+        $('biProfit').textContent='$'+(player.profit/secs).toFixed(1)+'/s avg';$('biProfit').style.color='var(--gold)';
+        $('biGreed').textContent='—';$('biShutdownBar').style.width='0%';$('biExitBar').style.width='0%';
+        $('biHistory').textContent='Total: $'+player.profit.toFixed(0)+' over '+secs+'s';
+    } else {
+        const bot=selectedBot;if(!bots.includes(bot)){$('boatInfo').classList.remove('show');selectedBot=null;return;}
+        const idx=bots.indexOf(bot);
+        $('biName').textContent='🚤 Boat #'+(idx+2);$('biName').style.color='var(--boat-bot)';
+        const status=bot.docked?'⚓ Docked':bot.returning?'↩️ Returning to Dock':'🐟 Fishing';
+        $('biStatus').textContent=status;$('biStatus').style.color=bot.docked?'var(--text-dim)':bot.returning?'#ff9800':'var(--green)';
+        $('biCatch').textContent=bot.catch;
+        $('biRevenue').textContent='$'+(bot._recentRevenue||0).toFixed(2)+'/s';
+        $('biCost').textContent='$3/s (FC $1 + VC $2)';
+        const econ=bot._econProfit||0;
+        $('biProfit').textContent='$'+econ.toFixed(2)+'/s';$('biProfit').style.color=econ>=0?'var(--green)':'var(--red)';
+        $('biGreed').textContent=bot.greed.toFixed(2);
+        const opProf=bot._opProfit||0;
+        $('biShutdownBar').style.width=Math.min(100,opProf<0?Math.abs(opProf)*50:0)+'%';
+        $('biExitBar').style.width=Math.min(100,econ<0?Math.abs(econ)*30:0)+'%';
+        const recent=bot.profitHist.slice(-10);
+        const trend=recent.length>1?(recent[recent.length-1]>recent[0])?'📈':'📉':'—';
+        const conf=Math.min(100,bot.belief_n*5);
+        $('biHistory').textContent=`Belief: ${(bot.belief_catchRate*60).toFixed(2)} catch/s (${conf.toFixed(0)}% conf) · Opt: ${bot.belief_optimism.toFixed(1)} · ${trend}`;
+    }
+}
+
+if($('restartBtn'))$('restartBtn').onclick=initGame;
+
+function isInSanctuary(x,z){for(const s of sanctuaries){if(Math.hypot(x-s.x,z-s.z)<s.r)return true;}return false;}
+function getActiveTax(){return policy==='tax'?taxRate:0;}
+
+// ── Factories ──
+function spawnFishData(near){
+    let x,z;
+    if(near){x=near.x+(Math.random()-.5)*40;z=near.z+(Math.random()-.5)*40;const c=clampToCircle(x,z);x=c.x;z=c.z;}
+    else{const p=randomInCircle();x=p.x;z=p.z;}
+    return{x,z,vx:(Math.random()-.5)*.15,vz:(Math.random()-.5)*.15,schoolAng:Math.random()*Math.PI*2,turnTimer:60+Math.floor(Math.random()*120),mesh:null,wobble:Math.random()*Math.PI*2};
+}
+
+function addFish3D(f){
+    const color=Math.random()>.3?0xf6c643:0xa8d8ea;
+    const m=makeFishMesh(color);
+    const s=1.5+Math.random()*0.8;
+    m.scale.set(s,s,s);
+    m.position.set(f.x,-2.5-Math.random()*2,f.z);
+    fishGroup.add(m);f.mesh=m;
+}
+
+function getMarketPrior(){
+    // Shared naive estimate of catch rate based on observable conditions
+    const fishDensity=fish.length/Math.max(1,FISH_CAPACITY);
+    return fishDensity*getCatchR()*0.005*SPEED_LEVELS[speedIdx]*0.2;
+}
+
+function makeBotData(){
+    const dockAng=Math.random()*Math.PI*2;
+    const dockX=WORLD_CX+Math.cos(dockAng)*(WORLD_R+15);
+    const dockZ=WORLD_CZ+Math.sin(dockAng)*(WORLD_R+15);
+    // Bayesian belief: prior catch rate with agent-specific noise and hype
+    const basePrior=getMarketPrior();
+    const hype=HYPE_LEVELS[hypeIdx];
+    const agentNoise=0.7+Math.random()*0.6; // individual optimism/pessimism
+    return{x:dockX,z:dockZ,vx:0,vz:0,angle:Math.random()*Math.PI*2,speed:0,
+        catch:0,targetFish:null,thinkTimer:0,greed:GREED_LEVELS[greedIdx]*(0.7+Math.random()*0.6),
+        turnRate:.04+Math.random()*.03,
+        docked:true,dockTimer:60+Math.floor(Math.random()*60),returning:false,
+        dockX,dockZ,dockAng,
+        profitHist:[],spawnTime:gameTime,
+        mesh:null,dockMesh:null,
+        // Bayesian belief system
+        belief_catchRate:basePrior*hype*agentNoise, // prior expected catch/frame
+        belief_n:2, // "observations" backing the belief (low=uncertain, high=confident)
+        belief_optimism:agentNoise*hype, // agent's initial optimism factor
+        actualCatchesThisSec:0, // running count for this second
+        actualSecsFishing:0, // seconds spent actively fishing
+        _recentRevenue:0,_recentCatch:0,_econProfit:0,_opProfit:0};
+}
+
+// 3D dock: small pier on circle edge
+function makeDockMesh(dockX,dockZ,dockAng){
+    const g=new THREE.Group();
+    // Pier planks
+    const plankMat=new THREE.MeshStandardMaterial({color:0x8B6914,roughness:0.8});
+    const plank=new THREE.Mesh(new THREE.BoxGeometry(4,0.5,10),plankMat);
+    plank.position.set(0,0.5,0);g.add(plank);
+    // Posts
+    const postMat=new THREE.MeshStandardMaterial({color:0x5a3e0a,roughness:0.9});
+    for(const oz of[-4,4]){
+        const post=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,4,6),postMat);
+        post.position.set(1.5,-1,oz);g.add(post);
+        const post2=post.clone();post2.position.x=-1.5;g.add(post2);
+    }
+    g.position.set(dockX,0,dockZ);
+    g.rotation.y=-dockAng+Math.PI/2;
+    return g;
+}
+
+function addBot3D(b){
+    const m=makeBoatMesh(0xef5350);const s=SIZE_LEVELS[sizeIdx]*0.8;
+    m.scale.set(s,s,s);m.position.set(b.x,0,b.z);
+    boatGroup.add(m);b.mesh=m;
+    // Create dock
+    const dm=makeDockMesh(b.dockX,b.dockZ,b.dockAng);
+    sanctGroup.add(dm);b.dockMesh=dm;
+}
+
+let playerMesh;
+
+function initGame(){
+    // Clear 3D
+    while(fishGroup.children.length)fishGroup.remove(fishGroup.children[0]);
+    while(boatGroup.children.length)boatGroup.remove(boatGroup.children[0]);
+    while(effectGroup.children.length)effectGroup.remove(effectGroup.children[0]);
+    while(sanctGroup.children.length)sanctGroup.remove(sanctGroup.children[0]);
+
+    fish=[];collapsed=false;gameTime=0;particles3d=[];catchLines=[];botTotalCatch=0;
+    profitHist=[];stockHist=[];priceHist=[];profitThisSec=0;harvestThisSec=0;lastHarvest=0;
+    profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=30*60;scenarioActive=true;
+    currentPrice=BASE_FISH_PRICE;supplySmooth=0;totalHarvestRate=0;
+    sanctuaries=[];placingSanctuary=false;$('placingIndicator').style.display='none';
+
+    player={x:W3/2,z:H3/2,vx:0,vz:0,angle:-Math.PI/2,speed:0,catch:0,profit:0};
+    playerMesh=makeBoatMesh(0x4fc3f7);
+    const ps=SIZE_LEVELS[sizeIdx]*0.8;playerMesh.scale.set(ps,ps,ps);
+    playerMesh.position.set(player.x,0,player.z);boatGroup.add(playerMesh);
+
+    for(let i=0;i<FISH_CAPACITY;i++){const f=spawnFishData();fish.push(f);addFish3D(f);}
+    bots=[];for(let i=0;i<initialBotCount;i++){const b=makeBotData();bots.push(b);addBot3D(b);}
+
+    $('collapseAlert').classList.remove('show');
+    document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('[data-policy="open"]').classList.add('active');policy='open';
+    allowSpawn=$('spawnChk').checked;
+    updateInsight();
+}
+
+// ── Particle effects ──
+function spawnBirthEffect(x,z){
+    for(let i=0;i<6;i++){
+        const geo=new THREE.SphereGeometry(0.4,4,4);
+        const mat=new THREE.MeshBasicMaterial({color:Math.random()>.5?0x81c784:0xf6c643,transparent:true,opacity:1});
+        const m=new THREE.Mesh(geo,mat);
+        const ang=Math.PI*2*i/6;
+        m.position.set(x,-3,z);
+        effectGroup.add(m);
+        particles3d.push({mesh:m,vx:Math.cos(ang)*0.5,vy:0.3,vz:Math.sin(ang)*0.5,life:40,maxLife:40});
+    }
+}
+let _popupOffset=0; // stagger popups
+function spawnCatchEffect(x,z,isPlayer,earnAmount){
+    const col=isPlayer?0xf6c643:0xef5350;
+    for(let i=0;i<6;i++){
+        const geo=new THREE.SphereGeometry(0.6,4,4);
+        const mat=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:1});
+        const m=new THREE.Mesh(geo,mat);
+        const ang=Math.PI*2*i/6;
+        m.position.set(x,-1,z);effectGroup.add(m);
+        particles3d.push({mesh:m,vx:Math.cos(ang)*0.8,vy:0.6+Math.random()*0.4,vz:Math.sin(ang)*0.8,life:30,maxLife:30});
+    }
+    // Big floating profit text
+    if(isPlayer&&earnAmount>0){
+        _popupOffset=(_popupOffset+1)%3;
+        const canvas2=document.createElement('canvas');
+        canvas2.width=512;canvas2.height=192;
+        const ctx2=canvas2.getContext('2d');
+        ctx2.font='bold 120px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+        ctx2.shadowColor='#ffeb3b';ctx2.shadowBlur=30;
+        ctx2.strokeStyle='#2a1f00';ctx2.lineWidth=10;
+        ctx2.fillStyle='#ffeb3b';
+        const txt='+$'+earnAmount.toFixed(1);
+        ctx2.strokeText(txt,256,96);ctx2.fillText(txt,256,96);
+        const tex=new THREE.CanvasTexture(canvas2);
+        const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
+        const sprite=new THREE.Sprite(spriteMat);
+        sprite.scale.set(35,13,1);
+        const ox=(_popupOffset-1)*12;
+        sprite.position.set(x+ox,12,z);
+        effectGroup.add(sprite);
+        particles3d.push({mesh:sprite,vx:ox*0.02,vy:0.4,vz:0,life:70,maxLife:70});
+    }
+    if(!isPlayer){
+        const canvas2=document.createElement('canvas');
+        canvas2.width=128;canvas2.height=128;
+        const ctx2=canvas2.getContext('2d');
+        ctx2.font='bold 90px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+        ctx2.fillStyle='#ef5350';ctx2.fillText('✕',64,64);
+        const tex=new THREE.CanvasTexture(canvas2);
+        const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
+        const sprite=new THREE.Sprite(spriteMat);
+        sprite.scale.set(10,10,1);
+        sprite.position.set(x,6,z);effectGroup.add(sprite);
+        particles3d.push({mesh:sprite,vx:0,vy:0.2,vz:0,life:30,maxLife:30});
+    }
+}
+
+function spawnCatchLine(boatX,boatZ,fishX,fishZ){
+    const geo=new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(boatX,2,boatZ),
+        new THREE.Vector3(fishX,-1,fishZ)
+    ]);
+    const mat=new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.9,linewidth:2});
+    const line=new THREE.Line(geo,mat);
+    effectGroup.add(line);
+    catchLines.push({mesh:line,life:12,maxLife:12});
+}
+
+// ── Market ──
+function updateMarket(){
+    supplySmooth=supplySmooth*.92+totalHarvestRate*.08;
+    // Inverse demand: P = intercept - slope*Q. Scarcity premium when fish stock is low.
+    const baseP=Math.max(0.5,DEMAND_INTERCEPT-DEMAND_SLOPE*supplySmooth*6);
+    // Scarcity multiplier: prices rise when stock is depleted (fewer fish = higher willingness to pay)
+    const scarcity=1+Math.max(0,1-fish.length/FISH_CAPACITY)*4; // 1x at full stock, up to 5x at zero
+    currentPrice=Math.round(baseP*scarcity*10)/10;
+}
+function spawnStatusSprite(x,z,text,color){
+    const canvas2=document.createElement('canvas');
+    canvas2.width=256;canvas2.height=64;
+    const ctx2=canvas2.getContext('2d');
+    ctx2.font='bold 32px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+    ctx2.strokeStyle='#111';ctx2.lineWidth=4;ctx2.fillStyle=color;
+    ctx2.strokeText(text,128,32);ctx2.fillText(text,128,32);
+    const tex=new THREE.CanvasTexture(canvas2);
+    const mat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
+    const sprite=new THREE.Sprite(mat);
+    sprite.scale.set(18,4.5,1);sprite.position.set(x,15,z);
+    effectGroup.add(sprite);
+    particles3d.push({mesh:sprite,vx:0,vy:0.15,vz:0,life:90,maxLife:90});
+}
+
+function updateBotEntryExit(){
+    const FC_PER_SEC=1.0,VC_PER_SEC=BOAT_COST_PER_SEC;
+    const totalCost=FC_PER_SEC+VC_PER_SEC;
+    const revenuePerFish=Math.max(0,currentPrice-getActiveTax());
+    const marketPrior=getMarketPrior();
+
+    bots.forEach(bot=>{
+        // Compute this bot's individual expected profitability from its belief
+        const myRevPerSec=bot.belief_catchRate*revenuePerFish;
+        const myEconProfit=myRevPerSec-totalCost;
+        const myOpProfit=myRevPerSec-VC_PER_SEC;
+
+        bot._recentRevenue=myRevPerSec;
+        bot._recentCatch=bot.belief_catchRate;
+        bot._econProfit=myEconProfit;
+        bot._opProfit=myOpProfit;
+        if(bot.profitHist.length>60)bot.profitHist.shift();
+        bot.profitHist.push(myEconProfit);
+
+        if(bot.docked&&!bot.returning){
+            bot.dockTimer--;
+            // Docked bots slowly update belief toward market prior (they hear rumors)
+            if(gameTime%60===0){
+                const rumorRate=marketPrior*HYPE_LEVELS[hypeIdx]*bot.belief_optimism;
+                bot.belief_catchRate=(bot.belief_catchRate*bot.belief_n+rumorRate*0.5)/(bot.belief_n+0.5);
+                // Recalc with updated belief
+                const updatedRev=bot.belief_catchRate*revenuePerFish;
+                const updatedEcon=updatedRev-totalCost;
+                if(bot.dockTimer<=0&&updatedEcon>0.1&&allowSpawn){
+                    bot.docked=false;bot.returning=false;
+                    bot.actualCatchesThisSec=0;bot.actualSecsFishing=0;
+                    spawnStatusSprite(bot.x,bot.z,'📈 Re-entering','#4caf50');
+                }
+            }
+        } else if(bot.returning){
+            // handled in movement
+        } else if(!bot.docked){
+            // Active fishing: update belief each second
+            if(gameTime%60===0){
+                bot.actualSecsFishing++;
+                // Bayesian update: blend observed catch rate with prior
+                // observedRate = catches this second (as a per-frame rate)
+                const observed=bot.actualCatchesThisSec/60; // catches per frame this second
+                const weight=Math.min(bot.belief_n,10); // prior weight
+                const obsWeight=1.5; // how much we trust one second of observation
+                bot.belief_catchRate=(bot.belief_catchRate*weight+observed*obsWeight)/(weight+obsWeight);
+                bot.belief_n=Math.min(20,bot.belief_n+obsWeight); // grow confidence
+                bot.actualCatchesThisSec=0;
+
+                // Also weakly observe market conditions
+                const marketSignal=marketPrior*0.5;
+                bot.belief_catchRate=(bot.belief_catchRate*bot.belief_n+marketSignal*0.2)/(bot.belief_n+0.2);
+            }
+
+            // Individual exit decisions based on THIS bot's belief
+            if(myOpProfit<0){
+                const exitProb=Math.min(0.12,0.01+Math.abs(myOpProfit)*0.04);
+                if(Math.random()<exitProb){
+                    bot.returning=true;
+                    spawnStatusSprite(bot.x,bot.z,'⚠️ P < AVC','#ef5350');
+                }
+            } else if(myEconProfit<-0.3){
+                const exitProb=Math.min(0.04,0.003+Math.abs(myEconProfit)*0.008);
+                if(Math.random()<exitProb){
+                    bot.returning=true;
+                    spawnStatusSprite(bot.x,bot.z,'📉 P < ATC','#ff9800');
+                }
+            }
+        }
+    });
+
+    // New entry: a prospective firm evaluates with hype-inflated prior
+    if(allowSpawn&&bots.length<30){
+        const hype=HYPE_LEVELS[hypeIdx];
+        const prospectCatchRate=marketPrior*hype*(0.8+Math.random()*0.4);
+        const prospectRev=prospectCatchRate*revenuePerFish;
+        const prospectProfit=prospectRev-totalCost;
+        if(prospectProfit>0){
+            const entryProb=Math.min(0.25,0.02+prospectProfit*0.03);
+            if(Math.random()<entryProb){
+                const nb=makeBotData();nb.docked=false;nb.dockTimer=0;
+                // New entrant's belief is the hyped prospect
+                nb.belief_catchRate=prospectCatchRate;
+                nb.belief_n=2; // low confidence, will update quickly
+                bots.push(nb);addBot3D(nb);$('boatVal').textContent=bots.length;
+                spawnStatusSprite(nb.x,nb.z,'🚤 New entrant!','#4fc3f7');
+            }
+        }
+    }
+
+    // Permanent exit: pessimistic docked bots leave industry
+    const docked=bots.filter(b=>b.docked&&!b.returning);
+    if(docked.length>0){
+        // Check each docked bot individually for exit
+        for(let di=docked.length-1;di>=0;di--){
+            const b=docked[di];
+            const bRev=b.belief_catchRate*revenuePerFish;
+            const bProf=bRev-totalCost;
+            const dockedTime=gameTime-b.spawnTime;
+            const dockedLong=b.actualSecsFishing<3&&dockedTime>300; // fished <3s but existed >5s
+            // Exit if belief is deeply negative OR been docked a long time with bad outlook
+            if((bProf<-0.3&&Math.random()<0.03)||(dockedLong&&bProf<0&&Math.random()<0.02)){
+                const idx=bots.indexOf(b);
+                if(idx>=0){
+                    spawnStatusSprite(b.x,b.z,'🚫 Exited industry','#ef5350');
+                    if(b.mesh)boatGroup.remove(b.mesh);
+                    if(b.dockMesh)sanctGroup.remove(b.dockMesh);
+                    if(selectedBot===b){$('boatInfo').classList.remove('show');selectedBot=null;}
+                    bots.splice(idx,1);$('boatVal').textContent=bots.length;
+                }
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════
+//  GAME UPDATE
+// ════════════════════════════════════════════════
+function update(){
+    if(collapsed)return;
+    gameTime++;
+    const pMaxSpd=SPEED_LEVELS[speedIdx];
+    const bMaxBase=pMaxSpd*0.75;
+    const catchR=getCatchR();
+    const schoolF=(schoolStrength/20)*(schoolStrength/20)*4; // 0→0, 2→0.04, 5→0.25, 10→1, 20→4
+
+    // ─ Player ─
+    let tI=0,thI=0;
+    if(keys['a']||keys['arrowleft'])tI-=1;if(keys['d']||keys['arrowright'])tI+=1;
+    if(keys['w']||keys['arrowup'])thI=1;if(keys['s']||keys['arrowdown'])thI=-.5;
+
+    // If player presses movement keys, snap camera back to follow
+    if(tI!==0||thI!==0) camFollowPlayer=true;
+
+    player.angle+=tI*.05;
+    // Scale acceleration with speed level so high speeds are actually reachable
+    const accelF=0.04+pMaxSpd*0.008;
+    player.vx+=Math.sin(player.angle)*thI*accelF;player.vz+=-Math.cos(player.angle)*thI*accelF;
+    const drag=MOMENTUM_LEVELS[momentumIdx];
+    player.vx*=drag;player.vz*=drag;
+    let spd=Math.hypot(player.vx,player.vz);
+    if(spd>pMaxSpd){player.vx*=pMaxSpd/spd;player.vz*=pMaxSpd/spd;spd=pMaxSpd;}
+    player.speed=spd;player.x+=player.vx;player.z+=player.vz;
+    const pc=clampToCircle(player.x,player.z);player.x=pc.x;player.z=pc.z;
+
+    // Camera follow player smoothly
+    if(camFollowPlayer){
+        camTarget.x+=(player.x-camTarget.x)*0.08;
+        camTarget.z+=(player.z-camTarget.z)*0.08;
+        updateCamera();
+    }
+
+    if(playerMesh){
+        const sz=SIZE_LEVELS[sizeIdx]*0.8;playerMesh.scale.set(sz,sz,sz);
+        playerMesh.position.set(player.x,Math.sin(gameTime*0.05)*0.3,player.z);
+        playerMesh.rotation.y=-player.angle;
+        if(playerMesh.userData.flag)playerMesh.userData.flag.rotation.y=Math.sin(gameTime*0.08)*0.3;
+    }
+
+    // ─ Bots ─
+    const activeBots=bots.filter(b=>!b.docked&&!b.returning);
+    bots.forEach(bot=>{
+        const bMax=bMaxBase*(.8+bot.greed*.4);
+        const botAccelF=0.03+bMaxBase*0.007;
+
+        if(bot.docked){
+            // Sit at dock
+            bot.x=bot.dockX;bot.z=bot.dockZ;bot.vx=0;bot.vz=0;
+            if(bot.mesh){
+                const sz=SIZE_LEVELS[sizeIdx]*0.8;bot.mesh.scale.set(sz,sz,sz);
+                bot.mesh.position.set(bot.dockX,0.5,bot.dockZ);
+                // Grey out
+                bot.mesh.traverse(c=>{if(c.material&&!c._origColor){c._origColor=c.material.color.getHex();c.material.color.setHex(0x556677);}});
+            }
+        } else if(bot.returning){
+            // Drive back to dock — decelerate as approaching
+            const dx=bot.dockX-bot.x,dz=bot.dockZ-bot.z,dd=Math.hypot(dx,dz);
+            if(dd<12){
+                // Close enough: snap to dock, kill velocity
+                bot.returning=false;bot.docked=true;bot.dockTimer=30+Math.floor(Math.random()*60);
+                bot.vx=0;bot.vz=0;bot.x=bot.dockX;bot.z=bot.dockZ;
+            } else {
+                // Steer toward dock
+                const des=Math.atan2(dx,-dz);
+                let diff=des-bot.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
+                bot.angle+=Math.sign(diff)*Math.min(Math.abs(diff),bot.turnRate*2);
+                // Decelerate when getting close
+                const speedFactor=Math.min(1,dd/80);
+                bot.vx+=Math.sin(bot.angle)*speedFactor*0.6*botAccelF;
+                bot.vz+=-Math.cos(bot.angle)*speedFactor*0.6*botAccelF;
+                // Strong braking drag when close
+                const brakeDrag=dd<40?0.92:MOMENTUM_LEVELS[momentumIdx];
+                bot.vx*=brakeDrag;bot.vz*=brakeDrag;
+            }
+            const bs=Math.hypot(bot.vx,bot.vz);if(bs>bMax){bot.vx*=bMax/bs;bot.vz*=bMax/bs;}
+            bot.x+=bot.vx;bot.z+=bot.vz;
+            bot.speed=Math.hypot(bot.vx,bot.vz);
+            if(bot.mesh){
+                const sz=SIZE_LEVELS[sizeIdx]*0.8;bot.mesh.scale.set(sz,sz,sz);
+                bot.mesh.traverse(c=>{if(c.material&&!c._origColor){c._origColor=c.material.color.getHex();c.material.color.setHex(0x887777);}});
+                bot.mesh.position.set(bot.x,Math.sin(gameTime*0.05+bot.greed*5)*0.3,bot.z);
+                bot.mesh.rotation.y=-bot.angle;
+            }
+        } else {
+            // Fishing — restore color
+            if(bot.mesh){
+                bot.mesh.traverse(c=>{if(c.material&&c._origColor){c.material.color.setHex(c._origColor);delete c._origColor;}});
+            }
+            bot.thinkTimer--;
+            if(bot.thinkTimer<=0||!bot.targetFish||!fish.includes(bot.targetFish)){
+                let best=null,bestD=Infinity;
+                fish.forEach(f=>{if(isInSanctuary(f.x,f.z)&&bot.greed<.8)return;const d=(f.x-bot.x)**2+(f.z-bot.z)**2;if(d<bestD){bestD=d;best=f;}});
+                bot.targetFish=best;bot.thinkTimer=10+Math.floor(Math.random()*20);
+            }
+            let bt=.85*bot.greed;
+            if(policy==='quota'&&bot.catch>=QUOTA_LIMIT*bot.greed){bt=0;bot.targetFish=null;}
+            if(bot.targetFish){
+                const des=Math.atan2(bot.targetFish.x-bot.x,-(bot.targetFish.z-bot.z));
+                let diff=des-bot.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
+                bot.angle+=Math.sign(diff)*Math.min(Math.abs(diff),bot.turnRate);
+            }
+            bot.vx+=Math.sin(bot.angle)*bt*botAccelF;bot.vz+=-Math.cos(bot.angle)*bt*botAccelF;
+            const bDrag=MOMENTUM_LEVELS[momentumIdx];bot.vx*=bDrag;bot.vz*=bDrag;
+            const bs=Math.hypot(bot.vx,bot.vz);if(bs>bMax){bot.vx*=bMax/bs;bot.vz*=bMax/bs;}
+            bot.x+=bot.vx;bot.z+=bot.vz;
+            const bc=clampToCircle(bot.x,bot.z);bot.x=bc.x;bot.z=bc.z;
+            bot.speed=Math.hypot(bot.vx,bot.vz);
+            if(bot.mesh){
+                const sz=SIZE_LEVELS[sizeIdx]*0.8;bot.mesh.scale.set(sz,sz,sz);
+                bot.mesh.position.set(bot.x,Math.sin(gameTime*0.05+bot.greed*5)*0.3,bot.z);
+                bot.mesh.rotation.y=-bot.angle;
+                if(bot.mesh.userData.flag)bot.mesh.userData.flag.rotation.y=Math.sin(gameTime*0.08+bot.greed)*0.3;
+            }
+        }
+    });
+
+    // ─ Fish ─
+    const cx=WORLD_CX,cz=WORLD_CZ;
+    const fSpd=FISH_SPEED_LEVELS[fishSpeedIdx];
+    for(let fi=0;fi<fish.length;fi++){
+        const f=fish[fi];
+        f.wobble+=0.03;f.turnTimer--;
+        // Random direction changes — frequent and lively
+        if(f.turnTimer<=0){f.schoolAng+=(Math.random()-.5)*2.5;f.turnTimer=15+Math.floor(Math.random()*50);}
+        // Base wandering drive — scaled by fish speed, with strong active swimming
+        f.vx+=Math.cos(f.schoolAng)*.006*fSpd;f.vz+=Math.sin(f.schoolAng)*.006*fSpd;
+        // Random jitter for organic movement
+        f.vx+=(Math.random()-.5)*.025*fSpd;f.vz+=(Math.random()-.5)*.025*fSpd;
+        // Circular boundary repulsion (keep fish in bounds but no center pull)
+        const fd=distFromCenter(f.x,f.z);
+        if(fd>WORLD_R*0.82){
+            const push=(fd-WORLD_R*0.82)/(WORLD_R*0.18)*0.015*fSpd;
+            f.vx+=(WORLD_CX-f.x)/fd*push;f.vz+=(WORLD_CZ-f.z)/fd*push;
+        }
+        // Very gentle center drift only when far out (prevents permanent edge hugging)
+        const dc=Math.hypot(cx-f.x,cz-f.z);
+        if(dc>WORLD_R*0.7){f.vx+=(cx-f.x)/dc*.0005*fSpd;f.vz+=(cz-f.z)/dc*.0005*fSpd;}
+        // Flee boats — with lateral scatter to avoid ring formation
+        for(const b of[player,...activeBots]){
+            const dx=f.x-b.x,dz=f.z-b.z,d=Math.hypot(dx,dz);
+            if(d<110&&d>1){
+                const fl=.15*(1-d/110)*(1-d/110)*fSpd;
+                // Add perpendicular scatter (random left or right of flee direction)
+                const scatter=(Math.random()-.5)*0.7;
+                f.vx+=(dx/d+scatter*(-dz/d))*fl;
+                f.vz+=(dz/d+scatter*(dx/d))*fl;
+            }
+        }
+        // Sanctuary attract
+        for(const s of sanctuaries){const d=Math.hypot(s.x-f.x,s.z-f.z);if(d>s.r&&d<s.r*3){f.vx+=(s.x-f.x)/d*.003*fSpd;f.vz+=(s.z-f.z)/d*.003*fSpd;}}
+        // Schooling
+        if(schoolF>0){let nx=0,nz=0,nc=0;const lo=Math.max(0,fi-30),hi=Math.min(fish.length,fi+30);
+            for(let j=lo;j<hi;j++){if(j===fi)continue;const dx=fish[j].x-f.x,dz=fish[j].z-f.z,dd=dx*dx+dz*dz;
+                if(dd<3000&&dd>80){nx+=dx;nz+=dz;nc++;}if(dd<200&&dd>0){const d=Math.sqrt(dd);f.vx-=(dx/d)*.01*schoolF;f.vz-=(dz/d)*.01*schoolF;}}
+            if(nc>0){f.vx+=nx/nc*.002*schoolF;f.vz+=nz/nc*.002*schoolF;}}
+        // Drag and max speed scaled by fish speed level
+        f.vx*=.975;f.vz*=.975;
+        const fMaxSpd=0.5+fSpd*0.7;
+        const fs2=Math.hypot(f.vx,f.vz);if(fs2>fMaxSpd){f.vx*=fMaxSpd/fs2;f.vz*=fMaxSpd/fs2;}
+        f.x+=f.vx;f.z+=f.vz;const fc=clampToCircle(f.x,f.z);f.x=fc.x;f.z=fc.z;
+        // Update 3D
+        if(f.mesh){f.mesh.position.set(f.x,-2.5+Math.sin(f.wobble)*0.5,f.z);const fspd=Math.hypot(f.vx,f.vz);if(fspd>0.05)f.mesh.rotation.y=-Math.atan2(f.vx,-f.vz);}
+    }
+
+    // ─ Catch ─
+    const pQuotaOk=policy!=='quota'||player.catch<QUOTA_LIMIT;
+    const aTax=getActiveTax();const effPrice=currentPrice-aTax;
+    for(let i=fish.length-1;i>=0;i--){
+        const f=fish[i];if(isInSanctuary(f.x,f.z))continue;
+        const d=Math.hypot(f.x-player.x,f.z-player.z);
+        if(d<catchR&&pQuotaOk){
+            const earn=Math.max(0,Math.round(effPrice*10)/10);
+            player.catch++;player.profit+=earn;profitThisSec+=earn;welfareThisSec+=earn;harvestThisSec++;
+            spawnCatchEffect(player.x,player.z,true,earn);
+            spawnCatchLine(player.x,player.z,f.x,f.z);
+            playCatchSound(true);
+            if(f.mesh)fishGroup.remove(f.mesh);fish.splice(i,1);continue;
+        }
+        for(const bot of activeBots){
+            const bd=Math.hypot(f.x-bot.x,f.z-bot.z);
+            const bqOk=policy!=='quota'||bot.catch<QUOTA_LIMIT*bot.greed;
+            if(bd<catchR*.75&&bqOk){
+                bot.catch++;botTotalCatch++;harvestThisSec++;welfareThisSec+=Math.max(0,currentPrice-getActiveTax());
+                bot.actualCatchesThisSec++; // feeds Bayesian belief update
+                spawnCatchEffect(bot.x,bot.z,false,0);
+                spawnCatchLine(bot.x,bot.z,f.x,f.z);
+                playCatchSound(false);
+                if(f.mesh)fishGroup.remove(f.mesh);fish.splice(i,1);break;
+            }
+        }
+    }
+
+    // ─ Reproduction ─
+    const N=fish.length,A=ALLEE_FRAC*FISH_CAPACITY,K=FISH_CAPACITY;
+    const dNdt=-GROWTH_RATE*N*(1-N/A)*(1-N/K);
+    if(dNdt>0&&N<K){
+        if(Math.random()<dNdt&&fish.length>0){const par=fish[Math.floor(Math.random()*fish.length)];const baby=spawnFishData(par);fish.push(baby);addFish3D(baby);spawnBirthEffect(baby.x,baby.z);}
+        if(dNdt>1&&Math.random()<dNdt-1&&fish.length>0){const par=fish[Math.floor(Math.random()*fish.length)];const baby=spawnFishData(par);fish.push(baby);addFish3D(baby);spawnBirthEffect(baby.x,baby.z);}
+    }
+    if(dNdt<0&&N>0&&Math.random()<Math.abs(dNdt)){
+        const idx=Math.floor(Math.random()*fish.length);
+        if(fish[idx].mesh)fishGroup.remove(fish[idx].mesh);fish.splice(idx,1);
+    }
+
+    // ─ Particles ─
+    particles3d=particles3d.filter(p=>{
+        p.life--;p.mesh.position.x+=p.vx;p.mesh.position.y+=p.vy;p.mesh.position.z+=p.vz;
+        p.vx*=.95;p.vy*=.95;p.vz*=.95;
+        p.mesh.material.opacity=p.life/p.maxLife;
+        if(p.mesh.isSprite){/* keep sprite scale constant */}
+        else{const s=Math.max(0.01,p.life/p.maxLife);p.mesh.scale.set(s,s,s);}
+        if(p.life<=0){effectGroup.remove(p.mesh);return false;}return true;
+    });
+
+    // Catch lines fade quickly
+    catchLines=catchLines.filter(cl=>{
+        cl.life--;cl.mesh.material.opacity=cl.life/cl.maxLife;
+        if(cl.life<=0){effectGroup.remove(cl.mesh);return false;}return true;
+    });
+
+    // ─ Water animation + shimmer ─
+    const pos=waterGeo.attributes.position;
+    for(let i=0;i<pos.count;i++){
+        const x=pos.getX(i),y=pos.getY(i);
+        pos.setZ(i,Math.sin(x*0.04+gameTime*0.04)*0.6+Math.sin(y*0.03+gameTime*0.03)*0.4);
+    }
+    pos.needsUpdate=true;waterGeo.computeVertexNormals();
+    // Shimmer: oscillate water emissive
+    const shimmer=0.03+Math.sin(gameTime*0.02)*0.02+Math.sin(gameTime*0.07)*0.01;
+    waterMat.emissive=waterMat.emissive||new THREE.Color();
+    waterMat.emissive.setRGB(shimmer*0.3,shimmer*0.8,shimmer*1.2);
+    waterMat.emissiveIntensity=1;
+    // Animate seaweed sway
+    seabedGroup.children.forEach(c=>{
+        if(c.userData.swayOffset!==undefined){
+            c.children.forEach((blade,bi)=>{
+                blade.rotation.z=Math.sin(gameTime*0.02+c.userData.swayOffset+bi*0.5)*0.15;
+            });
+        }
+    });
+
+    // ─ Per second ─
+    if(gameTime%60===0){
+        profitWindow.push(profitThisSec);
+        if(profitWindow.length>PROFIT_AVG_WINDOW)profitWindow.shift();
+        lastHarvest=harvestThisSec;totalHarvestRate=harvestThisSec;
+        totalWelfare+=welfareThisSec;
+        welfareHist.push(welfareThisSec);if(welfareHist.length>GRAPH_LEN)welfareHist.shift();
+        profitHist.push(profitThisSec);stockHist.push(fish.length);priceHist.push(currentPrice);
+        if(profitHist.length>GRAPH_LEN)profitHist.shift();if(stockHist.length>GRAPH_LEN)stockHist.shift();if(priceHist.length>GRAPH_LEN)priceHist.shift();
+        profitThisSec=0;harvestThisSec=0;welfareThisSec=0;
+        updateMarket();updateBotEntryExit();
+    }
+    // Scenario timer
+    if(scenarioActive&&scenarioTimeLeft>0){
+        scenarioTimeLeft--;
+        const sLeft=Math.ceil(scenarioTimeLeft/60);
+        $('scenarioTimer').textContent=Math.floor(sLeft/60)+':'+String(sLeft%60).padStart(2,'0');
+        $('timerBar').style.width=(scenarioTimeLeft/(30*60)*100)+'%';
+        if(scenarioTimeLeft<=0)endScenario();
+    }
+
+    // Collapse
+    if(fish.length<=COLLAPSE_THRESHOLD){
+        collapsed=true;scenarioActive=false;
+        const secs=Math.max(1,Math.floor(gameTime/60));
+        const reason=N<=A?`Allee effect — stock fell below ${Math.round(A)} fish.`:`Overharvested in ${secs}s.`;
+        const code=makeVerifyCode(currentScenario,player.profit,totalWelfare,player.catch,fish.length);
+        const isNew=!highScores[currentScenario]||player.profit>highScores[currentScenario];
+        if(isNew&&player.profit>0)highScores[currentScenario]=player.profit;
+        const al=$('collapseAlert');
+        al.innerHTML=`
+            <h2 style="color:var(--red)">🐟 Fishery Collapsed!</h2>
+            <p>${reason}</p>
+            <div class="score-grid">
+                <span class="sg-label">Your Profit</span><span class="sg-val" style="color:var(--gold)">$${player.profit.toFixed(0)}</span>
+                <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${totalWelfare.toFixed(0)}</span>
+                <span class="sg-label">Your Catch</span><span class="sg-val" style="color:var(--boat-you)">${player.catch}</span>
+                <span class="sg-label">Avg $/sec</span><span class="sg-val">$${(player.profit/secs).toFixed(1)}</span>
+            </div>
+            ${isNew&&player.profit>0?'<div class="highscore">🏆 New High Score!</div>':''}
+            <div class="verify">Verify: ${code}</div>
+            <button class="restart-btn" onclick="applyScenario('${currentScenario}')">🔄 Retry</button>
+        `;
+        al.classList.add('show');
+    }
+    updateHUD();
+}
+
+// ════════════════════════════════════════════════
+//  HUD & GRAPHS (2D overlay)
+// ════════════════════════════════════════════════
+function updateHUD(){
+    $('yourCatch').textContent=player.catch;$('yourProfit').textContent='$'+player.profit.toFixed(0);
+    const avgProfit=profitWindow.length>0?profitWindow.reduce((a,b)=>a+b,0)/profitWindow.length:0;
+    $('profitRate').textContent=avgProfit.toFixed(1);
+    const ab=bots.filter(b=>!b.docked);$('activeBoats').textContent=ab.length+'/'+bots.length;
+    $('fishPrice').textContent='$'+currentPrice.toFixed(1);
+    $('fishPrice').style.color=currentPrice>BASE_FISH_PRICE?'var(--green)':currentPrice<3?'var(--red)':'var(--gold)';
+    $('totalWelfare').textContent='$'+totalWelfare.toFixed(0);
+    const secs=Math.floor(gameTime/60),m=Math.floor(secs/60),s=secs%60;
+    $('gameTime').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    const frac=fish.length/FISH_CAPACITY,bar=$('stockBar');bar.style.width=(frac*100)+'%';
+    bar.style.background=frac>.5?'linear-gradient(90deg,#4caf50,#81c784)':frac>.25?'linear-gradient(90deg,#ff9800,#ffb74d)':'linear-gradient(90deg,#ef5350,#e57373)';
+    $('stockCount').textContent=`${fish.length} / ${FISH_CAPACITY}`;
+    const ap=ALLEE_FRAC*FISH_CAPACITY,st=$('stockStatus');
+    if(frac>.6){st.textContent='🟢 Healthy';st.style.color='#4caf50';}
+    else if(frac>.4){st.textContent='🟡 Moderate';st.style.color='#ff9800';}
+    else if(fish.length>ap){st.textContent='🟠 Declining';st.style.color='#ff5722';}
+    else{st.textContent='🔴 Below Allee!';st.style.color='#ef5350';}
+    if(selectedBot)updateBoatInfoPanel();
+}
+
+function updateInsight(){
+    const p=$('insightPanel'),A=Math.round(ALLEE_FRAC*FISH_CAPACITY);
+    let msyG=0;for(let n=1;n<FISH_CAPACITY;n++){const g=-GROWTH_RATE*n*(1-n/A)*(1-n/FISH_CAPACITY);if(g>msyG)msyG=g;}
+    p.innerHTML=`<strong>Market:</strong> Price $${currentPrice.toFixed(1)}, Tax $${taxRate}/fish. FC=$1/s, VC=$${BOAT_COST_PER_SEC}/s. Boats enter when P &gt; ATC (economic profit), shutdown when P &lt; AVC. MSY: ~$${(msyG*60*BASE_FISH_PRICE).toFixed(1)}/s.`;
+}
+
+// Graphs (same 2D canvas overlay)
+function drawGraphs(){
+    const A=ALLEE_FRAC*FISH_CAPACITY,K=FISH_CAPACITY;
+    let msyG=0,msyN=0;for(let n=1;n<K;n++){const g=-GROWTH_RATE*n*(1-n/A)*(1-n/K);if(g>msyG){msyG=g;msyN=n;}}
+    // Compute moving-averaged profit data for graph
+    const profitMA=[];
+    for(let i=0;i<profitHist.length;i++){
+        let sum=0,cnt=0;
+        for(let j=Math.max(0,i-PROFIT_AVG_WINDOW+1);j<=i;j++){sum+=profitHist[j];cnt++;}
+        profitMA.push(sum/cnt);
+    }
+    drawScrollGraph('gProfit',profitMA,{color:'#f6c643',refLine:msyG*60*BASE_FISH_PRICE,refColor:'rgba(246,198,67,.4)',refLabel:'MSY',valId:'gProfitVal',prefix:'$'});
+    // Welfare graph (moving avg)
+    const welfareMA=[];
+    for(let i=0;i<welfareHist.length;i++){let s=0,c=0;for(let j=Math.max(0,i-PROFIT_AVG_WINDOW+1);j<=i;j++){s+=welfareHist[j];c++;}welfareMA.push(s/c);}
+    drawScrollGraph('gWelfare',welfareMA,{color:'#f6c643',valId:'gWelfareVal',prefix:'$'});
+    drawScrollGraph('gStock',stockHist,{color:'#4fc3f7',refLine:msyN,refColor:'rgba(79,195,247,.25)',refLabel:'MSY',refLine2:A,refColor2:'rgba(255,152,0,.35)',refLabel2:'Allee',maxY:FISH_CAPACITY,valId:'gStockVal',prefix:''});
+    drawGrowthCurve(A,K,msyN);
+    drawScrollGraph('gPrice',priceHist,{color:'#4caf50',refLine:BOAT_COST_PER_SEC/(msyG*60||1),refColor:'rgba(239,83,80,.3)',refLabel:'B/E',valId:'gPriceVal',prefix:'$'});
+    drawMarketGraph();
+}
+function drawScrollGraph(cid,data,opts){
+    const c=$(cid);if(!c)return;const cx2=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;cx2.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;cx2.fillStyle='rgba(15,40,71,.5)';cx2.fillRect(0,0,w,h);
+    if(data.length<2){cx2.fillStyle='rgba(122,154,181,.3)';cx2.font='500 9px Fredoka';cx2.textAlign='center';cx2.fillText('...',w/2,h/2);return;}
+    const pad={l:2,r:2,t:3,b:3},gw=w-4,gh=h-6;
+    let maxY=opts.maxY||Math.max(...data,opts.refLine||0,(opts.refLine2||0))*1.15;if(maxY<=0)maxY=1;
+    const X=i=>pad.l+(i/(GRAPH_LEN-1))*gw;const Y=v=>pad.t+gh*(1-Math.max(0,v)/maxY);
+    if(opts.refLine>0){cx2.strokeStyle=opts.refColor;cx2.lineWidth=1;cx2.setLineDash([3,3]);cx2.beginPath();cx2.moveTo(pad.l,Y(opts.refLine));cx2.lineTo(w-pad.r,Y(opts.refLine));cx2.stroke();cx2.setLineDash([]);cx2.fillStyle=opts.refColor;cx2.font='500 7px Fredoka';cx2.textAlign='right';cx2.fillText(opts.refLabel,w-3,Y(opts.refLine)-2);}
+    if(opts.refLine2>0){cx2.strokeStyle=opts.refColor2;cx2.lineWidth=1;cx2.setLineDash([2,2]);cx2.beginPath();cx2.moveTo(pad.l,Y(opts.refLine2));cx2.lineTo(w-pad.r,Y(opts.refLine2));cx2.stroke();cx2.setLineDash([]);cx2.fillStyle=opts.refColor2;cx2.font='500 7px Fredoka';cx2.textAlign='left';cx2.fillText(opts.refLabel2,3,Y(opts.refLine2)-2);}
+    const off=GRAPH_LEN-data.length;cx2.beginPath();cx2.moveTo(X(off),Y(0));data.forEach((v,i)=>cx2.lineTo(X(off+i),Y(v)));cx2.lineTo(X(off+data.length-1),Y(0));cx2.closePath();cx2.fillStyle=opts.color+'15';cx2.fill();
+    cx2.strokeStyle=opts.color;cx2.lineWidth=1.5;cx2.beginPath();data.forEach((v,i)=>{i===0?cx2.moveTo(X(off),Y(v)):cx2.lineTo(X(off+i),Y(v));});cx2.stroke();
+    $(opts.valId).textContent=(opts.prefix||'')+Math.round(data[data.length-1]*10)/10;
+}
+function drawGrowthCurve(A,K,msyN){
+    const c=$('gGrowth');if(!c)return;
+    const cx2=c.getContext('2d');const dpr=window.devicePixelRatio||1;
+    const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;
+    cx2.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;
+    cx2.fillStyle='rgba(15,40,71,.5)';cx2.fillRect(0,0,w,h);
+    const pad={l:4,r:4,t:4,b:4},gw=w-8,gh=h-8;
+    // Compute growth curve
+    let maxG=0;const growthData=[];
+    for(let n=0;n<=K;n++){
+        const g=-GROWTH_RATE*n*(1-n/A)*(1-n/K);
+        growthData.push(g);if(g>maxG)maxG=g;
+    }
+    const minG=Math.min(0,...growthData);
+    const rangeG=maxG-minG||1;
+    const X=n=>pad.l+(n/K)*gw;
+    const Y=g=>pad.t+gh*(1-(g-minG)/rangeG);
+    // Zero line
+    cx2.strokeStyle='rgba(255,255,255,.1)';cx2.lineWidth=0.5;
+    cx2.beginPath();cx2.moveTo(pad.l,Y(0));cx2.lineTo(w-pad.r,Y(0));cx2.stroke();
+    // Growth curve
+    cx2.strokeStyle='rgba(76,175,80,.8)';cx2.lineWidth=1.5;cx2.beginPath();
+    for(let n=0;n<=K;n++){n===0?cx2.moveTo(X(n),Y(growthData[n])):cx2.lineTo(X(n),Y(growthData[n]));}
+    cx2.stroke();
+    // Fill positive area
+    cx2.beginPath();cx2.moveTo(X(A),Y(0));
+    for(let n=Math.ceil(A);n<=K;n++)cx2.lineTo(X(n),Y(growthData[n]));
+    cx2.lineTo(X(K),Y(0));cx2.closePath();cx2.fillStyle='rgba(76,175,80,.1)';cx2.fill();
+    // Allee threshold
+    cx2.strokeStyle='rgba(255,152,0,.5)';cx2.lineWidth=1;cx2.setLineDash([2,2]);
+    cx2.beginPath();cx2.moveTo(X(A),Y(minG));cx2.lineTo(X(A),Y(maxG));cx2.stroke();cx2.setLineDash([]);
+    cx2.fillStyle='rgba(255,152,0,.5)';cx2.font='500 6px Fredoka';cx2.textAlign='center';
+    cx2.fillText('Allee',X(A),pad.t+6);
+    // Current position dot
+    const N=fish.length;const curG=N<=K?growthData[Math.min(N,K)]:0;
+    cx2.fillStyle=curG>=0?'rgba(79,195,247,.9)':'rgba(239,83,80,.9)';
+    cx2.beginPath();cx2.arc(X(N),Y(curG),4,0,Math.PI*2);cx2.fill();
+    cx2.strokeStyle='rgba(255,255,255,.3)';cx2.lineWidth=0.5;cx2.setLineDash([2,2]);
+    cx2.beginPath();cx2.moveTo(X(N),Y(curG));cx2.lineTo(X(N),Y(0));cx2.stroke();cx2.setLineDash([]);
+    // Label
+    const gPerSec=(curG*60).toFixed(1);
+    $('gGrowthVal').textContent=(curG>=0?'+':'')+gPerSec+'/s';
+}
+function drawMarketGraph(){
+    const c=$('gMarket');if(!c)return;const cx2=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;cx2.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;cx2.fillStyle='rgba(15,40,71,.5)';cx2.fillRect(0,0,w,h);
+    const pad={l:22,r:4,t:6,b:14},gw=w-26,gh=h-20,maxQ=40,maxP=DEMAND_INTERCEPT*1.1;
+    const X=q=>pad.l+(q/maxQ)*gw;const Y=p=>pad.t+gh*(1-p/maxP);
+    cx2.strokeStyle='rgba(255,255,255,.15)';cx2.lineWidth=1;cx2.beginPath();cx2.moveTo(pad.l,pad.t);cx2.lineTo(pad.l,h-pad.b);cx2.lineTo(w-pad.r,h-pad.b);cx2.stroke();
+    cx2.fillStyle='rgba(122,154,181,.4)';cx2.font='500 7px Fredoka';cx2.textAlign='center';cx2.fillText('Q',w/2,h-1);
+    cx2.strokeStyle='rgba(79,195,247,.6)';cx2.lineWidth=1.5;cx2.beginPath();
+    for(let q=0;q<=maxQ;q++){const p=Math.max(0,DEMAND_INTERCEPT-DEMAND_SLOPE*q*8);q===0?cx2.moveTo(X(q),Y(p)):cx2.lineTo(X(q),Y(p));}cx2.stroke();
+    cx2.fillStyle='rgba(79,195,247,.5)';cx2.font='500 7px JetBrains Mono';cx2.textAlign='left';cx2.fillText('D',X(maxQ*.65),Y(Math.max(0,DEMAND_INTERCEPT-DEMAND_SLOPE*maxQ*.65*8))-4);
+    cx2.strokeStyle='rgba(239,83,80,.6)';cx2.lineWidth=1.5;cx2.beginPath();let st=false;
+    for(let q=0;q<=maxQ;q++){const p=BOAT_COST_PER_SEC+q*.25;if(p<=maxP*1.1){if(!st){cx2.moveTo(X(q),Y(p));st=true;}else cx2.lineTo(X(q),Y(p));}}cx2.stroke();
+    cx2.fillStyle='rgba(239,83,80,.5)';cx2.fillText('S',X(maxQ*.75),Y(BOAT_COST_PER_SEC+maxQ*.75*.25)-4);
+    cx2.fillStyle='rgba(246,198,67,.8)';cx2.beginPath();cx2.arc(X(supplySmooth),Y(currentPrice),4,0,Math.PI*2);cx2.fill();
+    cx2.strokeStyle='rgba(246,198,67,.3)';cx2.lineWidth=.5;cx2.setLineDash([2,2]);
+    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(currentPrice));cx2.lineTo(X(supplySmooth),Y(0));cx2.stroke();
+    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(currentPrice));cx2.lineTo(X(0),Y(currentPrice));cx2.stroke();cx2.setLineDash([]);
+    $('gMarketVal').textContent='$'+currentPrice.toFixed(1);
+}
+
+// ════════════════════════════════════════════════
+//  MAIN LOOP
+// ════════════════════════════════════════════════
+function loop(){
+    update();
+    drawGraphs();
+    renderer.render(scene,camera);
+    requestAnimationFrame(loop);
+}
+applyScenario('solo');loop();
+})();
+</script>
+</body>
+</html>

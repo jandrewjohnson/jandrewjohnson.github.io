@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Externality Policy Toolkit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a202c;
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 0.92rem;
+            margin-bottom: 16px;
+        }
+
+        .app-grid {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 14px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .panel-title {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            color: #718096;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* Controls panel */
+        .controls-panel { grid-row: 1 / 4; }
+
+        .slider-group { margin-bottom: 14px; }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .slider-label span:first-child {
+            font-size: 0.82rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .slider-value {
+            background: #edf2f7;
+            color: #2b6cb0;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(66,153,225,0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            border: none;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 14px 0;
+        }
+
+        .equation-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 7px 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.74rem;
+            color: #4a5568;
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .info-box.highlight { border-left: 3px solid #4299e1; }
+        .info-box.warning { border-left: 3px solid #e53e3e; background: #fff5f5; }
+        .info-box.success { border-left: 3px solid #38a169; background: #f0fff4; }
+        .info-box strong { color: #1a202c; }
+
+        /* Policy cards row */
+        .policy-row {
+            grid-column: 2 / 4;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .policy-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .policy-card:hover { border-color: #a0aec0; }
+
+        .policy-card.active-tax { border-color: #e53e3e; background: #fff5f5; }
+        .policy-card.active-cap { border-color: #2b6cb0; background: #ebf8ff; }
+        .policy-card.active-cmd { border-color: #d69e2e; background: #fffff0; }
+        .policy-card.active-coase { border-color: #38a169; background: #f0fff4; }
+
+        .policy-card .pc-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .policy-card .pc-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+        .policy-card .pc-desc {
+            font-size: 0.72rem;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .policy-card .pc-badge {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Graph panels */
+        .graph-panel canvas {
+            width: 100%;
+            display: block;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.74rem;
+            color: #4a5568;
+        }
+
+        .legend-swatch {
+            width: 14px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        /* Bottom comparison */
+        .comparison-panel {
+            grid-column: 1 / -1;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .cg-header {
+            background: #edf2f7;
+            padding: 8px 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #4a5568;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cg-cell {
+            background: #ffffff;
+            padding: 8px 6px;
+            font-size: 0.78rem;
+            text-align: center;
+            color: #2d3748;
+        }
+
+        .cg-cell.label {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            text-align: left;
+            padding-left: 10px;
+            font-size: 0.75rem;
+        }
+
+        .cg-cell .val { font-family: 'Consolas', monospace; font-weight: 600; }
+        .cg-cell .val.good { color: #38a169; }
+        .cg-cell .val.bad { color: #e53e3e; }
+        .cg-cell .val.neutral { color: #2b6cb0; }
+        .cg-cell .val.best { color: #38a169; font-weight: 800; }
+
+        .policy-instrument-section { margin-top: 8px; }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls-panel { grid-row: auto; }
+            .policy-row { grid-column: auto; grid-template-columns: repeat(2, 1fr); }
+            .comparison-panel { grid-column: auto; }
+            .compare-grid { grid-template-columns: repeat(5, 1fr); font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Externality Policy Toolkit</h1>
+    <p class="subtitle">Same pollution problem, four policy instruments — compare efficiency, revenue, and distributional outcomes</p>
+
+    <div class="app-grid">
+        <!-- LEFT: Controls -->
+        <div class="panel controls-panel">
+            <div class="panel-title">Market Setup</div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Demand intercept (a)</span>
+                    <span class="slider-value" id="vA">100</span>
+                </div>
+                <input type="range" id="sA" min="40" max="200" value="100" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Demand slope (b)</span>
+                    <span class="slider-value" id="vB">1.0</span>
+                </div>
+                <input type="range" id="sB" min="0.2" max="3" value="1" step="0.1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Private MC intercept (c₀)</span>
+                    <span class="slider-value" id="vC0">10</span>
+                </div>
+                <input type="range" id="sC0" min="0" max="50" value="10" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Private MC slope (c₁)</span>
+                    <span class="slider-value" id="vC1">0.5</span>
+                </div>
+                <input type="range" id="sC1" min="0.1" max="3" value="0.5" step="0.1">
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Externality</div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Ext. damage intercept (d₀)</span>
+                    <span class="slider-value" id="vD0">5</span>
+                </div>
+                <input type="range" id="sD0" min="0" max="40" value="5" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Ext. damage slope (d₁)</span>
+                    <span class="slider-value" id="vD1">0.4</span>
+                </div>
+                <input type="range" id="sD1" min="0" max="2" value="0.4" step="0.05">
+            </div>
+
+            <div class="equation-box">
+                P = a − b·Q (Demand)<br>
+                PMC = c₀ + c₁·Q (Private MC)<br>
+                MED = d₀ + d₁·Q (Marginal Ext. Damage)<br>
+                SMC = PMC + MED
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Policy Instrument</div>
+
+            <div class="policy-instrument-section" id="policyInstrumentArea">
+                <!-- filled dynamically -->
+            </div>
+
+            <div class="info-box highlight" id="insightBox" style="margin-top: 10px;">
+                Click a policy card above to activate it and adjust its parameters here.
+            </div>
+        </div>
+
+        <!-- POLICY CARDS ROW -->
+        <div class="policy-row" id="policyRow">
+            <div class="policy-card" data-policy="tax" id="card-tax">
+                <div class="pc-icon">💰</div>
+                <div class="pc-name">Pigouvian Tax</div>
+                <div class="pc-desc">Per-unit tax on output equal to marginal external damage at Q*</div>
+                <div class="pc-badge" style="background:#fee2e2; color:#e53e3e;">Price</div>
+            </div>
+            <div class="policy-card" data-policy="cap" id="card-cap">
+                <div class="pc-icon">🎫</div>
+                <div class="pc-name">Cap &amp; Trade</div>
+                <div class="pc-desc">Set a quantity cap; permits trade to equalize marginal costs</div>
+                <div class="pc-badge" style="background:#dbeafe; color:#2b6cb0;">Quantity</div>
+            </div>
+            <div class="policy-card" data-policy="cmd" id="card-cmd">
+                <div class="pc-icon">📋</div>
+                <div class="pc-name">Command &amp; Control</div>
+                <div class="pc-desc">Uniform emission/output standard — no flexibility</div>
+                <div class="pc-badge" style="background:#fef3c7; color:#d69e2e;">Standard</div>
+            </div>
+            <div class="policy-card" data-policy="coase" id="card-coase">
+                <div class="pc-icon">🤝</div>
+                <div class="pc-name">Coasian Bargaining</div>
+                <div class="pc-desc">Assign property rights; parties negotiate to efficient outcome</div>
+                <div class="pc-badge" style="background:#d1fae5; color:#38a169;">Rights</div>
+            </div>
+        </div>
+
+        <!-- CENTER: Supply/Demand Graph -->
+        <div class="panel graph-panel">
+            <div class="panel-title">Market Equilibrium &amp; Policy</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#4a5568;"></div> Demand</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> PMC (Private)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> SMC (Social)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#d69e2e;"></div> MED</div>
+            </div>
+            <canvas id="marketCanvas" width="540" height="380"></canvas>
+        </div>
+
+        <!-- RIGHT: Welfare Graph -->
+        <div class="panel graph-panel">
+            <div class="panel-title">Welfare Decomposition</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(43,108,176,0.2);"></div> Consumer Surplus</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(56,161,105,0.2);"></div> Producer Surplus</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(229,62,62,0.2);"></div> DWL / Ext. Damage</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgba(214,158,46,0.2);"></div> Gov. Revenue</div>
+            </div>
+            <canvas id="welfareCanvas" width="540" height="380"></canvas>
+        </div>
+
+        <!-- BOTTOM: Comparison Table -->
+        <div class="panel comparison-panel">
+            <div class="panel-title">Policy Comparison Dashboard</div>
+            <div class="compare-grid" id="compareGrid">
+                <!-- filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ---- State ----
+        let activePolicy = 'tax';
+        let policyParams = { tax: 0, cap: 0, cmd: 0, coaseRights: 'polluter' };
+
+        // ---- DOM ----
+        const sliders = {
+            a: document.getElementById('sA'),
+            b: document.getElementById('sB'),
+            c0: document.getElementById('sC0'),
+            c1: document.getElementById('sC1'),
+            d0: document.getElementById('sD0'),
+            d1: document.getElementById('sD1'),
+        };
+        const vals = {
+            a: document.getElementById('vA'),
+            b: document.getElementById('vB'),
+            c0: document.getElementById('vC0'),
+            c1: document.getElementById('vC1'),
+            d0: document.getElementById('vD0'),
+            d1: document.getElementById('vD1'),
+        };
+
+        const mCtx = document.getElementById('marketCanvas').getContext('2d');
+        const wCtx = document.getElementById('welfareCanvas').getContext('2d');
+        const mCanvas = document.getElementById('marketCanvas');
+        const wCanvas = document.getElementById('welfareCanvas');
+
+        // ---- Policy card click ----
+        document.querySelectorAll('.policy-card').forEach(card => {
+            card.addEventListener('click', () => {
+                activePolicy = card.dataset.policy;
+                updatePolicyCards();
+                buildPolicyInstrument();
+                update();
+            });
+        });
+
+        function updatePolicyCards() {
+            document.querySelectorAll('.policy-card').forEach(c => {
+                c.className = 'policy-card';
+            });
+            const classMap = { tax: 'active-tax', cap: 'active-cap', cmd: 'active-cmd', coase: 'active-coase' };
+            document.getElementById('card-' + activePolicy).classList.add(classMap[activePolicy]);
+        }
+
+        // ---- Build policy instrument controls ----
+        function buildPolicyInstrument() {
+            const area = document.getElementById('policyInstrumentArea');
+            const p = getParams();
+            const Qs = solveQstar(p);
+            const medAtQs = p.d0 + p.d1 * Qs;
+            const optTax = medAtQs;
+
+            if (activePolicy === 'tax') {
+                area.innerHTML = `
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Tax per unit (t)</span>
+                            <span class="slider-value" id="vTax">${policyParams.tax.toFixed(1)}</span>
+                        </div>
+                        <input type="range" id="sTax" min="0" max="80" value="${policyParams.tax}" step="0.5">
+                    </div>
+                    <div class="equation-box">Effective MC = PMC + t<br>Optimal t* = MED(Q*) = ${optTax.toFixed(1)}</div>
+                `;
+                document.getElementById('sTax').addEventListener('input', function() {
+                    policyParams.tax = parseFloat(this.value);
+                    document.getElementById('vTax').textContent = policyParams.tax.toFixed(1);
+                    update();
+                });
+            } else if (activePolicy === 'cap') {
+                area.innerHTML = `
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Permit cap (Q̄)</span>
+                            <span class="slider-value" id="vCap">${policyParams.cap.toFixed(1)}</span>
+                        </div>
+                        <input type="range" id="sCap" min="0" max="${(p.a / p.b * 1.1).toFixed(0)}" value="${policyParams.cap}" step="0.5">
+                    </div>
+                    <div class="equation-box">Permit price = Demand(Q̄) − PMC(Q̄)<br>Optimal Q̄* = ${Qs.toFixed(1)}</div>
+                `;
+                document.getElementById('sCap').addEventListener('input', function() {
+                    policyParams.cap = parseFloat(this.value);
+                    document.getElementById('vCap').textContent = policyParams.cap.toFixed(1);
+                    update();
+                });
+            } else if (activePolicy === 'cmd') {
+                area.innerHTML = `
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Max output standard (Q̄)</span>
+                            <span class="slider-value" id="vCmd">${policyParams.cmd.toFixed(1)}</span>
+                        </div>
+                        <input type="range" id="sCmd" min="0" max="${(p.a / p.b * 1.1).toFixed(0)}" value="${policyParams.cmd}" step="0.5">
+                    </div>
+                    <div class="equation-box">Binding if Q̄ < Q_market<br>No price signal — no revenue<br>Optimal Q̄* = ${Qs.toFixed(1)}</div>
+                `;
+                document.getElementById('sCmd').addEventListener('input', function() {
+                    policyParams.cmd = parseFloat(this.value);
+                    document.getElementById('vCmd').textContent = policyParams.cmd.toFixed(1);
+                    update();
+                });
+            } else if (activePolicy === 'coase') {
+                area.innerHTML = `
+                    <div style="margin-bottom:10px;">
+                        <div class="slider-label" style="margin-bottom:8px;">
+                            <span style="font-size:0.82rem; color:#4a5568; font-weight:500;">Property rights assigned to:</span>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="coase-btn ${policyParams.coaseRights === 'polluter' ? 'active' : ''}" data-rights="polluter"
+                                style="flex:1; padding:8px; border:1px solid #e2e8f0; border-radius:8px; background:${policyParams.coaseRights === 'polluter' ? '#f0fff4' : '#f7fafc'}; cursor:pointer; font-size:0.78rem; font-weight:600; color:${policyParams.coaseRights === 'polluter' ? '#38a169' : '#718096'}; border-color:${policyParams.coaseRights === 'polluter' ? '#38a169' : '#e2e8f0'};">
+                                🏭 Polluter
+                            </button>
+                            <button class="coase-btn ${policyParams.coaseRights === 'victim' ? 'active' : ''}" data-rights="victim"
+                                style="flex:1; padding:8px; border:1px solid #e2e8f0; border-radius:8px; background:${policyParams.coaseRights === 'victim' ? '#f0fff4' : '#f7fafc'}; cursor:pointer; font-size:0.78rem; font-weight:600; color:${policyParams.coaseRights === 'victim' ? '#38a169' : '#718096'}; border-color:${policyParams.coaseRights === 'victim' ? '#38a169' : '#e2e8f0'};">
+                                🏠 Victim
+                            </button>
+                        </div>
+                    </div>
+                    <div class="equation-box">
+                        ${policyParams.coaseRights === 'polluter'
+                            ? 'Victim pays polluter to reduce output.<br>Transfer = ∫ PMC surplus forgone'
+                            : 'Polluter pays victim for right to pollute.<br>Transfer = ∫ MED from 0 to Q*'}
+                        <br>Result: Q* (Coase theorem)
+                    </div>
+                `;
+                document.querySelectorAll('.coase-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        policyParams.coaseRights = this.dataset.rights;
+                        buildPolicyInstrument();
+                        update();
+                    });
+                });
+            }
+        }
+
+        // ---- Economics ----
+        function getParams() {
+            return {
+                a: parseFloat(sliders.a.value),
+                b: parseFloat(sliders.b.value),
+                c0: parseFloat(sliders.c0.value),
+                c1: parseFloat(sliders.c1.value),
+                d0: parseFloat(sliders.d0.value),
+                d1: parseFloat(sliders.d1.value),
+            };
+        }
+
+        // Demand: P = a - b*Q
+        // PMC: P = c0 + c1*Q
+        // MED: d0 + d1*Q
+        // SMC: (c0 + d0) + (c1 + d1)*Q
+
+        function solveQmarket(p) {
+            // a - b*Q = c0 + c1*Q  =>  Q = (a - c0) / (b + c1)
+            const Q = (p.a - p.c0) / (p.b + p.c1);
+            return Math.max(0, Q);
+        }
+
+        function solveQstar(p) {
+            // a - b*Q = (c0+d0) + (c1+d1)*Q  =>  Q = (a - c0 - d0) / (b + c1 + d1)
+            const Q = (p.a - p.c0 - p.d0) / (p.b + p.c1 + p.d1);
+            return Math.max(0, Q);
+        }
+
+        function demand(p, Q) { return p.a - p.b * Q; }
+        function pmc(p, Q) { return p.c0 + p.c1 * Q; }
+        function med(p, Q) { return p.d0 + p.d1 * Q; }
+        function smc(p, Q) { return p.c0 + p.d0 + (p.c1 + p.d1) * Q; }
+
+        function policyQ(p) {
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+            if (activePolicy === 'tax') {
+                // PMC + t = Demand  =>  c0 + c1*Q + t = a - b*Q  =>  Q = (a - c0 - t)/(b + c1)
+                const Q = (p.a - p.c0 - policyParams.tax) / (p.b + p.c1);
+                return Math.max(0, Q);
+            }
+            if (activePolicy === 'cap') {
+                return Math.max(0, Math.min(policyParams.cap, Qm));
+            }
+            if (activePolicy === 'cmd') {
+                return Math.max(0, Math.min(policyParams.cmd, Qm));
+            }
+            if (activePolicy === 'coase') {
+                return Qs; // Coase theorem: always reaches efficient outcome
+            }
+            return Qm;
+        }
+
+        // Welfare calculations using numerical integration
+        function integrate(fn, from, to, steps) {
+            if (to <= from) return 0;
+            const dx = (to - from) / steps;
+            let sum = 0;
+            for (let i = 0; i < steps; i++) {
+                const x = from + (i + 0.5) * dx;
+                sum += fn(x) * dx;
+            }
+            return sum;
+        }
+
+        function calcWelfare(p, Q) {
+            const CS = integrate(q => Math.max(demand(p, q) - demand(p, Q), 0), 0, Q, 200);
+            const PS = integrate(q => Math.max(demand(p, Q) - pmc(p, q), 0), 0, Q, 200);
+            // Actually: at quantity Q, market price is demand(p,Q) for cap/cmd,
+            // or for tax: price = demand(p,Q), firms receive price-tax
+            const totalExtDamage = integrate(q => med(p, q), 0, Q, 200);
+            const totalSocialSurplus = integrate(q => demand(p, q) - smc(p, q), 0, Q, 200);
+
+            return { CS, PS, totalExtDamage, totalSocialSurplus };
+        }
+
+        function calcPolicyWelfare(p) {
+            const Q = policyQ(p);
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+            const Pq = demand(p, Q);
+            const totalExtDamage = integrate(q => med(p, q), 0, Q, 200);
+            const maxSurplus = integrate(q => demand(p, q) - smc(p, q), 0, Qs, 200);
+            const actualSurplus = integrate(q => demand(p, q) - smc(p, q), 0, Q, 200);
+            // For overproduction, surplus could be negative past Qs
+            const dwl = maxSurplus - actualSurplus;
+
+            let govRevenue = 0;
+            let permitPrice = 0;
+            let consumerPrice = Pq;
+            let producerReceives = Pq;
+
+            if (activePolicy === 'tax') {
+                govRevenue = policyParams.tax * Q;
+                producerReceives = Pq - policyParams.tax; // firms pay tax
+                // CS: integral demand above Pq from 0 to Q
+                const CS = integrate(q => Math.max(demand(p, q) - Pq, 0), 0, Q, 200);
+                const PS = integrate(q => Math.max(producerReceives - pmc(p, q), 0), 0, Q, 200);
+                return { Q, CS, PS, govRevenue, totalExtDamage, dwl, permitPrice: 0, consumerPrice: Pq, producerReceives, maxSurplus };
+            }
+
+            if (activePolicy === 'cap') {
+                // Permit price = willingness to pay for marginal unit - cost of marginal unit
+                // = demand(Q) - pmc(Q) if binding
+                if (Q < Qm) {
+                    permitPrice = demand(p, Q) - pmc(p, Q);
+                    govRevenue = permitPrice * Q; // if permits auctioned
+                }
+                consumerPrice = Pq;
+                producerReceives = pmc(p, Q); // firms produce where PMC = permit price + PMC... simplification
+                const CS = integrate(q => Math.max(demand(p, q) - Pq, 0), 0, Q, 200);
+                const PS = integrate(q => Math.max(Pq - pmc(p, q), 0), 0, Q, 200) - govRevenue;
+                return { Q, CS, PS: Math.max(PS, 0), govRevenue, totalExtDamage, dwl, permitPrice, consumerPrice: Pq, producerReceives: Pq, maxSurplus };
+            }
+
+            if (activePolicy === 'cmd') {
+                // No revenue, no price signal, just a cap
+                const CS = integrate(q => Math.max(demand(p, q) - Pq, 0), 0, Q, 200);
+                const PS = integrate(q => Math.max(Pq - pmc(p, q), 0), 0, Q, 200);
+                return { Q, CS, PS, govRevenue: 0, totalExtDamage, dwl, permitPrice: 0, consumerPrice: Pq, producerReceives: Pq, maxSurplus };
+            }
+
+            if (activePolicy === 'coase') {
+                // Reaches Q*, transfer depends on rights assignment
+                const CS = integrate(q => Math.max(demand(p, Q) - demand(p, Q), 0), 0, Q, 200); // at market clearing
+                // Simpler: compute total surplus and split
+                let transfer = 0;
+                if (policyParams.coaseRights === 'polluter') {
+                    // Victim pays polluter to reduce from Qm to Q*
+                    // Transfer ~ forgone profits from Qm to Q*
+                    transfer = integrate(q => Math.max(demand(p, q) - pmc(p, q), 0), Q, Qm, 200);
+                } else {
+                    // Polluter pays victim for damage of producing Q*
+                    transfer = integrate(q => med(p, q), 0, Q, 200);
+                }
+                const CS2 = integrate(q => Math.max(demand(p, q) - demand(p, Q), 0), 0, Q, 200);
+                const PS2 = integrate(q => Math.max(demand(p, Q) - pmc(p, q), 0), 0, Q, 200);
+                return { Q, CS: CS2, PS: PS2, govRevenue: 0, totalExtDamage, dwl, permitPrice: 0, consumerPrice: demand(p, Q), producerReceives: demand(p, Q), maxSurplus, transfer };
+            }
+
+            return { Q, CS: 0, PS: 0, govRevenue: 0, totalExtDamage, dwl, permitPrice: 0, consumerPrice: Pq, producerReceives: Pq, maxSurplus };
+        }
+
+        // ---- Drawing ----
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+        const PAD = { top: 18, right: 25, bottom: 34, left: 48 };
+
+        function toX(q, w, maxQ) { return PAD.left + (q / maxQ) * (w - PAD.left - PAD.right); }
+        function toY(p, h, maxP) { return h - PAD.bottom - (p / maxP) * (h - PAD.top - PAD.bottom); }
+
+        function drawGrid(ctx, w, h, maxQ, maxP, xLabel, yLabel) {
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(PAD.left, PAD.top);
+            ctx.lineTo(PAD.left, h - PAD.bottom);
+            ctx.lineTo(w - PAD.right, h - PAD.bottom);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.6;
+            for (let i = 1; i <= 5; i++) {
+                const y = toY(maxP * i / 5, h, maxP);
+                ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(w - PAD.right, y); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '10px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText((maxP * i / 5).toFixed(0), PAD.left - 5, y + 3);
+            }
+            for (let i = 1; i <= 5; i++) {
+                const x = toX(maxQ * i / 5, w, maxQ);
+                ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, h - PAD.bottom); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '10px Consolas'; ctx.textAlign = 'center';
+                ctx.fillText((maxQ * i / 5).toFixed(0), x, h - PAD.bottom + 14);
+            }
+
+            ctx.fillStyle = '#4a5568'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText(xLabel, (PAD.left + w - PAD.right) / 2, h - 2);
+            ctx.save(); ctx.translate(12, (PAD.top + h - PAD.bottom) / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillText(yLabel, 0, 0); ctx.restore();
+        }
+
+        function drawCurve(ctx, fn, maxQ, w, h, maxP, color, width, dash) {
+            ctx.strokeStyle = color; ctx.lineWidth = width;
+            ctx.setLineDash(dash || []);
+            ctx.beginPath();
+            let started = false;
+            for (let q = 0; q <= maxQ; q += maxQ / 400) {
+                const p = fn(q);
+                if (p < 0 || p > maxP * 1.2) { started = false; continue; }
+                if (!started) { ctx.moveTo(toX(q, w, maxQ), toY(p, h, maxP)); started = true; }
+                else ctx.lineTo(toX(q, w, maxQ), toY(p, h, maxP));
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawMarketGraph(p) {
+            const { w, h } = setupCanvas(mCanvas, mCtx);
+            const ctx = mCtx;
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+            const Qp = policyQ(p);
+            const maxQ = Math.max(Qm, Qs, Qp, p.a / p.b) * 1.15;
+            const maxP = Math.max(p.a, smc(p, maxQ * 0.8)) * 1.1;
+
+            drawGrid(ctx, w, h, maxQ, maxP, 'Quantity (Q)', 'Price ($)');
+
+            const X = q => toX(q, w, maxQ);
+            const Y = pr => toY(pr, h, maxP);
+
+            // MED curve
+            drawCurve(ctx, q => med(p, q), maxQ, w, h, maxP, '#d69e2e', 1.5, [4, 3]);
+
+            // PMC curve
+            drawCurve(ctx, q => pmc(p, q), maxQ, w, h, maxP, '#e53e3e', 2);
+
+            // SMC curve
+            drawCurve(ctx, q => smc(p, q), maxQ, w, h, maxP, '#2b6cb0', 2.5);
+
+            // Demand curve
+            drawCurve(ctx, q => demand(p, q), p.a / p.b, w, h, maxP, '#4a5568', 2);
+
+            // Policy-specific shading
+            const colorMap = { tax: '#e53e3e', cap: '#2b6cb0', cmd: '#d69e2e', coase: '#38a169' };
+            const pColor = colorMap[activePolicy];
+
+            // Shade DWL area between Qp and Qs
+            if (Math.abs(Qp - Qs) > 0.3) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.12)';
+                const qLo = Math.min(Qp, Qs);
+                const qHi = Math.max(Qp, Qs);
+                ctx.beginPath();
+                ctx.moveTo(X(qLo), Y(demand(p, qLo)));
+                for (let q = qLo; q <= qHi; q += maxQ / 400) {
+                    ctx.lineTo(X(q), Y(demand(p, q)));
+                }
+                for (let q = qHi; q >= qLo; q -= maxQ / 400) {
+                    ctx.lineTo(X(q), Y(smc(p, q)));
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Tax: show shifted PMC
+            if (activePolicy === 'tax' && policyParams.tax > 0) {
+                drawCurve(ctx, q => pmc(p, q) + policyParams.tax, maxQ, w, h, maxP, '#e53e3e', 1.5, [3, 2]);
+                // Tax revenue rectangle
+                if (Qp > 0) {
+                    ctx.fillStyle = 'rgba(214, 158, 46, 0.12)';
+                    const Pq = demand(p, Qp);
+                    ctx.fillRect(X(0), Y(Pq), X(Qp) - X(0), Y(Pq - policyParams.tax) - Y(Pq));
+                }
+            }
+
+            // Vertical dashed lines
+            // Qm
+            ctx.setLineDash([3, 3]); ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(X(Qm), Y(0)); ctx.lineTo(X(Qm), Y(demand(p, Qm))); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#e53e3e'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText('Qₘ', X(Qm), Y(0) + 26);
+
+            // Qs
+            ctx.setLineDash([3, 3]); ctx.strokeStyle = '#2b6cb0'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(X(Qs), Y(0)); ctx.lineTo(X(Qs), Y(demand(p, Qs))); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#2b6cb0';
+            ctx.beginPath(); ctx.arc(X(Qs), Y(demand(p, Qs)), 5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillText('Q*', X(Qs), Y(0) + 26);
+
+            // Policy Q
+            if (Math.abs(Qp - Qm) > 0.3 && Math.abs(Qp - Qs) > 0.3) {
+                ctx.setLineDash([2, 2]); ctx.strokeStyle = pColor; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(X(Qp), Y(0)); ctx.lineTo(X(Qp), Y(demand(p, Qp))); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = pColor;
+                ctx.beginPath(); ctx.arc(X(Qp), Y(demand(p, Qp)), 4, 0, Math.PI * 2); ctx.fill();
+                ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Qₚ', X(Qp), Y(0) + 26);
+            }
+
+            // Curve labels
+            ctx.font = '10px Segoe UI';
+            const lq = maxQ * 0.25;
+            ctx.fillStyle = '#4a5568'; ctx.textAlign = 'left';
+            ctx.fillText('Demand', X(lq), Y(demand(p, lq)) - 6);
+            ctx.fillStyle = '#e53e3e';
+            ctx.fillText('PMC', X(maxQ * 0.65), Y(pmc(p, maxQ * 0.65)) - 6);
+            ctx.fillStyle = '#2b6cb0';
+            ctx.fillText('SMC', X(maxQ * 0.55), Y(smc(p, maxQ * 0.55)) - 6);
+            ctx.fillStyle = '#d69e2e';
+            ctx.fillText('MED', X(maxQ * 0.75), Y(med(p, maxQ * 0.75)) - 6);
+
+            if (activePolicy === 'tax' && policyParams.tax > 0) {
+                ctx.fillStyle = '#e53e3e'; ctx.font = '10px Segoe UI';
+                ctx.fillText('PMC + t', X(maxQ * 0.5), Y(pmc(p, maxQ * 0.5) + policyParams.tax) - 6);
+            }
+        }
+
+        function drawWelfareGraph(p) {
+            const { w, h } = setupCanvas(wCanvas, wCtx);
+            const ctx = wCtx;
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+            const Qp = policyQ(p);
+            const maxQ = Math.max(Qm, Qs, Qp, p.a / p.b) * 1.15;
+            const maxP = Math.max(p.a, smc(p, maxQ * 0.8)) * 1.1;
+
+            drawGrid(ctx, w, h, maxQ, maxP, 'Quantity (Q)', 'Price ($)');
+
+            const X = q => toX(q, w, maxQ);
+            const Y = pr => toY(pr, h, maxP);
+
+            const effectiveQ = Qp;
+            const Pq = demand(p, effectiveQ);
+
+            // Consumer surplus (blue shade)
+            ctx.fillStyle = 'rgba(43, 108, 176, 0.12)';
+            ctx.beginPath();
+            ctx.moveTo(X(0), Y(Pq));
+            for (let q = 0; q <= effectiveQ; q += maxQ / 400) {
+                ctx.lineTo(X(q), Y(demand(p, q)));
+            }
+            ctx.lineTo(X(effectiveQ), Y(Pq));
+            ctx.closePath();
+            ctx.fill();
+
+            // Producer surplus (green shade, above PMC below price)
+            let effectiveProducerPrice = Pq;
+            if (activePolicy === 'tax') effectiveProducerPrice = Pq - policyParams.tax;
+
+            if (effectiveProducerPrice > pmc(p, 0)) {
+                ctx.fillStyle = 'rgba(56, 161, 105, 0.12)';
+                ctx.beginPath();
+                ctx.moveTo(X(0), Y(effectiveProducerPrice));
+                for (let q = 0; q <= effectiveQ; q += maxQ / 400) {
+                    if (pmc(p, q) > effectiveProducerPrice) break;
+                    ctx.lineTo(X(q), Y(pmc(p, q)));
+                }
+                ctx.lineTo(X(effectiveQ), Y(effectiveProducerPrice));
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // External damage (red shade under MED from 0 to Q)
+            ctx.fillStyle = 'rgba(229, 62, 62, 0.1)';
+            ctx.beginPath();
+            ctx.moveTo(X(0), Y(0));
+            for (let q = 0; q <= effectiveQ; q += maxQ / 400) {
+                ctx.lineTo(X(q), Y(med(p, q)));
+            }
+            ctx.lineTo(X(effectiveQ), Y(0));
+            ctx.closePath();
+            ctx.fill();
+
+            // Gov revenue (gold shade) for tax
+            if (activePolicy === 'tax' && policyParams.tax > 0 && effectiveQ > 0) {
+                ctx.fillStyle = 'rgba(214, 158, 46, 0.15)';
+                ctx.fillRect(X(0), Y(Pq), X(effectiveQ) - X(0), Y(Pq - policyParams.tax) - Y(Pq));
+                ctx.fillStyle = '#d69e2e'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Tax Revenue', (X(0) + X(effectiveQ)) / 2, (Y(Pq) + Y(Pq - policyParams.tax)) / 2 + 3);
+            }
+
+            // Cap-and-trade revenue
+            if (activePolicy === 'cap' && effectiveQ > 0 && effectiveQ < Qm) {
+                const permitP = demand(p, effectiveQ) - pmc(p, effectiveQ);
+                if (permitP > 0) {
+                    ctx.fillStyle = 'rgba(214, 158, 46, 0.15)';
+                    const priceAtQ = pmc(p, effectiveQ);
+                    ctx.fillRect(X(0), Y(priceAtQ + permitP), X(effectiveQ) - X(0), Y(priceAtQ) - Y(priceAtQ + permitP));
+                    ctx.fillStyle = '#d69e2e'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+                    ctx.fillText('Permit Revenue', (X(0) + X(effectiveQ)) / 2, (Y(priceAtQ + permitP) + Y(priceAtQ)) / 2 + 3);
+                }
+            }
+
+            // DWL triangle if not at Q*
+            if (Math.abs(effectiveQ - Qs) > 0.3) {
+                ctx.fillStyle = 'rgba(229, 62, 62, 0.18)';
+                const qLo = Math.min(effectiveQ, Qs);
+                const qHi = Math.max(effectiveQ, Qs);
+                ctx.beginPath();
+                ctx.moveTo(X(qLo), Y(demand(p, qLo)));
+                for (let q = qLo; q <= qHi; q += maxQ / 400) {
+                    ctx.lineTo(X(q), Y(demand(p, q)));
+                }
+                for (let q = qHi; q >= qLo; q -= maxQ / 400) {
+                    ctx.lineTo(X(q), Y(smc(p, q)));
+                }
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#e53e3e'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('DWL', X((qLo + qHi) / 2), Y((demand(p, (qLo + qHi) / 2) + smc(p, (qLo + qHi) / 2)) / 2));
+            }
+
+            // Redraw curves on top
+            drawCurve(ctx, q => demand(p, q), p.a / p.b, w, h, maxP, '#4a5568', 2);
+            drawCurve(ctx, q => pmc(p, q), maxQ, w, h, maxP, '#e53e3e', 2);
+            drawCurve(ctx, q => smc(p, q), maxQ, w, h, maxP, '#2b6cb0', 2.5);
+            drawCurve(ctx, q => med(p, q), maxQ, w, h, maxP, '#d69e2e', 1.5, [4, 3]);
+
+            // Labels
+            ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(43,108,176,0.7)';
+            ctx.fillText('CS', X(effectiveQ * 0.3), Y((p.a + Pq) / 2));
+            ctx.fillStyle = 'rgba(56,161,105,0.7)';
+            if (effectiveProducerPrice > pmc(p, 0))
+                ctx.fillText('PS', X(effectiveQ * 0.3), Y((effectiveProducerPrice + pmc(p, effectiveQ * 0.3)) / 2));
+            ctx.fillStyle = 'rgba(229,62,62,0.6)';
+            ctx.fillText('Ext. Damage', X(effectiveQ * 0.5), Y(med(p, effectiveQ * 0.25) / 2));
+        }
+
+        // ---- Comparison Table ----
+        function buildComparisonTable(p) {
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+
+            // Compute welfare for each policy
+            const saved = { policy: activePolicy, params: { ...policyParams } };
+
+            function getWelfareFor(pol, params) {
+                activePolicy = pol;
+                Object.assign(policyParams, params);
+                const Q = policyQ(p);
+                const w = calcPolicyWelfare(p);
+                return { Q, ...w };
+            }
+
+            const optTax = med(p, Qs);
+            const results = {
+                noPolicy: (() => {
+                    activePolicy = 'tax'; policyParams.tax = 0;
+                    const Q = solveQmarket(p);
+                    const maxSurplus = integrate(q => demand(p, q) - smc(p, q), 0, Qs, 200);
+                    const actualSurplus = integrate(q => demand(p, q) - smc(p, q), 0, Q, 200);
+                    return { Q, dwl: maxSurplus - actualSurplus, govRevenue: 0, totalExtDamage: integrate(q => med(p, q), 0, Q, 200) };
+                })(),
+                tax: getWelfareFor('tax', { ...saved.params, tax: saved.params.tax }),
+                cap: getWelfareFor('cap', { ...saved.params, cap: saved.params.cap }),
+                cmd: getWelfareFor('cmd', { ...saved.params, cmd: saved.params.cmd }),
+            };
+
+            // Coase always hits Q*
+            activePolicy = 'coase';
+            results.coase = {
+                Q: Qs,
+                dwl: 0,
+                govRevenue: 0,
+                totalExtDamage: integrate(q => med(p, q), 0, Qs, 200),
+            };
+
+            // Restore
+            activePolicy = saved.policy;
+            Object.assign(policyParams, saved.params);
+
+            const r = results;
+            const minDWL = Math.min(r.tax.dwl, r.cap.dwl, r.cmd.dwl, r.coase.dwl);
+
+            function cell(val, fmt, isGood) {
+                const cls = isGood ? 'good' : (val > 0.5 ? 'bad' : 'neutral');
+                return `<span class="val ${cls}">${fmt}</span>`;
+            }
+
+            function bestCell(val, fmt, best) {
+                const cls = Math.abs(val - best) < 0.5 ? 'best' : (val > best + 0.5 ? 'bad' : 'neutral');
+                return `<span class="val ${cls}">${fmt}</span>`;
+            }
+
+            const grid = document.getElementById('compareGrid');
+            grid.innerHTML = `
+                <div class="cg-header">Metric</div>
+                <div class="cg-header">💰 Pigouvian Tax</div>
+                <div class="cg-header">🎫 Cap & Trade</div>
+                <div class="cg-header">📋 Command & Control</div>
+                <div class="cg-header">🤝 Coasian</div>
+
+                <div class="cg-cell label">Quantity</div>
+                <div class="cg-cell">${bestCell(r.tax.Q, r.tax.Q.toFixed(1), Qs)}</div>
+                <div class="cg-cell">${bestCell(r.cap.Q, r.cap.Q.toFixed(1), Qs)}</div>
+                <div class="cg-cell">${bestCell(r.cmd.Q, r.cmd.Q.toFixed(1), Qs)}</div>
+                <div class="cg-cell"><span class="val best">${Qs.toFixed(1)}</span></div>
+
+                <div class="cg-cell label">DWL</div>
+                <div class="cg-cell">${bestCell(r.tax.dwl, '$' + r.tax.dwl.toFixed(1), 0)}</div>
+                <div class="cg-cell">${bestCell(r.cap.dwl, '$' + r.cap.dwl.toFixed(1), 0)}</div>
+                <div class="cg-cell">${bestCell(r.cmd.dwl, '$' + r.cmd.dwl.toFixed(1), 0)}</div>
+                <div class="cg-cell"><span class="val best">$0.0</span></div>
+
+                <div class="cg-cell label">Gov. Revenue</div>
+                <div class="cg-cell"><span class="val neutral">$${r.tax.govRevenue.toFixed(1)}</span></div>
+                <div class="cg-cell"><span class="val neutral">$${r.cap.govRevenue.toFixed(1)}</span></div>
+                <div class="cg-cell"><span class="val neutral">$0.0</span></div>
+                <div class="cg-cell"><span class="val neutral">$0.0</span></div>
+
+                <div class="cg-cell label">Ext. Damage</div>
+                <div class="cg-cell">${bestCell(r.tax.totalExtDamage, '$' + r.tax.totalExtDamage.toFixed(1), r.coase.totalExtDamage)}</div>
+                <div class="cg-cell">${bestCell(r.cap.totalExtDamage, '$' + r.cap.totalExtDamage.toFixed(1), r.coase.totalExtDamage)}</div>
+                <div class="cg-cell">${bestCell(r.cmd.totalExtDamage, '$' + r.cmd.totalExtDamage.toFixed(1), r.coase.totalExtDamage)}</div>
+                <div class="cg-cell"><span class="val best">$${r.coase.totalExtDamage.toFixed(1)}</span></div>
+
+                <div class="cg-cell label">Price Signal?</div>
+                <div class="cg-cell"><span class="val good">✓ Yes</span></div>
+                <div class="cg-cell"><span class="val good">✓ Yes</span></div>
+                <div class="cg-cell"><span class="val bad">✗ No</span></div>
+                <div class="cg-cell"><span class="val good">✓ Yes</span></div>
+
+                <div class="cg-cell label">Info Required</div>
+                <div class="cg-cell"><span class="val neutral">MED(Q*)</span></div>
+                <div class="cg-cell"><span class="val neutral">Q* only</span></div>
+                <div class="cg-cell"><span class="val neutral">Q* only</span></div>
+                <div class="cg-cell"><span class="val good">None</span></div>
+
+                <div class="cg-cell label">Transaction Costs</div>
+                <div class="cg-cell"><span class="val good">Low</span></div>
+                <div class="cg-cell"><span class="val neutral">Medium</span></div>
+                <div class="cg-cell"><span class="val good">Low</span></div>
+                <div class="cg-cell"><span class="val bad">High*</span></div>
+            `;
+        }
+
+        // ---- Insight text ----
+        function updateInsight(p) {
+            const box = document.getElementById('insightBox');
+            const Qm = solveQmarket(p);
+            const Qs = solveQstar(p);
+            const Qp = policyQ(p);
+            const overprod = ((Qm - Qs) / Qs * 100).toFixed(0);
+            const optT = med(p, Qs).toFixed(1);
+
+            if (activePolicy === 'tax') {
+                const diff = Math.abs(policyParams.tax - med(p, Qs));
+                if (diff < 1) {
+                    box.className = 'info-box success';
+                    box.innerHTML = `<strong>✓ Optimal Pigouvian tax!</strong> t* = MED(Q*) = ${optT}. The tax internalizes the externality, and DWL is eliminated. Revenue of $${(policyParams.tax * Qp).toFixed(1)} can fund abatement or be returned lump-sum.`;
+                } else if (policyParams.tax < med(p, Qs)) {
+                    box.className = 'info-box warning';
+                    box.innerHTML = `Tax is <strong>too low</strong> — production still ${((Qp - Qs) / Qs * 100).toFixed(0)}% above optimum. The market overproduces by ${(Qp - Qs).toFixed(1)} units. Optimal t* = ${optT}.`;
+                } else {
+                    box.className = 'info-box warning';
+                    box.innerHTML = `Tax is <strong>too high</strong> — production is ${((Qs - Qp) / Qs * 100).toFixed(0)}% below optimum. The cure is worse than the disease! Optimal t* = ${optT}.`;
+                }
+            } else if (activePolicy === 'cap') {
+                const diff = Math.abs(policyParams.cap - Qs);
+                if (diff < 0.5) {
+                    box.className = 'info-box success';
+                    box.innerHTML = `<strong>✓ Optimal cap!</strong> Q̄ = Q* = ${Qs.toFixed(1)}. Permits trade at $${(demand(p, Qp) - pmc(p, Qp)).toFixed(1)}/unit. Cap-and-trade achieves the same efficiency as the Pigouvian tax and generates comparable revenue if permits are auctioned.`;
+                } else {
+                    box.className = 'info-box highlight';
+                    box.innerHTML = `Cap is set at ${policyParams.cap.toFixed(1)} vs. optimal ${Qs.toFixed(1)}. ${policyParams.cap > Qs ? 'Cap is too loose — permits are too cheap.' : 'Cap is too tight — permits are expensive, output is below optimum.'} Permit price: $${Math.max(0, demand(p, Qp) - pmc(p, Qp)).toFixed(1)}.`;
+                }
+            } else if (activePolicy === 'cmd') {
+                const diff = Math.abs(policyParams.cmd - Qs);
+                if (diff < 0.5) {
+                    box.className = 'info-box success';
+                    box.innerHTML = `<strong>✓ Correct standard!</strong> Q̄ = ${Qs.toFixed(1)} achieves the optimal quantity. But note: no revenue is generated, no price signal exists, and with heterogeneous firms this would be <strong>cost-inefficient</strong>.`;
+                } else {
+                    box.className = 'info-box highlight';
+                    box.innerHTML = `Standard at ${policyParams.cmd.toFixed(1)} vs. optimal ${Qs.toFixed(1)}. Command-and-control can hit the right quantity but generates <strong>no revenue</strong> and provides <strong>no price signal</strong> to incentivize innovation.`;
+                }
+            } else if (activePolicy === 'coase') {
+                box.className = 'info-box success';
+                const rights = policyParams.coaseRights;
+                box.innerHTML = `<strong>Coase Theorem:</strong> With well-defined property rights (assigned to <strong>${rights}</strong>), zero transaction costs, and complete information, bargaining always reaches Q* = ${Qs.toFixed(1)}. The allocation of rights affects <em>distribution</em> (who pays whom) but not <em>efficiency</em>. In practice, high transaction costs and many parties limit applicability.`;
+            }
+        }
+
+        // ---- Master update ----
+        function update() {
+            const p = getParams();
+            vals.a.textContent = p.a;
+            vals.b.textContent = p.b.toFixed(1);
+            vals.c0.textContent = p.c0;
+            vals.c1.textContent = p.c1.toFixed(1);
+            vals.d0.textContent = p.d0;
+            vals.d1.textContent = p.d1.toFixed(1);
+
+            drawMarketGraph(p);
+            drawWelfareGraph(p);
+            buildComparisonTable(p);
+            updateInsight(p);
+        }
+
+        // ---- Events ----
+        Object.values(sliders).forEach(s => s.addEventListener('input', () => {
+            update();
+            // Rebuild policy instrument to update optimal hints
+            buildPolicyInstrument();
+        }));
+
+        // ---- Init ----
+        // Set initial policy params to something interesting
+        const initP = getParams();
+        const initQs = solveQstar(initP);
+        policyParams.tax = med(initP, initQs) * 0.5; // start below optimal
+        policyParams.cap = initQs * 1.3;
+        policyParams.cmd = initQs * 1.3;
+
+        updatePolicyCards();
+        buildPolicyInstrument();
+        update();
+
+        window.addEventListener('resize', update);
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Public Goods Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa; color: #2d3748; min-height: 100vh; padding: 16px;
+        }
+        h1 { text-align: center; color: #1a202c; font-size: 1.7rem; font-weight: 700; margin-bottom: 2px; }
+        .subtitle { text-align: center; color: #718096; font-size: 0.92rem; margin-bottom: 16px; }
+
+        .app-grid {
+            max-width: 1440px; margin: 0 auto;
+            display: grid; grid-template-columns: 260px 1fr 1fr; gap: 14px;
+        }
+        .panel {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .panel-title {
+            font-size: 0.76rem; text-transform: uppercase; letter-spacing: 1.1px;
+            color: #718096; margin-bottom: 12px; font-weight: 600;
+        }
+        .controls-panel { grid-row: 1 / 5; }
+        .full-width { grid-column: 2 / 4; }
+
+        /* Sliders */
+        .slider-group { margin-bottom: 12px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .slider-label span:first-child { font-size: 0.8rem; color: #4a5568; font-weight: 500; }
+        .slider-value {
+            background: #edf2f7; color: #2b6cb0; padding: 2px 8px; border-radius: 6px;
+            font-size: 0.76rem; font-weight: 600; font-family: 'Consolas', monospace;
+        }
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+            background: #e2e8f0; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+            background: #4299e1; cursor: pointer; box-shadow: 0 1px 3px rgba(66,153,225,0.4);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%; background: #4299e1;
+            cursor: pointer; border: none;
+        }
+
+        .section-divider { border: none; border-top: 1px solid #e2e8f0; margin: 14px 0; }
+
+        .info-box {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; margin-top: 10px; font-size: 0.78rem; line-height: 1.5; color: #4a5568;
+        }
+        .info-box.highlight { border-left: 3px solid #4299e1; }
+        .info-box.warning { border-left: 3px solid #e53e3e; background: #fff5f5; }
+        .info-box.success { border-left: 3px solid #38a169; background: #f0fff4; }
+        .info-box strong { color: #1a202c; }
+
+        .equation-box {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 7px 10px; font-family: 'Consolas', monospace; font-size: 0.72rem;
+            color: #4a5568; margin: 6px 0; line-height: 1.6;
+        }
+
+        /* Contribution input */
+        .contrib-area { text-align: center; margin: 14px 0; }
+        .contrib-slider-wrap {
+            display: flex; align-items: center; gap: 10px; margin: 10px 0;
+        }
+        .contrib-slider-wrap input[type="range"] { flex: 1; height: 8px; }
+        .contrib-slider-wrap input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
+        .contrib-display {
+            font-size: 2rem; font-weight: 800; color: #2b6cb0;
+            font-family: 'Consolas', monospace; min-width: 60px;
+        }
+        .contrib-label { font-size: 0.78rem; color: #718096; }
+
+        .submit-btn {
+            padding: 12px 32px; border: 2px solid #4299e1; border-radius: 10px;
+            background: #ebf8ff; cursor: pointer; font-size: 0.92rem; font-weight: 700;
+            color: #2b6cb0; transition: all 0.15s; font-family: 'Segoe UI';
+            margin-top: 8px;
+        }
+        .submit-btn:hover { background: #bee3f8; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* Round result */
+        .round-result {
+            padding: 14px; border-radius: 10px; margin: 10px 0; text-align: center;
+            font-size: 0.85rem; line-height: 1.6; display: none; border: 1px solid #e2e8f0;
+        }
+        .round-result.show { display: block; animation: fadeIn 0.25s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+
+        .result-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 6px; margin: 10px 0;
+        }
+        .result-player {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 8px 4px; text-align: center;
+        }
+        .result-player.is-you { border-color: #4299e1; background: #ebf8ff; }
+        .result-player .rp-name { font-size: 0.68rem; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-player .rp-contrib { font-size: 1.1rem; font-weight: 800; font-family: 'Consolas', monospace; }
+        .result-player .rp-earn { font-size: 0.72rem; color: #718096; margin-top: 2px; }
+
+        /* Score bar */
+        .score-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; background: #f7fafc; border: 1px solid #e2e8f0;
+            border-radius: 10px; margin-bottom: 10px;
+        }
+        .score-item { text-align: center; }
+        .score-item .sc-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.8px; color: #718096; }
+        .score-item .sc-value { font-size: 1.15rem; font-weight: 700; font-family: 'Consolas', monospace; }
+
+        /* Charts */
+        .chart-panel canvas { width: 100%; display: block; }
+        .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: #4a5568; }
+        .legend-swatch { width: 12px; height: 4px; border-radius: 2px; }
+
+        /* Mechanism tabs */
+        .mech-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+        .mech-tab {
+            flex: 1; padding: 8px 4px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f7fafc; cursor: pointer; text-align: center; font-size: 0.72rem;
+            color: #718096; font-weight: 600; transition: all 0.15s; font-family: 'Segoe UI';
+        }
+        .mech-tab:hover { border-color: #4299e1; color: #2b6cb0; }
+        .mech-tab.active { background: #ebf8ff; border-color: #4299e1; color: #2b6cb0; }
+
+        .mech-controls { display: none; }
+        .mech-controls.active { display: block; }
+
+        /* Strategy badges */
+        .strat-select {
+            width: 100%; padding: 7px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f7fafc; font-size: 0.8rem; color: #2d3748; cursor: pointer;
+            font-family: 'Segoe UI'; margin-bottom: 6px;
+        }
+
+        .reset-btn {
+            width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 0.78rem; color: #718096; font-weight: 600;
+            transition: all 0.15s; font-family: 'Segoe UI'; margin-top: 8px;
+        }
+        .reset-btn:hover { border-color: #e53e3e; color: #e53e3e; background: #fff5f5; }
+
+        /* Punishment UI */
+        .punish-area { margin-top: 8px; display: none; }
+        .punish-area.show { display: block; }
+        .punish-row {
+            display: flex; align-items: center; gap: 6px; padding: 4px 0;
+            font-size: 0.78rem; color: #4a5568;
+        }
+        .punish-row input[type="range"] { flex: 1; height: 4px; }
+        .punish-row .punish-val { font-family: 'Consolas', monospace; font-size: 0.76rem; color: #e53e3e; font-weight: 600; min-width: 20px; }
+
+        @media (max-width: 1100px) {
+            .app-grid { grid-template-columns: 1fr; }
+            .controls-panel { grid-row: auto; }
+            .full-width { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <h1>The Public Goods Game</h1>
+    <p class="subtitle">Each player has an endowment to split between a private account and a public pot — will free-riding prevail?</p>
+
+    <div class="app-grid">
+        <!-- LEFT CONTROLS -->
+        <div class="panel controls-panel">
+            <div class="panel-title">Game Parameters</div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Group size (N)</span><span class="slider-value" id="vN">4</span></div>
+                <input type="range" id="sN" min="2" max="10" value="4" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Endowment (E)</span><span class="slider-value" id="vE">20</span></div>
+                <input type="range" id="sE" min="5" max="50" value="20" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Multiplier (m)</span><span class="slider-value" id="vM">1.6</span></div>
+                <input type="range" id="sM" min="1.1" max="4" value="1.6" step="0.1">
+            </div>
+
+            <div class="equation-box" id="eqBox">
+                Payoff = (E − cᵢ) + (m · ΣC) / N<br>
+                where cᵢ = your contribution, ΣC = group total<br><br>
+                Socially optimal: contribute E (all in)<br>
+                Nash equilibrium: contribute 0 (free ride)<br>
+                Dilemma exists when: 1 &lt; m &lt; N
+            </div>
+
+            <div id="dilemmaCheck" class="info-box success">
+                <strong>✓ Dilemma exists:</strong> m/N = 0.40 &lt; 1 (defect is dominant) but m = 1.6 &gt; 1 (group gains from contributing).
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Institutional Mechanism</div>
+
+            <div class="mech-tabs">
+                <div class="mech-tab active" data-mech="none">Baseline</div>
+                <div class="mech-tab" data-mech="punish">Punishment</div>
+                <div class="mech-tab" data-mech="reward">Reward</div>
+                <div class="mech-tab" data-mech="threshold">Threshold</div>
+            </div>
+
+            <div class="mech-controls active" id="ctrl-none">
+                <div class="info-box warning">
+                    <strong>No institution:</strong> Standard VCM. The dominant strategy is to contribute 0. Experimental finding: contributions start ~40-60% of endowment and decay toward 0 over rounds.
+                </div>
+            </div>
+
+            <div class="mech-controls" id="ctrl-punish">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Punishment cost ratio</span><span class="slider-value" id="vPunCost">0.33</span></div>
+                    <input type="range" id="sPunCost" min="0.1" max="1" value="0.33" step="0.01">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-label"><span>Punishment impact ratio</span><span class="slider-value" id="vPunImpact">1.0</span></div>
+                    <input type="range" id="sPunImpact" min="0.5" max="3" value="1" step="0.1">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Peer punishment:</strong> After contributions are revealed, you can spend tokens to reduce low contributors' payoffs. Costs you <em>cost</em> per unit, reduces them by <em>impact</em> per unit. Fehr & Gächter (2000) found this sustains cooperation.
+                </div>
+            </div>
+
+            <div class="mech-controls" id="ctrl-reward">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Reward cost ratio</span><span class="slider-value" id="vRewCost">0.33</span></div>
+                    <input type="range" id="sRewCost" min="0.1" max="1" value="0.33" step="0.01">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Peer reward:</strong> After seeing contributions, you can spend tokens to reward high contributors. Each token you spend gives them 1 token. Less effective than punishment empirically, but creates positive reciprocity.
+                </div>
+            </div>
+
+            <div class="mech-controls" id="ctrl-threshold">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Provision threshold (%)</span><span class="slider-value" id="vThresh">50</span></div>
+                    <input type="range" id="sThresh" min="10" max="100" value="50" step="5">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Provision point:</strong> The public good is only provided if total contributions reach the threshold. Below it, contributions are refunded. Creates a coordination game instead of a pure free-rider problem.
+                </div>
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Bot Behavior</div>
+            <select class="strat-select" id="botStrat">
+                <option value="decay">Realistic (start high, decay)</option>
+                <option value="conditional">Conditional Cooperator</option>
+                <option value="free_rider">Free Rider</option>
+                <option value="altruist">Altruist</option>
+                <option value="random">Random</option>
+                <option value="tft">Tit-for-Tat (match avg)</option>
+            </select>
+            <div class="info-box" id="botDesc" style="margin-top:4px; font-size:0.74rem;">
+                <strong>Realistic:</strong> Bots start contributing ~50-70% and gradually decay toward 0, mimicking typical experimental results.
+            </div>
+
+            <hr class="section-divider">
+            <button class="reset-btn" id="resetBtn">↺ Reset Game</button>
+        </div>
+
+        <!-- CENTER: Play Area -->
+        <div class="panel">
+            <div class="panel-title">Round <span id="roundLabel">1</span> — Choose Your Contribution</div>
+
+            <div class="score-bar">
+                <div class="score-item"><div class="sc-label">Your Total</div><div class="sc-value" style="color:#2b6cb0;" id="totalYou">0</div></div>
+                <div class="score-item"><div class="sc-label">Round</div><div class="sc-value" style="color:#718096;" id="roundNum">1</div></div>
+                <div class="score-item"><div class="sc-label">Avg Other</div><div class="sc-value" style="color:#e53e3e;" id="totalOther">0</div></div>
+            </div>
+
+            <div class="contrib-area">
+                <div class="contrib-label">Your contribution to the public pot</div>
+                <div class="contrib-slider-wrap">
+                    <span style="font-size:0.8rem; color:#718096;">0</span>
+                    <input type="range" id="contribSlider" min="0" max="20" value="10" step="1">
+                    <span style="font-size:0.8rem; color:#718096;" id="contribMax">20</span>
+                </div>
+                <div class="contrib-display" id="contribDisplay">10</div>
+                <div class="contrib-label">Keep: <strong id="keepDisplay">10</strong> &nbsp;|&nbsp; Contribute: <strong id="giveDisplay">10</strong></div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">Submit Contribution →</button>
+
+            <div class="round-result" id="roundResult"></div>
+
+            <!-- Punishment phase -->
+            <div class="punish-area" id="punishArea">
+                <div class="panel-title" style="margin-top:10px;">⚖️ Punishment Phase — Spend to Punish Free Riders</div>
+                <div id="punishRows"></div>
+                <button class="submit-btn" id="punishBtn" style="margin-top:6px;">Apply Punishment →</button>
+            </div>
+
+            <!-- Reward phase -->
+            <div class="punish-area" id="rewardArea">
+                <div class="panel-title" style="margin-top:10px;">🎁 Reward Phase — Spend to Reward Contributors</div>
+                <div id="rewardRows"></div>
+                <button class="submit-btn" id="rewardBtn" style="margin-top:6px;">Apply Rewards →</button>
+            </div>
+
+            <div class="info-box highlight" id="insightBox">
+                Each token you keep earns 1. Each token in the pot earns m/N = <strong>0.40</strong> per person. Since 0.40 &lt; 1, the private return from contributing is negative — but the group earns m = 1.6 per contributed token. This is the dilemma.
+            </div>
+        </div>
+
+        <!-- RIGHT: Charts -->
+        <div class="panel chart-panel">
+            <div class="panel-title">Contributions Over Time</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your Contribution</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Avg. Others</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169;" ></div> Group Average</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#d69e2e; height:2px;" ></div> Social Optimum</div>
+            </div>
+            <canvas id="contribCanvas" width="520" height="190"></canvas>
+
+            <div class="panel-title" style="margin-top:14px;">Cumulative Earnings</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> You</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#a0aec0;"></div> Avg. Others</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#d69e2e; height:2px;"></div> If All Cooperated</div>
+            </div>
+            <canvas id="earningsCanvas" width="520" height="190"></canvas>
+        </div>
+
+        <!-- FULL WIDTH: Theory Panel -->
+        <div class="panel full-width">
+            <div class="panel-title">The Free-Rider Problem Explained</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px;">
+                <div class="info-box" style="margin:0;">
+                    <strong>Marginal Private Return</strong><br>
+                    Each token you contribute returns m/N = <span id="mprVal">0.40</span> to you. Since this is &lt; 1, you're better off keeping it. <em>This is why free-riding is the Nash equilibrium.</em>
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>Marginal Social Return</strong><br>
+                    Each token contributed returns m = <span id="msrVal">1.6</span> to the group. Since this is &gt; 1, every contribution creates a net social gain. <em>This is why full contribution is socially optimal.</em>
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>The Efficiency Gap</strong><br>
+                    If all contribute E: each earns <span id="coopPay">—</span>. If all contribute 0: each earns <span id="defPay">—</span>. Efficiency loss: <strong id="effLoss">—</strong>%.
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>Experimental Evidence</strong><br>
+                    Lab experiments consistently find: ~40-60% initial contributions, decay to ~10-20% over 10 rounds, restart effects, and punishment sustains cooperation at ~80-90%.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // State
+        let N = 4, E = 20, m = 1.6;
+        let mechanism = 'none';
+        let round = 0;
+        let history = []; // [{you, others:[], pot, yourEarn, otherEarns:[], punishments, rewards}]
+        let yourTotal = 0;
+        let phase = 'contribute'; // 'contribute' | 'punish' | 'reward' | 'done'
+
+        // DOM
+        const sN = document.getElementById('sN'), sE = document.getElementById('sE'), sM = document.getElementById('sM');
+        const vN = document.getElementById('vN'), vE = document.getElementById('vE'), vM = document.getElementById('vM');
+        const contribSlider = document.getElementById('contribSlider');
+        const contribCanvas = document.getElementById('contribCanvas');
+        const earningsCanvas = document.getElementById('earningsCanvas');
+        const ccCtx = contribCanvas.getContext('2d');
+        const ecCtx = earningsCanvas.getContext('2d');
+
+        // Param sliders
+        [sN, sE, sM].forEach(s => s.addEventListener('input', () => {
+            N = parseInt(sN.value); E = parseInt(sE.value); m = parseFloat(sM.value);
+            contribSlider.max = E;
+            document.getElementById('contribMax').textContent = E;
+            if (parseInt(contribSlider.value) > E) contribSlider.value = E;
+            updateContribDisplay();
+            updateAll();
+            resetGame();
+        }));
+
+        // Mechanism tabs
+        document.querySelectorAll('.mech-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mech-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.mech-controls').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                mechanism = tab.dataset.mech;
+                document.getElementById('ctrl-' + mechanism).classList.add('active');
+                resetGame();
+            });
+        });
+
+        // Punishment/reward sliders
+        ['sPunCost', 'sPunImpact', 'sRewCost', 'sThresh'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => {
+                document.getElementById('v' + id.slice(1)).textContent =
+                    id === 'sThresh' ? el.value : parseFloat(el.value).toFixed(2);
+                updateAll();
+            });
+        });
+
+        // Bot descriptions
+        const botDescs = {
+            decay: '<strong>Realistic:</strong> Start at ~50-70% of endowment, decay ~5-15% each round. Mimics average experimental behavior.',
+            conditional: '<strong>Conditional Cooperator:</strong> Matches roughly the group average from last round. ~50% of experimental subjects behave this way.',
+            free_rider: '<strong>Free Rider:</strong> Contributes 0 every round. The Nash equilibrium strategy.',
+            altruist: '<strong>Altruist:</strong> Contributes 100% every round regardless. Exploitable but maximizes social welfare.',
+            random: '<strong>Random:</strong> Uniform random contribution each round. Noisy baseline.',
+            tft: '<strong>Tit-for-Tat:</strong> Matches your contribution from the previous round. Direct reciprocity.',
+        };
+
+        document.getElementById('botStrat').addEventListener('change', function() {
+            document.getElementById('botDesc').innerHTML = botDescs[this.value] || '';
+            resetGame();
+        });
+
+        // Contribution slider
+        contribSlider.addEventListener('input', updateContribDisplay);
+        function updateContribDisplay() {
+            const c = parseInt(contribSlider.value);
+            document.getElementById('contribDisplay').textContent = c;
+            document.getElementById('keepDisplay').textContent = E - c;
+            document.getElementById('giveDisplay').textContent = c;
+        }
+
+        // Bot contribution logic
+        function botContribution(botIndex) {
+            const strat = document.getElementById('botStrat').value;
+            const r = round;
+            if (strat === 'free_rider') return 0;
+            if (strat === 'altruist') return E;
+            if (strat === 'random') return Math.floor(Math.random() * (E + 1));
+            if (strat === 'decay') {
+                const base = E * (0.5 + Math.random() * 0.2);
+                const decayed = base * Math.pow(0.85, r) + (Math.random() - 0.5) * E * 0.1;
+                return Math.max(0, Math.min(E, Math.round(decayed)));
+            }
+            if (strat === 'conditional') {
+                if (r === 0) return Math.round(E * (0.4 + Math.random() * 0.2));
+                const lastAvg = history[r - 1].pot / N;
+                const noise = (Math.random() - 0.5) * E * 0.15;
+                return Math.max(0, Math.min(E, Math.round(lastAvg + noise)));
+            }
+            if (strat === 'tft') {
+                if (r === 0) return Math.round(E * 0.5);
+                return Math.max(0, Math.min(E, history[r - 1].you + Math.round((Math.random() - 0.5) * 2)));
+            }
+            return Math.round(E * 0.3);
+        }
+
+        // Submit contribution
+        document.getElementById('submitBtn').addEventListener('click', submitContribution);
+
+        function submitContribution() {
+            const yourC = parseInt(contribSlider.value);
+            const others = [];
+            for (let i = 0; i < N - 1; i++) others.push(botContribution(i));
+
+            const pot = yourC + others.reduce((a, b) => a + b, 0);
+            const share = (m * pot) / N;
+            const yourEarn = (E - yourC) + share;
+            const otherEarns = others.map(c => (E - c) + share);
+
+            const entry = { you: yourC, others, pot, yourEarn, otherEarns, share, punishments: null, rewards: null, yourFinalEarn: yourEarn, otherFinalEarns: [...otherEarns] };
+
+            // Check threshold mechanism
+            if (mechanism === 'threshold') {
+                const thresh = parseFloat(document.getElementById('sThresh').value) / 100 * N * E;
+                if (pot < thresh) {
+                    // Refund
+                    entry.yourEarn = E;
+                    entry.yourFinalEarn = E;
+                    entry.otherEarns = others.map(() => E);
+                    entry.otherFinalEarns = others.map(() => E);
+                    entry.thresholdMet = false;
+                    entry.share = 0;
+                } else {
+                    entry.thresholdMet = true;
+                }
+            }
+
+            history.push(entry);
+            yourTotal += entry.yourFinalEarn;
+
+            showRoundResult(entry);
+
+            if (mechanism === 'punish') {
+                phase = 'punish';
+                showPunishPhase(entry);
+            } else if (mechanism === 'reward') {
+                phase = 'reward';
+                showRewardPhase(entry);
+            } else {
+                finishRound();
+            }
+        }
+
+        function showRoundResult(entry) {
+            const res = document.getElementById('roundResult');
+            const allContribs = [entry.you, ...entry.others];
+            const avgOthers = entry.others.length > 0 ? (entry.others.reduce((a, b) => a + b, 0) / entry.others.length).toFixed(1) : 0;
+
+            let threshNote = '';
+            if (mechanism === 'threshold') {
+                const thresh = parseFloat(document.getElementById('sThresh').value) / 100 * N * E;
+                threshNote = entry.thresholdMet
+                    ? `<div style="color:#38a169; font-weight:700; margin-bottom:6px;">✓ Threshold met! (${entry.pot.toFixed(0)} ≥ ${thresh.toFixed(0)})</div>`
+                    : `<div style="color:#e53e3e; font-weight:700; margin-bottom:6px;">✗ Threshold NOT met (${entry.pot.toFixed(0)} < ${thresh.toFixed(0)}) — contributions refunded</div>`;
+            }
+
+            let html = threshNote + `<div style="font-size:0.82rem; color:#718096; margin-bottom:8px;">Pot total: <strong>${entry.pot}</strong> × ${m} ÷ ${N} = <strong>${entry.share.toFixed(1)}</strong> per person</div>`;
+            html += '<div class="result-grid">';
+            html += `<div class="result-player is-you">
+                <div class="rp-name">You</div>
+                <div class="rp-contrib" style="color:#2b6cb0;">${entry.you}</div>
+                <div class="rp-earn">earned ${entry.yourFinalEarn.toFixed(1)}</div>
+            </div>`;
+            entry.others.forEach((c, i) => {
+                html += `<div class="result-player">
+                    <div class="rp-name">Bot ${i + 1}</div>
+                    <div class="rp-contrib" style="color:${c === 0 ? '#e53e3e' : (c >= E * 0.8 ? '#38a169' : '#4a5568')}">${c}</div>
+                    <div class="rp-earn">earned ${entry.otherFinalEarns[i].toFixed(1)}</div>
+                </div>`;
+            });
+            html += '</div>';
+
+            res.style.background = '#fff';
+            res.innerHTML = html;
+            res.classList.add('show');
+        }
+
+        // Punishment phase
+        function showPunishPhase(entry) {
+            const area = document.getElementById('punishArea');
+            area.classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+
+            const rows = document.getElementById('punishRows');
+            let html = '';
+            entry.others.forEach((c, i) => {
+                html += `<div class="punish-row">
+                    <span style="min-width:50px;">Bot ${i + 1} (gave ${c})</span>
+                    <input type="range" class="pun-slider" data-idx="${i}" min="0" max="10" value="0" step="1">
+                    <span class="punish-val" id="punVal${i}">0</span>
+                </div>`;
+            });
+            rows.innerHTML = html;
+
+            rows.querySelectorAll('.pun-slider').forEach(sl => {
+                sl.addEventListener('input', function() {
+                    document.getElementById('punVal' + this.dataset.idx).textContent = this.value;
+                });
+            });
+        }
+
+        document.getElementById('punishBtn').addEventListener('click', () => {
+            const entry = history[history.length - 1];
+            const punCost = parseFloat(document.getElementById('sPunCost').value);
+            const punImpact = parseFloat(document.getElementById('sPunImpact').value);
+            const sliders = document.querySelectorAll('.pun-slider');
+            let totalSpent = 0;
+            const punishments = [];
+            sliders.forEach(sl => {
+                const pts = parseInt(sl.value);
+                punishments.push(pts);
+                totalSpent += pts * punCost;
+            });
+
+            entry.punishments = punishments;
+            entry.yourFinalEarn -= totalSpent;
+            yourTotal -= totalSpent;
+            punishments.forEach((pts, i) => {
+                const reduction = pts * punImpact;
+                entry.otherFinalEarns[i] -= reduction;
+            });
+
+            document.getElementById('punishArea').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            showRoundResult(entry);
+            finishRound();
+        });
+
+        // Reward phase
+        function showRewardPhase(entry) {
+            const area = document.getElementById('rewardArea');
+            area.classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+
+            const rows = document.getElementById('rewardRows');
+            let html = '';
+            entry.others.forEach((c, i) => {
+                html += `<div class="punish-row">
+                    <span style="min-width:50px;">Bot ${i + 1} (gave ${c})</span>
+                    <input type="range" class="rew-slider" data-idx="${i}" min="0" max="10" value="0" step="1">
+                    <span class="punish-val" style="color:#38a169;" id="rewVal${i}">0</span>
+                </div>`;
+            });
+            rows.innerHTML = html;
+
+            rows.querySelectorAll('.rew-slider').forEach(sl => {
+                sl.addEventListener('input', function() {
+                    document.getElementById('rewVal' + this.dataset.idx).textContent = this.value;
+                });
+            });
+        }
+
+        document.getElementById('rewardBtn').addEventListener('click', () => {
+            const entry = history[history.length - 1];
+            const rewCost = parseFloat(document.getElementById('sRewCost').value);
+            const sliders = document.querySelectorAll('.rew-slider');
+            let totalSpent = 0;
+            const rewards = [];
+            sliders.forEach(sl => {
+                const pts = parseInt(sl.value);
+                rewards.push(pts);
+                totalSpent += pts * rewCost;
+            });
+
+            entry.rewards = rewards;
+            entry.yourFinalEarn -= totalSpent;
+            yourTotal -= totalSpent;
+            rewards.forEach((pts, i) => {
+                entry.otherFinalEarns[i] += pts;
+            });
+
+            document.getElementById('rewardArea').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            showRoundResult(entry);
+            finishRound();
+        });
+
+        function finishRound() {
+            round++;
+            phase = 'contribute';
+            document.getElementById('roundLabel').textContent = round + 1;
+            document.getElementById('roundNum').textContent = round + 1;
+
+            // Recalculate totals
+            yourTotal = history.reduce((s, h) => s + h.yourFinalEarn, 0);
+            document.getElementById('totalYou').textContent = yourTotal.toFixed(1);
+
+            const avgOtherTotal = history.reduce((s, h) => s + h.otherFinalEarns.reduce((a, b) => a + b, 0) / h.otherFinalEarns.length, 0);
+            document.getElementById('totalOther').textContent = avgOtherTotal.toFixed(1);
+
+            drawContribChart();
+            drawEarningsChart();
+            updateInsight();
+        }
+
+        function resetGame() {
+            round = 0; history = []; yourTotal = 0; phase = 'contribute';
+            document.getElementById('roundLabel').textContent = 1;
+            document.getElementById('roundNum').textContent = 1;
+            document.getElementById('totalYou').textContent = '0';
+            document.getElementById('totalOther').textContent = '0';
+            document.getElementById('roundResult').className = 'round-result';
+            document.getElementById('punishArea').classList.remove('show');
+            document.getElementById('rewardArea').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            contribSlider.value = Math.round(E / 2);
+            updateContribDisplay();
+            drawContribChart();
+            drawEarningsChart();
+            updateInsight();
+        }
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+        // Charts
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+        function drawContribChart() {
+            const { w, h } = setupCanvas(contribCanvas, ccCtx);
+            const ctx = ccCtx;
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+
+            if (history.length === 0) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Play rounds to see contribution trends', w / 2, h / 2);
+                return;
+            }
+
+            const pad = { top: 10, right: 12, bottom: 22, left: 36 };
+            const maxR = Math.max(history.length, 5);
+            function X(i) { return pad.left + (i / (maxR - 1)) * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - (v / E) * (h - pad.top - pad.bottom); }
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const v = E * i / 4;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), pad.left - 3, Y(v) + 3);
+            }
+
+            // Social optimum line
+            ctx.setLineDash([4, 3]); ctx.strokeStyle = '#d69e2e'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(pad.left, Y(E)); ctx.lineTo(w - pad.right, Y(E)); ctx.stroke();
+            ctx.setLineDash([]);
+
+            function drawLine(data, color, width) {
+                ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath();
+                data.forEach((v, i) => { i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); });
+                ctx.stroke();
+                // Dots
+                data.forEach((v, i) => {
+                    ctx.fillStyle = color; ctx.beginPath();
+                    ctx.arc(X(i), Y(v), 3, 0, Math.PI * 2); ctx.fill();
+                });
+            }
+
+            const yourC = history.map(h => h.you);
+            const avgOthers = history.map(h => h.others.reduce((a, b) => a + b, 0) / h.others.length);
+            const groupAvg = history.map(h => h.pot / N);
+
+            drawLine(avgOthers, '#e53e3e', 1.5);
+            drawLine(groupAvg, '#38a169', 1.5);
+            drawLine(yourC, '#2b6cb0', 2.5);
+
+            // X labels
+            ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'center';
+            history.forEach((_, i) => { ctx.fillText(i + 1, X(i), h - 4); });
+        }
+
+        function drawEarningsChart() {
+            const { w, h } = setupCanvas(earningsCanvas, ecCtx);
+            const ctx = ecCtx;
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+
+            if (history.length === 0) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText('Play rounds to see earnings', w / 2, h / 2);
+                return;
+            }
+
+            const pad = { top: 10, right: 12, bottom: 22, left: 42 };
+            const coopPerRound = E + (m * N * E / N) - E; // = E * m ... simplified: E * m
+            // Actually: if all give E, payoff = (E - E) + m*N*E/N = m*E
+            const idealPerRound = m * E;
+
+            let cumYou = [], cumOther = [], cumIdeal = [];
+            let sy = 0, so = 0;
+            history.forEach((h, i) => {
+                sy += h.yourFinalEarn;
+                so += h.otherFinalEarns.reduce((a, b) => a + b, 0) / h.otherFinalEarns.length;
+                cumYou.push(sy);
+                cumOther.push(so);
+                cumIdeal.push((i + 1) * idealPerRound);
+            });
+
+            const maxV = Math.max(...cumYou, ...cumOther, ...cumIdeal, 1);
+            function X(i) { return pad.left + (i / Math.max(history.length - 1, 1)) * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - (v / maxV) * (h - pad.top - pad.bottom); }
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const v = maxV * i / 4;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), pad.left - 3, Y(v) + 3);
+            }
+
+            // Ideal line
+            ctx.setLineDash([4, 3]); ctx.strokeStyle = '#d69e2e'; ctx.lineWidth = 1;
+            ctx.beginPath();
+            cumIdeal.forEach((v, i) => { i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); });
+            ctx.stroke(); ctx.setLineDash([]);
+
+            function drawLine(data, color, width) {
+                ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath();
+                data.forEach((v, i) => { i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); });
+                ctx.stroke();
+            }
+
+            drawLine(cumOther, '#a0aec0', 1.5);
+            drawLine(cumYou, '#2b6cb0', 2.5);
+        }
+
+        function updateInsight() {
+            const box = document.getElementById('insightBox');
+            const mpr = m / N;
+
+            if (history.length === 0) {
+                box.innerHTML = `Each token you keep earns 1. Each token in the pot earns m/N = <strong>${mpr.toFixed(2)}</strong> per person. Since ${mpr.toFixed(2)} < 1, the private return from contributing is negative — but the group earns m = ${m.toFixed(1)} per contributed token. This is the dilemma.`;
+                box.className = 'info-box highlight';
+                return;
+            }
+
+            const last = history[history.length - 1];
+            const avgC = history.map(h => h.pot / N);
+            const trend = avgC.length >= 3 ? avgC[avgC.length - 1] - avgC[0] : 0;
+            const yourAvgC = history.map(h => h.you).reduce((a, b) => a + b, 0) / history.length;
+
+            let text = `<strong>Round ${round}:</strong> `;
+
+            if (mechanism === 'threshold' && last.thresholdMet === false) {
+                text += `Threshold not met — all contributions refunded. The provision point creates a coordination problem: everyone wants the good, but no one wants to be the sucker paying for something that won't be provided.`;
+            } else if (trend < -E * 0.1 && history.length >= 3) {
+                text += `Contributions are <span style="color:#e53e3e; font-weight:600;">declining</span> — the classic decay pattern. Free-riders erode cooperators' willingness to contribute. `;
+            } else if (trend > E * 0.05 && history.length >= 3) {
+                text += `Contributions are <span style="color:#38a169; font-weight:600;">increasing</span> — ${mechanism !== 'none' ? 'the institutional mechanism is working!' : 'unusual for a baseline game.'} `;
+            } else {
+                text += `Contributions are relatively stable around ${(avgC[avgC.length - 1]).toFixed(1)} (${(avgC[avgC.length - 1] / E * 100).toFixed(0)}% of endowment). `;
+            }
+
+            const efficiency = (last.pot * m) / (N * E * m) * 100;
+            text += `<br>Efficiency: <strong>${efficiency.toFixed(0)}%</strong> of social optimum. Lost surplus per round: <strong>${((N * m * E - last.pot * m) / (N * m * E) * 100).toFixed(0)}%</strong>.`;
+
+            box.innerHTML = text;
+            box.className = 'info-box highlight';
+        }
+
+        function updateAll() {
+            vN.textContent = N; vE.textContent = E; vM.textContent = m.toFixed(1);
+            const mpr = m / N;
+            document.getElementById('mprVal').textContent = mpr.toFixed(2);
+            document.getElementById('msrVal').textContent = m.toFixed(1);
+
+            const coopPay = m * E;
+            const defPay = E;
+            document.getElementById('coopPay').textContent = coopPay.toFixed(0);
+            document.getElementById('defPay').textContent = defPay.toFixed(0);
+            document.getElementById('effLoss').textContent = ((1 - defPay / coopPay) * 100).toFixed(0);
+
+            // Dilemma check
+            const check = document.getElementById('dilemmaCheck');
+            if (m > 1 && m < N) {
+                check.className = 'info-box success';
+                check.innerHTML = `<strong>✓ Dilemma exists:</strong> m/N = ${(m / N).toFixed(2)} < 1 (defect dominant) but m = ${m.toFixed(1)} > 1 (group benefits).`;
+            } else if (m >= N) {
+                check.className = 'info-box highlight';
+                check.innerHTML = `<strong>No dilemma:</strong> m/N = ${(m / N).toFixed(2)} ≥ 1. Contributing is individually rational — cooperation is the dominant strategy!`;
+            } else {
+                check.className = 'info-box warning';
+                check.innerHTML = `<strong>No social gain:</strong> m = ${m.toFixed(1)} ≤ 1. Even full cooperation destroys value. The game has no dilemma because there's no reason to contribute.`;
+            }
+
+            // Equation box
+            document.getElementById('eqBox').innerHTML = `Payoff = (E − cᵢ) + (m · ΣC) / N<br>= (${E} − cᵢ) + (${m.toFixed(1)} · ΣC) / ${N}<br><br>MPR = m/N = ${(m / N).toFixed(2)} < 1 → free-ride<br>MSR = m = ${m.toFixed(1)} > 1 → contribute is social opt.`;
+
+            updateInsight();
+        }
+
+        // Init
+        contribSlider.max = E;
+        updateContribDisplay();
+        updateAll();
+        drawContribChart();
+        drawEarningsChart();
+
+        window.addEventListener('resize', () => { drawContribChart(); drawEarningsChart(); });
+    })();
+    </script>
+</body>
+</html>

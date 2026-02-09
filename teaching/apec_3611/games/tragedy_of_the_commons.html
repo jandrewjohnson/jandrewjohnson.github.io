@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tragedy of the Commons — Open-Access Fishery</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa; color: #2d3748; min-height: 100vh; padding: 16px;
+        }
+        h1 { text-align: center; color: #1a202c; font-size: 1.65rem; font-weight: 700; margin-bottom: 2px; }
+        .subtitle { text-align: center; color: #718096; font-size: 0.9rem; margin-bottom: 16px; }
+
+        .app-grid {
+            max-width: 1480px; margin: 0 auto;
+            display: grid; grid-template-columns: 260px 1fr 1fr; gap: 14px;
+        }
+        .panel {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .panel-title {
+            font-size: 0.76rem; text-transform: uppercase; letter-spacing: 1.1px;
+            color: #718096; margin-bottom: 12px; font-weight: 600;
+        }
+        .controls-panel { grid-row: 1 / 5; }
+        .full-width { grid-column: 2 / 4; }
+
+        .slider-group { margin-bottom: 11px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .slider-label span:first-child { font-size: 0.78rem; color: #4a5568; font-weight: 500; }
+        .slider-value {
+            background: #edf2f7; color: #2b6cb0; padding: 2px 8px; border-radius: 6px;
+            font-size: 0.74rem; font-weight: 600; font-family: 'Consolas', monospace;
+        }
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+            background: #e2e8f0; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+            background: #4299e1; cursor: pointer; box-shadow: 0 1px 3px rgba(66,153,225,0.4);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%; background: #4299e1; cursor: pointer; border: none;
+        }
+        .section-divider { border: none; border-top: 1px solid #e2e8f0; margin: 13px 0; }
+        .info-box {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 10px; margin-top: 10px; font-size: 0.76rem; line-height: 1.5; color: #4a5568;
+        }
+        .info-box.highlight { border-left: 3px solid #4299e1; }
+        .info-box.warning { border-left: 3px solid #e53e3e; background: #fff5f5; }
+        .info-box.success { border-left: 3px solid #38a169; background: #f0fff4; }
+        .info-box.danger { border-left: 3px solid #805ad5; background: #faf5ff; }
+        .info-box strong { color: #1a202c; }
+        .equation-box {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 7px 10px; font-family: 'Consolas', monospace; font-size: 0.7rem;
+            color: #4a5568; margin: 6px 0; line-height: 1.6;
+        }
+
+        /* Fish stock gauge */
+        .stock-gauge {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 12px; margin-bottom: 12px; text-align: center;
+        }
+        .stock-bar-outer {
+            width: 100%; height: 24px; background: #edf2f7; border-radius: 12px;
+            overflow: hidden; margin: 8px 0;
+        }
+        .stock-bar-inner {
+            height: 100%; border-radius: 12px; transition: width 0.5s ease, background 0.5s ease;
+        }
+        .stock-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: #a0aec0; }
+        .stock-number {
+            font-size: 1.8rem; font-weight: 800; font-family: 'Consolas', monospace;
+            transition: color 0.3s;
+        }
+        .stock-sub { font-size: 0.72rem; color: #718096; }
+
+        /* Effort input */
+        .effort-area { text-align: center; margin: 10px 0; }
+        .effort-wrap { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+        .effort-wrap input[type="range"] { flex: 1; height: 8px; }
+        .effort-wrap input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
+        .effort-display {
+            font-size: 2rem; font-weight: 800; color: #2b6cb0;
+            font-family: 'Consolas', monospace; min-width: 50px;
+        }
+
+        .submit-btn {
+            padding: 12px 32px; border: 2px solid #4299e1; border-radius: 10px;
+            background: #ebf8ff; cursor: pointer; font-size: 0.9rem; font-weight: 700;
+            color: #2b6cb0; transition: all 0.15s; font-family: 'Segoe UI'; margin-top: 6px;
+        }
+        .submit-btn:hover { background: #bee3f8; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* Result */
+        .round-result {
+            padding: 12px; border-radius: 10px; margin: 10px 0; font-size: 0.82rem;
+            line-height: 1.6; display: none; border: 1px solid #e2e8f0; background: #fff;
+        }
+        .round-result.show { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+
+        .result-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 6px; margin: 8px 0;
+        }
+        .result-player {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 8px 4px; text-align: center;
+        }
+        .result-player.is-you { border-color: #4299e1; background: #ebf8ff; }
+        .result-player .rp-name { font-size: 0.66rem; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-player .rp-val { font-size: 1rem; font-weight: 800; font-family: 'Consolas', monospace; }
+        .result-player .rp-sub { font-size: 0.68rem; color: #718096; margin-top: 2px; }
+
+        /* Score bar */
+        .score-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+            margin-bottom: 10px;
+        }
+        .score-card {
+            background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 8px; text-align: center;
+        }
+        .score-card .sc-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.8px; color: #718096; }
+        .score-card .sc-value { font-size: 1.1rem; font-weight: 700; font-family: 'Consolas', monospace; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: #4a5568; }
+        .legend-swatch { width: 12px; height: 4px; border-radius: 2px; }
+
+        canvas { width: 100%; display: block; }
+
+        .mech-tabs { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+        .mech-tab {
+            flex: 1; min-width: 60px; padding: 7px 4px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f7fafc; cursor: pointer; text-align: center; font-size: 0.68rem;
+            color: #718096; font-weight: 600; transition: all 0.15s; font-family: 'Segoe UI';
+        }
+        .mech-tab:hover { border-color: #4299e1; color: #2b6cb0; }
+        .mech-tab.active { background: #ebf8ff; border-color: #4299e1; color: #2b6cb0; }
+        .mech-controls { display: none; }
+        .mech-controls.active { display: block; }
+
+        .strat-select {
+            width: 100%; padding: 7px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f7fafc; font-size: 0.78rem; color: #2d3748; cursor: pointer; font-family: 'Segoe UI';
+        }
+        .reset-btn {
+            width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 0.76rem; color: #718096; font-weight: 600;
+            transition: all 0.15s; font-family: 'Segoe UI'; margin-top: 8px;
+        }
+        .reset-btn:hover { border-color: #e53e3e; color: #e53e3e; background: #fff5f5; }
+
+        .collapsed-alert {
+            text-align: center; padding: 20px; font-size: 1rem; font-weight: 700;
+            color: #e53e3e; display: none;
+        }
+        .collapsed-alert.show { display: block; }
+
+        @media (max-width: 1100px) {
+            .app-grid { grid-template-columns: 1fr; }
+            .controls-panel { grid-row: auto; }
+            .full-width { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Tragedy of the Commons</h1>
+    <p class="subtitle">An open-access fishery — each fisher maximizes their own catch, but the stock is shared and finite</p>
+
+    <div class="app-grid">
+        <!-- LEFT CONTROLS -->
+        <div class="panel controls-panel">
+            <div class="panel-title">Ecosystem Parameters</div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Carrying capacity (K)</span><span class="slider-value" id="vK">1000</span></div>
+                <input type="range" id="sK" min="200" max="2000" value="1000" step="50">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Growth rate (r)</span><span class="slider-value" id="vR">0.30</span></div>
+                <input type="range" id="sR" min="0.05" max="0.8" value="0.30" step="0.01">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Fishers (N)</span><span class="slider-value" id="vN">5</span></div>
+                <input type="range" id="sN" min="2" max="12" value="5" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Price per fish (p)</span><span class="slider-value" id="vP">10</span></div>
+                <input type="range" id="sP" min="1" max="30" value="10" step="1">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>Cost per boat (w)</span><span class="slider-value" id="vW">50</span></div>
+                <input type="range" id="sW" min="10" max="200" value="50" step="5">
+            </div>
+
+            <div class="equation-box">
+                Stock growth: S' = S + rS(1 − S/K) − H<br>
+                Catch per boat: q·S/N_total_boats<br>
+                (more boats & less stock → less per boat)<br>
+                Profit = p·catch − w·boats<br>
+                MSY = rK/4 at S = K/2
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Policy Regime</div>
+            <div class="mech-tabs">
+                <div class="mech-tab active" data-mech="open">Open Access</div>
+                <div class="mech-tab" data-mech="tax">Tax</div>
+                <div class="mech-tab" data-mech="quota">Quota</div>
+                <div class="mech-tab" data-mech="itq">ITQs</div>
+            </div>
+
+            <div class="mech-controls active" id="ctrl-open">
+                <div class="info-box warning">
+                    <strong>Open access:</strong> No regulation. Each fisher sends as many boats as they want. Classic tragedy — entry continues until profit = 0, overshooting the MSY.
+                </div>
+            </div>
+            <div class="mech-controls" id="ctrl-tax">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Tax per fish caught</span><span class="slider-value" id="vTax">0</span></div>
+                    <input type="range" id="sTax" min="0" max="15" value="0" step="0.5">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Pigouvian tax:</strong> Raises the effective cost of fishing, reducing effort to a sustainable level. Revenue goes to the regulator. Set tax to internalize the stock externality.
+                </div>
+            </div>
+            <div class="mech-controls" id="ctrl-quota">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Total Allowable Catch</span><span class="slider-value" id="vTAC">200</span></div>
+                    <input type="range" id="sTAC" min="10" max="500" value="200" step="10">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Catch quota (TAC):</strong> Regulator sets a total catch limit, divided equally among fishers. Prevents overharvesting but may create a "race to fish" within the season.
+                </div>
+            </div>
+            <div class="mech-controls" id="ctrl-itq">
+                <div class="slider-group">
+                    <div class="slider-label"><span>Total quota</span><span class="slider-value" id="vITQ">200</span></div>
+                    <input type="range" id="sITQ" min="10" max="500" value="200" step="10">
+                </div>
+                <div class="info-box highlight">
+                    <strong>Individual Transferable Quotas:</strong> Each fisher gets a tradeable share. Eliminates the race to fish and allows efficient allocation. Your share: <span id="itqShare">—</span> fish.
+                </div>
+            </div>
+
+            <hr class="section-divider">
+            <div class="panel-title">Bot Behavior</div>
+            <select class="strat-select" id="botStrat">
+                <option value="profit_max">Profit Maximizer (myopic)</option>
+                <option value="greedy">Greedy (max boats)</option>
+                <option value="cautious">Cautious (sustainable)</option>
+                <option value="adaptive">Adaptive (responds to stock)</option>
+                <option value="random">Random</option>
+            </select>
+
+            <hr class="section-divider">
+            <button class="reset-btn" id="resetBtn">↺ Reset Fishery</button>
+        </div>
+
+        <!-- CENTER: Play Area -->
+        <div class="panel">
+            <div class="panel-title">Season <span id="roundLabel">1</span></div>
+
+            <div class="stock-gauge">
+                <div class="stock-sub">Fish Stock</div>
+                <div class="stock-number" id="stockNum">1000</div>
+                <div class="stock-bar-outer">
+                    <div class="stock-bar-inner" id="stockBar" style="width:100%; background:#38a169;"></div>
+                </div>
+                <div class="stock-labels">
+                    <span>0 (collapsed)</span>
+                    <span id="msyLabel">MSY at 500</span>
+                    <span id="kLabel">K = 1000</span>
+                </div>
+            </div>
+
+            <div class="score-bar">
+                <div class="score-card"><div class="sc-label">Your Profit</div><div class="sc-value" style="color:#2b6cb0;" id="scProfit">0</div></div>
+                <div class="score-card"><div class="sc-label">Your Catch</div><div class="sc-value" style="color:#38a169;" id="scCatch">0</div></div>
+                <div class="score-card"><div class="sc-label">Total Harvest</div><div class="sc-value" style="color:#e53e3e;" id="scHarvest">0</div></div>
+                <div class="score-card"><div class="sc-label">Season</div><div class="sc-value" style="color:#718096;" id="scRound">1</div></div>
+            </div>
+
+            <div class="effort-area">
+                <div style="font-size:0.8rem; color:#718096; margin-bottom:4px;">Your fishing effort (boats)</div>
+                <div class="effort-wrap">
+                    <span style="font-size:0.78rem; color:#a0aec0;">0</span>
+                    <input type="range" id="effortSlider" min="0" max="20" value="3" step="1">
+                    <span style="font-size:0.78rem; color:#a0aec0;">20</span>
+                </div>
+                <div class="effort-display" id="effortDisplay">3</div>
+                <div style="font-size:0.74rem; color:#718096;">
+                    Cost: <strong id="costDisplay">150</strong> &nbsp;|&nbsp;
+                    Est. catch: <strong id="estCatch">—</strong> &nbsp;|&nbsp;
+                    Est. profit: <strong id="estProfit">—</strong>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">🎣 Fish This Season →</button>
+
+            <div class="collapsed-alert" id="collapsedAlert">
+                🐟💀 The fishery has collapsed! Stock fell below recovery threshold.<br>
+                <span style="font-size:0.82rem; font-weight:500; color:#718096;">Reset to try a different approach.</span>
+            </div>
+
+            <div class="round-result" id="roundResult"></div>
+
+            <div class="info-box highlight" id="insightBox">
+                Each boat you send catches fish proportional to the stock and inversely proportional to total boats.
+                More boats = less per boat. The stock regenerates each season via logistic growth — but only if enough fish remain.
+            </div>
+        </div>
+
+        <!-- RIGHT: Charts -->
+        <div class="panel">
+            <div class="panel-title">Fish Stock Over Time</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Stock Level</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169; height:2px;"></div> MSY Stock (K/2)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e; height:2px;"></div> Collapse Threshold</div>
+            </div>
+            <canvas id="stockCanvas" width="520" height="175"></canvas>
+
+            <div class="panel-title" style="margin-top:12px;">Harvest &amp; Sustainable Yield</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Total Harvest</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#d69e2e; height:2px;"></div> MSY (rK/4)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#38a169;"></div> Natural Growth</div>
+            </div>
+            <canvas id="harvestCanvas" width="520" height="175"></canvas>
+        </div>
+
+        <!-- RIGHT 2: Profit chart -->
+        <div class="panel">
+            <div class="panel-title">Cumulative Profits</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your Cum. Profit</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#a0aec0;"></div> Avg Bot Cum. Profit</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#d69e2e; height:2px;"></div> Optimal Sustainable Profit</div>
+            </div>
+            <canvas id="profitCanvas" width="520" height="175"></canvas>
+
+            <div class="panel-title" style="margin-top:12px;">Effort (Boats) Per Season</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-swatch" style="background:#2b6cb0;"></div> Your Boats</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e53e3e;"></div> Total Boats</div>
+            </div>
+            <canvas id="effortCanvas" width="520" height="175"></canvas>
+        </div>
+
+        <!-- FULL WIDTH: Theory -->
+        <div class="panel full-width">
+            <div class="panel-title">The Commons Problem Explained</div>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;">
+                <div class="info-box" style="margin:0;">
+                    <strong>The Externality</strong><br>
+                    When you send a boat, you reduce the stock available to everyone else — but you don't bear that cost. Each fisher ignores the <em>stock externality</em>, leading to over-entry.
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>Open-Access Equilibrium</strong><br>
+                    Entry continues until profit per boat = 0. This happens at a stock level well below MSY. Rents are fully dissipated — the fishery generates zero economic profit.
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>Maximum Sustainable Yield</strong><br>
+                    MSY = rK/4 = <strong id="msyVal">—</strong> fish/season at stock S = K/2 = <strong id="msyStock">—</strong>. A sole owner would harvest at this level to maximize long-run value.
+                </div>
+                <div class="info-box" style="margin:0;">
+                    <strong>Policy Solutions</strong><br>
+                    Tax (raise costs), Quota (limit total catch), ITQs (tradeable shares — most efficient). All aim to reduce effort to the level a sole owner would choose.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // === State ===
+        let K = 1000, r = 0.30, N = 5, price = 10, costPerBoat = 50;
+        let stock, collapsed;
+        let mechanism = 'open';
+        let season = 0;
+        let history = []; // {you_boats, bot_boats[], total_boats, stock_before, stock_after, harvest, your_catch, your_profit, bot_profits[], growth}
+        let yourTotalProfit = 0;
+        const catchability = 0.01; // q: catch per boat = q * S / (some congestion)
+        const COLLAPSE_THRESHOLD = 0.03; // fraction of K
+
+        // === DOM ===
+        const sK = document.getElementById('sK'), sR_ = document.getElementById('sR'), sN = document.getElementById('sN');
+        const sPrice = document.getElementById('sP'), sW = document.getElementById('sW');
+        const effortSlider = document.getElementById('effortSlider');
+
+        const stockCanvas = document.getElementById('stockCanvas');
+        const harvestCanvas = document.getElementById('harvestCanvas');
+        const profitCanvas = document.getElementById('profitCanvas');
+        const effortCanvas = document.getElementById('effortCanvas');
+        const stkCtx = stockCanvas.getContext('2d');
+        const harvCtx = harvestCanvas.getContext('2d');
+        const profCtx = profitCanvas.getContext('2d');
+        const effCtx = effortCanvas.getContext('2d');
+
+        // === Init ===
+        function initState() {
+            stock = K; collapsed = false; season = 0; history = []; yourTotalProfit = 0;
+        }
+        initState();
+
+        // === Param sliders ===
+        [sK, sR_, sN, sPrice, sW].forEach(s => s.addEventListener('input', () => {
+            K = parseInt(sK.value); r = parseFloat(sR_.value); N = parseInt(sN.value);
+            price = parseInt(sPrice.value); costPerBoat = parseInt(sW.value);
+            updateParamDisplay();
+            resetGame();
+        }));
+
+        function updateParamDisplay() {
+            document.getElementById('vK').textContent = K;
+            document.getElementById('vR').textContent = r.toFixed(2);
+            document.getElementById('vN').textContent = N;
+            document.getElementById('vP').textContent = price;
+            document.getElementById('vW').textContent = costPerBoat;
+            document.getElementById('msyLabel').textContent = `MSY at ${(K/2).toFixed(0)}`;
+            document.getElementById('kLabel').textContent = `K = ${K}`;
+            document.getElementById('msyVal').textContent = (r * K / 4).toFixed(0);
+            document.getElementById('msyStock').textContent = (K / 2).toFixed(0);
+        }
+
+        // Mechanism tabs
+        document.querySelectorAll('.mech-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mech-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.mech-controls').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                mechanism = tab.dataset.mech;
+                document.getElementById('ctrl-' + mechanism).classList.add('active');
+                resetGame();
+            });
+        });
+
+        // Policy sliders
+        ['sTax', 'sTAC', 'sITQ'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => {
+                const vid = 'v' + id.charAt(1).toUpperCase() + id.slice(2);
+                document.getElementById(vid).textContent = el.value;
+                if (id === 'sITQ') {
+                    document.getElementById('itqShare').textContent = (parseFloat(el.value) / N).toFixed(0);
+                }
+                updateEffortEstimate();
+            });
+        });
+
+        // Effort slider
+        effortSlider.addEventListener('input', updateEffortEstimate);
+
+        function updateEffortEstimate() {
+            const boats = parseInt(effortSlider.value);
+            document.getElementById('effortDisplay').textContent = boats;
+            const cost = boats * getEffectiveCost();
+            document.getElementById('costDisplay').textContent = cost.toFixed(0);
+
+            // Estimate catch
+            const totalBoatsEst = boats + estimateBotTotalBoats();
+            if (totalBoatsEst > 0 && stock > 0) {
+                const harvestRate = Math.min(catchability * totalBoatsEst, 0.9);
+                const totalCatchEst = harvestRate * stock;
+
+                // Apply quota caps
+                let cappedCatch = totalCatchEst;
+                if (mechanism === 'quota') cappedCatch = Math.min(totalCatchEst, parseFloat(document.getElementById('sTAC').value));
+                if (mechanism === 'itq') cappedCatch = Math.min(totalCatchEst, parseFloat(document.getElementById('sITQ').value));
+
+                const myCatchEst = cappedCatch * (boats / totalBoatsEst);
+                const myRevEst = myCatchEst * price;
+                const myProfitEst = myRevEst - cost;
+
+                document.getElementById('estCatch').textContent = myCatchEst.toFixed(0);
+                document.getElementById('estProfit').innerHTML = `<span style="color:${myProfitEst >= 0 ? '#38a169' : '#e53e3e'}">${myProfitEst.toFixed(0)}</span>`;
+            } else {
+                document.getElementById('estCatch').textContent = '0';
+                document.getElementById('estProfit').textContent = '0';
+            }
+        }
+
+        function getEffectiveCost() {
+            if (mechanism === 'tax') {
+                // Tax is per fish, but we approximate as added cost per boat based on expected catch
+                return costPerBoat; // actual tax applied to revenue later
+            }
+            return costPerBoat;
+        }
+
+        function estimateBotTotalBoats() {
+            const strat = document.getElementById('botStrat').value;
+            const perBot = botBoats(0, strat); // estimate for one bot
+            return perBot * (N - 1);
+        }
+
+        // === Bot logic ===
+        function botBoats(botIdx, strat) {
+            if (collapsed) return 0;
+            const s = stock;
+            const frac = s / K;
+
+            if (strat === 'greedy') return 20;
+            if (strat === 'random') return Math.floor(Math.random() * 15);
+
+            if (strat === 'cautious') {
+                // Try to keep harvest near MSY share
+                const msyHarvest = r * K / 4;
+                const myShare = msyHarvest / N;
+                // Roughly: catch per boat ~ q * S / totalBoats... solve for boats
+                const targetBoats = Math.max(1, Math.round(myShare / (catchability * s / (N * 3 + 1)) ));
+                return Math.min(10, Math.max(1, targetBoats + Math.round((Math.random() - 0.5) * 2)));
+            }
+
+            if (strat === 'adaptive') {
+                // Scale effort with stock health
+                const base = Math.round(frac * 8 + 1);
+                return Math.max(0, Math.min(15, base + Math.round((Math.random() - 0.5) * 2)));
+            }
+
+            // profit_max: myopic — pick boats to maximize expected profit this season
+            if (strat === 'profit_max') {
+                let bestBoats = 0, bestProfit = 0;
+                for (let b = 0; b <= 15; b++) {
+                    const totalB = b + (N - 1) * 3; // assume others send ~3
+                    const harvestRate = Math.min(catchability * totalB, 0.9);
+                    const totalC = harvestRate * s;
+                    const myC = totalC * (b / Math.max(totalB, 1));
+                    const effPrice = mechanism === 'tax' ? price - parseFloat(document.getElementById('sTax')?.value || 0) : price;
+                    const prof = myC * effPrice - b * costPerBoat;
+                    if (prof > bestProfit) { bestProfit = prof; bestBoats = b; }
+                }
+                return Math.max(0, bestBoats + Math.round((Math.random() - 0.5) * 1.5));
+            }
+
+            return 3;
+        }
+
+        // === Submit ===
+        document.getElementById('submitBtn').addEventListener('click', playSeason);
+
+        function playSeason() {
+            if (collapsed) return;
+
+            const myBoats = parseInt(effortSlider.value);
+            const strat = document.getElementById('botStrat').value;
+            const botBoatsArr = [];
+            for (let i = 0; i < N - 1; i++) {
+                botBoatsArr.push(botBoats(i, strat));
+            }
+
+            const totalBoats = myBoats + botBoatsArr.reduce((a, b) => a + b, 0);
+            const stockBefore = stock;
+
+            // Harvest
+            const harvestRate = totalBoats > 0 ? Math.min(catchability * totalBoats, 0.95) : 0;
+            let totalHarvest = harvestRate * stock;
+
+            // Apply quotas
+            if (mechanism === 'quota') {
+                const tac = parseFloat(document.getElementById('sTAC').value);
+                totalHarvest = Math.min(totalHarvest, tac);
+            }
+            if (mechanism === 'itq') {
+                const itqTotal = parseFloat(document.getElementById('sITQ').value);
+                totalHarvest = Math.min(totalHarvest, itqTotal);
+            }
+
+            // Distribute catch proportional to boats
+            let myCatch = 0, botCatches = [];
+            if (totalBoats > 0) {
+                myCatch = totalHarvest * (myBoats / totalBoats);
+                botCatches = botBoatsArr.map(b => totalHarvest * (b / totalBoats));
+            } else {
+                botCatches = botBoatsArr.map(() => 0);
+            }
+
+            // Tax
+            const tax = mechanism === 'tax' ? parseFloat(document.getElementById('sTax')?.value || 0) : 0;
+            const effectivePrice = price - tax;
+
+            const myProfit = myCatch * effectivePrice - myBoats * costPerBoat;
+            const botProfits = botCatches.map((c, i) => c * effectivePrice - botBoatsArr[i] * costPerBoat);
+
+            // Stock dynamics: logistic growth then subtract harvest
+            const growth = r * stock * (1 - stock / K);
+            stock = stock + growth - totalHarvest;
+            stock = Math.max(0, stock);
+
+            // Check collapse
+            if (stock < K * COLLAPSE_THRESHOLD) {
+                collapsed = true;
+            }
+
+            const entry = {
+                myBoats, botBoats: botBoatsArr, totalBoats,
+                stockBefore, stockAfter: stock,
+                totalHarvest, myCatch, myProfit, botProfits, botCatches,
+                growth, tax, taxRevenue: tax * totalHarvest,
+            };
+            history.push(entry);
+            yourTotalProfit += myProfit;
+            season++;
+
+            updateUI(entry);
+        }
+
+        function updateUI(entry) {
+            // Stock gauge
+            const frac = stock / K;
+            const bar = document.getElementById('stockBar');
+            bar.style.width = (frac * 100).toFixed(1) + '%';
+            bar.style.background = frac > 0.5 ? '#38a169' : (frac > 0.25 ? '#d69e2e' : (frac > 0.1 ? '#e53e3e' : '#805ad5'));
+            const numEl = document.getElementById('stockNum');
+            numEl.textContent = Math.round(stock);
+            numEl.style.color = frac > 0.5 ? '#38a169' : (frac > 0.25 ? '#d69e2e' : '#e53e3e');
+
+            // Scores
+            document.getElementById('scProfit').textContent = yourTotalProfit.toFixed(0);
+            document.getElementById('scProfit').style.color = yourTotalProfit >= 0 ? '#2b6cb0' : '#e53e3e';
+            document.getElementById('scCatch').textContent = entry.myCatch.toFixed(0);
+            document.getElementById('scHarvest').textContent = entry.totalHarvest.toFixed(0);
+            document.getElementById('scRound').textContent = season;
+            document.getElementById('roundLabel').textContent = season + 1;
+
+            // Round result
+            const res = document.getElementById('roundResult');
+            let html = `<div style="font-size:0.78rem; color:#718096; margin-bottom:6px;">
+                Total harvest: <strong>${entry.totalHarvest.toFixed(0)}</strong> fish from stock of ${entry.stockBefore.toFixed(0)} &nbsp;|&nbsp;
+                Natural growth: <strong style="color:#38a169;">+${entry.growth.toFixed(0)}</strong> &nbsp;|&nbsp;
+                Stock after: <strong style="color:${stock/K > 0.5 ? '#38a169' : '#e53e3e'};">${Math.round(stock)}</strong>
+                ${entry.tax > 0 ? ` &nbsp;|&nbsp; Tax revenue: <strong style="color:#d69e2e;">$${entry.taxRevenue.toFixed(0)}</strong>` : ''}
+            </div>`;
+            html += '<div class="result-grid">';
+            html += `<div class="result-player is-you">
+                <div class="rp-name">You</div>
+                <div class="rp-val" style="color:#2b6cb0;">🚤 ${entry.myBoats}</div>
+                <div class="rp-sub">catch ${entry.myCatch.toFixed(0)} · <span style="color:${entry.myProfit >= 0 ? '#38a169' : '#e53e3e'}">$${entry.myProfit.toFixed(0)}</span></div>
+            </div>`;
+            entry.botBoats.forEach((b, i) => {
+                html += `<div class="result-player">
+                    <div class="rp-name">Fisher ${i + 2}</div>
+                    <div class="rp-val" style="color:#718096;">🚤 ${b}</div>
+                    <div class="rp-sub">catch ${entry.botCatches[i].toFixed(0)} · <span style="color:${entry.botProfits[i] >= 0 ? '#38a169' : '#e53e3e'}">$${entry.botProfits[i].toFixed(0)}</span></div>
+                </div>`;
+            });
+            html += '</div>';
+            res.innerHTML = html;
+            res.classList.add('show');
+
+            // Collapse
+            const alert = document.getElementById('collapsedAlert');
+            if (collapsed) {
+                alert.classList.add('show');
+                document.getElementById('submitBtn').disabled = true;
+            } else {
+                alert.classList.remove('show');
+                document.getElementById('submitBtn').disabled = false;
+            }
+
+            drawAllCharts();
+            updateInsight(entry);
+            updateEffortEstimate();
+        }
+
+        function updateInsight(entry) {
+            const box = document.getElementById('insightBox');
+            const msy = r * K / 4;
+            const msyStock = K / 2;
+
+            if (collapsed) {
+                box.className = 'info-box danger';
+                box.innerHTML = `<strong>💀 Fishery collapsed in season ${season}.</strong> The stock fell below the recovery threshold (${(COLLAPSE_THRESHOLD * 100).toFixed(0)}% of K). This is the tragedy of the commons — individually rational fishing decisions led to collective ruin. Total profits earned before collapse: <strong>$${yourTotalProfit.toFixed(0)}</strong>.`;
+                return;
+            }
+
+            const frac = stock / K;
+            let text = `<strong>Season ${season}:</strong> `;
+
+            if (entry.totalHarvest > msy * 1.2) {
+                text += `<span style="color:#e53e3e; font-weight:600;">Overharvesting!</span> Catch of ${entry.totalHarvest.toFixed(0)} exceeds MSY of ${msy.toFixed(0)}. `;
+            } else if (entry.totalHarvest > msy * 0.8 && entry.totalHarvest <= msy * 1.2) {
+                text += `<span style="color:#38a169; font-weight:600;">Near-optimal harvest</span> of ${entry.totalHarvest.toFixed(0)} (MSY = ${msy.toFixed(0)}). `;
+            } else {
+                text += `Harvest of ${entry.totalHarvest.toFixed(0)} is below MSY (${msy.toFixed(0)}) — room for more sustainable catch. `;
+            }
+
+            if (frac < 0.3) {
+                text += `<span style="color:#e53e3e; font-weight:700;">⚠ Stock critically low at ${(frac * 100).toFixed(0)}% of carrying capacity.</span> `;
+            } else if (frac < 0.5) {
+                text += `Stock at ${(frac * 100).toFixed(0)}% — below MSY-optimal level. `;
+            } else {
+                text += `Stock healthy at ${(frac * 100).toFixed(0)}% of K. `;
+            }
+
+            const sustainableProfit = (msy * price - (msy / (catchability * msyStock)) * costPerBoat);
+            text += `<br>Sustainable long-run profit for the fishery: ~<strong>$${(sustainableProfit > 0 ? sustainableProfit : 0).toFixed(0)}</strong>/season at MSY.`;
+
+            box.className = frac < 0.3 ? 'info-box warning' : 'info-box highlight';
+            box.innerHTML = text;
+        }
+
+        // === Charts ===
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+        function drawChart(canvas, ctx, data, opts) {
+            const { w, h } = setupCanvas(canvas, ctx);
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+
+            if (history.length === 0) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText(opts.emptyText || 'Play seasons to see data', w / 2, h / 2);
+                return;
+            }
+
+            const pad = { top: 10, right: 12, bottom: 20, left: 42 };
+            const maxX = Math.max(history.length, 5);
+            const maxY = opts.maxY || Math.max(...data.flatMap(d => d.values), 1) * 1.1;
+            const minY = opts.minY || Math.min(0, ...data.flatMap(d => d.values));
+            const rangeY = maxY - minY || 1;
+
+            function X(i) { return pad.left + (i / (maxX - 1)) * (w - pad.left - pad.right); }
+            function Y(v) { return h - pad.bottom - ((v - minY) / rangeY) * (h - pad.top - pad.bottom); }
+
+            // Grid
+            ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const v = minY + rangeY * i / 4;
+                ctx.beginPath(); ctx.moveTo(pad.left, Y(v)); ctx.lineTo(w - pad.right, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), pad.left - 3, Y(v) + 3);
+            }
+
+            // Reference lines
+            if (opts.refLines) {
+                opts.refLines.forEach(rl => {
+                    ctx.setLineDash(rl.dash || [4, 3]); ctx.strokeStyle = rl.color; ctx.lineWidth = 1;
+                    ctx.beginPath(); ctx.moveTo(pad.left, Y(rl.value)); ctx.lineTo(w - pad.right, Y(rl.value)); ctx.stroke();
+                    ctx.setLineDash([]);
+                });
+            }
+
+            // Data lines
+            data.forEach(series => {
+                ctx.strokeStyle = series.color; ctx.lineWidth = series.width || 2;
+                ctx.setLineDash(series.dash || []);
+                ctx.beginPath();
+                series.values.forEach((v, i) => {
+                    i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v));
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                if (series.dots !== false) {
+                    series.values.forEach((v, i) => {
+                        ctx.fillStyle = series.color; ctx.beginPath();
+                        ctx.arc(X(i), Y(v), 2.5, 0, Math.PI * 2); ctx.fill();
+                    });
+                }
+            });
+
+            // X labels
+            ctx.fillStyle = '#a0aec0'; ctx.font = '9px Consolas'; ctx.textAlign = 'center';
+            const step = Math.max(1, Math.floor(history.length / 12));
+            history.forEach((_, i) => { if (i % step === 0 || i === history.length - 1) ctx.fillText(i + 1, X(i), h - 3); });
+        }
+
+        function drawAllCharts() {
+            const msy = r * K / 4;
+
+            // Stock chart
+            const stockData = history.map(h => h.stockAfter);
+            const stockBefore = history.map(h => h.stockBefore);
+            drawChart(stockCanvas, stkCtx, [
+                { values: stockBefore.length > 0 ? [history[0].stockBefore, ...stockData.slice(0, -1)] : stockData, color: '#2b6cb0', width: 2.5 },
+            ], {
+                maxY: K * 1.05,
+                refLines: [
+                    { value: K / 2, color: '#38a169', dash: [4, 3] },
+                    { value: K * COLLAPSE_THRESHOLD, color: '#e53e3e', dash: [2, 2] },
+                ],
+                emptyText: 'Fish stock will appear here',
+            });
+            // Redraw stock line on top of refs with current stock
+            // (already handled by drawChart)
+
+            // Harvest chart
+            const harvests = history.map(h => h.totalHarvest);
+            const growths = history.map(h => h.growth);
+            drawChart(harvestCanvas, harvCtx, [
+                { values: harvests, color: '#e53e3e', width: 2.5 },
+                { values: growths, color: '#38a169', width: 1.5 },
+            ], {
+                refLines: [{ value: msy, color: '#d69e2e' }],
+                emptyText: 'Harvest data will appear here',
+            });
+
+            // Profit chart
+            let cumYou = [], cumBot = [];
+            let sy = 0, sb = 0;
+            // Optimal sustainable profit per season per fisher (rough)
+            const optProfitPerSeason = (msy * price / N - 3 * costPerBoat);
+            history.forEach(h => {
+                sy += h.myProfit;
+                const avgBotProf = h.botProfits.length > 0 ? h.botProfits.reduce((a, b) => a + b, 0) / h.botProfits.length : 0;
+                sb += avgBotProf;
+                cumYou.push(sy); cumBot.push(sb);
+            });
+            const cumOpt = history.map((_, i) => (i + 1) * Math.max(optProfitPerSeason, 0));
+            drawChart(profitCanvas, profCtx, [
+                { values: cumBot, color: '#a0aec0', width: 1.5 },
+                { values: cumYou, color: '#2b6cb0', width: 2.5 },
+                { values: cumOpt, color: '#d69e2e', width: 1, dash: [4, 3], dots: false },
+            ], {
+                minY: Math.min(0, ...cumYou, ...cumBot),
+                emptyText: 'Profit data will appear here',
+            });
+
+            // Effort chart
+            const yourBoats = history.map(h => h.myBoats);
+            const totalBoats = history.map(h => h.totalBoats);
+            drawChart(effortCanvas, effCtx, [
+                { values: totalBoats, color: '#e53e3e', width: 1.5 },
+                { values: yourBoats, color: '#2b6cb0', width: 2.5 },
+            ], {
+                emptyText: 'Effort data will appear here',
+            });
+        }
+
+        function resetGame() {
+            initState();
+            document.getElementById('roundLabel').textContent = 1;
+            document.getElementById('scProfit').textContent = '0';
+            document.getElementById('scCatch').textContent = '0';
+            document.getElementById('scHarvest').textContent = '0';
+            document.getElementById('scRound').textContent = '1';
+            document.getElementById('roundResult').className = 'round-result';
+            document.getElementById('collapsedAlert').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+
+            const bar = document.getElementById('stockBar');
+            bar.style.width = '100%'; bar.style.background = '#38a169';
+            document.getElementById('stockNum').textContent = K;
+            document.getElementById('stockNum').style.color = '#38a169';
+
+            effortSlider.value = 3;
+            updateEffortEstimate();
+            updateParamDisplay();
+            drawAllCharts();
+
+            const box = document.getElementById('insightBox');
+            box.className = 'info-box highlight';
+            box.innerHTML = `Each boat catches fish proportional to the stock and inversely proportional to total boats. More boats = less per boat. The stock regenerates each season via logistic growth — but only if enough fish remain. MSY = <strong>${(r * K / 4).toFixed(0)}</strong> fish at stock = <strong>${(K / 2).toFixed(0)}</strong>.`;
+
+            if (mechanism === 'itq') {
+                document.getElementById('itqShare').textContent = (parseFloat(document.getElementById('sITQ').value) / N).toFixed(0);
+            }
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+        // Init
+        updateParamDisplay();
+        updateEffortEstimate();
+        drawAllCharts();
+
+        window.addEventListener('resize', drawAllCharts);
+    })();
+    </script>
+</body>
+</html>

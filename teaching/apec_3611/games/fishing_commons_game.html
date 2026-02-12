@@ -7,7 +7,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--ui-bg:rgba(11,29,53,0.92);--ui-border:rgba(79,195,247,0.25);--text:#e0e8f0;--text-dim:#7a9ab5;--boat-you:#4fc3f7;--boat-bot:#ef5350;--gold:#f6c643;--green:#4caf50;--red:#ef5350;--sidebar:210px;--rbar:195px}
+:root{--ui-bg:rgba(11,29,53,0.92);--ui-border:rgba(79,195,247,0.25);--text:#e0e8f0;--text-dim:#7a9ab5;--boat-you:#4fc3f7;--boat-bot:#ef5350;--gold:#f6c643;--green:#4caf50;--red:#ef5350;--sidebar:300px;--rbar:280px}
 body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overflow:hidden;height:100vh;touch-action:none;user-select:none}
 #c{display:block;position:absolute;top:0;left:var(--sidebar);width:calc(100% - var(--sidebar) - var(--rbar));height:100%}
 .sidebar,.rbar{position:absolute;top:0;height:100vh;background:var(--ui-bg);z-index:10;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;backdrop-filter:blur(8px)}
@@ -15,60 +15,71 @@ body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overf
 .rbar{right:0;width:var(--rbar);border-left:1px solid var(--ui-border)}
 .sidebar::-webkit-scrollbar,.rbar::-webkit-scrollbar{width:3px}
 .sidebar::-webkit-scrollbar-thumb,.rbar::-webkit-scrollbar-thumb{background:rgba(79,195,247,.2);border-radius:2px}
-.sb-section{padding:5px 7px;border-bottom:1px solid rgba(79,195,247,.1)}
-.sb-title{font-size:.46rem;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:3px}
-.sb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.sb-label{font-size:.48rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.2px}
-.sb-val{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700}
-.stock-bar-outer{width:100%;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;position:relative;margin:2px 0}
-.stock-bar-inner{height:100%;border-radius:4px;transition:width .3s,background .3s}
+.sb-section{padding:7px 10px;border-bottom:1px solid rgba(79,195,247,.1)}
+.sb-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:4px}
+.sb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.sb-label{font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.2px}
+.sb-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700}
+.stock-bar-outer{width:100%;height:10px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;position:relative;margin:3px 0}
+.stock-bar-inner{height:100%;border-radius:5px;transition:width .3s,background .3s}
 .allee-marker{position:absolute;top:0;height:100%;width:2px;background:rgba(255,165,0,.6);z-index:2}
-.set-group{display:flex;align-items:center;gap:2px;margin-bottom:1px}
-.set-label{font-size:.44rem;color:var(--text-dim);letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;min-width:42px}
-.set-btn{width:18px;height:18px;border:1px solid var(--ui-border);border-radius:3px;background:rgba(255,255,255,.06);color:var(--text);font-family:'Fredoka';font-size:.6rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.set-group{display:flex;align-items:center;gap:3px;margin-bottom:2px}
+.set-label{font-size:.62rem;color:var(--text-dim);letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;min-width:55px}
+.set-btn{width:24px;height:24px;border:1px solid var(--ui-border);border-radius:4px;background:rgba(255,255,255,.06);color:var(--text);font-family:'Fredoka';font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
 .set-btn:hover{background:rgba(79,195,247,.2);border-color:var(--boat-you)}
-.set-val{font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;min-width:20px;text-align:center;color:var(--boat-you)}
-.policy-grid{display:flex;flex-wrap:wrap;gap:2px}
-.policy-btn{padding:2px 5px;border:1px solid var(--ui-border);border-radius:3px;background:rgba(255,255,255,.05);color:var(--text-dim);font-family:'Fredoka';font-size:.44rem;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.set-val{font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;min-width:26px;text-align:center;color:var(--boat-you)}
+.policy-grid{display:flex;flex-wrap:wrap;gap:3px}
+.policy-btn{padding:3px 7px;border:1px solid var(--ui-border);border-radius:4px;background:rgba(255,255,255,.05);color:var(--text-dim);font-family:'Fredoka';font-size:.62rem;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
 .policy-btn:hover{background:rgba(79,195,247,.15);color:var(--text)}
 .policy-btn.active{background:rgba(79,195,247,.2);border-color:var(--boat-you);color:var(--boat-you)}
-.chk-group{display:flex;align-items:center;gap:3px;margin-top:1px}
-.chk-group label{font-size:.44rem;color:var(--text-dim);text-transform:uppercase;cursor:pointer}
-.chk-group input[type="checkbox"]{accent-color:var(--boat-you);cursor:pointer;width:12px;height:12px}
-.graph-box{margin-bottom:3px}
-.graph-title{font-size:.4rem;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:1px;display:flex;justify-content:space-between}
-.graph-title .gt-val{color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.44rem}
-.graph-box canvas{width:100%;height:38px;display:block;border-radius:2px;background:rgba(15,40,71,.3)}
-.welfare-box{background:rgba(246,198,67,.06);border:1px solid rgba(246,198,67,.25);border-radius:5px;padding:4px 6px}
-.welfare-box .wf-val{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--gold)}
-.timer-bar{width:100%;height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin:2px 0;overflow:hidden}
+.chk-group{display:flex;align-items:center;gap:4px;margin-top:2px}
+.chk-group label{font-size:.62rem;color:var(--text-dim);text-transform:uppercase;cursor:pointer}
+.chk-group input[type="checkbox"]{accent-color:var(--boat-you);cursor:pointer;width:14px;height:14px}
+.graph-box{margin-bottom:4px}
+.graph-title{font-size:.55rem;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:2px;display:flex;justify-content:space-between}
+.graph-title .gt-val{color:var(--text);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.6rem}
+.graph-box canvas{width:100%;height:44px;display:block;border-radius:3px;background:rgba(15,40,71,.3)}
+.welfare-box{background:rgba(246,198,67,.06);border:1px solid rgba(246,198,67,.25);border-radius:6px;padding:6px 8px}
+.welfare-box .wf-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--gold)}
+.timer-bar{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:3px;margin:3px 0;overflow:hidden}
 .timer-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--boat-you),var(--gold));transition:width .5s}
-.insight-text{font-size:.44rem;line-height:1.2;color:var(--text-dim)}.insight-text strong{color:var(--gold)}
-.controls-hint{font-size:.42rem;color:var(--text-dim);line-height:1.2;padding:4px 7px}
-.controls-hint kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:2px;padding:0 2px;font-family:'JetBrains Mono';font-size:.4rem}
-.placing-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(76,175,80,.2);border:2px solid var(--green);border-radius:12px;padding:14px 24px;font-size:.9rem;font-weight:600;color:var(--green);pointer-events:none;display:none;z-index:15;animation:pulse 1.5s infinite}
+.insight-text{font-size:.6rem;line-height:1.3;color:var(--text-dim)}.insight-text strong{color:var(--gold)}
+.controls-hint{font-size:.58rem;color:var(--text-dim);line-height:1.3;padding:6px 10px}
+.controls-hint kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:3px;padding:1px 3px;font-family:'JetBrains Mono';font-size:.55rem}
+.placing-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(76,175,80,.2);border:2px solid var(--green);border-radius:12px;padding:14px 24px;font-size:1rem;font-weight:600;color:var(--green);pointer-events:none;display:none;z-index:15;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.game-alert{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ui-bg);border:2px solid var(--gold);border-radius:14px;padding:20px 28px;text-align:center;backdrop-filter:blur(12px);display:none;pointer-events:auto;z-index:20;max-width:420px;min-width:280px}
+.game-alert{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ui-bg);border:2px solid var(--gold);border-radius:14px;padding:24px 32px;text-align:center;backdrop-filter:blur(12px);display:none;pointer-events:auto;z-index:20;max-width:520px;min-width:340px}
 .game-alert.show{display:block;animation:popIn .3s ease}
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-.game-alert h2{font-size:1.05rem;margin-bottom:6px}
-.game-alert p{color:var(--text-dim);font-size:.68rem;margin-bottom:6px;line-height:1.3}
-.game-alert .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;text-align:left;margin:8px 0;font-size:.6rem}
-.game-alert .sg-label{color:var(--text-dim);text-transform:uppercase;font-size:.44rem;letter-spacing:.4px}
-.game-alert .sg-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.7rem}
-.game-alert .verify{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:var(--text-dim);background:rgba(255,255,255,.05);padding:3px 6px;border-radius:3px;margin-top:6px;word-break:break-all}
-.game-alert .highscore{color:var(--gold);font-weight:700;font-size:.62rem;margin-top:4px}
-.restart-btn{padding:6px 16px;border:2px solid var(--boat-you);border-radius:6px;background:rgba(79,195,247,.15);color:var(--boat-you);font-family:'Fredoka';font-size:.72rem;font-weight:700;cursor:pointer;margin-top:6px}
+.game-alert h2{font-size:1.3rem;margin-bottom:8px}
+.game-alert p{color:var(--text-dim);font-size:.82rem;margin-bottom:8px;line-height:1.35}
+.game-alert .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;text-align:left;margin:10px 0;font-size:.75rem}
+.game-alert .sg-label{color:var(--text-dim);text-transform:uppercase;font-size:.58rem;letter-spacing:.4px}
+.game-alert .sg-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.88rem}
+.game-alert .verify{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text-dim);background:rgba(255,255,255,.05);padding:4px 8px;border-radius:4px;margin-top:8px;word-break:break-all}
+.game-alert .highscore{color:var(--gold);font-weight:700;font-size:.78rem;margin-top:6px}
+.restart-btn{padding:8px 20px;border:2px solid var(--boat-you);border-radius:7px;background:rgba(79,195,247,.15);color:var(--boat-you);font-family:'Fredoka';font-size:.88rem;font-weight:700;cursor:pointer;margin-top:8px}
 .restart-btn:hover{background:rgba(79,195,247,.3)}
-.boat-info{position:absolute;pointer-events:auto;z-index:15;background:var(--ui-bg);border:1px solid var(--ui-border);border-radius:8px;padding:8px 12px;backdrop-filter:blur(8px);display:none;min-width:200px;font-size:.6rem;line-height:1.3}
+.boat-info{position:absolute;pointer-events:auto;z-index:15;background:var(--ui-bg);border:1px solid var(--ui-border);border-radius:8px;padding:10px 14px;backdrop-filter:blur(8px);display:none;min-width:240px;font-size:.75rem;line-height:1.35}
 .boat-info.show{display:block}
-.boat-info h3{font-size:.75rem;margin-bottom:3px;color:var(--boat-you)}
-.boat-info .bi-row{display:flex;justify-content:space-between;gap:6px}
-.boat-info .bi-label{color:var(--text-dim);text-transform:uppercase;font-size:.42rem}
+.boat-info h3{font-size:.9rem;margin-bottom:4px;color:var(--boat-you)}
+.boat-info .bi-row{display:flex;justify-content:space-between;gap:8px}
+.boat-info .bi-label{color:var(--text-dim);text-transform:uppercase;font-size:.56rem}
 .boat-info .bi-val{font-family:'JetBrains Mono',monospace;font-weight:700}
-.boat-info .bi-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin:2px 0}
-.boat-info .bi-bar-fill{height:100%;border-radius:2px;transition:width .3s}
-.boat-info .bi-close{position:absolute;top:3px;right:5px;cursor:pointer;color:var(--text-dim);font-size:.8rem}
+.boat-info .bi-bar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin:3px 0}
+.boat-info .bi-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.boat-info .bi-close{position:absolute;top:4px;right:6px;cursor:pointer;color:var(--text-dim);font-size:.9rem}
+body.basic-mode .adv-only{display:none!important}
+body.basic-mode .rbar{width:230px}
+body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)}
+.how-to-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ui-bg);border:2px solid var(--boat-you);border-radius:14px;padding:28px 36px;text-align:left;backdrop-filter:blur(12px);z-index:25;max-width:560px;min-width:380px;pointer-events:auto;animation:popIn .3s ease}
+.how-to-play h2{font-size:1.4rem;color:var(--boat-you);margin-bottom:10px;text-align:center}
+.how-to-play p{color:var(--text-dim);font-size:.8rem;margin-bottom:8px;line-height:1.45}
+.how-to-play .htp-section{margin-bottom:10px}
+.how-to-play .htp-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);font-weight:700;margin-bottom:3px}
+.how-to-play kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:3px;padding:2px 5px;font-family:'JetBrains Mono';font-size:.65rem}
+.how-to-play .start-btn{display:block;margin:12px auto 0;padding:10px 28px;border:2px solid var(--boat-you);border-radius:8px;background:rgba(79,195,247,.15);color:var(--boat-you);font-family:'Fredoka';font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s}
+.how-to-play .start-btn:hover{background:rgba(79,195,247,.3)}
 </style>
 </head>
 <body>
@@ -77,32 +88,15 @@ body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overf
     <div class="sb-section">
         <div class="sb-title">Scenarios</div>
         <div class="policy-grid" id="scenarioGrid">
-            <div class="policy-btn active" data-scenario="solo">1: Solo</div>
-            <div class="policy-btn" data-scenario="freeentry">2: Free Entry</div>
-            <div class="policy-btn" data-scenario="fast">3: Speed</div>
-            <div class="policy-btn" data-scenario="allee">4: Allee</div>
-            <div class="policy-btn" data-scenario="tax">5: Tax</div>
-            <div class="policy-btn" data-scenario="sanctuary">6: Sanctuary</div>
-            <div class="policy-btn" data-scenario="hype">7: Hype</div>
+            <div class="policy-btn active" data-scenario="freeplay">0: Free Play</div>
+            <div class="policy-btn" data-scenario="simple">1: Simple</div>
+            <div class="policy-btn" data-scenario="solo">2: Solo</div>
+            <div class="policy-btn" data-scenario="freeentry">3: Free Entry</div>
+            <div class="policy-btn" data-scenario="fast">4: Speed</div>
+            <div class="policy-btn" data-scenario="policy">5: Policy</div>
+            <div class="policy-btn" data-scenario="hype">6: Hype</div>
         </div>
-    </div>
-    <div class="sb-section">
-        <div class="sb-title">Parameters</div>
-        <div class="set-group"><span class="set-label">Boats</span><div class="set-btn" id="boatMinus">−</div><span class="set-val" id="boatVal">2</span><div class="set-btn" id="boatPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Speed</span><div class="set-btn" id="spdMinus">−</div><span class="set-val" id="spdVal">9</span><div class="set-btn" id="spdPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Momentum</span><div class="set-btn" id="momMinus">−</div><span class="set-val" id="momVal">2</span><div class="set-btn" id="momPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Size</span><div class="set-btn" id="sizeMinus">−</div><span class="set-val" id="sizeVal">6</span><div class="set-btn" id="sizePlus">+</div></div>
-        <div class="set-group"><span class="set-label">Fish Spd</span><div class="set-btn" id="fishSpdMinus">−</div><span class="set-val" id="fishSpdVal">3</span><div class="set-btn" id="fishSpdPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Greed</span><div class="set-btn" id="greedMinus">−</div><span class="set-val" id="greedVal">5</span><div class="set-btn" id="greedPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Hype</span><div class="set-btn" id="hypeMinus">−</div><span class="set-val" id="hypeVal">3</span><div class="set-btn" id="hypePlus">+</div></div>
-        <div class="set-group"><span class="set-label">Growth</span><div class="set-btn" id="growMinus">−</div><span class="set-val" id="growVal">3</span><div class="set-btn" id="growPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Cap</span><div class="set-btn" id="capMinus">−</div><span class="set-val" id="capVal">200</span><div class="set-btn" id="capPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Allee</span><div class="set-btn" id="alleeMinus">−</div><span class="set-val" id="alleeVal">15%</span><div class="set-btn" id="alleePlus">+</div></div>
-        <div class="set-group"><span class="set-label">Tax</span><div class="set-btn" id="taxMinus">−</div><span class="set-val" id="taxVal">$0</span><div class="set-btn" id="taxPlus">+</div></div>
-        <div class="set-group"><span class="set-label">Demand</span><div class="set-btn" id="demMinus">−</div><span class="set-val" id="demVal">5</span><div class="set-btn" id="demPlus">+</div></div>
-        <div class="set-group"><span class="set-label">School</span><div class="set-btn" id="schoolMinus">−</div><span class="set-val" id="schoolVal">1</span><div class="set-btn" id="schoolPlus">+</div></div>
-        <div class="chk-group"><input type="checkbox" id="spawnChk"><label for="spawnChk">Allow firms to enter</label></div>
-        <div style="margin-top:3px"><div class="set-btn" id="resetFishBtn" style="width:auto;padding:2px 7px;font-size:.44rem">🔄 Reset Fish</div></div>
+        <div id="scenarioBestScores" style="margin-top:4px;font-size:.42rem;color:var(--text-dim);line-height:1.4;font-family:'JetBrains Mono',monospace"></div>
     </div>
     <div class="sb-section">
         <div class="sb-title">Policy</div>
@@ -112,48 +106,102 @@ body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overf
             <div class="policy-btn" data-policy="quota">📋 Quota</div>
             <div class="policy-btn" data-policy="sanctuary">🏝️ Sanctuary</div>
         </div>
+        <div class="set-group" style="margin-top:3px"><span class="set-label">Tax</span><div class="set-btn" id="taxMinus">−</div><span class="set-val" id="taxVal">$0</span><div class="set-btn" id="taxPlus">+</div></div>
     </div>
-    <div class="sb-section"><div class="insight-text" id="insightPanel"></div></div>
+    <div class="sb-section adv-only" data-mode="advanced">
+        <div class="sb-title">Parameters</div>
+        <div class="set-group"><span class="set-label">Boats</span><div class="set-btn" id="boatMinus">−</div><span class="set-val" id="boatVal">2</span><div class="set-btn" id="boatPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Speed</span><div class="set-btn" id="spdMinus">−</div><span class="set-val" id="spdVal">8</span><div class="set-btn" id="spdPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Momentum</span><div class="set-btn" id="momMinus">−</div><span class="set-val" id="momVal">2</span><div class="set-btn" id="momPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Size</span><div class="set-btn" id="sizeMinus">−</div><span class="set-val" id="sizeVal">6</span><div class="set-btn" id="sizePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Fish Spd</span><div class="set-btn" id="fishSpdMinus">−</div><span class="set-val" id="fishSpdVal">3</span><div class="set-btn" id="fishSpdPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Greed</span><div class="set-btn" id="greedMinus">−</div><span class="set-val" id="greedVal">1</span><div class="set-btn" id="greedPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Hype</span><div class="set-btn" id="hypeMinus">−</div><span class="set-val" id="hypeVal">3</span><div class="set-btn" id="hypePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Growth</span><div class="set-btn" id="growMinus">−</div><span class="set-val" id="growVal">4</span><div class="set-btn" id="growPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Cap</span><div class="set-btn" id="capMinus">−</div><span class="set-val" id="capVal">200</span><div class="set-btn" id="capPlus">+</div></div>
+        <div class="set-group"><span class="set-label">Allee</span><div class="set-btn" id="alleeMinus">−</div><span class="set-val" id="alleeVal">40%</span><div class="set-btn" id="alleePlus">+</div></div>
+        <div class="set-group"><span class="set-label">Demand</span><div class="set-btn" id="demMinus">−</div><span class="set-val" id="demVal">8</span><div class="set-btn" id="demPlus">+</div></div>
+        <div class="set-group"><span class="set-label">School</span><div class="set-btn" id="schoolMinus">−</div><span class="set-val" id="schoolVal">0</span><div class="set-btn" id="schoolPlus">+</div></div>
+        <div class="chk-group"><input type="checkbox" id="spawnChk"><label for="spawnChk">Allow firms to enter</label></div>
+        <div style="margin-top:3px"><div class="set-btn" id="resetFishBtn" style="width:auto;padding:2px 7px;font-size:.44rem">🔄 Reset Fish</div></div>
+    </div>
+    <div class="sb-section adv-only" data-mode="advanced"><div class="insight-text" id="insightPanel"></div></div>
+    <div class="sb-section" style="padding:4px 7px">
+        <div class="chk-group"><input type="checkbox" id="fpvChk"><label for="fpvChk">First-person camera</label></div>
+    </div>
+    <div class="sb-section" style="padding:4px 7px">
+        <div class="set-btn" id="modeToggleBtn" style="width:100%;padding:4px 8px;font-size:.5rem;text-align:center;cursor:pointer;border-color:var(--gold);color:var(--gold)">⚙️ Advanced Mode</div>
+    </div>
     <div class="controls-hint"><kbd>WASD</kbd> move · <kbd>MMB</kbd> rotate · <kbd>Scroll</kbd> zoom · Click boat</div>
 </div>
 <div class="rbar">
     <div class="sb-section">
         <div class="sb-title">⏱️ Scenario</div>
-        <div class="sb-row"><span class="sb-label" id="scenarioName">Solo Fisher</span><span class="sb-val" id="scenarioTimer" style="color:var(--boat-you)">0:30</span></div>
+        <div class="sb-row"><span class="sb-label" id="scenarioName">Free Play</span><span class="sb-val" id="scenarioTimer" style="color:var(--boat-you)">1:00</span></div>
         <div class="timer-bar"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div>
-        <div class="sb-row"><span class="sb-label">High Score</span><span class="sb-val" style="color:var(--gold)" id="highScore">—</span></div>
+        <div class="sb-row"><span class="sb-label" id="scenarioProgress" style="font-family:'JetBrains Mono',monospace;font-size:.44rem;color:var(--text-dim)">0% complete</span><span class="sb-val" style="color:var(--gold)" id="highScore">—</span></div>
+        <div style="font-size:.38rem;color:var(--text-dim);text-align:right">High Score</div>
     </div>
     <div class="sb-section">
-        <div class="sb-title">Outputs</div>
-        <div class="sb-row"><span class="sb-label">Catch</span><span class="sb-val" style="color:var(--boat-you)" id="yourCatch">0</span></div>
         <div class="sb-row"><span class="sb-label">Profit</span><span class="sb-val" style="color:var(--gold)" id="yourProfit">$0</span></div>
         <div class="sb-row"><span class="sb-label">$/sec</span><span class="sb-val" style="color:var(--gold)" id="profitRate">0</span></div>
-        <div class="sb-row"><span class="sb-label">Time</span><span class="sb-val" id="gameTime">0:00</span></div>
-        <div class="sb-row"><span class="sb-label">Boats</span><span class="sb-val" style="color:var(--boat-bot)" id="activeBoats">0</span></div>
-        <div class="sb-row"><span class="sb-label">Price</span><span class="sb-val" style="color:var(--green)" id="fishPrice">$5.0</span></div>
+        <div class="sb-row"><span class="sb-label">Market Price</span><span class="sb-val" style="color:var(--green)" id="marketPriceBasic">$20.0</span></div>
     </div>
     <div class="sb-section">
         <div class="welfare-box">
             <div class="sb-row"><span class="sb-label">Total Welfare</span><span class="wf-val" id="totalWelfare">$0</span></div>
-            <div style="font-size:.38rem;color:var(--text-dim)">All fishers combined</div>
+            <div class="sb-row" style="margin-top:2px"><span class="sb-label">Catch Revenue</span><span class="sb-val" style="color:var(--green);font-size:.78rem" id="catchRevenue">$0</span></div>
+            <div class="sb-row"><span class="sb-label">Fish Stock NPV</span><span class="sb-val" style="color:var(--boat-you);font-size:.78rem" id="fishNPV">$0</span></div>
+            <div class="set-group" style="margin-top:3px"><span class="set-label" style="font-size:.55rem">Discount</span><div class="set-btn" id="discMinus" style="width:20px;height:20px;font-size:.65rem">−</div><span class="set-val" id="discVal" style="font-size:.65rem">5%</span><div class="set-btn" id="discPlus" style="width:20px;height:20px;font-size:.65rem">+</div></div>
         </div>
     </div>
     <div class="sb-section">
         <div class="sb-title">Fish Stock</div>
-        <div class="stock-bar-outer"><div class="stock-bar-inner" id="stockBar"></div><div class="allee-marker" id="alleeMarker" style="left:15%"></div></div>
+        <div class="stock-bar-outer"><div class="stock-bar-inner" id="stockBar"></div><div class="allee-marker" id="alleeMarker" style="left:40%"></div></div>
         <div style="display:flex;justify-content:space-between;font-size:.42rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)"><span id="stockCount" style="color:var(--text);font-weight:700">200/200</span><span id="stockStatus">🟢</span></div>
     </div>
-    <div class="sb-section">
+    <div class="sb-section adv-only" data-mode="advanced">
+        <div class="sb-title">Details</div>
+        <div class="sb-row"><span class="sb-label">Catch</span><span class="sb-val" style="color:var(--boat-you)" id="yourCatch">0</span></div>
+        <div class="sb-row"><span class="sb-label">Time</span><span class="sb-val" id="gameTime">0:00</span></div>
+        <div class="sb-row"><span class="sb-label">Boats (active/total)</span><span class="sb-val" style="color:var(--boat-bot)" id="activeBoats">0</span></div>
+        <div class="sb-row"><span class="sb-label">Price</span><span class="sb-val" style="color:var(--green)" id="fishPrice">$12.0</span></div>
+    </div>
+    <div class="sb-section adv-only" data-mode="advanced">
         <div class="sb-title">Charts</div>
         <div class="graph-box"><div class="graph-title"><span>Welfare $/s</span><span class="gt-val" id="gWelfareVal">0</span></div><canvas id="gWelfare"></canvas></div>
         <div class="graph-box"><div class="graph-title"><span>Your $/s</span><span class="gt-val" id="gProfitVal">0</span></div><canvas id="gProfit"></canvas></div>
         <div class="graph-box"><div class="graph-title"><span>Fish</span><span class="gt-val" id="gStockVal">200</span></div><canvas id="gStock"></canvas></div>
         <div class="graph-box"><div class="graph-title"><span>Growth</span><span class="gt-val" id="gGrowthVal">0</span></div><canvas id="gGrowth"></canvas></div>
-        <div class="graph-box"><div class="graph-title"><span>S&amp;D</span><span class="gt-val" id="gMarketVal">$5</span></div><canvas id="gMarket" style="height:48px"></canvas></div>
-        <div class="graph-box"><div class="graph-title"><span>Price</span><span class="gt-val" id="gPriceVal">$5</span></div><canvas id="gPrice"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>S&amp;D</span><span class="gt-val" id="gMarketVal">$12</span></div><canvas id="gMarket" style="height:60px"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Price</span><span class="gt-val" id="gPriceVal">$12</span></div><canvas id="gPrice"></canvas></div>
+        <div class="graph-box"><div class="graph-title"><span>Boats</span><span class="gt-val" id="gBoatsVal">0</span></div><canvas id="gBoats"></canvas></div>
     </div>
 </div>
+</div>
 <div class="placing-indicator" id="placingIndicator">🏝️ Click ocean to place sanctuary</div>
+<div class="how-to-play" id="howToPlay">
+    <h2>🐟 Fishing Commons</h2>
+    <div class="htp-section">
+        <div class="htp-label">Goal</div>
+        <p>You are a fishing boat captain. Catch fish to earn profit — but if everyone overfishes, the stock collapses and nobody wins. Balance your greed against the health of the commons.</p>
+    </div>
+    <div class="htp-section">
+        <div class="htp-label">Controls</div>
+        <p><kbd>W</kbd> / <kbd>↑</kbd> accelerate forward · <kbd>S</kbd> / <kbd>↓</kbd> reverse<br>
+        <kbd>A</kbd> / <kbd>←</kbd> turn left · <kbd>D</kbd> / <kbd>→</kbd> turn right<br>
+        <kbd>MMB</kbd> drag to rotate camera · <kbd>Scroll</kbd> to zoom</p>
+    </div>
+    <div class="htp-section">
+        <div class="htp-label">How It Works</div>
+        <p>Sail near fish to catch them automatically. Each fish earns the market price (shown on the right). As more fish are caught, the price drops. AI boats will enter and exit the fishery based on profitability.</p>
+    </div>
+    <div class="htp-section">
+        <div class="htp-label">Scenarios</div>
+        <p>Try each scenario on the left — from solo fishing to managing policy with taxes and sanctuaries. Each has a 90-second timer. Your profit is your score!</p>
+    </div>
+    <button class="start-btn" id="startPlayBtn">🎣 Start Fishing!</button>
+</div>
 <div class="boat-info" id="boatInfo">
     <span class="bi-close" id="biClose">✕</span>
     <h3 id="biName">Boat #1</h3>
@@ -180,7 +228,8 @@ body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overf
 // ════════════════════════════════════════════════
 const W3=800, H3=800;
 const WORLD_CX=W3/2, WORLD_CZ=H3/2, WORLD_R=380;
-const SIDEBAR_W=210,RBAR_W=195;
+const SIDEBAR_W=300,RBAR_W=280;
+let advancedMode=false; // declared early for resize handler
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
@@ -194,9 +243,10 @@ camera.position.set(W3/2,700,H3/2+500);
 camera.lookAt(W3/2,0,H3/2);
 
 window.addEventListener('resize',()=>{
-    camera.aspect=(window.innerWidth-SIDEBAR_W-RBAR_W)/window.innerHeight;
+    const rbarW=advancedMode?280:230;
+    camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
+    renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
 });
 
 // ── Sound system ──
@@ -220,6 +270,10 @@ let camDist=550, camTheta=0, camPhi=Math.PI/4.5;
 let dragging=0; // 0=none,1=middle(rotate),2=right(pan)
 let dragStart={x:0,y:0};
 let camFollowPlayer=true; // snap camera to player when moving
+let fpvMode=false; // first-person camera view
+let fpvDist=55; // distance behind boat in FPV
+let fpvHeightBase=32; // base height in FPV
+let fpvAngleOffset=0; // horizontal rotation offset in FPV
 
 function updateCamera(){
     const x=camTarget.x+camDist*Math.sin(camPhi)*Math.sin(camTheta);
@@ -232,38 +286,52 @@ updateCamera();
 
 const cvs=renderer.domElement;
 cvs.addEventListener('mousedown',e=>{
-    if(e.button===1){dragging=1;dragStart={x:e.clientX,y:e.clientY};camFollowPlayer=false;e.preventDefault();}
-    if(e.button===2){dragging=2;dragStart={x:e.clientX,y:e.clientY};camFollowPlayer=false;e.preventDefault();}
+    if(e.button===1){dragging=1;dragStart={x:e.clientX,y:e.clientY};if(!fpvMode)camFollowPlayer=false;e.preventDefault();}
+    if(e.button===2){dragging=2;dragStart={x:e.clientX,y:e.clientY};if(!fpvMode)camFollowPlayer=false;e.preventDefault();}
 });
 window.addEventListener('mousemove',e=>{
     if(dragging===1){
-        camTheta+=(e.clientX-dragStart.x)*0.005;
-        camPhi=Math.max(0.1,Math.min(Math.PI/2-0.05,camPhi-(e.clientY-dragStart.y)*0.005));
+        if(fpvMode){
+            // In FPV: rotate around the boat
+            fpvAngleOffset+=(e.clientX-dragStart.x)*0.005;
+            fpvHeightBase=Math.max(5,Math.min(120,fpvHeightBase-(e.clientY-dragStart.y)*0.3));
+        } else {
+            camTheta+=(e.clientX-dragStart.x)*0.005;
+            camPhi=Math.max(0.1,Math.min(Math.PI/2-0.05,camPhi-(e.clientY-dragStart.y)*0.005));
+        }
         dragStart={x:e.clientX,y:e.clientY};
-        updateCamera();
+        if(!fpvMode)updateCamera();
     }
     if(dragging===2){
-        const right=new THREE.Vector3();camera.getWorldDirection(right);
-        right.y=0;right.normalize();
-        const fwd=right.clone().cross(new THREE.Vector3(0,1,0)).normalize();
-        // Actually: right is camera right, fwd is camera "up" projected
-        const camRight=new THREE.Vector3();
-        camRight.crossVectors(camera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(0,1,0)).normalize();
-        const camFwd=new THREE.Vector3();
-        camFwd.crossVectors(new THREE.Vector3(0,1,0),camRight).normalize();
-        const dx=-(e.clientX-dragStart.x)*camDist*0.002;
-        const dz=-(e.clientY-dragStart.y)*camDist*0.002;
-        camTarget.add(camRight.multiplyScalar(dx));
-        camTarget.add(camFwd.multiplyScalar(dz));
+        if(fpvMode){
+            // In FPV: same as rotate
+            fpvAngleOffset+=(e.clientX-dragStart.x)*0.005;
+            fpvHeightBase=Math.max(5,Math.min(120,fpvHeightBase-(e.clientY-dragStart.y)*0.3));
+        } else {
+            const camRight=new THREE.Vector3();
+            camRight.crossVectors(camera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(0,1,0)).normalize();
+            const camFwd=new THREE.Vector3();
+            camFwd.crossVectors(new THREE.Vector3(0,1,0),camRight).normalize();
+            const dx=-(e.clientX-dragStart.x)*camDist*0.002;
+            const dz=-(e.clientY-dragStart.y)*camDist*0.002;
+            camTarget.add(camRight.multiplyScalar(dx));
+            camTarget.add(camFwd.multiplyScalar(dz));
+        }
         dragStart={x:e.clientX,y:e.clientY};
-        updateCamera();
+        if(!fpvMode)updateCamera();
     }
 });
 window.addEventListener('mouseup',()=>{dragging=0;});
 cvs.addEventListener('wheel',e=>{
-    camDist=Math.max(150,Math.min(2500,camDist+e.deltaY*0.5));
-    camFollowPlayer=false;
-    updateCamera();e.preventDefault();
+    if(fpvMode){
+        // In FPV: zoom changes distance behind boat
+        fpvDist=Math.max(15,Math.min(200,fpvDist+e.deltaY*0.08));
+    } else {
+        camDist=Math.max(150,Math.min(2500,camDist+e.deltaY*0.5));
+        camFollowPlayer=false;
+    }
+    if(!fpvMode)updateCamera();
+    e.preventDefault();
 },{passive:false});
 cvs.addEventListener('contextmenu',e=>e.preventDefault());
 
@@ -368,23 +436,23 @@ function makeBoatMesh(color){
     // Deck
     const deckGeo=new THREE.BoxGeometry(5,0.3,12);
     const deck=new THREE.Mesh(deckGeo,whiteMat);
-    deck.position.set(0,2.8,0);g.add(deck);
+    deck.position.set(0,0.5,0);g.add(deck);
 
     // Cabin (slightly aft = +Z)
     const cabGeo=new THREE.BoxGeometry(3.5,3,4);
     const cab=new THREE.Mesh(cabGeo,new THREE.MeshStandardMaterial({color:0xdddddd,roughness:0.5}));
-    cab.position.set(0,4.5,1.5);g.add(cab);
+    cab.position.set(0,2.2,1.5);g.add(cab);
 
     // Roof
     const roofGeo=new THREE.BoxGeometry(3.9,0.3,4.4);
     const roof=new THREE.Mesh(roofGeo,darkMat);
-    roof.position.set(0,6.05,1.5);g.add(roof);
+    roof.position.set(0,3.75,1.5);g.add(roof);
 
     // Windows facing bow (-Z)
     const winMat=new THREE.MeshStandardMaterial({color:0xaaddff,emissive:0x88bbff,emissiveIntensity:0.4,transparent:true,opacity:0.8});
     for(let i=-1;i<=1;i++){
         const win=new THREE.Mesh(new THREE.PlaneGeometry(0.8,1.2),winMat);
-        win.position.set(i*1.1,4.7,-0.52);
+        win.position.set(i*1.1,2.4,-0.52);
         // face -Z
         g.add(win);
     }
@@ -392,18 +460,18 @@ function makeBoatMesh(color){
     // Mast (forward of cabin)
     const mastGeo=new THREE.CylinderGeometry(0.12,0.15,8,6);
     const mast=new THREE.Mesh(mastGeo,new THREE.MeshStandardMaterial({color:0xaaaaaa,roughness:0.6}));
-    mast.position.set(0,7,-2);g.add(mast);
+    mast.position.set(0,4.7,-2);g.add(mast);
 
     // Flag
     const flagGeo=new THREE.PlaneGeometry(2.5,1.5);
     const flagMat=new THREE.MeshStandardMaterial({color,side:THREE.DoubleSide,emissive:color,emissiveIntensity:0.3});
     const flag=new THREE.Mesh(flagGeo,flagMat);
-    flag.position.set(1.5,10.5,-2);g.add(flag);
+    flag.position.set(1.5,8.2,-2);g.add(flag);
     g.userData.flag=flag;
 
     // Bow rail
     const rail=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,2.5,4),new THREE.MeshStandardMaterial({color:0x999999,metalness:0.3}));
-    rail.position.set(0,4,-5);g.add(rail);
+    rail.position.set(0,1.7,-5);g.add(rail);
 
     return g;
 }
@@ -436,20 +504,21 @@ function makeFishMesh(color){
 }
 
 // ── Game Constants ──
-let FISH_CAPACITY=200,ALLEE_FRAC=0.15,initialBotCount=2;
-const GROWTH_LEVELS=[0.00008,0.00015,0.0003,0.0005,0.0008,0.001,0.0015,0.002,0.003,0.005,0.008,0.012,0.018,0.025,0.04];
+let FISH_CAPACITY=200,ALLEE_FRAC=0.40,initialBotCount=2;
+const GROWTH_LEVELS=[0.00009,0.000169,0.000338,0.000563,0.0009,0.001125,0.001688,0.00225,0.003375,0.005625,0.009,0.0135,0.02025,0.028125,0.045];
 let growthIdx=0;let GROWTH_RATE=GROWTH_LEVELS[0];
 const SPEED_LEVELS=[1.5,2,2.8,3.5,4.2,5,6,7.5,9,11,13,15,18,22,28];
-let speedIdx=8; // default speed 10
+let speedIdx=7; // default speed
 const MOMENTUM_LEVELS=[0.92,0.94,0.96,0.975,0.985,0.99,0.994,0.997];
 let momentumIdx=1; // default 2
 const SIZE_LEVELS=[0.5,0.7,1,1.4,1.9,2.5,3.2,4];
 let sizeIdx=5;
-let taxRate=0,schoolStrength=1;
+let taxRate=0,schoolStrength=0;
+let discountRate=0.05; // annual discount rate for NPV
 const FISH_SPEED_LEVELS=[0.15,0.3,0.5,0.7,1.0,1.4,1.8,2.5];
 let fishSpeedIdx=2; // default 3
 const GREED_LEVELS=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
-let greedIdx=4; // default 5 (avg greed 0.5)
+let greedIdx=0; // default 1 (avg greed 0.1)
 const HYPE_LEVELS=[0.2,0.5,0.8,1.0,1.5,2.0,3.0,4.0,6.0,10.0];
 let hypeIdx=4; // default 5 → multiplier 1.5 on prior
 let allowSpawn=true;
@@ -457,9 +526,9 @@ let allowSpawn=true;
 const COLLAPSE_THRESHOLD=3,BASE_FISH_PRICE=5,QUOTA_LIMIT=50,SANCTUARY_RADIUS=60;
 const BASE_CATCH_RADIUS=16,BOAT_COST_PER_SEC=2;
 const DEMAND_LEVELS=[4,6,8,10,12,16,20,26,35,50];
-let demandIdx=4;
-let DEMAND_INTERCEPT=DEMAND_LEVELS[4];
-const DEMAND_SLOPE=0.15;
+let demandIdx=7;
+let DEMAND_INTERCEPT=DEMAND_LEVELS[7];
+const DEMAND_SLOPE=0.8;
 
 function getCatchR(){return BASE_CATCH_RADIUS*SIZE_LEVELS[sizeIdx];}
 
@@ -479,11 +548,11 @@ function distFromCenter(x,z){return Math.hypot(x-WORLD_CX,z-WORLD_CZ);}
 let fish=[],player,bots=[],policy='open',gameTime=0,collapsed=false;
 let particles3d=[],catchLines=[],botTotalCatch=0,sanctuaries=[];
 let placingSanctuary=false;
-let currentPrice=BASE_FISH_PRICE,supplySmooth=0,totalHarvestRate=0;
+let currentPrice=DEMAND_INTERCEPT,supplySmooth=0,totalHarvestRate=0;
 const GRAPH_LEN=90;
-let profitHist=[],stockHist=[],priceHist=[];
+let profitHist=[],stockHist=[],priceHist=[],boatsHist=[];
 let profitThisSec=0,harvestThisSec=0,lastHarvest=0;
-let profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=30*60;scenarioActive=true; // last 30 seconds of profit for moving average
+let profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=90*60;scenarioActive=true; // last 60 seconds of profit for moving average
 const PROFIT_AVG_WINDOW=30;
 
 // 3D containers
@@ -508,12 +577,12 @@ $('boatMinus').onclick=()=>{
         const b=bots[bots.length-1];if(b.mesh)boatGroup.remove(b.mesh);if(b.dockMesh)sanctGroup.remove(b.dockMesh);bots.pop();
     }
     initialBotCount=Math.max(0,bots.length);
-    $('boatVal').textContent=bots.length;
+    const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;
 };
 $('boatPlus').onclick=()=>{
     const nb=makeBotData();bots.push(nb);addBot3D(nb);
     initialBotCount=bots.length;
-    $('boatVal').textContent=bots.length;
+    const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;
 };
 $('spdMinus').onclick=()=>{speedIdx=Math.max(0,speedIdx-1);$('spdVal').textContent=speedIdx+1;};
 $('spdPlus').onclick=()=>{speedIdx=Math.min(SPEED_LEVELS.length-1,speedIdx+1);$('spdVal').textContent=speedIdx+1;};
@@ -526,9 +595,11 @@ $('growPlus').onclick=()=>{growthIdx=Math.min(GROWTH_LEVELS.length-1,growthIdx+1
 $('capMinus').onclick=()=>{FISH_CAPACITY=Math.max(50,FISH_CAPACITY-50);$('capVal').textContent=FISH_CAPACITY;$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
 $('capPlus').onclick=()=>{FISH_CAPACITY=Math.min(800,FISH_CAPACITY+50);$('capVal').textContent=FISH_CAPACITY;$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
 $('alleeMinus').onclick=()=>{ALLEE_FRAC=Math.max(0,Math.round((ALLEE_FRAC-.05)*100)/100);$('alleeVal').textContent=Math.round(ALLEE_FRAC*100)+'%';$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
-$('alleePlus').onclick=()=>{ALLEE_FRAC=Math.min(.5,Math.round((ALLEE_FRAC+.05)*100)/100);$('alleeVal').textContent=Math.round(ALLEE_FRAC*100)+'%';$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
+$('alleePlus').onclick=()=>{ALLEE_FRAC=Math.min(.8,Math.round((ALLEE_FRAC+.05)*100)/100);$('alleeVal').textContent=Math.round(ALLEE_FRAC*100)+'%';$('alleeMarker').style.left=(ALLEE_FRAC*100)+'%';};
 $('taxMinus').onclick=()=>{taxRate=Math.max(0,Math.round((taxRate-0.5)*10)/10);$('taxVal').textContent='$'+taxRate;};
 $('taxPlus').onclick=()=>{taxRate=Math.min(50,Math.round((taxRate+0.5)*10)/10);$('taxVal').textContent='$'+taxRate;};
+$('discMinus').onclick=()=>{discountRate=Math.max(0,Math.round((discountRate-0.01)*100)/100);$('discVal').textContent=Math.round(discountRate*100)+'%';};
+$('discPlus').onclick=()=>{discountRate=Math.min(0.50,Math.round((discountRate+0.01)*100)/100);$('discVal').textContent=Math.round(discountRate*100)+'%';};
 $('demMinus').onclick=()=>{demandIdx=Math.max(0,demandIdx-1);DEMAND_INTERCEPT=DEMAND_LEVELS[demandIdx];$('demVal').textContent=demandIdx+1;};
 $('demPlus').onclick=()=>{demandIdx=Math.min(DEMAND_LEVELS.length-1,demandIdx+1);DEMAND_INTERCEPT=DEMAND_LEVELS[demandIdx];$('demVal').textContent=demandIdx+1;};
 $('resetFishBtn').onclick=()=>{
@@ -539,17 +610,29 @@ $('resetFishBtn').onclick=()=>{
 
 // ── Scenarios & Timer ──
 let currentScenario='solo';
-const SCENARIO_DURATION=30*60; // 30 seconds at 60fps
+const SCENARIO_DURATION=90*60; // 90 seconds at 60fps
 const highScores={}; // keyed by scenario name
 
+function updateBestScoresDisplay(){
+    const el=$('scenarioBestScores');if(!el)return;
+    const names={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+    const parts=[];
+    for(const key in SCENARIOS){
+        if(highScores[key]!==undefined){
+            parts.push(`<span style="color:var(--gold)">🏆</span> ${names[key]||key}: <span style="color:var(--gold)">$${highScores[key].toFixed(0)}</span>`);
+        }
+    }
+    el.innerHTML=parts.length?parts.join(' · '):'<span style="color:var(--text-dim)">No scores yet</span>';
+}
+
 const SCENARIOS={
-    solo:{name:'Solo Fisher',spawn:false,speed:8,mom:1,growth:2,hype:2,allee:0.15,desc:'Just you. Maximize your profit.'},
-    freeentry:{name:'Free Entry',spawn:true,speed:8,mom:1,growth:2,hype:5,allee:0.15,desc:'Firms can enter. Manage the commons.'},
-    fast:{name:'Speed Race',spawn:true,speed:12,mom:4,growth:3,hype:6,allee:0.15,desc:'Fast boats, high stakes.'},
-    allee:{name:'Allee Danger',spawn:true,speed:8,mom:1,growth:2,hype:5,allee:0.35,desc:'High Allee threshold. Don\'t collapse!'},
-    tax:{name:'Tax Policy',spawn:true,speed:8,mom:1,growth:2,hype:6,allee:0.15,taxStart:3,desc:'Use tax policy to maximize welfare.'},
-    sanctuary:{name:'Sanctuary',spawn:true,speed:8,mom:1,growth:3,hype:5,allee:0.15,policySanctuary:true,desc:'Place sanctuaries. Protect the stock.'},
-    hype:{name:'Hype Bubble',spawn:true,speed:8,mom:1,growth:1,hype:9,allee:0.15,desc:'Extreme hype! Survive the bubble.'}
+    freeplay:{name:'Free Play',spawn:false,boats:0,speed:7,mom:1,growth:1,hype:5,allee:0.01,fpv:true,desc:'Sandbox mode. Tweak any parameter.'},
+    simple:{name:'Simple',spawn:true,speed:7,mom:1,growth:0,hype:6,allee:0.05,fpv:true,desc:'Minimal Allee effect. Fish recover easily. Learn the basics.'},
+    solo:{name:'Solo Fisher',spawn:false,speed:7,mom:1,growth:3,hype:3,allee:0.40,fpv:true,desc:'Just you. Maximize your profit.'},
+    freeentry:{name:'Free Entry',spawn:true,speed:7,mom:1,growth:3,hype:6,allee:0.40,fpv:false,desc:'Firms can enter. Manage the commons.'},
+    fast:{name:'Speed Race',spawn:true,speed:11,mom:4,growth:3,hype:7,allee:0.40,fpv:false,desc:'Fast boats, high stakes.'},
+    policy:{name:'Policy',spawn:true,speed:7,mom:1,growth:3,hype:7,allee:0.40,fpv:false,taxStart:3,policyStart:'open',policyEnabled:true,desc:'Use tax, quota, or sanctuary to maximize welfare.'},
+    hype:{name:'Hype Bubble',spawn:true,speed:7,mom:1,growth:1,hype:9,allee:0.40,fpv:false,desc:'Extreme hype! Survive the bubble.'}
 };
 
 function applyScenario(s){
@@ -558,16 +641,47 @@ function applyScenario(s){
     document.querySelectorAll('[data-scenario]').forEach(b=>b.classList.remove('active'));
     document.querySelector(`[data-scenario="${s}"]`).classList.add('active');
     allowSpawn=sc.spawn;$('spawnChk').checked=sc.spawn;
+    initialBotCount=(sc.boats!==undefined)?sc.boats:2;
     speedIdx=sc.speed;$('spdVal').textContent=sc.speed+1;
     momentumIdx=sc.mom;$('momVal').textContent=sc.mom+1;
     growthIdx=sc.growth;GROWTH_RATE=GROWTH_LEVELS[sc.growth];$('growVal').textContent=sc.growth+1;
     hypeIdx=sc.hype;$('hypeVal').textContent=sc.hype+1;
     ALLEE_FRAC=sc.allee;$('alleeVal').textContent=Math.round(sc.allee*100)+'%';
+    $('alleeMarker').style.left=(sc.allee*100)+'%';
     if(sc.taxStart){taxRate=sc.taxStart;$('taxVal').textContent='$'+sc.taxStart;}else{taxRate=0;$('taxVal').textContent='$0';}
-    if(sc.policySanctuary){policy='sanctuary';placingSanctuary=true;$('placingIndicator').style.display='block';}
     $('scenarioName').textContent=sc.name;
-    $('highScore').textContent=highScores[s]?'$'+highScores[s].toFixed(0):'—';
+    $('highScore').textContent=highScores[s]!==undefined?'$'+highScores[s].toFixed(0):'—';
     initGame();
+    // Set FPV mode based on scenario
+    fpvMode=!!sc.fpv;
+    $('fpvChk').checked=fpvMode;
+    if(fpvMode){fpvAngleOffset=0;fpvDist=55;fpvHeightBase=32;camFollowPlayer=true;}
+    else{camFollowPlayer=true;}
+    // Enable/disable policy buttons based on scenario
+    const policyEnabled=!!sc.policyEnabled;
+    document.querySelectorAll('[data-policy]').forEach(b=>{
+        if(b.dataset.policy==='open')return; // always enabled
+        if(policyEnabled){
+            b.style.opacity='1';b.style.pointerEvents='auto';
+        } else {
+            b.style.opacity='0.3';b.style.pointerEvents='none';
+        }
+    });
+    // Set policy AFTER initGame so it doesn't get overwritten
+    document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));
+    if(sc.policyStart==='tax'){
+        policy='tax';
+        document.querySelector('[data-policy="tax"]').classList.add('active');
+        placingSanctuary=false;$('placingIndicator').style.display='none';
+    } else if(sc.policyStart==='sanctuary'){
+        policy='sanctuary';placingSanctuary=true;
+        document.querySelector('[data-policy="sanctuary"]').classList.add('active');
+        $('placingIndicator').style.display='block';
+    } else {
+        policy='open';
+        document.querySelector('[data-policy="open"]').classList.add('active');
+        placingSanctuary=false;$('placingIndicator').style.display='none';
+    }
 }
 
 function makeVerifyCode(scenario,profit,welfare,catch_n,fishLeft){
@@ -580,25 +694,47 @@ function makeVerifyCode(scenario,profit,welfare,catch_n,fishLeft){
 function endScenario(){
     scenarioActive=false;
     const sc=SCENARIOS[currentScenario];
-    const isNew=!highScores[currentScenario]||player.profit>highScores[currentScenario];
+    const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario];
+    highScores[currentScenario]=isNew?player.profit:(highScores[currentScenario]);
+    // Always store latest score for display
+    if(highScores[currentScenario]===undefined)highScores[currentScenario]=player.profit;
     if(isNew)highScores[currentScenario]=player.profit;
     $('highScore').textContent='$'+(highScores[currentScenario]||0).toFixed(0);
-    const code=makeVerifyCode(currentScenario,player.profit,totalWelfare,player.catch,fish.length);
+    updateBestScoresDisplay();
+    const elapsedSecsEnd=Math.max(1,Math.floor(gameTime/60));
+    const discFactorEnd=discountRate>0?Math.pow(1+discountRate,elapsedSecsEnd):1;
+    const fishStockValue=(fish.length*currentPrice)/discFactorEnd;
+    const finalWelfare=totalWelfare+fishStockValue;
+    const code=makeVerifyCode(currentScenario,player.profit,finalWelfare,player.catch,fish.length);
+    // Build all-scenario scores summary
+    const scenarioNames={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+    let allScoresHtml='<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(79,195,247,.15)"><div style="font-size:.44rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:4px">All Scenario Best Scores</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;font-size:.48rem">';
+    for(const key in SCENARIOS){
+        const name=scenarioNames[key]||key;
+        const score=highScores[key];
+        const isCurrent=key===currentScenario;
+        const color=score!==undefined?(isCurrent?'var(--gold)':'var(--text)'):'var(--text-dim)';
+        const val=score!==undefined?'$'+score.toFixed(0):'—';
+        allScoresHtml+=`<span style="color:${color};font-family:'JetBrains Mono',monospace;font-weight:${isCurrent?'700':'500'}">${isCurrent?'▸ ':''}${name}: ${val}</span>`;
+    }
+    allScoresHtml+='</div></div>';
     const al=$('collapseAlert');
     al.innerHTML=`
         <h2 style="color:var(--gold)">⏱️ Scenario Complete!</h2>
         <p>${sc.name}: ${sc.desc}</p>
         <div class="score-grid">
             <span class="sg-label">Your Profit</span><span class="sg-val" style="color:var(--gold)">$${player.profit.toFixed(0)}</span>
-            <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${totalWelfare.toFixed(0)}</span>
+            <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${finalWelfare.toFixed(0)}</span>
             <span class="sg-label">Your Catch</span><span class="sg-val" style="color:var(--boat-you)">${player.catch}</span>
             <span class="sg-label">Fish Remaining</span><span class="sg-val">${fish.length}/${FISH_CAPACITY}</span>
-            <span class="sg-label">Avg $/sec</span><span class="sg-val" style="color:var(--gold)">$${(player.profit/30).toFixed(1)}</span>
+            <span class="sg-label">Fish Stock Value</span><span class="sg-val" style="color:var(--green)">$${fishStockValue.toFixed(0)}</span>
+            <span class="sg-label">Avg $/sec</span><span class="sg-val" style="color:var(--gold)">$${(player.profit/Math.max(1,Math.floor(gameTime/60))).toFixed(1)}</span>
             <span class="sg-label">Boats (final)</span><span class="sg-val">${bots.length}</span>
         </div>
         ${isNew?'<div class="highscore">🏆 New High Score!</div>':''}
+        ${allScoresHtml}
         <div class="verify">Verify: ${code}</div>
-        <button class="restart-btn" onclick="applyScenario('${currentScenario}')">🔄 Retry</button>
+        <button class="restart-btn" onclick="window.applyScenario('${currentScenario}')">🔄 Retry</button>
         <button class="restart-btn" style="margin-left:8px;border-color:var(--gold);color:var(--gold)" onclick="document.getElementById('collapseAlert').classList.remove('show')">Continue Playing</button>
     `;
     al.classList.add('show');
@@ -607,7 +743,7 @@ function endScenario(){
 document.querySelectorAll('[data-scenario]').forEach(b=>{
     b.addEventListener('click',()=>applyScenario(b.dataset.scenario));
 });
-$('schoolMinus').onclick=()=>{schoolStrength=Math.max(0,schoolStrength-1);$('schoolVal').textContent=schoolStrength;};
+$('schoolMinus').onclick=()=>{schoolStrength=Math.max(-20,schoolStrength-1);$('schoolVal').textContent=schoolStrength;};
 $('schoolPlus').onclick=()=>{schoolStrength=Math.min(20,schoolStrength+1);$('schoolVal').textContent=schoolStrength;};
 $('fishSpdMinus').onclick=()=>{fishSpeedIdx=Math.max(0,fishSpeedIdx-1);$('fishSpdVal').textContent=fishSpeedIdx+1;};
 $('fishSpdPlus').onclick=()=>{fishSpeedIdx=Math.min(FISH_SPEED_LEVELS.length-1,fishSpeedIdx+1);$('fishSpdVal').textContent=fishSpeedIdx+1;};
@@ -618,12 +754,54 @@ $('hypePlus').onclick=()=>{hypeIdx=Math.min(HYPE_LEVELS.length-1,hypeIdx+1);$('h
 const spawnChkEl=$('spawnChk');
 spawnChkEl.onchange=function(){allowSpawn=this.checked;};
 spawnChkEl.onclick=function(){allowSpawn=this.checked;};
+const fpvChkEl=$('fpvChk');
+fpvChkEl.onchange=function(){fpvMode=this.checked;camFollowPlayer=true;};
+fpvChkEl.onclick=function(){fpvMode=this.checked;camFollowPlayer=true;};
+
+// ── Basic / Advanced mode toggle ──
+function setMode(adv){
+    advancedMode=adv;
+    if(adv){
+        document.body.classList.remove('basic-mode');
+        $('modeToggleBtn').textContent='📊 Basic Mode';
+        $('modeToggleBtn').style.borderColor='var(--boat-you)';
+        $('modeToggleBtn').style.color='var(--boat-you)';
+    } else {
+        document.body.classList.add('basic-mode');
+        $('modeToggleBtn').textContent='⚙️ Advanced Mode';
+        $('modeToggleBtn').style.borderColor='var(--gold)';
+        $('modeToggleBtn').style.color='var(--gold)';
+    }
+    // Resize renderer for rbar width change
+    setTimeout(()=>{
+        const rbarW=adv?280:230;
+        camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
+    },10);
+}
+$('modeToggleBtn').onclick=()=>setMode(!advancedMode);
+// Start in basic mode
+setMode(false);
+
+// ── How to play popup ──
+$('startPlayBtn').onclick=()=>{$('howToPlay').style.display='none';};
+
 
 // Policy
 document.querySelectorAll('.policy-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
         const p=btn.dataset.policy;
-        if(p==='sanctuary'){placingSanctuary=!placingSanctuary;$('placingIndicator').style.display=placingSanctuary?'block':'none';if(placingSanctuary){document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}return;}
+        if(p==='sanctuary'){
+            placingSanctuary=!placingSanctuary;
+            $('placingIndicator').style.display=placingSanctuary?'block':'none';
+            if(placingSanctuary){
+                policy='sanctuary';
+                document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            return;
+        }
         placingSanctuary=false;$('placingIndicator').style.display='none';
         document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');policy=p;
         if(p==='open'){sanctuaries=[];while(sanctGroup.children.length)sanctGroup.remove(sanctGroup.children[0]);}
@@ -803,9 +981,9 @@ function initGame(){
     while(sanctGroup.children.length)sanctGroup.remove(sanctGroup.children[0]);
 
     fish=[];collapsed=false;gameTime=0;particles3d=[];catchLines=[];botTotalCatch=0;
-    profitHist=[];stockHist=[];priceHist=[];profitThisSec=0;harvestThisSec=0;lastHarvest=0;
-    profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=30*60;scenarioActive=true;
-    currentPrice=BASE_FISH_PRICE;supplySmooth=0;totalHarvestRate=0;
+    profitHist=[];stockHist=[];priceHist=[];boatsHist=[];profitThisSec=0;harvestThisSec=0;lastHarvest=0;
+    profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=90*60;scenarioActive=true;
+    currentPrice=DEMAND_INTERCEPT;supplySmooth=0;totalHarvestRate=0;
     sanctuaries=[];placingSanctuary=false;$('placingIndicator').style.display='none';
 
     player={x:W3/2,z:H3/2,vx:0,vz:0,angle:-Math.PI/2,speed:0,catch:0,profit:0};
@@ -817,8 +995,6 @@ function initGame(){
     bots=[];for(let i=0;i<initialBotCount;i++){const b=makeBotData();bots.push(b);addBot3D(b);}
 
     $('collapseAlert').classList.remove('show');
-    document.querySelectorAll('.policy-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelector('[data-policy="open"]').classList.add('active');policy='open';
     allowSpawn=$('spawnChk').checked;
     updateInsight();
 }
@@ -838,47 +1014,68 @@ function spawnBirthEffect(x,z){
 let _popupOffset=0; // stagger popups
 function spawnCatchEffect(x,z,isPlayer,earnAmount){
     const col=isPlayer?0xf6c643:0xef5350;
-    for(let i=0;i<6;i++){
-        const geo=new THREE.SphereGeometry(0.6,4,4);
+    const particleCount=fpvMode?3:6;
+    for(let i=0;i<particleCount;i++){
+        const geo=new THREE.SphereGeometry(fpvMode?0.3:0.6,4,4);
         const mat=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:1});
         const m=new THREE.Mesh(geo,mat);
-        const ang=Math.PI*2*i/6;
+        const ang=Math.PI*2*i/particleCount;
         m.position.set(x,-1,z);effectGroup.add(m);
-        particles3d.push({mesh:m,vx:Math.cos(ang)*0.8,vy:0.6+Math.random()*0.4,vz:Math.sin(ang)*0.8,life:30,maxLife:30});
+        particles3d.push({mesh:m,vx:Math.cos(ang)*(fpvMode?0.4:0.8),vy:0.6+Math.random()*0.4,vz:Math.sin(ang)*(fpvMode?0.4:0.8),life:30,maxLife:30});
     }
-    // Big floating profit text
+    // Floating profit text
     if(isPlayer&&earnAmount>0){
         _popupOffset=(_popupOffset+1)%3;
         const canvas2=document.createElement('canvas');
-        canvas2.width=512;canvas2.height=192;
-        const ctx2=canvas2.getContext('2d');
-        ctx2.font='bold 120px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
-        ctx2.shadowColor='#ffeb3b';ctx2.shadowBlur=30;
-        ctx2.strokeStyle='#2a1f00';ctx2.lineWidth=10;
-        ctx2.fillStyle='#ffeb3b';
-        const txt='+$'+earnAmount.toFixed(1);
-        ctx2.strokeText(txt,256,96);ctx2.fillText(txt,256,96);
-        const tex=new THREE.CanvasTexture(canvas2);
-        const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
-        const sprite=new THREE.Sprite(spriteMat);
-        sprite.scale.set(35,13,1);
-        const ox=(_popupOffset-1)*12;
-        sprite.position.set(x+ox,12,z);
-        effectGroup.add(sprite);
-        particles3d.push({mesh:sprite,vx:ox*0.02,vy:0.4,vz:0,life:70,maxLife:70});
+        if(fpvMode){
+            // Compact, clean text for FPV
+            canvas2.width=256;canvas2.height=96;
+            const ctx2=canvas2.getContext('2d');
+            ctx2.font='bold 64px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+            ctx2.fillStyle='#f6c643';
+            const txt='+$'+earnAmount.toFixed(1);
+            ctx2.fillText(txt,128,48);
+            const tex=new THREE.CanvasTexture(canvas2);
+            const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:0.9,depthTest:false});
+            const sprite=new THREE.Sprite(spriteMat);
+            sprite.scale.set(12,4.5,1);
+            const ox=(_popupOffset-1)*5;
+            sprite.position.set(x+ox,6,z);
+            effectGroup.add(sprite);
+            particles3d.push({mesh:sprite,vx:ox*0.01,vy:0.25,vz:0,life:50,maxLife:50});
+        } else {
+            canvas2.width=512;canvas2.height=192;
+            const ctx2=canvas2.getContext('2d');
+            ctx2.font='bold 120px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+            ctx2.shadowColor='#ffeb3b';ctx2.shadowBlur=30;
+            ctx2.strokeStyle='#2a1f00';ctx2.lineWidth=10;
+            ctx2.fillStyle='#ffeb3b';
+            const txt='+$'+earnAmount.toFixed(1);
+            ctx2.strokeText(txt,256,96);ctx2.fillText(txt,256,96);
+            const tex=new THREE.CanvasTexture(canvas2);
+            const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
+            const sprite=new THREE.Sprite(spriteMat);
+            sprite.scale.set(35,13,1);
+            const ox=(_popupOffset-1)*12;
+            sprite.position.set(x+ox,12,z);
+            effectGroup.add(sprite);
+            particles3d.push({mesh:sprite,vx:ox*0.02,vy:0.4,vz:0,life:70,maxLife:70});
+        }
     }
     if(!isPlayer){
         const canvas2=document.createElement('canvas');
-        canvas2.width=128;canvas2.height=128;
+        canvas2.width=256;canvas2.height=128;
         const ctx2=canvas2.getContext('2d');
-        ctx2.font='bold 90px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
-        ctx2.fillStyle='#ef5350';ctx2.fillText('✕',64,64);
+        ctx2.font='bold 72px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+        ctx2.fillStyle='#ef5350';
+        const profitText=earnAmount>0?'$'+earnAmount.toFixed(1):'$0';
+        ctx2.fillText(profitText,128,64);
         const tex=new THREE.CanvasTexture(canvas2);
         const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
         const sprite=new THREE.Sprite(spriteMat);
-        sprite.scale.set(10,10,1);
+        sprite.scale.set(18,9,1);
         sprite.position.set(x,6,z);effectGroup.add(sprite);
-        particles3d.push({mesh:sprite,vx:0,vy:0.2,vz:0,life:30,maxLife:30});
+        particles3d.push({mesh:sprite,vx:0,vy:0.2,vz:0,life:35,maxLife:35});
     }
 }
 
@@ -894,13 +1091,12 @@ function spawnCatchLine(boatX,boatZ,fishX,fishZ){
 }
 
 // ── Market ──
+// Pure inverse demand: price = DEMAND_INTERCEPT - DEMAND_SLOPE * Q
+// Q = supplySmooth = smoothed harvest rate (fish/sec brought to market)
+// High catch → lots of fish on market → low price. Low catch → scarce → high price.
 function updateMarket(){
-    supplySmooth=supplySmooth*.92+totalHarvestRate*.08;
-    // Inverse demand: P = intercept - slope*Q. Scarcity premium when fish stock is low.
-    const baseP=Math.max(0.5,DEMAND_INTERCEPT-DEMAND_SLOPE*supplySmooth*6);
-    // Scarcity multiplier: prices rise when stock is depleted (fewer fish = higher willingness to pay)
-    const scarcity=1+Math.max(0,1-fish.length/FISH_CAPACITY)*4; // 1x at full stock, up to 5x at zero
-    currentPrice=Math.round(baseP*scarcity*10)/10;
+    supplySmooth=supplySmooth*.75+totalHarvestRate*.25; // responsive to harvest changes
+    currentPrice=Math.max(0.5,Math.round((DEMAND_INTERCEPT-DEMAND_SLOPE*supplySmooth)*10)/10);
 }
 function spawnStatusSprite(x,z,text,color){
     const canvas2=document.createElement('canvas');
@@ -960,10 +1156,12 @@ function updateBotEntryExit(){
                 // Bayesian update: blend observed catch rate with prior
                 // observedRate = catches this second (as a per-frame rate)
                 const observed=bot.actualCatchesThisSec/60; // catches per frame this second
-                const weight=Math.min(bot.belief_n,10); // prior weight
-                const obsWeight=1.5; // how much we trust one second of observation
+                const weight=Math.min(bot.belief_n,5); // prior weight (capped low for faster adaptation)
+                const obsWeight=3.0; // high trust in direct observation
                 bot.belief_catchRate=(bot.belief_catchRate*weight+observed*obsWeight)/(weight+obsWeight);
-                bot.belief_n=Math.min(20,bot.belief_n+obsWeight); // grow confidence
+                bot.belief_n=Math.min(10,bot.belief_n+obsWeight); // grow confidence but cap lower
+                // Decay confidence over time so bots stay responsive to changing conditions
+                bot.belief_n=Math.max(2,bot.belief_n*0.85);
                 bot.actualCatchesThisSec=0;
 
                 // Also weakly observe market conditions
@@ -972,14 +1170,15 @@ function updateBotEntryExit(){
             }
 
             // Individual exit decisions based on THIS bot's belief
+            // Much more responsive: higher base probabilities and steeper scaling
             if(myOpProfit<0){
-                const exitProb=Math.min(0.12,0.01+Math.abs(myOpProfit)*0.04);
+                const exitProb=Math.min(0.30,0.04+Math.abs(myOpProfit)*0.10);
                 if(Math.random()<exitProb){
                     bot.returning=true;
                     spawnStatusSprite(bot.x,bot.z,'⚠️ P < AVC','#ef5350');
                 }
-            } else if(myEconProfit<-0.3){
-                const exitProb=Math.min(0.04,0.003+Math.abs(myEconProfit)*0.008);
+            } else if(myEconProfit<-0.1){
+                const exitProb=Math.min(0.15,0.01+Math.abs(myEconProfit)*0.03);
                 if(Math.random()<exitProb){
                     bot.returning=true;
                     spawnStatusSprite(bot.x,bot.z,'📉 P < ATC','#ff9800');
@@ -1001,7 +1200,7 @@ function updateBotEntryExit(){
                 // New entrant's belief is the hyped prospect
                 nb.belief_catchRate=prospectCatchRate;
                 nb.belief_n=2; // low confidence, will update quickly
-                bots.push(nb);addBot3D(nb);$('boatVal').textContent=bots.length;
+                bots.push(nb);addBot3D(nb);{const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;}
                 spawnStatusSprite(nb.x,nb.z,'🚤 New entrant!','#4fc3f7');
             }
         }
@@ -1016,16 +1215,16 @@ function updateBotEntryExit(){
             const bRev=b.belief_catchRate*revenuePerFish;
             const bProf=bRev-totalCost;
             const dockedTime=gameTime-b.spawnTime;
-            const dockedLong=b.actualSecsFishing<3&&dockedTime>300; // fished <3s but existed >5s
-            // Exit if belief is deeply negative OR been docked a long time with bad outlook
-            if((bProf<-0.3&&Math.random()<0.03)||(dockedLong&&bProf<0&&Math.random()<0.02)){
+            const dockedLong=b.actualSecsFishing<3&&dockedTime>180; // fished <3s but existed >3s
+            // Exit if belief is negative OR been docked a long time with bad outlook
+            if((bProf<-0.1&&Math.random()<0.08)||(dockedLong&&bProf<0&&Math.random()<0.06)){
                 const idx=bots.indexOf(b);
                 if(idx>=0){
                     spawnStatusSprite(b.x,b.z,'🚫 Exited industry','#ef5350');
                     if(b.mesh)boatGroup.remove(b.mesh);
                     if(b.dockMesh)sanctGroup.remove(b.dockMesh);
                     if(selectedBot===b){$('boatInfo').classList.remove('show');selectedBot=null;}
-                    bots.splice(idx,1);$('boatVal').textContent=bots.length;
+                    bots.splice(idx,1);{const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;}
                 }
             }
         }
@@ -1039,9 +1238,9 @@ function update(){
     if(collapsed)return;
     gameTime++;
     const pMaxSpd=SPEED_LEVELS[speedIdx];
-    const bMaxBase=pMaxSpd*0.75;
+    const bMaxBase=pMaxSpd*0.9;
     const catchR=getCatchR();
-    const schoolF=(schoolStrength/20)*(schoolStrength/20)*4; // 0→0, 2→0.04, 5→0.25, 10→1, 20→4
+    const schoolF=Math.sign(schoolStrength)*(Math.abs(schoolStrength)/20)*(Math.abs(schoolStrength)/20)*4; // negative = repulsion
 
     // ─ Player ─
     let tI=0,thI=0;
@@ -1063,7 +1262,19 @@ function update(){
     const pc=clampToCircle(player.x,player.z);player.x=pc.x;player.z=pc.z;
 
     // Camera follow player smoothly
-    if(camFollowPlayer){
+    if(fpvMode){
+        // Chase cam: behind and above boat, with user-adjustable distance/height/angle
+        const fpvAngle=player.angle+fpvAngleOffset;
+        const lookDist=150;
+        const camX=player.x-Math.sin(fpvAngle)*fpvDist;
+        const camZ=player.z+Math.cos(fpvAngle)*fpvDist;
+        const lookX=player.x+Math.sin(fpvAngle)*lookDist;
+        const lookZ=player.z-Math.cos(fpvAngle)*lookDist;
+        camera.position.x+=(camX-camera.position.x)*0.04;
+        camera.position.y+=(fpvHeightBase-camera.position.y)*0.04;
+        camera.position.z+=(camZ-camera.position.z)*0.04;
+        camera.lookAt(lookX,1,lookZ);
+    } else if(camFollowPlayer){
         camTarget.x+=(player.x-camTarget.x)*0.08;
         camTarget.z+=(player.z-camTarget.z)*0.08;
         updateCamera();
@@ -1079,8 +1290,8 @@ function update(){
     // ─ Bots ─
     const activeBots=bots.filter(b=>!b.docked&&!b.returning);
     bots.forEach(bot=>{
-        const bMax=bMaxBase*(.8+bot.greed*.4);
-        const botAccelF=0.03+bMaxBase*0.007;
+        const bMax=bMaxBase*(.9+bot.greed*.1);
+        const botAccelF=0.04+bMaxBase*0.008;
 
         if(bot.docked){
             // Sit at dock
@@ -1096,19 +1307,19 @@ function update(){
             const dx=bot.dockX-bot.x,dz=bot.dockZ-bot.z,dd=Math.hypot(dx,dz);
             if(dd<12){
                 // Close enough: snap to dock, kill velocity
-                bot.returning=false;bot.docked=true;bot.dockTimer=30+Math.floor(Math.random()*60);
+                bot.returning=false;bot.docked=true;bot.dockTimer=15+Math.floor(Math.random()*30);
                 bot.vx=0;bot.vz=0;bot.x=bot.dockX;bot.z=bot.dockZ;
             } else {
                 // Steer toward dock
                 const des=Math.atan2(dx,-dz);
                 let diff=des-bot.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
-                bot.angle+=Math.sign(diff)*Math.min(Math.abs(diff),bot.turnRate*2);
+                bot.angle+=Math.sign(diff)*Math.min(Math.abs(diff),bot.turnRate*3);
                 // Decelerate when getting close
-                const speedFactor=Math.min(1,dd/80);
-                bot.vx+=Math.sin(bot.angle)*speedFactor*0.6*botAccelF;
-                bot.vz+=-Math.cos(bot.angle)*speedFactor*0.6*botAccelF;
+                const speedFactor=Math.min(1,dd/60);
+                bot.vx+=Math.sin(bot.angle)*speedFactor*1.0*botAccelF;
+                bot.vz+=-Math.cos(bot.angle)*speedFactor*1.0*botAccelF;
                 // Strong braking drag when close
-                const brakeDrag=dd<40?0.92:MOMENTUM_LEVELS[momentumIdx];
+                const brakeDrag=dd<30?0.90:MOMENTUM_LEVELS[momentumIdx];
                 bot.vx*=brakeDrag;bot.vz*=brakeDrag;
             }
             const bs=Math.hypot(bot.vx,bot.vz);if(bs>bMax){bot.vx*=bMax/bs;bot.vz*=bMax/bs;}
@@ -1128,10 +1339,11 @@ function update(){
             bot.thinkTimer--;
             if(bot.thinkTimer<=0||!bot.targetFish||!fish.includes(bot.targetFish)){
                 let best=null,bestD=Infinity;
-                fish.forEach(f=>{if(isInSanctuary(f.x,f.z)&&bot.greed<.8)return;const d=(f.x-bot.x)**2+(f.z-bot.z)**2;if(d<bestD){bestD=d;best=f;}});
+                // Never target fish inside sanctuaries
+                fish.forEach(f=>{if(isInSanctuary(f.x,f.z))return;const d=(f.x-bot.x)**2+(f.z-bot.z)**2;if(d<bestD){bestD=d;best=f;}});
                 bot.targetFish=best;bot.thinkTimer=10+Math.floor(Math.random()*20);
             }
-            let bt=.85*bot.greed;
+            let bt=0.85;
             if(policy==='quota'&&bot.catch>=QUOTA_LIMIT*bot.greed){bt=0;bot.targetFish=null;}
             if(bot.targetFish){
                 const des=Math.atan2(bot.targetFish.x-bot.x,-(bot.targetFish.z-bot.z));
@@ -1142,6 +1354,20 @@ function update(){
             const bDrag=MOMENTUM_LEVELS[momentumIdx];bot.vx*=bDrag;bot.vz*=bDrag;
             const bs=Math.hypot(bot.vx,bot.vz);if(bs>bMax){bot.vx*=bMax/bs;bot.vz*=bMax/bs;}
             bot.x+=bot.vx;bot.z+=bot.vz;
+            // Sanctuary physical repulsion — push bot out if inside
+            for(const s of sanctuaries){
+                const sdx=bot.x-s.x,sdz=bot.z-s.z,sd=Math.hypot(sdx,sdz);
+                if(sd<s.r){
+                    // Push out to edge
+                    const pushStr=2.0*(1-sd/s.r);
+                    bot.vx+=(sdx/sd)*pushStr;bot.vz+=(sdz/sd)*pushStr;
+                    bot.x=s.x+sdx/sd*s.r;bot.z=s.z+sdz/sd*s.r;
+                } else if(sd<s.r+30){
+                    // Gentle repulsion near boundary
+                    const pushStr=0.3*(1-(sd-s.r)/30);
+                    bot.vx+=(sdx/sd)*pushStr;bot.vz+=(sdz/sd)*pushStr;
+                }
+            }
             const bc=clampToCircle(bot.x,bot.z);bot.x=bc.x;bot.z=bc.z;
             bot.speed=Math.hypot(bot.vx,bot.vz);
             if(bot.mesh){
@@ -1188,7 +1414,7 @@ function update(){
         // Sanctuary attract
         for(const s of sanctuaries){const d=Math.hypot(s.x-f.x,s.z-f.z);if(d>s.r&&d<s.r*3){f.vx+=(s.x-f.x)/d*.003*fSpd;f.vz+=(s.z-f.z)/d*.003*fSpd;}}
         // Schooling
-        if(schoolF>0){let nx=0,nz=0,nc=0;const lo=Math.max(0,fi-30),hi=Math.min(fish.length,fi+30);
+        if(schoolF!==0){let nx=0,nz=0,nc=0;const lo=Math.max(0,fi-30),hi=Math.min(fish.length,fi+30);
             for(let j=lo;j<hi;j++){if(j===fi)continue;const dx=fish[j].x-f.x,dz=fish[j].z-f.z,dd=dx*dx+dz*dz;
                 if(dd<3000&&dd>80){nx+=dx;nz+=dz;nc++;}if(dd<200&&dd>0){const d=Math.sqrt(dd);f.vx-=(dx/d)*.01*schoolF;f.vz-=(dz/d)*.01*schoolF;}}
             if(nc>0){f.vx+=nx/nc*.002*schoolF;f.vz+=nz/nc*.002*schoolF;}}
@@ -1219,9 +1445,10 @@ function update(){
             const bd=Math.hypot(f.x-bot.x,f.z-bot.z);
             const bqOk=policy!=='quota'||bot.catch<QUOTA_LIMIT*bot.greed;
             if(bd<catchR*.75&&bqOk){
-                bot.catch++;botTotalCatch++;harvestThisSec++;welfareThisSec+=Math.max(0,currentPrice-getActiveTax());
+                const botEarn=Math.max(0,currentPrice-getActiveTax());
+                bot.catch++;botTotalCatch++;harvestThisSec++;welfareThisSec+=botEarn;
                 bot.actualCatchesThisSec++; // feeds Bayesian belief update
-                spawnCatchEffect(bot.x,bot.z,false,0);
+                spawnCatchEffect(bot.x,bot.z,false,botEarn);
                 spawnCatchLine(bot.x,bot.z,f.x,f.z);
                 playCatchSound(false);
                 if(f.mesh)fishGroup.remove(f.mesh);fish.splice(i,1);break;
@@ -1285,8 +1512,8 @@ function update(){
         lastHarvest=harvestThisSec;totalHarvestRate=harvestThisSec;
         totalWelfare+=welfareThisSec;
         welfareHist.push(welfareThisSec);if(welfareHist.length>GRAPH_LEN)welfareHist.shift();
-        profitHist.push(profitThisSec);stockHist.push(fish.length);priceHist.push(currentPrice);
-        if(profitHist.length>GRAPH_LEN)profitHist.shift();if(stockHist.length>GRAPH_LEN)stockHist.shift();if(priceHist.length>GRAPH_LEN)priceHist.shift();
+        profitHist.push(profitThisSec);stockHist.push(fish.length);priceHist.push(currentPrice);boatsHist.push(bots.filter(b=>!b.docked).length);
+        if(profitHist.length>GRAPH_LEN)profitHist.shift();if(stockHist.length>GRAPH_LEN)stockHist.shift();if(priceHist.length>GRAPH_LEN)priceHist.shift();if(boatsHist.length>GRAPH_LEN)boatsHist.shift();
         profitThisSec=0;harvestThisSec=0;welfareThisSec=0;
         updateMarket();updateBotEntryExit();
     }
@@ -1295,7 +1522,9 @@ function update(){
         scenarioTimeLeft--;
         const sLeft=Math.ceil(scenarioTimeLeft/60);
         $('scenarioTimer').textContent=Math.floor(sLeft/60)+':'+String(sLeft%60).padStart(2,'0');
-        $('timerBar').style.width=(scenarioTimeLeft/(30*60)*100)+'%';
+        $('timerBar').style.width=(scenarioTimeLeft/SCENARIO_DURATION*100)+'%';
+        const pct=Math.round((1-scenarioTimeLeft/SCENARIO_DURATION)*100);
+        $('scenarioProgress').textContent=pct+'% complete';
         if(scenarioTimeLeft<=0)endScenario();
     }
 
@@ -1304,22 +1533,42 @@ function update(){
         collapsed=true;scenarioActive=false;
         const secs=Math.max(1,Math.floor(gameTime/60));
         const reason=N<=A?`Allee effect — stock fell below ${Math.round(A)} fish.`:`Overharvested in ${secs}s.`;
-        const code=makeVerifyCode(currentScenario,player.profit,totalWelfare,player.catch,fish.length);
-        const isNew=!highScores[currentScenario]||player.profit>highScores[currentScenario];
+        const colElapsedSecs=Math.max(1,Math.floor(gameTime/60));
+        const colDiscFactor=discountRate>0?Math.pow(1+discountRate,colElapsedSecs):1;
+        const colFishStockValue=(fish.length*currentPrice)/colDiscFactor;
+        const colFinalWelfare=totalWelfare+colFishStockValue;
+        const code=makeVerifyCode(currentScenario,player.profit,colFinalWelfare,player.catch,fish.length);
+        const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario];
+        if(highScores[currentScenario]===undefined)highScores[currentScenario]=player.profit;
         if(isNew&&player.profit>0)highScores[currentScenario]=player.profit;
+        updateBestScoresDisplay();
+        // Build all-scenario scores summary
+        const scenarioNames2={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+        let allScoresHtml2='<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(79,195,247,.15)"><div style="font-size:.44rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:4px">All Scenario Best Scores</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;font-size:.48rem">';
+        for(const key in SCENARIOS){
+            const name=scenarioNames2[key]||key;
+            const score=highScores[key];
+            const isCurrent=key===currentScenario;
+            const color=score!==undefined?(isCurrent?'var(--gold)':'var(--text)'):'var(--text-dim)';
+            const val=score!==undefined?'$'+score.toFixed(0):'—';
+            allScoresHtml2+=`<span style="color:${color};font-family:'JetBrains Mono',monospace;font-weight:${isCurrent?'700':'500'}">${isCurrent?'▸ ':''}${name}: ${val}</span>`;
+        }
+        allScoresHtml2+='</div></div>';
         const al=$('collapseAlert');
         al.innerHTML=`
             <h2 style="color:var(--red)">🐟 Fishery Collapsed!</h2>
             <p>${reason}</p>
             <div class="score-grid">
                 <span class="sg-label">Your Profit</span><span class="sg-val" style="color:var(--gold)">$${player.profit.toFixed(0)}</span>
-                <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${totalWelfare.toFixed(0)}</span>
+                <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${colFinalWelfare.toFixed(0)}</span>
                 <span class="sg-label">Your Catch</span><span class="sg-val" style="color:var(--boat-you)">${player.catch}</span>
+                <span class="sg-label">Fish Stock Value</span><span class="sg-val" style="color:var(--green)">$${colFishStockValue.toFixed(0)}</span>
                 <span class="sg-label">Avg $/sec</span><span class="sg-val">$${(player.profit/secs).toFixed(1)}</span>
             </div>
             ${isNew&&player.profit>0?'<div class="highscore">🏆 New High Score!</div>':''}
+            ${allScoresHtml2}
             <div class="verify">Verify: ${code}</div>
-            <button class="restart-btn" onclick="applyScenario('${currentScenario}')">🔄 Retry</button>
+            <button class="restart-btn" onclick="window.applyScenario('${currentScenario}')">🔄 Retry</button>
         `;
         al.classList.add('show');
     }
@@ -1333,10 +1582,25 @@ function updateHUD(){
     $('yourCatch').textContent=player.catch;$('yourProfit').textContent='$'+player.profit.toFixed(0);
     const avgProfit=profitWindow.length>0?profitWindow.reduce((a,b)=>a+b,0)/profitWindow.length:0;
     $('profitRate').textContent=avgProfit.toFixed(1);
-    const ab=bots.filter(b=>!b.docked);$('activeBoats').textContent=ab.length+'/'+bots.length;
+    const ab=bots.filter(b=>!b.docked);$('activeBoats').textContent=ab.length+'/'+bots.length;$('boatVal').textContent=ab.length+'/'+bots.length;
     $('fishPrice').textContent='$'+currentPrice.toFixed(1);
-    $('fishPrice').style.color=currentPrice>BASE_FISH_PRICE?'var(--green)':currentPrice<3?'var(--red)':'var(--gold)';
-    $('totalWelfare').textContent='$'+totalWelfare.toFixed(0);
+    $('marketPriceBasic').textContent='$'+currentPrice.toFixed(1);
+    const eqPrice=DEMAND_INTERCEPT; // baseline price at zero harvest
+    $('fishPrice').style.color=currentPrice>eqPrice*0.8?'var(--green)':currentPrice>eqPrice*0.4?'var(--gold)':'var(--red)';
+    $('marketPriceBasic').style.color=currentPrice>eqPrice*0.8?'var(--green)':currentPrice>eqPrice*0.4?'var(--gold)':'var(--red)';
+    // NPV of fish stock: each fish is worth currentPrice, discounted
+    // Treat as perpetuity of fish value: if discount rate is r per second,
+    // NPV = fish_count * price_per_fish / (1 + r)^t where t=elapsed seconds
+    // Simpler: NPV = fish_count * price / (1 + annual_discount_rate)^(elapsed_years)
+    // With per-second rate: r_sec = (1+r_annual)^(1/31536000) - 1 ≈ r_annual/31536000
+    // For game time: use r_per_game_second = discountRate (treat each game-sec as a period)
+    const elapsedSecs=Math.floor(gameTime/60);
+    const discFactor=discountRate>0?Math.pow(1+discountRate,elapsedSecs):1;
+    const fishNPV=(fish.length*currentPrice)/discFactor;
+    const totalWelfareWithStock=totalWelfare+fishNPV;
+    $('totalWelfare').textContent='$'+totalWelfareWithStock.toFixed(0);
+    $('catchRevenue').textContent='$'+totalWelfare.toFixed(0);
+    $('fishNPV').textContent='$'+fishNPV.toFixed(0);
     const secs=Math.floor(gameTime/60),m=Math.floor(secs/60),s=secs%60;
     $('gameTime').textContent=`${m}:${s.toString().padStart(2,'0')}`;
     const frac=fish.length/FISH_CAPACITY,bar=$('stockBar');bar.style.width=(frac*100)+'%';
@@ -1353,7 +1617,7 @@ function updateHUD(){
 function updateInsight(){
     const p=$('insightPanel'),A=Math.round(ALLEE_FRAC*FISH_CAPACITY);
     let msyG=0;for(let n=1;n<FISH_CAPACITY;n++){const g=-GROWTH_RATE*n*(1-n/A)*(1-n/FISH_CAPACITY);if(g>msyG)msyG=g;}
-    p.innerHTML=`<strong>Market:</strong> Price $${currentPrice.toFixed(1)}, Tax $${taxRate}/fish. FC=$1/s, VC=$${BOAT_COST_PER_SEC}/s. Boats enter when P &gt; ATC (economic profit), shutdown when P &lt; AVC. MSY: ~$${(msyG*60*BASE_FISH_PRICE).toFixed(1)}/s.`;
+    p.innerHTML=`<strong>Market:</strong> Price $${currentPrice.toFixed(1)}, Tax $${taxRate}/fish. FC=$1/s, VC=$${BOAT_COST_PER_SEC}/s. Boats enter when P &gt; ATC, shutdown when P &lt; AVC. MSY: ~${(msyG*60).toFixed(1)} fish/s.`;
 }
 
 // Graphs (same 2D canvas overlay)
@@ -1367,14 +1631,15 @@ function drawGraphs(){
         for(let j=Math.max(0,i-PROFIT_AVG_WINDOW+1);j<=i;j++){sum+=profitHist[j];cnt++;}
         profitMA.push(sum/cnt);
     }
-    drawScrollGraph('gProfit',profitMA,{color:'#f6c643',refLine:msyG*60*BASE_FISH_PRICE,refColor:'rgba(246,198,67,.4)',refLabel:'MSY',valId:'gProfitVal',prefix:'$'});
+    drawScrollGraph('gProfit',profitMA,{color:'#f6c643',refLine:msyG*60*currentPrice,refColor:'rgba(246,198,67,.4)',refLabel:'MSY',valId:'gProfitVal',prefix:'$'});
     // Welfare graph (moving avg)
     const welfareMA=[];
     for(let i=0;i<welfareHist.length;i++){let s=0,c=0;for(let j=Math.max(0,i-PROFIT_AVG_WINDOW+1);j<=i;j++){s+=welfareHist[j];c++;}welfareMA.push(s/c);}
     drawScrollGraph('gWelfare',welfareMA,{color:'#f6c643',valId:'gWelfareVal',prefix:'$'});
     drawScrollGraph('gStock',stockHist,{color:'#4fc3f7',refLine:msyN,refColor:'rgba(79,195,247,.25)',refLabel:'MSY',refLine2:A,refColor2:'rgba(255,152,0,.35)',refLabel2:'Allee',maxY:FISH_CAPACITY,valId:'gStockVal',prefix:''});
     drawGrowthCurve(A,K,msyN);
-    drawScrollGraph('gPrice',priceHist,{color:'#4caf50',refLine:BOAT_COST_PER_SEC/(msyG*60||1),refColor:'rgba(239,83,80,.3)',refLabel:'B/E',valId:'gPriceVal',prefix:'$'});
+    drawScrollGraph('gPrice',priceHist,{color:'#4caf50',refLine:BOAT_COST_PER_SEC,refColor:'rgba(239,83,80,.3)',refLabel:'AVC',valId:'gPriceVal',prefix:'$'});
+    drawScrollGraph('gBoats',boatsHist,{color:'#ef5350',valId:'gBoatsVal',prefix:''});
     drawMarketGraph();
 }
 function drawScrollGraph(cid,data,opts){
@@ -1434,20 +1699,88 @@ function drawGrowthCurve(A,K,msyN){
 }
 function drawMarketGraph(){
     const c=$('gMarket');if(!c)return;const cx2=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;cx2.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;cx2.fillStyle='rgba(15,40,71,.5)';cx2.fillRect(0,0,w,h);
-    const pad={l:22,r:4,t:6,b:14},gw=w-26,gh=h-20,maxQ=40,maxP=DEMAND_INTERCEPT*1.1;
-    const X=q=>pad.l+(q/maxQ)*gw;const Y=p=>pad.t+gh*(1-p/maxP);
+    // Axis bounds: Q from 0 to where demand hits ~0, P from 0 to intercept + margin
+    const maxP=DEMAND_INTERCEPT*1.15;
+    const maxQ=Math.ceil(DEMAND_INTERCEPT/DEMAND_SLOPE)+2; // Q where P=0 on demand curve
+    const pad={l:22,r:4,t:6,b:14},gw=w-26,gh=h-20;
+    const X=q=>pad.l+(q/maxQ)*gw;const Y=p=>pad.t+gh*(1-Math.max(0,p)/maxP);
+    const steps=50;
+    const aTax=getActiveTax();
+    // Axes
     cx2.strokeStyle='rgba(255,255,255,.15)';cx2.lineWidth=1;cx2.beginPath();cx2.moveTo(pad.l,pad.t);cx2.lineTo(pad.l,h-pad.b);cx2.lineTo(w-pad.r,h-pad.b);cx2.stroke();
-    cx2.fillStyle='rgba(122,154,181,.4)';cx2.font='500 7px Fredoka';cx2.textAlign='center';cx2.fillText('Q',w/2,h-1);
-    cx2.strokeStyle='rgba(79,195,247,.6)';cx2.lineWidth=1.5;cx2.beginPath();
-    for(let q=0;q<=maxQ;q++){const p=Math.max(0,DEMAND_INTERCEPT-DEMAND_SLOPE*q*8);q===0?cx2.moveTo(X(q),Y(p)):cx2.lineTo(X(q),Y(p));}cx2.stroke();
-    cx2.fillStyle='rgba(79,195,247,.5)';cx2.font='500 7px JetBrains Mono';cx2.textAlign='left';cx2.fillText('D',X(maxQ*.65),Y(Math.max(0,DEMAND_INTERCEPT-DEMAND_SLOPE*maxQ*.65*8))-4);
-    cx2.strokeStyle='rgba(239,83,80,.6)';cx2.lineWidth=1.5;cx2.beginPath();let st=false;
-    for(let q=0;q<=maxQ;q++){const p=BOAT_COST_PER_SEC+q*.25;if(p<=maxP*1.1){if(!st){cx2.moveTo(X(q),Y(p));st=true;}else cx2.lineTo(X(q),Y(p));}}cx2.stroke();
-    cx2.fillStyle='rgba(239,83,80,.5)';cx2.fillText('S',X(maxQ*.75),Y(BOAT_COST_PER_SEC+maxQ*.75*.25)-4);
-    cx2.fillStyle='rgba(246,198,67,.8)';cx2.beginPath();cx2.arc(X(supplySmooth),Y(currentPrice),4,0,Math.PI*2);cx2.fill();
+    cx2.fillStyle='rgba(122,154,181,.4)';cx2.font='500 7px Fredoka';
+    cx2.textAlign='center';cx2.fillText('Q (catch/s)',w/2,h-1);
+    cx2.save();cx2.translate(6,h/2);cx2.rotate(-Math.PI/2);cx2.fillText('P ($)',0,0);cx2.restore();
+    // ── Demand curve: P = INTERCEPT - SLOPE * Q (this IS the price-setting mechanism) ──
+    cx2.strokeStyle='rgba(79,195,247,.7)';cx2.lineWidth=1.5;cx2.beginPath();
+    for(let i=0;i<=steps;i++){
+        const q=(i/steps)*maxQ;
+        const p=Math.max(0,DEMAND_INTERCEPT-DEMAND_SLOPE*q);
+        i===0?cx2.moveTo(X(q),Y(p)):cx2.lineTo(X(q),Y(p));
+    }
+    cx2.stroke();
+    cx2.fillStyle='rgba(79,195,247,.6)';cx2.font='500 7px JetBrains Mono';cx2.textAlign='left';
+    cx2.fillText('D',X(maxQ*0.12),Y(DEMAND_INTERCEPT-DEMAND_SLOPE*maxQ*0.12)-5);
+    // ── Compute equilibrium first so supply curve can reference it ──
+    const eqP=Math.max(0.5,DEMAND_INTERCEPT-DEMAND_SLOPE*supplySmooth);
+    // ── Supply curve: MC = intercept + slope*Q (shifts to intersect equilibrium) ──
+    const supplySlope=0.15;
+    // Compute supply intercept so curve passes through equilibrium point (supplySmooth, eqP)
+    // For S+T curve: supplyIntercept + slope*Q + tax = eqP at Q=supplySmooth
+    const supplyIntercept=eqP-supplySlope*supplySmooth-aTax; // base supply intercept (pre-tax)
+    const drawSupplyIntercept=supplyIntercept;
+    cx2.strokeStyle='rgba(239,83,80,.7)';cx2.lineWidth=1.5;cx2.beginPath();
+    for(let i=0;i<=steps;i++){
+        const q=(i/steps)*maxQ;
+        const p=drawSupplyIntercept+supplySlope*q+aTax;
+        if(p>maxP*1.1)break;
+        i===0?cx2.moveTo(X(q),Y(p)):cx2.lineTo(X(q),Y(p));
+    }
+    cx2.stroke();
+    cx2.fillStyle='rgba(239,83,80,.6)';
+    const sLabelQ=maxQ*0.55;const sLabelP=drawSupplyIntercept+supplySlope*sLabelQ+aTax;
+    if(sLabelP<maxP)cx2.fillText('S'+(aTax>0?'+T':''),X(sLabelQ),Y(sLabelP)-5);
+    // If tax active, show pre-tax supply as dashed
+    if(aTax>0){
+        cx2.strokeStyle='rgba(239,83,80,.25)';cx2.lineWidth=1;cx2.setLineDash([3,3]);cx2.beginPath();
+        for(let i=0;i<=steps;i++){
+            const q=(i/steps)*maxQ;
+            const p=drawSupplyIntercept+supplySlope*q;
+            if(p>maxP*1.1)break;
+            i===0?cx2.moveTo(X(q),Y(p)):cx2.lineTo(X(q),Y(p));
+        }
+        cx2.stroke();cx2.setLineDash([]);
+        cx2.fillStyle='rgba(239,83,80,.3)';cx2.fillText('S',X(maxQ*0.65),Y(drawSupplyIntercept+supplySlope*maxQ*0.65)-5);
+    }
+    // ── Equilibrium: dot on the demand curve at Q=supplySmooth ──
+    // Consumer pays this price (read off demand curve)
+    cx2.fillStyle='rgba(246,198,67,.9)';cx2.beginPath();cx2.arc(X(supplySmooth),Y(eqP),4,0,Math.PI*2);cx2.fill();
+    // Crosshairs to axes
     cx2.strokeStyle='rgba(246,198,67,.3)';cx2.lineWidth=.5;cx2.setLineDash([2,2]);
-    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(currentPrice));cx2.lineTo(X(supplySmooth),Y(0));cx2.stroke();
-    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(currentPrice));cx2.lineTo(X(0),Y(currentPrice));cx2.stroke();cx2.setLineDash([]);
+    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(eqP));cx2.lineTo(X(supplySmooth),Y(0));cx2.stroke();
+    cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(eqP));cx2.lineTo(X(0),Y(eqP));cx2.stroke();cx2.setLineDash([]);
+    // Price & Q labels
+    cx2.fillStyle='rgba(246,198,67,.7)';cx2.font='500 7px JetBrains Mono';
+    cx2.textAlign='right';cx2.fillText('$'+eqP.toFixed(1),pad.l-2,Y(eqP)+3);
+    cx2.textAlign='center';cx2.fillText(supplySmooth.toFixed(1),X(supplySmooth),h-pad.b+9);
+    // ── Tax: show producer price (what fishers actually get = market price - tax) ──
+    if(aTax>0){
+        const prodP=Math.max(0,eqP-aTax);
+        // Producer price dot (red, smaller)
+        cx2.fillStyle='rgba(239,83,80,.8)';cx2.beginPath();cx2.arc(X(supplySmooth),Y(prodP),3,0,Math.PI*2);cx2.fill();
+        // Dashed line to P axis
+        cx2.strokeStyle='rgba(239,83,80,.3)';cx2.lineWidth=.5;cx2.setLineDash([2,2]);
+        cx2.beginPath();cx2.moveTo(X(supplySmooth),Y(prodP));cx2.lineTo(X(0),Y(prodP));cx2.stroke();cx2.setLineDash([]);
+        cx2.fillStyle='rgba(239,83,80,.7)';cx2.textAlign='right';
+        cx2.fillText('$'+prodP.toFixed(1),pad.l-2,Y(prodP)+3);
+        // Tax wedge bracket
+        const bx=X(supplySmooth)+8;
+        cx2.strokeStyle='rgba(255,152,0,.6)';cx2.lineWidth=1;cx2.setLineDash([]);
+        cx2.beginPath();cx2.moveTo(bx-3,Y(eqP));cx2.lineTo(bx,Y(eqP));
+        cx2.lineTo(bx,Y(prodP));cx2.lineTo(bx-3,Y(prodP));cx2.stroke();
+        cx2.fillStyle='rgba(255,152,0,.8)';cx2.font='500 6px Fredoka';cx2.textAlign='left';
+        cx2.fillText('Tax $'+aTax,bx+3,(Y(eqP)+Y(prodP))/2+2);
+    }
     $('gMarketVal').textContent='$'+currentPrice.toFixed(1);
 }
 
@@ -1460,7 +1793,9 @@ function loop(){
     renderer.render(scene,camera);
     requestAnimationFrame(loop);
 }
-applyScenario('solo');loop();
+applyScenario('freeplay');loop();
+// Expose applyScenario globally for inline onclick handlers in alerts
+window.applyScenario=applyScenario;
 })();
 </script>
 </body>

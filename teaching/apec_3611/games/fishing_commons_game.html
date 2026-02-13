@@ -9,6 +9,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--ui-bg:rgba(11,29,53,0.92);--ui-border:rgba(79,195,247,0.25);--text:#e0e8f0;--text-dim:#7a9ab5;--boat-you:#4fc3f7;--boat-bot:#ef5350;--gold:#f6c643;--green:#4caf50;--red:#ef5350;--sidebar:300px;--rbar:280px}
 body{background:#0b1d35;color:var(--text);font-family:'Fredoka',sans-serif;overflow:hidden;height:100vh;touch-action:none;user-select:none}
+#gameWrap{display:contents}
+#canvasWrap{display:contents}
 #c{display:block;position:absolute;top:0;left:var(--sidebar);width:calc(100% - var(--sidebar) - var(--rbar));height:100%}
 .sidebar,.rbar{position:absolute;top:0;height:100vh;background:var(--ui-bg);z-index:10;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;backdrop-filter:blur(8px)}
 .sidebar{left:0;width:var(--sidebar);border-right:1px solid var(--ui-border)}
@@ -80,10 +82,63 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
 .how-to-play kbd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:3px;padding:2px 5px;font-family:'JetBrains Mono';font-size:.65rem}
 .how-to-play .start-btn{display:block;margin:12px auto 0;padding:10px 28px;border:2px solid var(--boat-you);border-radius:8px;background:rgba(79,195,247,.15);color:var(--boat-you);font-family:'Fredoka';font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s}
 .how-to-play .start-btn:hover{background:rgba(79,195,247,.3)}
+/* Mobile touch controls overlay */
+.touch-controls{display:none;position:absolute;z-index:12;pointer-events:none}
+.touch-col{position:absolute;bottom:16px;display:flex;flex-direction:column;gap:8px;pointer-events:auto;touch-action:none}
+.touch-col.tc-left{left:14px}
+.touch-col.tc-right{right:14px;flex-direction:row;gap:10px}
+.touch-btn{width:52px;height:52px;border:2px solid rgba(79,195,247,.5);border-radius:14px;background:rgba(11,29,53,.5);color:var(--boat-you);font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;backdrop-filter:blur(4px)}
+.touch-btn:active,.touch-btn.pressed{background:rgba(79,195,247,.35);border-color:var(--boat-you)}
+/* Mobile layout */
+@media(max-width:900px){
+    body{overflow:auto;height:auto}
+    #gameWrap{display:flex;flex-direction:column;width:100%;min-height:100vh}
+    #canvasWrap{order:1;position:relative;flex-shrink:0}
+    body.basic-mode .rbar{width:100%}
+    body.basic-mode #c{width:100%;left:0}
+    .sidebar,.rbar{position:relative;width:100%!important;height:auto;border:none;border-bottom:1px solid var(--ui-border);flex-shrink:0}
+    .sidebar{order:2;flex-direction:row;flex-wrap:wrap}
+    .sidebar .sb-section{flex:1 1 auto;min-width:140px}
+    .rbar{order:3;flex-direction:row;flex-wrap:wrap}
+    .rbar .sb-section{flex:1 1 auto;min-width:140px}
+    #c{position:relative!important;left:0!important;width:100%!important;height:55vw!important;min-height:240px;max-height:400px}
+    .touch-controls{display:block;position:absolute;top:0;left:0;width:100%;height:100%}
+    .game-alert,.how-to-play{position:fixed;max-width:92vw;min-width:0;max-height:85vh;overflow-y:auto;padding:16px 18px}
+    .how-to-play{min-width:0;max-width:92vw;padding:16px 18px}
+    .how-to-play h2{font-size:1.1rem;margin-bottom:6px}
+    .how-to-play p{font-size:.7rem;margin-bottom:5px;line-height:1.35}
+    .how-to-play .htp-section{margin-bottom:6px}
+    .how-to-play .htp-label{font-size:.55rem;margin-bottom:2px}
+    .how-to-play kbd{font-size:.55rem;padding:1px 3px}
+    .how-to-play .start-btn{padding:8px 20px;font-size:.85rem;margin-top:8px}
+    .game-alert h2{font-size:1.1rem;margin-bottom:5px}
+    .game-alert p{font-size:.72rem;margin-bottom:5px}
+    .game-alert .score-grid{gap:2px 8px;font-size:.65rem;margin:6px 0}
+    .game-alert .sg-label{font-size:.5rem}
+    .game-alert .sg-val{font-size:.75rem}
+    .game-alert .verify{font-size:.5rem;padding:3px 6px}
+    .restart-btn{padding:6px 14px;font-size:.78rem}
+    .boat-info{position:fixed;max-width:85vw;font-size:.65rem}
+    .placing-indicator{position:fixed}
+    .controls-hint{display:none}
+}
 </style>
 </head>
 <body>
+<div id="gameWrap">
+<div id="canvasWrap" style="position:relative">
 <canvas id="c"></canvas>
+<div class="touch-controls" id="touchControls">
+    <div class="touch-col tc-left">
+        <div class="touch-btn" data-tdir="w">▲</div>
+        <div class="touch-btn" data-tdir="s">▼</div>
+    </div>
+    <div class="touch-col tc-right">
+        <div class="touch-btn" data-tdir="a">◀</div>
+        <div class="touch-btn" data-tdir="d">▶</div>
+    </div>
+</div>
+</div>
 <div class="sidebar">
     <div class="sb-section">
         <div class="sb-title">Scenarios</div>
@@ -95,6 +150,8 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
             <div class="policy-btn" data-scenario="fast">4: Speed</div>
             <div class="policy-btn" data-scenario="policy">5: Policy</div>
             <div class="policy-btn" data-scenario="hype">6: Hype</div>
+            <div class="policy-btn" data-scenario="pirate">7: Pirate</div>
+            <div class="policy-btn" data-scenario="sharks">8: Sharks</div>
         </div>
         <div id="scenarioBestScores" style="margin-top:4px;font-size:.42rem;color:var(--text-dim);line-height:1.4;font-family:'JetBrains Mono',monospace"></div>
     </div>
@@ -103,7 +160,6 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
         <div class="policy-grid">
             <div class="policy-btn active" data-policy="open">🌊 Open</div>
             <div class="policy-btn" data-policy="tax">💰 Tax</div>
-            <div class="policy-btn" data-policy="quota">📋 Quota</div>
             <div class="policy-btn" data-policy="sanctuary">🏝️ Sanctuary</div>
         </div>
         <div class="set-group" style="margin-top:3px"><span class="set-label">Tax</span><div class="set-btn" id="taxMinus">−</div><span class="set-val" id="taxVal">$0</span><div class="set-btn" id="taxPlus">+</div></div>
@@ -123,6 +179,14 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
         <div class="set-group"><span class="set-label">Demand</span><div class="set-btn" id="demMinus">−</div><span class="set-val" id="demVal">8</span><div class="set-btn" id="demPlus">+</div></div>
         <div class="set-group"><span class="set-label">School</span><div class="set-btn" id="schoolMinus">−</div><span class="set-val" id="schoolVal">0</span><div class="set-btn" id="schoolPlus">+</div></div>
         <div class="chk-group"><input type="checkbox" id="spawnChk"><label for="spawnChk">Allow firms to enter</label></div>
+        <div class="chk-group"><input type="checkbox" id="ramChk"><label for="ramChk">Enable ramming</label></div>
+        <div class="chk-group"><input type="checkbox" id="sharkChk"><label for="sharkChk">Enable sharks</label></div>
+        <div class="set-group"><span class="set-label">🦈 Thresh</span><div class="set-btn" id="sharkThreshMinus">−</div><span class="set-val" id="sharkThreshVal">100</span><div class="set-btn" id="sharkThreshPlus">+</div></div>
+        <div class="set-group"><span class="set-label">🦈 Speed</span><div class="set-btn" id="sharkSpdMinus">−</div><span class="set-val" id="sharkSpdVal">7</span><div class="set-btn" id="sharkSpdPlus">+</div></div>
+        <div style="margin-top:2px"><span class="sb-label">Shark Spawn</span>
+            <div class="stock-bar-outer" style="height:8px"><div class="stock-bar-inner" id="sharkBar" style="width:0%;background:linear-gradient(90deg,#ff5722,#d32f2f)"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:.38rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)"><span id="sharkProgress">0%</span><span id="sharkCount">🦈 0</span></div>
+        </div>
         <div style="margin-top:3px"><div class="set-btn" id="resetFishBtn" style="width:auto;padding:2px 7px;font-size:.44rem">🔄 Reset Fish</div></div>
     </div>
     <div class="sb-section adv-only" data-mode="advanced"><div class="insight-text" id="insightPanel"></div></div>
@@ -178,7 +242,7 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
         <div class="graph-box"><div class="graph-title"><span>Boats</span><span class="gt-val" id="gBoatsVal">0</span></div><canvas id="gBoats"></canvas></div>
     </div>
 </div>
-</div>
+</div><!-- /gameWrap -->
 <div class="placing-indicator" id="placingIndicator">🏝️ Click ocean to place sanctuary</div>
 <div class="how-to-play" id="howToPlay">
     <h2>🐟 Fishing Commons</h2>
@@ -190,7 +254,8 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
         <div class="htp-label">Controls</div>
         <p><kbd>W</kbd> / <kbd>↑</kbd> accelerate forward · <kbd>S</kbd> / <kbd>↓</kbd> reverse<br>
         <kbd>A</kbd> / <kbd>←</kbd> turn left · <kbd>D</kbd> / <kbd>→</kbd> turn right<br>
-        <kbd>MMB</kbd> drag to rotate camera · <kbd>Scroll</kbd> to zoom</p>
+        <kbd>MMB</kbd> drag to rotate camera · <kbd>Scroll</kbd> to zoom<br>
+        On mobile: use the on-screen d-pad</p>
     </div>
     <div class="htp-section">
         <div class="htp-label">How It Works</div>
@@ -232,21 +297,39 @@ const SIDEBAR_W=300,RBAR_W=280;
 let advancedMode=false; // declared early for resize handler
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
+if(window.innerWidth<=900){
+    const w=window.innerWidth;
+    const h=Math.min(420,Math.max(260,w*0.55));
+    renderer.setSize(w,h);
+} else {
+    renderer.setSize(window.innerWidth-SIDEBAR_W-RBAR_W,window.innerHeight);
+}
 renderer.setClearColor(0x0b1d35);
 
 const scene=new THREE.Scene();
 scene.fog=new THREE.FogExp2(0x0b1d35,0.0008);
 
-const camera=new THREE.PerspectiveCamera(50,(window.innerWidth-SIDEBAR_W-RBAR_W)/window.innerHeight,1,5000);
+const camera=new THREE.PerspectiveCamera(50,
+    window.innerWidth<=900?(window.innerWidth/Math.min(420,Math.max(260,window.innerWidth*0.55))):((window.innerWidth-SIDEBAR_W-RBAR_W)/window.innerHeight),
+    1,5000);
 camera.position.set(W3/2,700,H3/2+500);
 camera.lookAt(W3/2,0,H3/2);
 
 window.addEventListener('resize',()=>{
-    const rbarW=advancedMode?280:230;
-    camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
+    if(window.innerWidth<=900){
+        // Mobile: canvas fills width, fixed height
+        const cvs=document.getElementById('c');
+        const w=window.innerWidth;
+        const h=Math.min(420,Math.max(260,window.innerWidth*0.55));
+        camera.aspect=w/h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w,h);
+    } else {
+        const rbarW=advancedMode?280:230;
+        camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
+    }
 });
 
 // ── Sound system ──
@@ -274,6 +357,7 @@ let fpvMode=false; // first-person camera view
 let fpvDist=55; // distance behind boat in FPV
 let fpvHeightBase=32; // base height in FPV
 let fpvAngleOffset=0; // horizontal rotation offset in FPV
+let fpvSmoothedAngle=0; // smoothed version of player angle for camera
 
 function updateCamera(){
     const x=camTarget.x+camDist*Math.sin(camPhi)*Math.sin(camTheta);
@@ -522,6 +606,14 @@ let greedIdx=0; // default 1 (avg greed 0.1)
 const HYPE_LEVELS=[0.2,0.5,0.8,1.0,1.5,2.0,3.0,4.0,6.0,10.0];
 let hypeIdx=4; // default 5 → multiplier 1.5 on prior
 let allowSpawn=true;
+let rammingEnabled=false;
+let sharksEnabled=false;
+let sharks=[];
+let sharkGroup=new THREE.Group();
+let cumulativeFishingTime=0; // frames of all boats fishing
+let sharkThreshold=100; // seconds of fishing before shark spawns
+let sharkBaseSpeed=7;
+let sharkSpawnCount=0; // how many sharks have spawned total
 
 const COLLAPSE_THRESHOLD=3,BASE_FISH_PRICE=5,QUOTA_LIMIT=50,SANCTUARY_RADIUS=60;
 const BASE_CATCH_RADIUS=16,BOAT_COST_PER_SEC=2;
@@ -560,6 +652,7 @@ const fishGroup=new THREE.Group();scene.add(fishGroup);
 const boatGroup=new THREE.Group();scene.add(boatGroup);
 const effectGroup=new THREE.Group();scene.add(effectGroup);
 const sanctGroup=new THREE.Group();scene.add(sanctGroup);
+scene.add(sharkGroup);
 
 // ── Raycaster for click-to-place ──
 const raycaster=new THREE.Raycaster();
@@ -571,10 +664,24 @@ const keys={};
 window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;keys[e.code]=true;});
 window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys[e.code]=false;});
 
+// ── Touch button controls ──
+const isMobile=()=>window.innerWidth<=900;
+document.querySelectorAll('.touch-btn').forEach(btn=>{
+    const key=btn.dataset.tdir;
+    const start=()=>{keys[key]=true;btn.classList.add('pressed');};
+    const end=()=>{keys[key]=false;btn.classList.remove('pressed');};
+    btn.addEventListener('touchstart',e=>{e.preventDefault();start();},{passive:false});
+    btn.addEventListener('touchend',e=>{e.preventDefault();end();},{passive:false});
+    btn.addEventListener('touchcancel',()=>{end();});
+    btn.addEventListener('mousedown',e=>{e.preventDefault();start();});
+    btn.addEventListener('mouseup',()=>{end();});
+    btn.addEventListener('mouseleave',()=>{end();});
+});
+
 // ── Settings ──
 $('boatMinus').onclick=()=>{
     if(bots.length>0){
-        const b=bots[bots.length-1];if(b.mesh)boatGroup.remove(b.mesh);if(b.dockMesh)sanctGroup.remove(b.dockMesh);bots.pop();
+        const b=bots[bots.length-1];if(b.mesh)boatGroup.remove(b.mesh);if(b.dockMesh)sanctGroup.remove(b.dockMesh);if(b.coinPile)sanctGroup.remove(b.coinPile);bots.pop();
     }
     initialBotCount=Math.max(0,bots.length);
     const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;
@@ -611,15 +718,15 @@ $('resetFishBtn').onclick=()=>{
 // ── Scenarios & Timer ──
 let currentScenario='solo';
 const SCENARIO_DURATION=90*60; // 90 seconds at 60fps
-const highScores={}; // keyed by scenario name
+const highScores={}; // keyed by scenario name, stores {profit, welfare}
 
 function updateBestScoresDisplay(){
     const el=$('scenarioBestScores');if(!el)return;
-    const names={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+    const names={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype',pirate:'Pirate',sharks:'Sharks'};
     const parts=[];
     for(const key in SCENARIOS){
         if(highScores[key]!==undefined){
-            parts.push(`<span style="color:var(--gold)">🏆</span> ${names[key]||key}: <span style="color:var(--gold)">$${highScores[key].toFixed(0)}</span>`);
+            parts.push(`<span style="color:var(--gold)">🏆</span> ${names[key]||key}: <span style="color:var(--gold)">$${highScores[key].profit.toFixed(0)}</span> <span style="color:var(--green);font-size:.35rem">W$${highScores[key].welfare.toFixed(0)}</span>`);
         }
     }
     el.innerHTML=parts.length?parts.join(' · '):'<span style="color:var(--text-dim)">No scores yet</span>';
@@ -631,8 +738,10 @@ const SCENARIOS={
     solo:{name:'Solo Fisher',spawn:false,speed:7,mom:1,growth:3,hype:3,allee:0.40,fpv:true,desc:'Just you. Maximize your profit.'},
     freeentry:{name:'Free Entry',spawn:true,speed:7,mom:1,growth:3,hype:6,allee:0.40,fpv:false,desc:'Firms can enter. Manage the commons.'},
     fast:{name:'Speed Race',spawn:true,speed:11,mom:4,growth:3,hype:7,allee:0.40,fpv:false,desc:'Fast boats, high stakes.'},
-    policy:{name:'Policy',spawn:true,speed:7,mom:1,growth:3,hype:7,allee:0.40,fpv:false,taxStart:3,policyStart:'open',policyEnabled:true,desc:'Use tax, quota, or sanctuary to maximize welfare.'},
-    hype:{name:'Hype Bubble',spawn:true,speed:7,mom:1,growth:1,hype:9,allee:0.40,fpv:false,desc:'Extreme hype! Survive the bubble.'}
+    policy:{name:'Policy',spawn:true,speed:7,mom:1,growth:3,hype:7,allee:0.40,fpv:false,taxStart:3,policyStart:'open',policyEnabled:true,desc:'Use tax or sanctuary to maximize welfare.'},
+    hype:{name:'Hype Bubble',spawn:true,speed:7,mom:1,growth:1,hype:9,allee:0.40,fpv:false,desc:'Extreme hype! Survive the bubble.'},
+    pirate:{name:'Pirate',spawn:true,speed:9,mom:2,growth:3,hype:7,allee:0.40,fpv:true,ramming:true,school:2,desc:'Ram other boats to send them to dock! Aggressive strategy.'},
+    sharks:{name:'Sharks',spawn:true,speed:9,mom:2,growth:3,hype:7,allee:0.40,fpv:true,ramming:true,school:2,sharksEnabled:true,sharkThresh:100,sharkSpd:7,desc:'Overfishing attracts sharks! They destroy boats permanently.'}
 };
 
 function applyScenario(s){
@@ -650,13 +759,20 @@ function applyScenario(s){
     $('alleeMarker').style.left=(sc.allee*100)+'%';
     if(sc.taxStart){taxRate=sc.taxStart;$('taxVal').textContent='$'+sc.taxStart;}else{taxRate=0;$('taxVal').textContent='$0';}
     $('scenarioName').textContent=sc.name;
-    $('highScore').textContent=highScores[s]!==undefined?'$'+highScores[s].toFixed(0):'—';
+    $('highScore').textContent=highScores[s]!==undefined?'$'+highScores[s].profit.toFixed(0):'—';
     initGame();
     // Set FPV mode based on scenario
     fpvMode=!!sc.fpv;
     $('fpvChk').checked=fpvMode;
-    if(fpvMode){fpvAngleOffset=0;fpvDist=55;fpvHeightBase=32;camFollowPlayer=true;}
+    if(fpvMode){fpvAngleOffset=0;fpvDist=55;fpvHeightBase=32;fpvSmoothedAngle=player.angle;camFollowPlayer=true;}
     else{camFollowPlayer=true;}
+    rammingEnabled=!!sc.ramming;
+    $('ramChk').checked=rammingEnabled;
+    sharksEnabled=!!sc.sharksEnabled;
+    $('sharkChk').checked=sharksEnabled;
+    if(sc.sharkThresh!==undefined){sharkThreshold=sc.sharkThresh;$('sharkThreshVal').textContent=sharkThreshold;}
+    if(sc.sharkSpd!==undefined){sharkBaseSpeed=sc.sharkSpd;$('sharkSpdVal').textContent=sharkBaseSpeed;}
+    if(sc.school!==undefined){schoolStrength=sc.school;$('schoolVal').textContent=sc.school;}
     // Enable/disable policy buttons based on scenario
     const policyEnabled=!!sc.policyEnabled;
     document.querySelectorAll('[data-policy]').forEach(b=>{
@@ -694,27 +810,25 @@ function makeVerifyCode(scenario,profit,welfare,catch_n,fishLeft){
 function endScenario(){
     scenarioActive=false;
     const sc=SCENARIOS[currentScenario];
-    const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario];
-    highScores[currentScenario]=isNew?player.profit:(highScores[currentScenario]);
-    // Always store latest score for display
-    if(highScores[currentScenario]===undefined)highScores[currentScenario]=player.profit;
-    if(isNew)highScores[currentScenario]=player.profit;
-    $('highScore').textContent='$'+(highScores[currentScenario]||0).toFixed(0);
-    updateBestScoresDisplay();
     const elapsedSecsEnd=Math.max(1,Math.floor(gameTime/60));
     const discFactorEnd=discountRate>0?Math.pow(1+discountRate,elapsedSecsEnd):1;
     const fishStockValue=(fish.length*currentPrice)/discFactorEnd;
     const finalWelfare=totalWelfare+fishStockValue;
+    const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario].profit;
+    if(isNew)highScores[currentScenario]={profit:player.profit,welfare:finalWelfare};
+    else if(highScores[currentScenario]===undefined)highScores[currentScenario]={profit:player.profit,welfare:finalWelfare};
+    $('highScore').textContent='$'+(highScores[currentScenario]?highScores[currentScenario].profit:0).toFixed(0);
+    updateBestScoresDisplay();
     const code=makeVerifyCode(currentScenario,player.profit,finalWelfare,player.catch,fish.length);
     // Build all-scenario scores summary
-    const scenarioNames={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+    const scenarioNames={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype',pirate:'Pirate',sharks:'Sharks'};
     let allScoresHtml='<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(79,195,247,.15)"><div style="font-size:.44rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:4px">All Scenario Best Scores</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;font-size:.48rem">';
     for(const key in SCENARIOS){
         const name=scenarioNames[key]||key;
         const score=highScores[key];
         const isCurrent=key===currentScenario;
         const color=score!==undefined?(isCurrent?'var(--gold)':'var(--text)'):'var(--text-dim)';
-        const val=score!==undefined?'$'+score.toFixed(0):'—';
+        const val=score!==undefined?'P$'+score.profit.toFixed(0)+' W$'+score.welfare.toFixed(0):'—';
         allScoresHtml+=`<span style="color:${color};font-family:'JetBrains Mono',monospace;font-weight:${isCurrent?'700':'500'}">${isCurrent?'▸ ':''}${name}: ${val}</span>`;
     }
     allScoresHtml+='</div></div>';
@@ -754,9 +868,19 @@ $('hypePlus').onclick=()=>{hypeIdx=Math.min(HYPE_LEVELS.length-1,hypeIdx+1);$('h
 const spawnChkEl=$('spawnChk');
 spawnChkEl.onchange=function(){allowSpawn=this.checked;};
 spawnChkEl.onclick=function(){allowSpawn=this.checked;};
+const ramChkEl=$('ramChk');
+ramChkEl.onchange=function(){rammingEnabled=this.checked;};
+ramChkEl.onclick=function(){rammingEnabled=this.checked;};
+const sharkChkEl=$('sharkChk');
+sharkChkEl.onchange=function(){sharksEnabled=this.checked;};
+sharkChkEl.onclick=function(){sharksEnabled=this.checked;};
+$('sharkThreshMinus').onclick=()=>{sharkThreshold=Math.max(25,sharkThreshold-25);$('sharkThreshVal').textContent=sharkThreshold;};
+$('sharkThreshPlus').onclick=()=>{sharkThreshold=Math.min(2000,sharkThreshold+25);$('sharkThreshVal').textContent=sharkThreshold;};
+$('sharkSpdMinus').onclick=()=>{sharkBaseSpeed=Math.max(1,sharkBaseSpeed-1);$('sharkSpdVal').textContent=sharkBaseSpeed;};
+$('sharkSpdPlus').onclick=()=>{sharkBaseSpeed=Math.min(15,sharkBaseSpeed+1);$('sharkSpdVal').textContent=sharkBaseSpeed;};
 const fpvChkEl=$('fpvChk');
-fpvChkEl.onchange=function(){fpvMode=this.checked;camFollowPlayer=true;};
-fpvChkEl.onclick=function(){fpvMode=this.checked;camFollowPlayer=true;};
+fpvChkEl.onchange=function(){fpvMode=this.checked;camFollowPlayer=true;if(this.checked)fpvSmoothedAngle=player.angle;};
+fpvChkEl.onclick=function(){fpvMode=this.checked;camFollowPlayer=true;if(this.checked)fpvSmoothedAngle=player.angle;};
 
 // ── Basic / Advanced mode toggle ──
 function setMode(adv){
@@ -774,10 +898,18 @@ function setMode(adv){
     }
     // Resize renderer for rbar width change
     setTimeout(()=>{
-        const rbarW=adv?280:230;
-        camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
+        if(window.innerWidth<=900){
+            const w=window.innerWidth;
+            const h=Math.min(420,Math.max(260,w*0.55));
+            camera.aspect=w/h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w,h);
+        } else {
+            const rbarW=adv?280:230;
+            camera.aspect=(window.innerWidth-SIDEBAR_W-rbarW)/window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth-SIDEBAR_W-rbarW,window.innerHeight);
+        }
     },10);
 }
 $('modeToggleBtn').onclick=()=>setMode(!advancedMode);
@@ -928,12 +1060,12 @@ function makeBotData(){
     const hype=HYPE_LEVELS[hypeIdx];
     const agentNoise=0.7+Math.random()*0.6; // individual optimism/pessimism
     return{x:dockX,z:dockZ,vx:0,vz:0,angle:Math.random()*Math.PI*2,speed:0,
-        catch:0,targetFish:null,thinkTimer:0,greed:GREED_LEVELS[greedIdx]*(0.7+Math.random()*0.6),
+        catch:0,totalProfit:0,targetFish:null,thinkTimer:0,greed:GREED_LEVELS[greedIdx]*(0.7+Math.random()*0.6),
         turnRate:.04+Math.random()*.03,
         docked:true,dockTimer:60+Math.floor(Math.random()*60),returning:false,
         dockX,dockZ,dockAng,
         profitHist:[],spawnTime:gameTime,
-        mesh:null,dockMesh:null,
+        mesh:null,dockMesh:null,coinPile:null,crewMeshes:[],
         // Bayesian belief system
         belief_catchRate:basePrior*hype*agentNoise, // prior expected catch/frame
         belief_n:2, // "observations" backing the belief (low=uncertain, high=confident)
@@ -948,14 +1080,14 @@ function makeDockMesh(dockX,dockZ,dockAng){
     const g=new THREE.Group();
     // Pier planks
     const plankMat=new THREE.MeshStandardMaterial({color:0x8B6914,roughness:0.8});
-    const plank=new THREE.Mesh(new THREE.BoxGeometry(4,0.5,10),plankMat);
+    const plank=new THREE.Mesh(new THREE.BoxGeometry(12,0.8,30),plankMat);
     plank.position.set(0,0.5,0);g.add(plank);
     // Posts
     const postMat=new THREE.MeshStandardMaterial({color:0x5a3e0a,roughness:0.9});
-    for(const oz of[-4,4]){
-        const post=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,4,6),postMat);
-        post.position.set(1.5,-1,oz);g.add(post);
-        const post2=post.clone();post2.position.x=-1.5;g.add(post2);
+    for(const oz of[-12,12]){
+        const post=new THREE.Mesh(new THREE.CylinderGeometry(0.8,0.8,6,6),postMat);
+        post.position.set(4.5,-1.5,oz);g.add(post);
+        const post2=post.clone();post2.position.x=-4.5;g.add(post2);
     }
     g.position.set(dockX,0,dockZ);
     g.rotation.y=-dockAng+Math.PI/2;
@@ -969,9 +1101,193 @@ function addBot3D(b){
     // Create dock
     const dm=makeDockMesh(b.dockX,b.dockZ,b.dockAng);
     sanctGroup.add(dm);b.dockMesh=dm;
+    // Create coin pile group at dock
+    b.coinPile=new THREE.Group();
+    b.coinPile.position.set(b.dockX,0,b.dockZ);
+    sanctGroup.add(b.coinPile);
+}
+
+// Update coin pile at a dock based on profit
+const coinMat=new THREE.MeshStandardMaterial({color:0xf6c643,roughness:0.3,metalness:0.5});
+function updateCoinPile(coinGroup,profit){
+    const targetCoins=Math.min(20,Math.floor(profit/15));
+    while(coinGroup.children.length<targetCoins){
+        const c=new THREE.Mesh(new THREE.CylinderGeometry(6,6,2,8),coinMat);
+        const layer=Math.floor(coinGroup.children.length/5);
+        const idx=coinGroup.children.length%5;
+        c.position.set((idx-2)*5.5+(layer%2)*2.5,3+layer*2.2,(Math.random()-0.5)*6);
+        coinGroup.add(c);
+    }
+    while(coinGroup.children.length>targetCoins&&coinGroup.children.length>0){
+        coinGroup.remove(coinGroup.children[coinGroup.children.length-1]);
+    }
+}
+
+// Crew cylinders on boat based on profit rate
+const crewMat=new THREE.MeshStandardMaterial({color:0xffcc88,roughness:0.6});
+const crewHatMat=new THREE.MeshStandardMaterial({color:0x2255aa,roughness:0.5});
+function updateBoatCrew(entity){
+    if(!entity.mesh)return;
+    // Remove old crew
+    if(entity.crewMeshes){entity.crewMeshes.forEach(c=>entity.mesh.remove(c));entity.crewMeshes=[];}
+    // Add crew based on profit rate (0-4 crew)
+    const profitRate=entity._recentRevenue||0;
+    const numCrew=Math.min(4,Math.max(0,Math.floor(profitRate*0.8+0.3)));
+    for(let i=0;i<numCrew;i++){
+        const g=new THREE.Group();
+        const body=new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.6,2.5,6),crewMat);
+        body.position.y=2.0;g.add(body);
+        const head=new THREE.Mesh(new THREE.SphereGeometry(0.55,6,6),crewMat);
+        head.position.y=3.6;g.add(head);
+        const hat=new THREE.Mesh(new THREE.CylinderGeometry(0.65,0.6,0.7,6),crewHatMat);
+        hat.position.y=4.2;g.add(hat);
+        // Spread across the stern deck area, standing on deck (Y=0.5 in boat local space)
+        g.position.set(-1.8+i*1.2,0.5,3.0-i*0.6);
+        entity.mesh.add(g);
+        entity.crewMeshes.push(g);
+    }
+}
+
+// Unprofitable indicator — red tint + smoke-like particle
+function updateProfitIndicator(bot){
+    if(!bot.mesh)return;
+    if(!bot.docked&&!bot.returning&&bot._econProfit<-0.5){
+        // Flash hull reddish
+        bot.mesh.traverse(c=>{
+            if(c.material&&!c._origColor){c._origColor=c.material.color.getHex();}
+            if(c.material&&c._origColor){
+                const t=(Math.sin(gameTime*0.15)*0.5+0.5);
+                const r=((c._origColor>>16)&0xff)/255;
+                const g2=((c._origColor>>8)&0xff)/255;
+                const b2=(c._origColor&0xff)/255;
+                c.material.color.setRGB(r*0.6+0.4*t,g2*0.4,b2*0.4);
+            }
+        });
+    }
+}
+
+// Coin trail from boat to dock on catch
+const _coinGeo=new THREE.SphereGeometry(0.8,3,3);
+const _coinMatProto=new THREE.MeshBasicMaterial({color:0xffd700,transparent:true,opacity:1});
+let _coinParticleCount=0;
+const MAX_COIN_PARTICLES=50;
+function spawnCoinTrail(fromX,fromZ,toX,toZ,count){
+    count=count||2;
+    if(_coinParticleCount>=MAX_COIN_PARTICLES)return;
+    for(let i=0;i<count;i++){
+        const mat=_coinMatProto.clone();
+        const m=new THREE.Mesh(_coinGeo,mat);
+        m.position.set(fromX+(Math.random()-0.5)*3,3+Math.random()*4,fromZ+(Math.random()-0.5)*3);
+        effectGroup.add(m);
+        const dx=toX-fromX,dz=toZ-fromZ;
+        const life=90+Math.floor(Math.random()*30);
+        _coinParticleCount++;
+        particles3d.push({mesh:m,
+            vx:dx/life*1.2+(Math.random()-0.5)*0.4,
+            vy:0.2+Math.random()*0.15,
+            vz:dz/life*1.2+(Math.random()-0.5)*0.4,
+            life:life,maxLife:life,coinFx:true});
+    }
+}
+
+// Coin burst on ram
+function spawnCoinBurst(x,z,count){
+    for(let i=0;i<count;i++){
+        const mat=_coinMatProto.clone();
+        const m=new THREE.Mesh(_coinGeo,mat);
+        m.position.set(x,4+Math.random()*2,z);
+        effectGroup.add(m);
+        const ang=Math.PI*2*i/count+Math.random()*0.5;
+        particles3d.push({mesh:m,
+            vx:Math.cos(ang)*(1.2+Math.random()*0.8),
+            vy:0.8+Math.random()*0.6,
+            vz:Math.sin(ang)*(1.2+Math.random()*0.8),
+            life:40+Math.floor(Math.random()*20),maxLife:60,coinFx:true});
+    }
 }
 
 let playerMesh;
+
+// ── Shark system ──
+function makeSharkMesh(){
+    const g=new THREE.Group();
+    const bodyMat=new THREE.MeshStandardMaterial({color:0x556677,roughness:0.4,metalness:0.2});
+    // Body - elongated, aligned along Z (forward = -Z like boats)
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(2,3,18,8),bodyMat);
+    body.rotation.x=Math.PI/2;body.position.set(0,0,0);g.add(body);
+    // Nose cone pointing forward (-Z)
+    const nose=new THREE.Mesh(new THREE.ConeGeometry(2,6,8),bodyMat);
+    nose.rotation.x=-Math.PI/2;nose.position.set(0,0,-12);g.add(nose);
+    // Dorsal fin
+    const finMat=new THREE.MeshStandardMaterial({color:0x445566,roughness:0.5});
+    const fin=new THREE.Mesh(new THREE.ConeGeometry(1.5,6,4),finMat);
+    fin.position.set(0,5,0);g.add(fin);
+    // Tail pointing back (+Z)
+    const tail=new THREE.Mesh(new THREE.ConeGeometry(2.5,5,4),finMat);
+    tail.rotation.x=Math.PI*0.15;tail.position.set(0,2,10);g.add(tail);
+    // Eyes - red
+    const eyeMat=new THREE.MeshBasicMaterial({color:0xff2222});
+    const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.6,6,6),eyeMat);
+    eyeL.position.set(1.8,1,-6);g.add(eyeL);
+    const eyeR=eyeL.clone();eyeR.position.x=-1.8;g.add(eyeR);
+    // Scale 2x
+    g.scale.set(2,2,2);
+    return g;
+}
+
+function spawnShark(){
+    sharkSpawnCount++;
+    const ang=Math.random()*Math.PI*2;
+    const r=WORLD_R*0.7;
+    const x=WORLD_CX+Math.cos(ang)*r;
+    const z=WORLD_CZ+Math.sin(ang)*r;
+    // Each shark is faster than the last
+    const speedMult=1+sharkSpawnCount*0.15;
+    const spd=sharkBaseSpeed*speedMult;
+    const mesh=makeSharkMesh();
+    mesh.position.set(x,-2,z);
+    sharkGroup.add(mesh);
+    const shark={x,z,angle:Math.random()*Math.PI*2,speed:spd,mesh,target:null,thinkTimer:0};
+    sharks.push(shark);
+    spawnStatusSprite(x,z,'🦈 SHARK!','#d32f2f');
+    playTone(150,0.25,0.5,'sawtooth');
+}
+
+function spawnExplosion(x,z){
+    // Ring of fire particles
+    const _explGeo=new THREE.SphereGeometry(1,3,3);
+    for(let i=0;i<12;i++){
+        const colors=[0xff5722,0xff9800,0xffeb3b,0xd32f2f,0xff6f00];
+        const mat=new THREE.MeshBasicMaterial({color:colors[Math.floor(Math.random()*5)],transparent:true,opacity:1});
+        const m=new THREE.Mesh(_explGeo,mat);
+        m.position.set(x,2+Math.random()*3,z);
+        effectGroup.add(m);
+        const ang=Math.PI*2*i/12+Math.random()*0.3;
+        const spd=1.5+Math.random()*2;
+        particles3d.push({mesh:m,vx:Math.cos(ang)*spd,vy:1.5+Math.random()*1.5,vz:Math.sin(ang)*spd,life:40+Math.floor(Math.random()*15),maxLife:55});
+    }
+    // Debris chunks
+    const _debrisGeo=new THREE.BoxGeometry(1.2,0.6,1.2);
+    const debrisMat=new THREE.MeshStandardMaterial({color:0x8B6914,roughness:0.8,transparent:true,opacity:1});
+    for(let i=0;i<5;i++){
+        const m=new THREE.Mesh(_debrisGeo,debrisMat.clone());
+        m.position.set(x,3,z);
+        effectGroup.add(m);
+        const ang=Math.PI*2*i/5;
+        particles3d.push({mesh:m,vx:Math.cos(ang)*(1+Math.random()),vy:1+Math.random()*2,vz:Math.sin(ang)*(1+Math.random()),life:60,maxLife:60});
+    }
+    // Shockwave ring
+    const ringGeo=new THREE.RingGeometry(0.5,2,24);
+    const ringMat=new THREE.MeshBasicMaterial({color:0xffeb3b,transparent:true,opacity:0.8,side:THREE.DoubleSide});
+    const ring=new THREE.Mesh(ringGeo,ringMat);
+    ring.rotation.x=-Math.PI/2;ring.position.set(x,3,z);
+    effectGroup.add(ring);
+    particles3d.push({mesh:ring,vx:0,vy:0.05,vz:0,life:30,maxLife:30,shockwave:true});
+    // Sound
+    playTone(100,0.3,0.6,'sawtooth');
+    setTimeout(()=>playTone(80,0.2,0.4,'square'),100);
+    setTimeout(()=>playTone(200,0.15,0.3,'sine'),200);
+}
 
 function initGame(){
     // Clear 3D
@@ -985,8 +1301,23 @@ function initGame(){
     profitWindow=[];totalWelfare=0;welfareThisSec=0;welfareHist=[];scenarioTimeLeft=90*60;scenarioActive=true;
     currentPrice=DEMAND_INTERCEPT;supplySmooth=0;totalHarvestRate=0;
     sanctuaries=[];placingSanctuary=false;$('placingIndicator').style.display='none';
+    // Clear sharks
+    while(sharkGroup.children.length)sharkGroup.remove(sharkGroup.children[0]);
+    sharks=[];cumulativeFishingTime=0;sharkSpawnCount=0;
 
-    player={x:W3/2,z:H3/2,vx:0,vz:0,angle:-Math.PI/2,speed:0,catch:0,profit:0};
+    player={x:W3/2,z:H3/2,vx:0,vz:0,angle:-Math.PI/2,speed:0,catch:0,profit:0,crewMeshes:[],_recentRevenue:0};
+    // Player dock
+    const pDockAng=-Math.PI/2;
+    player.dockX=WORLD_CX+Math.cos(pDockAng)*(WORLD_R+15);
+    player.dockZ=WORLD_CZ+Math.sin(pDockAng)*(WORLD_R+15);
+    player.dockAng=pDockAng;
+    const pDock=makeDockMesh(player.dockX,player.dockZ,player.dockAng);
+    sanctGroup.add(pDock);
+    // Player coin pile
+    player.coinPile=new THREE.Group();
+    player.coinPile.position.set(player.dockX,0,player.dockZ);
+    sanctGroup.add(player.coinPile);
+
     playerMesh=makeBoatMesh(0x4fc3f7);
     const ps=SIZE_LEVELS[sizeIdx]*0.8;playerMesh.scale.set(ps,ps,ps);
     playerMesh.position.set(player.x,0,player.z);boatGroup.add(playerMesh);
@@ -1012,23 +1343,26 @@ function spawnBirthEffect(x,z){
     }
 }
 let _popupOffset=0; // stagger popups
+const _catchGeoSmall=new THREE.SphereGeometry(0.3,3,3);
+const _catchGeoLarge=new THREE.SphereGeometry(0.6,3,3);
+let _botCatchCounter=0;
 function spawnCatchEffect(x,z,isPlayer,earnAmount){
     const col=isPlayer?0xf6c643:0xef5350;
-    const particleCount=fpvMode?3:6;
-    for(let i=0;i<particleCount;i++){
-        const geo=new THREE.SphereGeometry(fpvMode?0.3:0.6,4,4);
+    // Fewer particles for bots, shared geometry
+    const pCount=isPlayer?(fpvMode?2:4):(fpvMode?1:2);
+    const geo=fpvMode?_catchGeoSmall:_catchGeoLarge;
+    for(let i=0;i<pCount;i++){
         const mat=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:1});
         const m=new THREE.Mesh(geo,mat);
-        const ang=Math.PI*2*i/particleCount;
+        const ang=Math.PI*2*i/pCount;
         m.position.set(x,-1,z);effectGroup.add(m);
-        particles3d.push({mesh:m,vx:Math.cos(ang)*(fpvMode?0.4:0.8),vy:0.6+Math.random()*0.4,vz:Math.sin(ang)*(fpvMode?0.4:0.8),life:30,maxLife:30});
+        particles3d.push({mesh:m,vx:Math.cos(ang)*(fpvMode?0.4:0.8),vy:0.6+Math.random()*0.4,vz:Math.sin(ang)*(fpvMode?0.4:0.8),life:25,maxLife:25});
     }
     // Floating profit text
     if(isPlayer&&earnAmount>0){
         _popupOffset=(_popupOffset+1)%3;
         const canvas2=document.createElement('canvas');
         if(fpvMode){
-            // Compact, clean text for FPV
             canvas2.width=256;canvas2.height=96;
             const ctx2=canvas2.getContext('2d');
             ctx2.font='bold 64px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
@@ -1047,8 +1381,8 @@ function spawnCatchEffect(x,z,isPlayer,earnAmount){
             canvas2.width=512;canvas2.height=192;
             const ctx2=canvas2.getContext('2d');
             ctx2.font='bold 120px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
-            ctx2.shadowColor='#ffeb3b';ctx2.shadowBlur=30;
-            ctx2.strokeStyle='#2a1f00';ctx2.lineWidth=10;
+            ctx2.shadowColor='#000000';ctx2.shadowBlur=4;
+            ctx2.strokeStyle='#1a1200';ctx2.lineWidth=8;
             ctx2.fillStyle='#ffeb3b';
             const txt='+$'+earnAmount.toFixed(1);
             ctx2.strokeText(txt,256,96);ctx2.fillText(txt,256,96);
@@ -1062,20 +1396,26 @@ function spawnCatchEffect(x,z,isPlayer,earnAmount){
             particles3d.push({mesh:sprite,vx:ox*0.02,vy:0.4,vz:0,life:70,maxLife:70});
         }
     }
+    // Bot profit text — only every 3rd catch to reduce canvas texture creation
     if(!isPlayer){
-        const canvas2=document.createElement('canvas');
-        canvas2.width=256;canvas2.height=128;
-        const ctx2=canvas2.getContext('2d');
-        ctx2.font='bold 72px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
-        ctx2.fillStyle='#ef5350';
-        const profitText=earnAmount>0?'$'+earnAmount.toFixed(1):'$0';
-        ctx2.fillText(profitText,128,64);
-        const tex=new THREE.CanvasTexture(canvas2);
-        const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
-        const sprite=new THREE.Sprite(spriteMat);
-        sprite.scale.set(18,9,1);
-        sprite.position.set(x,6,z);effectGroup.add(sprite);
-        particles3d.push({mesh:sprite,vx:0,vy:0.2,vz:0,life:35,maxLife:35});
+        _botCatchCounter++;
+        if(_botCatchCounter%3===0){
+            const canvas2=document.createElement('canvas');
+            canvas2.width=256;canvas2.height=96;
+            const ctx2=canvas2.getContext('2d');
+            ctx2.font='bold 64px Fredoka';ctx2.textAlign='center';ctx2.textBaseline='middle';
+            ctx2.shadowColor='#000';ctx2.shadowBlur=2;
+            ctx2.strokeStyle='#1a0000';ctx2.lineWidth=4;
+            ctx2.fillStyle='#ef5350';
+            const profitText=earnAmount>0?'$'+earnAmount.toFixed(1):'$0';
+            ctx2.strokeText(profitText,128,48);ctx2.fillText(profitText,128,48);
+            const tex=new THREE.CanvasTexture(canvas2);
+            const spriteMat=new THREE.SpriteMaterial({map:tex,transparent:true,opacity:1,depthTest:false});
+            const sprite=new THREE.Sprite(spriteMat);
+            sprite.scale.set(18,9,1);
+            sprite.position.set(x,6,z);effectGroup.add(sprite);
+            particles3d.push({mesh:sprite,vx:0,vy:0.2,vz:0,life:35,maxLife:35});
+        }
     }
 }
 
@@ -1223,6 +1563,7 @@ function updateBotEntryExit(){
                     spawnStatusSprite(b.x,b.z,'🚫 Exited industry','#ef5350');
                     if(b.mesh)boatGroup.remove(b.mesh);
                     if(b.dockMesh)sanctGroup.remove(b.dockMesh);
+                    if(b.coinPile)sanctGroup.remove(b.coinPile);
                     if(selectedBot===b){$('boatInfo').classList.remove('show');selectedBot=null;}
                     bots.splice(idx,1);{const ab=bots.filter(b=>!b.docked);$('boatVal').textContent=ab.length+'/'+bots.length;}
                 }
@@ -1263,8 +1604,12 @@ function update(){
 
     // Camera follow player smoothly
     if(fpvMode){
-        // Chase cam: behind and above boat, with user-adjustable distance/height/angle
-        const fpvAngle=player.angle+fpvAngleOffset;
+        // Smooth the camera angle — lerp toward player angle to avoid snap on turn
+        let angleDiff=player.angle-fpvSmoothedAngle;
+        while(angleDiff>Math.PI)angleDiff-=Math.PI*2;
+        while(angleDiff<-Math.PI)angleDiff+=Math.PI*2;
+        fpvSmoothedAngle+=angleDiff*0.025; // very gentle angle follow
+        const fpvAngle=fpvSmoothedAngle+fpvAngleOffset;
         const lookDist=150;
         const camX=player.x-Math.sin(fpvAngle)*fpvDist;
         const camZ=player.z+Math.cos(fpvAngle)*fpvDist;
@@ -1344,7 +1689,6 @@ function update(){
                 bot.targetFish=best;bot.thinkTimer=10+Math.floor(Math.random()*20);
             }
             let bt=0.85;
-            if(policy==='quota'&&bot.catch>=QUOTA_LIMIT*bot.greed){bt=0;bot.targetFish=null;}
             if(bot.targetFish){
                 const des=Math.atan2(bot.targetFish.x-bot.x,-(bot.targetFish.z-bot.z));
                 let diff=des-bot.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
@@ -1428,31 +1772,159 @@ function update(){
     }
 
     // ─ Catch ─
-    const pQuotaOk=policy!=='quota'||player.catch<QUOTA_LIMIT;
     const aTax=getActiveTax();const effPrice=currentPrice-aTax;
     for(let i=fish.length-1;i>=0;i--){
         const f=fish[i];if(isInSanctuary(f.x,f.z))continue;
         const d=Math.hypot(f.x-player.x,f.z-player.z);
-        if(d<catchR&&pQuotaOk){
+        if(d<catchR){
             const earn=Math.max(0,Math.round(effPrice*10)/10);
             player.catch++;player.profit+=earn;profitThisSec+=earn;welfareThisSec+=earn;harvestThisSec++;
             spawnCatchEffect(player.x,player.z,true,earn);
             spawnCatchLine(player.x,player.z,f.x,f.z);
+            if(earn>0)spawnCoinTrail(player.x,player.z,player.dockX,player.dockZ,1);
             playCatchSound(true);
             if(f.mesh)fishGroup.remove(f.mesh);fish.splice(i,1);continue;
         }
         for(const bot of activeBots){
             const bd=Math.hypot(f.x-bot.x,f.z-bot.z);
-            const bqOk=policy!=='quota'||bot.catch<QUOTA_LIMIT*bot.greed;
-            if(bd<catchR*.75&&bqOk){
+            if(bd<catchR*.75){
                 const botEarn=Math.max(0,currentPrice-getActiveTax());
-                bot.catch++;botTotalCatch++;harvestThisSec++;welfareThisSec+=botEarn;
+                bot.catch++;bot.totalProfit+=botEarn;botTotalCatch++;harvestThisSec++;welfareThisSec+=botEarn;
                 bot.actualCatchesThisSec++; // feeds Bayesian belief update
                 spawnCatchEffect(bot.x,bot.z,false,botEarn);
                 spawnCatchLine(bot.x,bot.z,f.x,f.z);
+                if(botEarn>0&&bot.catch%3===0)spawnCoinTrail(bot.x,bot.z,bot.dockX,bot.dockZ,1);
                 playCatchSound(false);
                 if(f.mesh)fishGroup.remove(f.mesh);fish.splice(i,1);break;
             }
+        }
+    }
+
+    // ─ Ramming (Pirate scenario) ─
+    if(rammingEnabled){
+        const ramRadius=getCatchR()*1.2;
+        for(const bot of activeBots){
+            const rd=Math.hypot(player.x-bot.x,player.z-bot.z);
+            if(rd<ramRadius&&player.speed>2){
+                // Ram! Send bot back to dock
+                bot.returning=true;
+                bot.totalProfit=Math.max(0,bot.totalProfit*0.85); // 15% profit penalty
+                bot.belief_catchRate*=0.5; // discourage re-entry
+                spawnStatusSprite(bot.x,bot.z,'💥 Rammed!','#ff5722');
+                spawnCoinBurst(bot.x,bot.z,8);
+                // Knockback
+                const kx=(bot.x-player.x)/rd,kz=(bot.z-player.z)/rd;
+                bot.vx+=kx*3;bot.vz+=kz*3;
+                player.vx-=kx*0.5;player.vz-=kz*0.5;
+                playTone(200,0.2,0.3,'sawtooth');
+            }
+        }
+    }
+
+    // ─ Sharks ─
+    if(sharksEnabled){
+        // Accumulate fishing time (1 frame per active bot + player)
+        const activeBoatCount=activeBots.length+1; // +1 for player
+        cumulativeFishingTime+=activeBoatCount;
+        const threshFrames=sharkThreshold*60; // convert seconds to frames
+        const progress=cumulativeFishingTime%threshFrames;
+        // Spawn shark when threshold reached
+        if(cumulativeFishingTime>0&&progress<activeBoatCount&&cumulativeFishingTime>=threshFrames*(sharks.length+1)){
+            spawnShark();
+        }
+        // Update shark bar
+        if(gameTime%10===0){
+            const pct=Math.min(100,(progress/threshFrames)*100);
+            $('sharkBar').style.width=pct+'%';
+            $('sharkProgress').textContent=Math.floor(pct)+'%';
+            $('sharkCount').textContent='🦈 '+sharks.length;
+        }
+        // Shark AI: chase nearest active boat
+        for(const shark of sharks){
+            shark.thinkTimer--;
+            if(shark.thinkTimer<=0){
+                // Find nearest target (bot or player)
+                let best=null,bestD=Infinity;
+                // Player
+                const pd=Math.hypot(player.x-shark.x,player.z-shark.z);
+                if(pd<bestD){bestD=pd;best={x:player.x,z:player.z,isPlayer:true};}
+                // Active bots
+                for(const bot of activeBots){
+                    const bd=Math.hypot(bot.x-shark.x,bot.z-shark.z);
+                    if(bd<bestD){bestD=bd;best={x:bot.x,z:bot.z,isPlayer:false,bot};}
+                }
+                shark.target=best;
+                shark.thinkTimer=15+Math.floor(Math.random()*10);
+            }
+            // Move toward target
+            if(shark.target){
+                const dx=shark.target.x-shark.x,dz=shark.target.z-shark.z;
+                const des=Math.atan2(dx,-dz);
+                let diff=des-shark.angle;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;
+                shark.angle+=Math.sign(diff)*Math.min(Math.abs(diff),0.06);
+            }
+            shark.x+=Math.sin(shark.angle)*shark.speed;
+            shark.z+=-Math.cos(shark.angle)*shark.speed;
+            // Clamp to world
+            const sc2=clampToCircle(shark.x,shark.z);shark.x=sc2.x;shark.z=sc2.z;
+            // Animate mesh
+            if(shark.mesh){
+                shark.mesh.position.set(shark.x,-2+Math.sin(gameTime*0.04)*1.5,shark.z);
+                shark.mesh.rotation.y=-shark.angle;
+                const wobble=Math.sin(gameTime*0.08)*0.1;
+                shark.mesh.rotation.z=wobble;
+            }
+            // Check collision with boats
+            const eatRadius=12;
+            // Player
+            if(Math.hypot(player.x-shark.x,player.z-shark.z)<eatRadius){
+                spawnExplosion(player.x,player.z);
+                // End scenario for player
+                collapsed=true;scenarioActive=false;
+                const colElapsedSecs=Math.max(1,Math.floor(gameTime/60));
+                const colDiscFactor=discountRate>0?Math.pow(1+discountRate,colElapsedSecs):1;
+                const colFishVal=(fish.length*currentPrice)/colDiscFactor;
+                const colFinalWelfare=totalWelfare+colFishVal;
+                const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario].profit;
+                if(isNew||!highScores[currentScenario])highScores[currentScenario]={profit:player.profit,welfare:colFinalWelfare};
+                const al=$('collapseAlert');
+                al.innerHTML=`<h2 style="color:var(--red)">🦈 Eaten by Shark!</h2><p>A shark destroyed your boat!</p>
+                    <div class="score-grid"><span class="sg-label">Your Profit</span><span class="sg-val" style="color:var(--gold)">$${player.profit.toFixed(0)}</span>
+                    <span class="sg-label">Total Welfare</span><span class="sg-val" style="color:var(--green)">$${colFinalWelfare.toFixed(0)}</span></div>
+                    <button class="restart-btn" onclick="window.applyScenario('${currentScenario}')">🔄 Retry</button>`;
+                al.classList.add('show');
+                if(playerMesh){boatGroup.remove(playerMesh);playerMesh=null;}
+                break;
+            }
+            // Bots
+            for(let bi=bots.length-1;bi>=0;bi--){
+                const bot=bots[bi];
+                if(bot.docked)continue;
+                if(Math.hypot(bot.x-shark.x,bot.z-shark.z)<eatRadius){
+                    spawnExplosion(bot.x,bot.z);
+                    spawnStatusSprite(bot.x,bot.z,'🦈 DESTROYED','#d32f2f');
+                    if(bot.mesh)boatGroup.remove(bot.mesh);
+                    if(bot.dockMesh)sanctGroup.remove(bot.dockMesh);
+                    if(bot.coinPile)sanctGroup.remove(bot.coinPile);
+                    if(selectedBot===bot){$('boatInfo').classList.remove('show');selectedBot=null;}
+                    bots.splice(bi,1);
+                }
+            }
+        }
+    }
+
+    // ─ Coin piles + crew + profit indicators (every 30 frames) ─
+    if(gameTime%30===0){
+        // Player coin pile + crew
+        if(player.coinPile)updateCoinPile(player.coinPile,player.profit);
+        // Track player revenue rate (smoothed)
+        player._recentRevenue=(player._recentRevenue||0)*0.8+profitThisSec*0.2*60;
+        updateBoatCrew(player);
+        // Bot coin piles + crew + profit indicators
+        for(const bot of bots){
+            if(bot.coinPile)updateCoinPile(bot.coinPile,bot.totalProfit);
+            if(!bot.docked&&!bot.returning)updateBoatCrew(bot);
+            if(!bot.docked&&!bot.returning)updateProfitIndicator(bot);
         }
     }
 
@@ -1471,11 +1943,27 @@ function update(){
     // ─ Particles ─
     particles3d=particles3d.filter(p=>{
         p.life--;p.mesh.position.x+=p.vx;p.mesh.position.y+=p.vy;p.mesh.position.z+=p.vz;
-        p.vx*=.95;p.vy*=.95;p.vz*=.95;
-        p.mesh.material.opacity=p.life/p.maxLife;
-        if(p.mesh.isSprite){/* keep sprite scale constant */}
-        else{const s=Math.max(0.01,p.life/p.maxLife);p.mesh.scale.set(s,s,s);}
-        if(p.life<=0){effectGroup.remove(p.mesh);return false;}return true;
+        if(p.coinFx){
+            // Coin particles: decelerate gently, fade out smoothly, flicker color
+            p.vx*=.985;p.vy*=.985;p.vz*=.985;
+            const t=p.life/p.maxLife;
+            p.mesh.material.opacity=t*t; // quadratic fade — mostly visible early, fades fast at end
+            const flicker=0.7+Math.sin(p.life*0.8)*0.3;
+            const s=Math.max(0.05,t*1.2);
+            p.mesh.scale.set(s*flicker,s*flicker,s*flicker);
+            p.mesh.material.color.setRGB(1,0.7+t*0.3,0.2*t); // gold→orange as it fades
+        } else if(p.shockwave){
+            const t=1-p.life/p.maxLife;
+            const s=1+t*25;
+            p.mesh.scale.set(s,s,s);
+            p.mesh.material.opacity=(1-t)*(1-t);
+        } else {
+            p.vx*=.95;p.vy*=.95;p.vz*=.95;
+            p.mesh.material.opacity=p.life/p.maxLife;
+            if(p.mesh.isSprite){/* keep sprite scale constant */}
+            else{const s=Math.max(0.01,p.life/p.maxLife);p.mesh.scale.set(s,s,s);}
+        }
+        if(p.life<=0){effectGroup.remove(p.mesh);if(p.coinFx)_coinParticleCount--;return false;}return true;
     });
 
     // Catch lines fade quickly
@@ -1538,19 +2026,19 @@ function update(){
         const colFishStockValue=(fish.length*currentPrice)/colDiscFactor;
         const colFinalWelfare=totalWelfare+colFishStockValue;
         const code=makeVerifyCode(currentScenario,player.profit,colFinalWelfare,player.catch,fish.length);
-        const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario];
-        if(highScores[currentScenario]===undefined)highScores[currentScenario]=player.profit;
-        if(isNew&&player.profit>0)highScores[currentScenario]=player.profit;
+        const isNew=highScores[currentScenario]===undefined||player.profit>highScores[currentScenario].profit;
+        if(highScores[currentScenario]===undefined)highScores[currentScenario]={profit:player.profit,welfare:colFinalWelfare};
+        if(isNew&&player.profit>0)highScores[currentScenario]={profit:player.profit,welfare:colFinalWelfare};
         updateBestScoresDisplay();
         // Build all-scenario scores summary
-        const scenarioNames2={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype'};
+        const scenarioNames2={freeplay:'Free Play',simple:'Simple',solo:'Solo',freeentry:'Free Entry',fast:'Speed',policy:'Policy',hype:'Hype',pirate:'Pirate',sharks:'Sharks'};
         let allScoresHtml2='<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(79,195,247,.15)"><div style="font-size:.44rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:4px">All Scenario Best Scores</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;font-size:.48rem">';
         for(const key in SCENARIOS){
             const name=scenarioNames2[key]||key;
             const score=highScores[key];
             const isCurrent=key===currentScenario;
             const color=score!==undefined?(isCurrent?'var(--gold)':'var(--text)'):'var(--text-dim)';
-            const val=score!==undefined?'$'+score.toFixed(0):'—';
+            const val=score!==undefined?'P$'+score.profit.toFixed(0)+' W$'+score.welfare.toFixed(0):'—';
             allScoresHtml2+=`<span style="color:${color};font-family:'JetBrains Mono',monospace;font-weight:${isCurrent?'700':'500'}">${isCurrent?'▸ ':''}${name}: ${val}</span>`;
         }
         allScoresHtml2+='</div></div>';

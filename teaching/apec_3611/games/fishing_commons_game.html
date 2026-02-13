@@ -182,7 +182,7 @@ body.basic-mode #c{width:calc(100% - var(--sidebar) - 230px);left:var(--sidebar)
         <div class="chk-group"><input type="checkbox" id="ramChk"><label for="ramChk">Enable ramming</label></div>
         <div class="chk-group"><input type="checkbox" id="sharkChk"><label for="sharkChk">Enable sharks</label></div>
         <div class="set-group"><span class="set-label">🦈 Thresh</span><div class="set-btn" id="sharkThreshMinus">−</div><span class="set-val" id="sharkThreshVal">25</span><div class="set-btn" id="sharkThreshPlus">+</div></div>
-        <div class="set-group"><span class="set-label">🦈 Speed</span><div class="set-btn" id="sharkSpdMinus">−</div><span class="set-val" id="sharkSpdVal">3</span><div class="set-btn" id="sharkSpdPlus">+</div></div>
+        <div class="set-group"><span class="set-label">🦈 Speed</span><div class="set-btn" id="sharkSpdMinus">−</div><span class="set-val" id="sharkSpdVal">2</span><div class="set-btn" id="sharkSpdPlus">+</div></div>
         <div style="margin-top:2px"><span class="sb-label">Shark Spawn</span>
             <div class="stock-bar-outer" style="height:8px"><div class="stock-bar-inner" id="sharkBar" style="width:0%;background:linear-gradient(90deg,#ff5722,#d32f2f)"></div></div>
             <div style="display:flex;justify-content:space-between;font-size:.38rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)"><span id="sharkProgress">0%</span><span id="sharkCount">🦈 0</span></div>
@@ -612,7 +612,7 @@ let sharks=[];
 let sharkGroup=new THREE.Group();
 let cumulativeFishingTime=0; // frames of all boats fishing
 let sharkThreshold=25; // seconds of fishing before shark spawns
-let sharkBaseSpeed=3;
+let sharkBaseSpeed=2;
 let sharkSpawnCount=0; // how many sharks have spawned total
 
 const COLLAPSE_THRESHOLD=3,BASE_FISH_PRICE=5,QUOTA_LIMIT=50,SANCTUARY_RADIUS=60;
@@ -741,7 +741,7 @@ const SCENARIOS={
     policy:{name:'Policy',spawn:true,speed:7,mom:1,growth:3,hype:7,allee:0.40,fpv:false,taxStart:3,policyStart:'open',policyEnabled:true,desc:'Use tax or sanctuary to maximize welfare.'},
     hype:{name:'Hype Bubble',spawn:true,speed:7,mom:1,growth:1,hype:9,allee:0.40,fpv:false,desc:'Extreme hype! Survive the bubble.'},
     pirate:{name:'Pirate',spawn:true,speed:9,mom:2,growth:3,hype:7,allee:0.40,fpv:true,ramming:true,school:2,desc:'Ram other boats to send them to dock! Aggressive strategy.'},
-    sharks:{name:'Sharks',spawn:true,speed:9,mom:2,growth:3,hype:7,allee:0.01,fpv:true,ramming:true,school:2,sharksEnabled:true,sharkThresh:25,sharkSpd:3,desc:'Overfishing attracts sharks! They destroy boats permanently.'}
+    sharks:{name:'Sharks',spawn:true,speed:9,mom:2,growth:3,hype:7,allee:0.04,fpv:true,ramming:true,school:2,sharksEnabled:true,sharkThresh:25,sharkSpd:2,desc:'Overfishing attracts sharks! They destroy boats permanently.'}
 };
 
 function applyScenario(s){

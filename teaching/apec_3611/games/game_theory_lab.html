@@ -41,6 +41,7 @@
         .action-btn:hover{border-color:#4299e1;background:#ebf8ff;transform:translateY(-1px)}.action-btn:active{transform:translateY(0)}
         .action-btn .btn-label{font-size:.9rem;font-weight:700;color:#1a202c;display:block}.action-btn .btn-sub{font-size:.7rem;color:#718096;margin-top:2px}
         .action-btn.cooperate:hover{border-color:#38a169;background:#f0fff4}.action-btn.defect:hover{border-color:#e53e3e;background:#fff5f5}
+        .action-btn.disabled{opacity:0.5;pointer-events:none;filter:grayscale(1);}
         .round-result{padding:12px;border-radius:10px;margin:10px 0;text-align:center;font-size:.88rem;line-height:1.5;display:none}.round-result.show{display:block}
         .history-scroll{max-height:180px;overflow-y:auto;margin-top:8px}
         .history-row{display:grid;grid-template-columns:30px 1fr 1fr 50px 50px;gap:4px;padding:5px 4px;font-size:.74rem;border-bottom:1px solid #edf2f7;align-items:center}
@@ -80,6 +81,33 @@
         .opt-row input[type="checkbox"]{accent-color:#4299e1;cursor:pointer;margin:0;width:14px;height:14px}
         .opt-section-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:#a0aec0;margin:10px 0 4px;font-weight:600}.opt-section-label:first-child{margin-top:0}
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 100;
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+        .modal-content {
+            background: #fff; padding: 32px; border-radius: 16px;
+            max-width: 440px; width: 90%; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-title { font-size: 1.5rem; font-weight: 700; color: #2d3748; margin-bottom: 8px; }
+        .modal-score { font-size: 3rem; font-weight: 800; color: #2b6cb0; margin: 16px 0; font-family: 'Consolas', monospace; }
+        .modal-desc { color: #718096; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; }
+        .reveal-box { background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+        .reveal-label { font-size: 0.75rem; text-transform: uppercase; color: #718096; font-weight: 700; letter-spacing: 0.5px; }
+        .reveal-val { font-size: 1.2rem; font-weight: 700; color: #2c5282; margin-top: 4px; }
+        .perf-bar { height: 8px; background: #edf2f7; border-radius: 4px; overflow: hidden; margin: 0 auto 8px; width: 100%; }
+        .perf-fill { height: 100%; background: linear-gradient(90deg, #4299e1, #48bb78); width: 0%; transition: width 1s ease 0.3s; }
+        .modal-btn { background: #2b6cb0; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: background 0.2s; }
+        .modal-btn:hover { background: #2c5282; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media(max-width:1100px){.app-grid{grid-template-columns:1fr}.controls-panel{grid-row:auto}.bottom-panel{grid-column:auto}.concepts-grid{grid-template-columns:repeat(2,1fr)}}
         .katex{font-size:1em}
     </style>
@@ -112,9 +140,10 @@
             <hr class="section-divider">
             <div class="panel-title">Opponent Strategy</div>
             <select class="strat-select" id="stratSelect">
+                <option value="hidden_random" selected>❓ Random (Hidden)</option>
                 <option value="tft">Tit-for-Tat</option><option value="random">Random (50/50)</option><option value="always_c">Always Cooperate</option><option value="always_d">Always Defect</option><option value="grudger">Grudger (Grim Trigger)</option><option value="pavlov">Pavlov (Win-Stay Lose-Shift)</option><option value="suspicious_tft">Suspicious Tit-for-Tat</option><option value="nash">Play Nash Equilibrium</option>
             </select>
-            <div class="info-box" id="stratDesc"><strong>Tit-for-Tat:</strong> Cooperates first, then copies your previous move. One of the most successful strategies in repeated PD tournaments.</div>
+            <div class="info-box" id="stratDesc"><strong>Hidden Strategy:</strong> The bot has picked a strategy from the list below, but won't tell you which one. Play 10 rounds to reveal the truth and see your score report.</div>
             <hr class="section-divider">
             <button class="reset-btn" id="resetBtn">↺ Reset Game History</button>
         </div>
@@ -124,7 +153,7 @@
             <div id="gameTypeBadge" class="game-type-badge" style="background:#fff5f5;color:#e53e3e;">🔒 Prisoner's Dilemma</div>
             <div class="score-bar">
                 <div class="score-item"><div class="sc-label">Your Total</div><div class="sc-value blue" id="scoreYou">0</div></div>
-                <div class="score-item"><div class="sc-label">Round</div><div class="sc-value gray" id="roundNum">0</div></div>
+                <div class="score-item"><div class="sc-label">Round</div><div class="sc-value gray" id="roundNum">0 / 10</div></div>
                 <div class="score-item"><div class="sc-label">Opponent Total</div><div class="sc-value red" id="scoreOpp">0</div></div>
             </div>
             <div class="matrix-container">
@@ -202,6 +231,33 @@
         </div>
     </div>
 
+    <!-- GAME OVER MODAL -->
+    <div class="modal-overlay" id="gameOverModal">
+        <div class="modal-content">
+            <div class="modal-title">Game Over</div>
+            <div class="modal-desc">10 Rounds Completed</div>
+            
+            <div class="reveal-box">
+                <div class="reveal-label">Your Final Score</div>
+                <div class="modal-score" id="finalScoreDisplay">0</div>
+            </div>
+            
+            <div class="reveal-box" style="background:#fffaf0; border-color:#fbd38d;">
+                <div class="reveal-label">Opponent Strategy Revealed</div>
+                <div class="reveal-val" id="revealedStratName">???</div>
+            </div>
+
+            <div style="text-align:left; margin-bottom:4px; display:flex; justify-content:space-between;">
+                <span class="reveal-label">Performance Rating</span>
+                <span class="reveal-label" id="perfPercent">0%</span>
+            </div>
+            <div class="perf-bar"><div class="perf-fill" id="perfFill"></div></div>
+            <div style="font-size:0.75rem; color:#a0aec0; margin-bottom:24px;">Based on max possible single-round payoff</div>
+
+            <button class="modal-btn" id="modalResetBtn">Play Again</button>
+        </div>
+    </div>
+
 <script>
 function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
 document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
@@ -214,40 +270,175 @@ function saveCanvas(canvas,name,btn){const lbl=btn.querySelector('span');const a
 (function(){
     let R=3,T=5,S=0,P=1;
     let history=[],yourScore=0,oppScore=0;
+    let hiddenStrat = 'tft'; // Default placeholder
 
     const sR=document.getElementById('sR'),sT=document.getElementById('sT'),sS=document.getElementById('sS'),sP=document.getElementById('sP');
     const vR=document.getElementById('vR'),vT=document.getElementById('vT'),vS=document.getElementById('vS'),vP=document.getElementById('vP');
     const scoreCanvas=document.getElementById('scoreCanvas'),sCtx=scoreCanvas.getContext('2d');
     const brCanvas=document.getElementById('brCanvas'),brCtx=brCanvas.getContext('2d');
-    // Expose for copy/save
     window.scoreCanvas=scoreCanvas;window.brCanvas=brCanvas;
 
     const presets={pd:{R:3,T:5,S:0,P:1,name:'🔒 Prisoner\'s Dilemma',color:'#e53e3e',bg:'#fff5f5'},stag:{R:5,T:3,S:0,P:1,name:'🦌 Stag Hunt',color:'#2b6cb0',bg:'#ebf8ff'},chicken:{R:3,T:5,S:1,P:0,name:'🐔 Chicken (Hawk-Dove)',color:'#d69e2e',bg:'#fffff0'},bos:{R:5,T:0,S:0,P:3,name:'💃 Battle of Sexes',color:'#805ad5',bg:'#faf5ff'},matching:{R:1,T:-1,S:-1,P:1,name:'🪙 Matching Pennies',color:'#718096',bg:'#f7fafc'},harmony:{R:5,T:3,S:3,P:1,name:'🕊️ Harmony Game',color:'#38a169',bg:'#f0fff4'},deadlock:{R:1,T:5,S:0,P:3,name:'💀 Deadlock',color:'#4a5568',bg:'#f7fafc'},custom:{R:R,T:T,S:S,P:P,name:'⚙️ Custom',color:'#4299e1',bg:'#ebf8ff'}};
     let activePreset='pd';
 
+    const stratDescs={
+        hidden_random:'<strong>Hidden Strategy:</strong> The bot has picked a strategy from the list below, but won\'t tell you which one. Play 10 rounds to reveal the truth and see your score report.',
+        tft:'<strong>Tit-for-Tat:</strong> Cooperates first, then copies your last move. Simple, forgiving, retaliatory.',
+        random:'<strong>Random:</strong> Cooperates 50% of the time, independent of history.',
+        always_c:'<strong>Always Cooperate:</strong> Cooperates unconditionally. Exploitable but maximizes joint payoff.',
+        always_d:'<strong>Always Defect:</strong> Never cooperates. Maximizes own payoff against cooperators.',
+        grudger:'<strong>Grim Trigger:</strong> Cooperates until you defect once, then defects forever.',
+        pavlov:'<strong>Pavlov:</strong> Repeats last action if high payoff; switches if low. "Win-stay, lose-shift."',
+        suspicious_tft:'<strong>Suspicious TfT:</strong> Like Tit-for-Tat but defects first.',
+        nash:'<strong>Nash Strategy:</strong> Plays the Nash equilibrium strategy (pure or mixed).'
+    };
+
+    const stratNamesForReveal = {
+        tft: "Tit-for-Tat",
+        random: "Random (50/50)",
+        always_c: "Always Cooperate",
+        always_d: "Always Defect",
+        grudger: "Grim Trigger",
+        pavlov: "Pavlov",
+        suspicious_tft: "Suspicious Tit-for-Tat",
+        nash: "Nash Strategy"
+    };
+
+    function rerollHiddenStrat() {
+        const options = ['tft', 'random', 'always_c', 'always_d', 'grudger', 'pavlov', 'suspicious_tft', 'nash'];
+        hiddenStrat = options[Math.floor(Math.random() * options.length)];
+        console.log("Secret strategy selected (shh!):", hiddenStrat);
+    }
+    rerollHiddenStrat();
+
     document.querySelectorAll('.preset-btn').forEach(btn=>{btn.addEventListener('click',()=>{activePreset=btn.dataset.preset;document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(activePreset!=='custom'){const p=presets[activePreset];R=p.R;T=p.T;S=p.S;P=p.P;sR.value=R;sT.value=T;sS.value=S;sP.value=P;}resetGame();updateAll();});});
     [sR,sT,sS,sP].forEach(s=>{s.addEventListener('input',()=>{R=parseInt(sR.value);T=parseInt(sT.value);S=parseInt(sS.value);P=parseInt(sP.value);let matched=false;for(const[key,p]of Object.entries(presets)){if(key==='custom')continue;if(p.R===R&&p.T===T&&p.S===S&&p.P===P){activePreset=key;matched=true;break;}}if(!matched)activePreset='custom';document.querySelectorAll('.preset-btn').forEach(b=>{b.classList.toggle('active',b.dataset.preset===activePreset);});updateAll();});});
 
-    const stratDescs={tft:'<strong>Tit-for-Tat:</strong> Cooperates first, then copies your last move. Simple, forgiving, retaliatory.',random:'<strong>Random:</strong> Cooperates 50% of the time, independent of history.',always_c:'<strong>Always Cooperate:</strong> Cooperates unconditionally. Exploitable but maximizes joint payoff.',always_d:'<strong>Always Defect:</strong> Never cooperates. Maximizes own payoff against cooperators.',grudger:'<strong>Grim Trigger:</strong> Cooperates until you defect once, then defects forever.',pavlov:'<strong>Pavlov:</strong> Repeats last action if high payoff; switches if low. "Win-stay, lose-shift."',suspicious_tft:'<strong>Suspicious TfT:</strong> Like Tit-for-Tat but defects first.',nash:'<strong>Nash Strategy:</strong> Plays the Nash equilibrium strategy (pure or mixed).'};
-    document.getElementById('stratSelect').addEventListener('change',function(){document.getElementById('stratDesc').innerHTML=stratDescs[this.value];});
+    document.getElementById('stratSelect').addEventListener('change',function(){
+        document.getElementById('stratDesc').innerHTML=stratDescs[this.value];
+        resetGame(); 
+    });
 
-    function classifyGame(){if(T>R&&R>P&&P>S)return'pd';if(R>T&&R>P&&P>S&&T>S)return'stag';if(T>R&&R>S&&S>P)return'chicken';if(R>T&&R>S&&P>T&&P>S)return'harmony';if(P>R&&T>R)return'deadlock';if(R>T&&T===S&&S<P)return'bos';if(R===P&&T===-S)return'matching';return'custom';}
+    // Updated Classification Logic to fix Harmony/BoS/Matching confusion
+    function classifyGame(){
+        // PD: T > R > P > S
+        if(T>R && R>P && P>S) return 'pd';
+        // Stag Hunt: R > T > P > S (In preset T=3, P=1, S=0. T>S)
+        if(R>T && R>P && P>S && T>S) return 'stag';
+        // Chicken: T > R > S > P
+        if(T>R && R>S && S>P) return 'chicken';
+        // Deadlock: T > P > R > S (Input file logic was slightly different, but this matches the preset)
+        if(P>R && T>R && R>S) return 'deadlock';
+        
+        // Matching Pennies: Cyclic zero-sum structure. 
+        // Preset: R=1, T=-1, S=-1, P=1. R=P, T=S, R!=T.
+        if(R===P && T===S && R!==T) return 'matching';
+        
+        // Battle of Sexes: Coordination.
+        // Preset: R=5, T=0, S=0, P=3. R > P > T = S.
+        // Specific check: R > T, P > S, T=S.
+        if(R>T && T===S && S<P) return 'bos';
+        
+        // Harmony: Cooperation Dominates.
+        // Preset: R=5, T=3, S=3, P=1. R > T, S > P.
+        if(R>T && S>P) return 'harmony';
+        
+        return 'custom';
+    }
 
     function findNashEquilibria(){const nash=[];if(R>=T)nash.push({you:'C',opp:'C'});if(S>=P&&T>=R)nash.push({you:'C',opp:'D'});if(T>=R&&S>=P)nash.push({you:'D',opp:'C'});if(P>=S)nash.push({you:'D',opp:'D'});const denom=R-T+P-S;let mixedQ=null,mixedP_you=null;if(Math.abs(denom)>.001){mixedQ=(P-S)/denom;mixedP_you=mixedQ;} return{pure:nash,mixedQ,mixedP_you};}
     function findDominantStrategies(){if(R>T&&S>P)return'C';if(R>=T&&S>=P&&(R>T||S>P))return'C (weakly)';if(T>R&&P>S)return'D';if(T>=R&&P>=S&&(T>R||P>S))return'D (weakly)';return null;}
     function findParetoOptimal(){const o=[{you:'C',opp:'C',y:R,o:R},{you:'C',opp:'D',y:S,o:T},{you:'D',opp:'C',y:T,o:S},{you:'D',opp:'D',y:P,o:P}];return o.filter(a=>!o.some(b=>b.y>=a.y&&b.o>=a.o&&(b.y>a.y||b.o>a.o)));}
 
-    function opponentMove(strat){const n=history.length;if(strat==='always_c')return'C';if(strat==='always_d')return'D';if(strat==='random')return Math.random()<.5?'C':'D';if(strat==='tft')return n===0?'C':history[n-1].you;if(strat==='suspicious_tft')return n===0?'D':history[n-1].you;if(strat==='grudger')return history.some(h=>h.you==='D')?'D':'C';if(strat==='pavlov'){if(n===0)return'C';const last=history[n-1],oppLA=last.opp,oppLP=last.oppPay;return oppLP>=R?oppLA:(oppLA==='C'?'D':'C');}if(strat==='nash'){const ne=findNashEquilibria();if(ne.pure.length>0)return ne.pure[0].opp;if(ne.mixedQ!==null&&ne.mixedQ>=0&&ne.mixedQ<=1)return Math.random()<ne.mixedQ?'C':'D';return Math.random()<.5?'C':'D';}return'C';}
+    function opponentMove(strat){
+        const n=history.length;
+        if(strat === 'hidden_random') strat = hiddenStrat;
+        if(strat==='always_c')return'C';
+        if(strat==='always_d')return'D';
+        if(strat==='random')return Math.random()<.5?'C':'D';
+        if(strat==='tft')return n===0?'C':history[n-1].you;
+        if(strat==='suspicious_tft')return n===0?'D':history[n-1].you;
+        if(strat==='grudger')return history.some(h=>h.you==='D')?'D':'C';
+        if(strat==='pavlov'){if(n===0)return'C';const last=history[n-1],oppLA=last.opp,oppLP=last.oppPay;return oppLP>=R?oppLA:(oppLA==='C'?'D':'C');}
+        if(strat==='nash'){const ne=findNashEquilibria();if(ne.pure.length>0)return ne.pure[0].opp;if(ne.mixedQ!==null&&ne.mixedQ>=0&&ne.mixedQ<=1)return Math.random()<ne.mixedQ?'C':'D';return Math.random()<.5?'C':'D';}
+        return'C';
+    }
+    
     function payoffs(you,opp){if(you==='C'&&opp==='C')return[R,R];if(you==='C'&&opp==='D')return[S,T];if(you==='D'&&opp==='C')return[T,S];return[P,P];}
 
-    function playRound(yourAction){const strat=document.getElementById('stratSelect').value,oppAction=opponentMove(strat),[yPay,oPay]=payoffs(yourAction,oppAction);history.push({you:yourAction,opp:oppAction,youPay:yPay,oppPay:oPay});yourScore+=yPay;oppScore+=oPay;const res=document.getElementById('roundResult'),youL=yourAction==='C'?'Cooperated':'Defected',oppL=oppAction==='C'?'Cooperated':'Defected',yC=yourAction==='C'?'#38a169':'#e53e3e',oC=oppAction==='C'?'#38a169':'#e53e3e';res.style.background=yPay>=oPay?'#f0fff4':'#fff5f5';res.style.border=`1px solid ${yPay>=oPay?'#c6f6d5':'#fed7d7'}`;res.innerHTML=`<span style="color:${yC};font-weight:700">You ${youL}</span> vs <span style="color:${oC};font-weight:700">Opponent ${oppL}</span><br><span style="color:#2b6cb0;font-weight:700">+${yPay}</span> for you, <span style="color:#e53e3e;font-weight:700">+${oPay}</span> for opponent`;res.classList.add('show');updateScores();addHistoryRow();drawScoreChart();updateInsight();}
+    function playRound(yourAction){
+        if(history.length >= 10) return;
+
+        const strat=document.getElementById('stratSelect').value;
+        const oppAction=opponentMove(strat);
+        const [yPay,oPay]=payoffs(yourAction,oppAction);
+        
+        history.push({you:yourAction,opp:oppAction,youPay:yPay,oppPay:oPay});
+        yourScore+=yPay;oppScore+=oPay;
+        
+        const res=document.getElementById('roundResult');
+        const youL=yourAction==='C'?'Cooperated':'Defected';
+        const oppL=oppAction==='C'?'Cooperated':'Defected';
+        const yC=yourAction==='C'?'#38a169':'#e53e3e';
+        const oC=oppAction==='C'?'#38a169':'#e53e3e';
+        res.style.background=yPay>=oPay?'#f0fff4':'#fff5f5';
+        res.style.border=`1px solid ${yPay>=oPay?'#c6f6d5':'#fed7d7'}`;
+        res.innerHTML=`<span style="color:${yC};font-weight:700">You ${youL}</span> vs <span style="color:${oC};font-weight:700">Opponent ${oppL}</span><br><span style="color:#2b6cb0;font-weight:700">+${yPay}</span> for you, <span style="color:#e53e3e;font-weight:700">+${oPay}</span> for opponent`;
+        res.classList.add('show');
+        
+        updateScores();
+        addHistoryRow();
+        drawScoreChart();
+        updateInsight();
+
+        if (history.length === 10) triggerGameOver();
+    }
+
+    function triggerGameOver() {
+        const stratSelect = document.getElementById('stratSelect').value;
+        const usedStrat = stratSelect === 'hidden_random' ? hiddenStrat : stratSelect;
+        
+        document.getElementById('btnCoop').classList.add('disabled');
+        document.getElementById('btnDefect').classList.add('disabled');
+
+        const modal = document.getElementById('gameOverModal');
+        document.getElementById('finalScoreDisplay').textContent = yourScore;
+        document.getElementById('revealedStratName').textContent = stratNamesForReveal[usedStrat];
+        
+        const maxSingle = Math.max(R, T, S, P);
+        const maxPossible = maxSingle * 10; 
+        const pct = Math.max(0, Math.min(100, (yourScore / maxPossible) * 100));
+        
+        document.getElementById('perfPercent').textContent = pct.toFixed(1) + "%";
+        document.getElementById('perfFill').style.width = pct + "%";
+        
+        modal.classList.add('show');
+    }
+
     document.getElementById('btnCoop').addEventListener('click',()=>playRound('C'));
     document.getElementById('btnDefect').addEventListener('click',()=>playRound('D'));
 
-    function resetGame(){history=[];yourScore=0;oppScore=0;updateScores();document.getElementById('historyBody').innerHTML='';document.getElementById('roundResult').classList.remove('show');drawScoreChart();updateInsight();}
+    function resetGame(){
+        history=[];yourScore=0;oppScore=0;
+        rerollHiddenStrat();
+        document.getElementById('btnCoop').classList.remove('disabled');
+        document.getElementById('btnDefect').classList.remove('disabled');
+        document.getElementById('gameOverModal').classList.remove('show');
+        updateScores();
+        document.getElementById('historyBody').innerHTML='';
+        document.getElementById('roundResult').classList.remove('show');
+        drawScoreChart();
+        updateInsight();
+    }
     document.getElementById('resetBtn').addEventListener('click',resetGame);
+    document.getElementById('modalResetBtn').addEventListener('click',resetGame);
 
-    function updateScores(){document.getElementById('scoreYou').textContent=yourScore;document.getElementById('scoreOpp').textContent=oppScore;document.getElementById('roundNum').textContent=history.length;}
+    function updateScores(){
+        document.getElementById('scoreYou').textContent=yourScore;
+        document.getElementById('scoreOpp').textContent=oppScore;
+        document.getElementById('roundNum').textContent=history.length + " / 10";
+    }
+
     function addHistoryRow(){const h=history[history.length-1],body=document.getElementById('historyBody'),row=document.createElement('div');row.className='history-row';row.innerHTML=`<div class="rn">${history.length}</div><div class="you-act">${h.you==='C'?'🤝':'🗡️'}</div><div class="opp-act">${h.opp==='C'?'🤝':'🗡️'}</div><div class="you-pay">${h.youPay>=0?'+':''}${h.youPay}</div><div class="opp-pay">${h.oppPay>=0?'+':''}${h.oppPay}</div>`;body.appendChild(row);document.getElementById('historyScroll').scrollTop=99999;}
 
     function updateMatrix(){vR.textContent=R;vT.textContent=T;vS.textContent=S;vP.textContent=P;const ne=findNashEquilibria(),pareto=findParetoOptimal();const cells={CC:document.getElementById('cell_CC'),CD:document.getElementById('cell_CD'),DC:document.getElementById('cell_DC'),DD:document.getElementById('cell_DD')};cells.CC.innerHTML=`<span class="p1">${R}</span>, <span class="p2">${R}</span>`;cells.CD.innerHTML=`<span class="p1">${S}</span>, <span class="p2">${T}</span>`;cells.DC.innerHTML=`<span class="p1">${T}</span>, <span class="p2">${S}</span>`;cells.DD.innerHTML=`<span class="p1">${P}</span>, <span class="p2">${P}</span>`;Object.values(cells).forEach(c=>{c.className='';});ne.pure.forEach(n=>{const k=n.you+n.opp;if(cells[k])cells[k].classList.add('nash');});pareto.forEach(p=>{const k=p.you+p.opp;if(cells[k])cells[k].classList.add('pareto-optimal');});}
@@ -278,12 +469,14 @@ function saveCanvas(canvas,name,btn){const lbl=btn.querySelector('span');const a
             analysis+='Make your first move!';
             box.className='info-box highlight';
             box.innerHTML=`<div style="margin-bottom:8px;line-height:1.55">${story}</div><div style="border-top:1px solid #e2e8f0;padding-top:8px">${analysis}</div>`;
-        }else{
+        }else if(history.length < 10){
             const cr=history.filter(h=>h.you==='C').length/n,or=history.filter(h=>h.opp==='C').length/n,ay=yourScore/n,ao=oppScore/n;
             let v='';if(ay>ao+.5)v='You\'re winning! ';else if(ao>ay+.5)v='Opponent is ahead. ';else v='Scores are close. ';
             if(cr>.7&&or>.7)v+='Mutual cooperation sustaining high joint payoffs.';else if(cr<.3&&or<.3)v+='Mutual defection — the classic trap.';else if(cr>.7&&or<.3)v+='You\'re being exploited!';else if(cr<.3&&or>.7)v+='You\'re exploiting a cooperator.';else v+='Mixed play pattern.';
             box.className='info-box highlight';
             box.innerHTML=`<div style="margin-bottom:8px;line-height:1.55">${story}</div><div style="border-top:1px solid #e2e8f0;padding-top:8px"><strong>After ${n} rounds:</strong> ${v}<br>Your avg: ${ay.toFixed(1)}/round (${(cr*100).toFixed(0)}% coop) | Opp avg: ${ao.toFixed(1)}/round (${(or*100).toFixed(0)}% coop)</div>`;
+        } else {
+             box.innerHTML=`<div style="margin-bottom:8px;line-height:1.55"><strong>Game Over!</strong> Check the score report to see who you were playing against.</div>`;
         }
         renderAllMath();
     }

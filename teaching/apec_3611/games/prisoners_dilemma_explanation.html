@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisoner's Dilemma — Find the Nash Equilibrium</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,500;0,700;1,300;1,500&family=DM+Sans:wght@400;500;700&display=swap');
+
+        :root {
+            --bg: #faf9f7;
+            --card: #ffffff;
+            --border: #e8e5e0;
+            --text: #2c2825;
+            --muted: #8a8580;
+            --accent: #b45309;
+            --accent-light: #fef3c7;
+            --p1: #1e40af;
+            --p1-light: #dbeafe;
+            --p1-star: #2563eb;
+            --p2: #b91c1c;
+            --p2-light: #fee2e2;
+            --p2-star: #dc2626;
+            --nash-bg: #ecfdf5;
+            --nash-border: #059669;
+            --nash-glow: rgba(5, 150, 105, 0.15);
+            --error-bg: #fee2e2;
+            --error-border: #ef4444;
+            --error-text: #991b1b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 32px 24px;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Error Toast */
+        #error-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #fff;
+            border: 2px solid var(--error-border);
+            border-left: 8px solid var(--error-border);
+            color: var(--text);
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 1rem;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 90%;
+            width: 400px;
+        }
+
+        #error-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        #error-toast strong { color: var(--error-text); display: block; margin-bottom: 4px; }
+
+        header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.92rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* Story card */
+        .story-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .story-card p {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: #4a4540;
+        }
+
+        .story-card p + p { margin-top: 12px; }
+
+        .story-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--muted);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Main interaction area */
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 760px) {
+            .game-area { grid-template-columns: 1fr; }
+        }
+
+        .matrix-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        .matrix-card .story-label { margin-bottom: 16px; }
+
+        /* Payoff matrix */
+        .matrix-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .payoff-matrix {
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .payoff-matrix th {
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .payoff-matrix .corner { min-width: 100px; }
+
+        .payoff-matrix .col-h {
+            color: var(--p2);
+        }
+
+        .payoff-matrix .row-h {
+            text-align: right;
+            padding-right: 16px;
+            color: var(--p1);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+
+        .payoff-matrix td.cell {
+            width: 150px;
+            height: 90px;
+            text-align: center;
+            vertical-align: middle;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            position: relative;
+            transition: all 0.25s ease;
+            background: var(--card);
+        }
+
+        .payoff-matrix td.cell.is-nash {
+            background: var(--nash-bg);
+            border-color: var(--nash-border);
+            box-shadow: 0 0 0 3px var(--nash-glow), 0 2px 8px var(--nash-glow);
+        }
+
+        .payoff-pair {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .payoff-pair .comma {
+            color: var(--muted);
+            font-size: 1.1rem;
+            margin: 0 -4px;
+        }
+
+        /* CLICKABLE AREAS IMPROVEMENT */
+        .payoff-val {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 8px; /* Bigger hit area */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.1s;
+            user-select: none;
+        }
+
+        .payoff-val:hover {
+            background-color: #f3f4f6;
+        }
+        
+        /* Shake animation for error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        
+        .shake-it {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            color: var(--error-text) !important;
+            font-weight: 700;
+        }
+
+        .payoff-val.p1 { color: var(--p1); }
+        .payoff-val.p2 { color: var(--p2); }
+
+        /* Stars */
+        .star-slot {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            transition: all 0.2s;
+            vertical-align: middle;
+            position: relative;
+            top: -2px;
+        }
+
+        .star-slot svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.2s;
+        }
+
+        .star-slot.empty svg {
+            fill: none;
+            stroke: #d1ccc7;
+            stroke-width: 1.5;
+            opacity: 0.3;
+        }
+
+        /* Hover effect on parent makes star preview */
+        .payoff-val:hover .star-slot.empty svg {
+            stroke: #a0a0a0;
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+        .star-slot.filled.p1-star svg {
+            fill: var(--p1-star);
+            stroke: var(--p1-star);
+            stroke-width: 0.5;
+            filter: drop-shadow(0 1px 2px rgba(37, 99, 235, 0.3));
+        }
+
+        .star-slot.filled.p2-star svg {
+            fill: var(--p2-star);
+            stroke: var(--p2-star);
+            stroke-width: 0.5;
+            filter: drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3));
+        }
+
+        .star-slot.filled svg {
+            animation: star-pop 0.3s ease;
+        }
+
+        @keyframes star-pop {
+            0% { transform: scale(0.5); opacity: 0.3; }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .nash-badge {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--nash-border);
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .cell.is-nash .nash-badge { opacity: 1; }
+
+        /* Player key */
+        .player-key {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .player-key .key-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .key-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .key-dot.p1 { background: var(--p1); }
+        .key-dot.p2 { background: var(--p2); }
+
+        /* Instructions panel */
+        .instructions-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 22px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step-num.done {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 0.76rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .step-desc strong { color: var(--text); }
+
+        .check-mark {
+            color: #059669;
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .reset-link {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .reset-link button {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 18px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+
+        .reset-link button:hover {
+            border-color: var(--p2);
+            color: var(--p2);
+            background: var(--p2-light);
+        }
+
+        /* Result */
+        .result-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: none;
+        }
+
+        .result-card.show { display: block; }
+
+        .result-card .story-label { margin-bottom: 10px; }
+
+        .result-card p {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #4a4540;
+        }
+
+        .result-card p + p { margin-top: 10px; }
+
+        .result-card .highlight-box {
+            background: var(--nash-bg);
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            color: #065f46;
+            line-height: 1.6;
+        }
+
+        /* Explanation at bottom */
+        .explanation {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .explanation p {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.02rem;
+            line-height: 1.7;
+            color: #4a4540;
+        }
+
+        .explanation p + p { margin-top: 12px; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: var(--muted); font-size: .78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; font-family: 'DM Sans', sans-serif; }
+        .display-options-toggle:hover { color: #5a5550; }
+        .display-options-toggle .arrow { font-size: .6rem; transition: transform .2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: var(--card); border-radius: 12px; padding: 16px 20px; border: 1px solid var(--border); }
+        .display-options-panel.open { display: block; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: .8rem; color: #4a4540; cursor: pointer; }
+        .opt-row input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; margin: 0; }
+
+        .katex { font-size: 1em; }
+    </style>
+</head>
+<body>
+
+<!-- Error Toast -->
+<div id="error-toast">
+    <div id="error-message"></div>
+</div>
+
+<div class="container">
+    <header>
+        <h1>Prisoner's Dilemma — Find the Nash Equilibrium</h1>
+        <p class="subtitle">Mark each player's best response with a ★. The interface will guide you if you make an irrational choice.</p>
+    </header>
+
+    <div class="story-card">
+        <div class="story-label">The Scenario</div>
+        <p>Two suspects are arrested. The prosecutor offers each the same deal: testify against the other (defect), or remain silent (cooperate). If both stay silent, each gets <strong>1 year</strong>. If one testifies while the other stays silent, the testifier goes <strong>free</strong> and the silent one gets <strong>5 years</strong>. If both testify, each gets <strong>3 years</strong>.</p>
+        <p>The payoffs below are written as <em>years avoided</em> (higher is better): getting 0 years = payoff of 5, getting 1 year = 4, getting 3 years = 2, and getting 5 years = 0.</p>
+    </div>
+
+    <div class="game-area">
+        <div class="matrix-card">
+            <div class="story-label">Payoff Matrix</div>
+            <div class="matrix-wrapper">
+                <table class="payoff-matrix">
+                    <tr>
+                        <th class="corner"></th>
+                        <th class="col-h">Suspect 2: Silent</th>
+                        <th class="col-h">Suspect 2: Testify</th>
+                    </tr>
+                    <tr>
+                        <th class="row-h">Suspect 1:<br>Silent</th>
+                        <td class="cell" id="cell-CC">
+                            <div class="payoff-pair">
+                                <!-- Updated: Added onclick to parent span -->
+                                <span class="payoff-val p1" onclick="handleInteraction('1', 'CC', 4, 5)">
+                                    <span class="star-slot empty" id="star-1-CC"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                    4
+                                </span>
+                                <span class="comma">,</span>
+                                <span class="payoff-val p2" onclick="handleInteraction('2', 'CC', 4, 5)">
+                                    4
+                                    <span class="star-slot empty" id="star-2-CC"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                </span>
+                            </div>
+                            <div class="nash-badge">★ Nash Equilibrium ★</div>
+                        </td>
+                        <td class="cell" id="cell-CD">
+                            <div class="payoff-pair">
+                                <span class="payoff-val p1" onclick="handleInteraction('1', 'CD', 0, 2)">
+                                    <span class="star-slot empty" id="star-1-CD"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                    0
+                                </span>
+                                <span class="comma">,</span>
+                                <span class="payoff-val p2" onclick="handleInteraction('2', 'CD', 5, 4)">
+                                    5
+                                    <span class="star-slot empty" id="star-2-CD"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                </span>
+                            </div>
+                            <div class="nash-badge">★ Nash Equilibrium ★</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="row-h">Suspect 1:<br>Testify</th>
+                        <td class="cell" id="cell-DC">
+                            <div class="payoff-pair">
+                                <span class="payoff-val p1" onclick="handleInteraction('1', 'DC', 5, 4)">
+                                    <span class="star-slot empty" id="star-1-DC"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                    5
+                                </span>
+                                <span class="comma">,</span>
+                                <span class="payoff-val p2" onclick="handleInteraction('2', 'DC', 0, 2)">
+                                    0
+                                    <span class="star-slot empty" id="star-2-DC"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                </span>
+                            </div>
+                            <div class="nash-badge">★ Nash Equilibrium ★</div>
+                        </td>
+                        <td class="cell" id="cell-DD">
+                            <div class="payoff-pair">
+                                <span class="payoff-val p1" onclick="handleInteraction('1', 'DD', 2, 0)">
+                                    <span class="star-slot empty" id="star-1-DD"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                    2
+                                </span>
+                                <span class="comma">,</span>
+                                <span class="payoff-val p2" onclick="handleInteraction('2', 'DD', 2, 0)">
+                                    2
+                                    <span class="star-slot empty" id="star-2-DD"><svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span>
+                                </span>
+                            </div>
+                            <div class="nash-badge">★ Nash Equilibrium ★</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="player-key">
+                <div class="key-item"><div class="key-dot p1"></div> Suspect 1's payoff (row player)</div>
+                <div class="key-item"><div class="key-dot p2"></div> Suspect 2's payoff (column player)</div>
+            </div>
+        </div>
+
+        <div class="instructions-card">
+            <div class="story-label">Instructions</div>
+
+            <div class="step" id="step1">
+                <div class="step-num" id="step1-num">1</div>
+                <div class="step-title">Suspect 1's best responses <span id="step1-check"></span></div>
+                <div class="step-desc">Consider each of Suspect 2's choices (columns) separately. Click the <strong style="color:var(--p1)">blue number</strong> that gives Suspect 1 the highest payoff in that situation.</div>
+            </div>
+
+            <div class="step" id="step2">
+                <div class="step-num" id="step2-num">2</div>
+                <div class="step-title">Suspect 2's best responses <span id="step2-check"></span></div>
+                <div class="step-desc">Consider each of Suspect 1's choices (rows) separately. Click the <strong style="color:var(--p2)">red number</strong> that gives Suspect 2 the highest payoff in that situation.</div>
+            </div>
+
+            <div class="step" id="step3">
+                <div class="step-num" id="step3-num">3</div>
+                <div class="step-title">Find the Nash Equilibrium <span id="step3-check"></span></div>
+                <div class="step-desc">The logic of best responses leads to the solution. The cell with two stars is the Nash Equilibrium.</div>
+            </div>
+
+            <div class="reset-link">
+                <button id="resetBtn">Clear all stars</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-card" id="resultCard">
+        <div class="story-label">What you found</div>
+        <div id="resultContent"></div>
+    </div>
+
+    <div class="explanation">
+        <div class="story-label">Explanation</div>
+        <p>A <strong>best response</strong> is the action that gives a player the highest payoff, taking the other player's choice as given. To find Suspect 1's best responses, you fix each column (Suspect 2's action) and ask: which row gives Suspect 1 the higher blue payoff? You mark that with a ★. You do the same for Suspect 2 across rows.</p>
+        <p>A <strong>Nash Equilibrium</strong> is an outcome where every player is simultaneously playing a best response — no one can do better by unilaterally changing their strategy. In the Prisoner's Dilemma, the only Nash Equilibrium is (Testify, Testify), even though (Silent, Silent) gives both players a higher payoff. This is the "dilemma": individual rationality leads to a collectively worse outcome.</p>
+    </div>
+
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="opt-row"><input type="checkbox" id="show-story" checked><label for="show-story">Scenario card</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-key" checked><label for="show-key">Player color key</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-steps" checked><label for="show-steps">Step-by-step instructions</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-explanation" checked><label for="show-explanation">Explanation section</label></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
+document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
+
+const stars = {}; 
+
+// Column groups for P1 (Opponent is 2)
+const p1Columns = {
+    C: ['CC', 'DC'],  // opponent plays Silent
+    D: ['CD', 'DD'],  // opponent plays Testify
+};
+
+// Row groups for P2 (Opponent is 1)
+const p2Rows = {
+    C: ['CC', 'CD'],  // P1 plays Silent
+    D: ['DC', 'DD'],  // P1 plays Testify
+};
+
+let errorTimeout;
+
+function showToast(message) {
+    const toast = document.getElementById('error-toast');
+    const msg = document.getElementById('error-message');
+    msg.innerHTML = message;
+    toast.classList.add('show');
+    
+    clearTimeout(errorTimeout);
+    errorTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000); // Hide after 4 seconds
+}
+
+// MAIN VALIDATION AND CLICK HANDLER
+// player: '1' or '2'
+// cell: 'CC', 'CD', etc.
+// val: the value clicked
+// altVal: the value of the other option in this specific choice set
+function handleInteraction(player, cell, val, altVal) {
+    // 1. Check if unchecking
+    const key = player + '-' + cell;
+    if (stars[key]) {
+        toggleStar(player, cell); // Allow unchecking freely
+        return;
+    }
+
+    // 2. Validation Logic
+    // In Prisoner's Dilemma, dominant strategy implies val must be > altVal.
+    // If they click the lower number, it's an error.
+    if (val < altVal) {
+        // Trigger Error
+        const el = event.currentTarget; // The span clicked
+        el.classList.add('shake-it');
+        setTimeout(() => el.classList.remove('shake-it'), 500);
+
+        const playerName = player === '1' ? "Suspect 1" : "Suspect 2";
+        const oppName = player === '1' ? "Suspect 2" : "Suspect 1";
+        const scenario = getScenarioDescription(player, cell);
+        
+        showToast(`<strong>Irrational Choice!</strong>If ${oppName} chooses ${scenario}, ${playerName} would get <strong>${val}</strong> by choosing this. <br><br>But they could get <strong>${altVal}</strong> by switching! A rational player always takes the higher payoff.`);
+        return; // Stop execution, don't toggle star
+    }
+
+    // 3. If Valid, Toggle
+    toggleStar(player, cell);
+}
+
+function getScenarioDescription(player, cell) {
+    // If Player 1 is clicking, we are looking at a specific Column (P2's choice)
+    if (player === '1') {
+        if (cell === 'CC' || cell === 'DC') return "Silence";
+        return "Testify";
+    }
+    // If Player 2 is clicking, we are looking at a specific Row (P1's choice)
+    if (cell === 'CC' || cell === 'CD') return "Silence";
+    return "Testify";
+}
+
+function toggleStar(player, cell) {
+    const key = player + '-' + cell;
+
+    if (stars[key]) {
+        stars[key] = false;
+    } else {
+        // Clear conflicting stars in the same decision set
+        if (player === '1') {
+            for (const [col, cells] of Object.entries(p1Columns)) {
+                if (cells.includes(cell)) {
+                    cells.forEach(c => { stars['1-' + c] = false; });
+                    break;
+                }
+            }
+        }
+        if (player === '2') {
+            for (const [row, cells] of Object.entries(p2Rows)) {
+                if (cells.includes(cell)) {
+                    cells.forEach(c => { stars['2-' + c] = false; });
+                    break;
+                }
+            }
+        }
+        stars[key] = true;
+    }
+
+    renderStars();
+    checkProgress();
+}
+
+function renderStars() {
+    // Clear all SVG fills first (logic handles the state)
+    document.querySelectorAll('.star-slot').forEach(slot => {
+        const player = slot.id.split('-')[1]; // extract from id="star-1-CC"
+        const cell = slot.id.split('-')[2];
+        const key = player + '-' + cell;
+        const filled = !!stars[key];
+        slot.className = 'star-slot ' + (filled ? 'filled ' + (player === '1' ? 'p1-star' : 'p2-star') : 'empty');
+    });
+
+    // Check Nash (both stars in a cell)
+    ['CC', 'CD', 'DC', 'DD'].forEach(cell => {
+        const el = document.getElementById('cell-' + cell);
+        const has1 = !!stars['1-' + cell];
+        const has2 = !!stars['2-' + cell];
+        el.classList.toggle('is-nash', has1 && has2);
+    });
+}
+
+function checkProgress() {
+    const p1Stars = ['CC', 'CD', 'DC', 'DD'].filter(c => stars['1-' + c]).length;
+    const p2Stars = ['CC', 'CD', 'DC', 'DD'].filter(c => stars['2-' + c]).length;
+
+    const s1Done = p1Stars === 2;
+    const s1Num = document.getElementById('step1-num');
+    const s1Check = document.getElementById('step1-check');
+    if (s1Done) { s1Num.classList.add('done'); s1Check.innerHTML = '<span class="check-mark">✓</span>'; }
+    else { s1Num.classList.remove('done'); s1Check.innerHTML = ''; }
+
+    const s2Done = p2Stars === 2;
+    const s2Num = document.getElementById('step2-num');
+    const s2Check = document.getElementById('step2-check');
+    if (s2Done) { s2Num.classList.add('done'); s2Check.innerHTML = '<span class="check-mark">✓</span>'; }
+    else { s2Num.classList.remove('done'); s2Check.innerHTML = ''; }
+
+    const nashCells = ['CC', 'CD', 'DC', 'DD'].filter(c => stars['1-' + c] && stars['2-' + c]);
+    const allDone = s1Done && s2Done;
+    const s3Num = document.getElementById('step3-num');
+    const s3Check = document.getElementById('step3-check');
+
+    const resultCard = document.getElementById('resultCard');
+    const resultContent = document.getElementById('resultContent');
+
+    if (allDone && nashCells.length > 0) {
+        s3Num.classList.add('done');
+        s3Check.innerHTML = '<span class="check-mark">✓</span>';
+        resultCard.classList.add('show');
+
+        // Since validation prevents wrong answers, if we are here, it MUST be the correct Nash
+        resultContent.innerHTML = `<p>You found the Nash Equilibrium: <strong>(Testify, Testify)</strong> with payoffs (2, 2). Both players are playing their best response.</p>
+        <p>But notice: <strong>(Silent, Silent)</strong> gives both players a payoff of 4, which is better for <em>everyone</em>. This is the dilemma — the Nash Equilibrium is not the best collective outcome.</p>
+        <div class="highlight-box">
+            <strong>Key insight:</strong> A Nash Equilibrium is stable (no one wants to deviate), but it is not necessarily efficient.
+        </div>`;
+    } else {
+        s3Num.classList.remove('done');
+        s3Check.innerHTML = '';
+        resultCard.classList.remove('show');
+    }
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+    Object.keys(stars).forEach(k => stars[k] = false);
+    renderStars();
+    checkProgress();
+    document.getElementById('resultCard').classList.remove('show');
+    document.getElementById('error-toast').classList.remove('show');
+});
+
+document.getElementById('display-toggle-btn').addEventListener('click', () => {
+    const p = document.getElementById('display-panel'), a = document.getElementById('display-arrow');
+    const o = p.classList.toggle('open'); a.classList.toggle('open', o);
+});
+
+document.getElementById('show-story').addEventListener('change', function() {
+    document.querySelector('.story-card').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('show-key').addEventListener('change', function() {
+    document.querySelector('.player-key').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('show-steps').addEventListener('change', function() {
+    document.querySelector('.instructions-card').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('show-explanation').addEventListener('change', function() {
+    document.querySelector('.explanation').style.display = this.checked ? '' : 'none';
+});
+
+renderStars();
+</script>
+</body>
+</html>

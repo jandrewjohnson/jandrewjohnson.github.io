@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Maximization — Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        *{box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#2d3748;margin:0;padding:15px;min-height:100vh}.container{max-width:1500px;margin:0 auto}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding:15px 20px;background:linear-gradient(135deg,#2c5282,#2b6cb0);border-radius:12px;color:#fff;flex-wrap:wrap;gap:12px}
+        .title-section h1{font-size:1.5rem;font-weight:600;margin:0 0 4px}.title-section .subtitle{font-size:.85rem;color:#bee3f8;margin:0}
+        .score-section{display:flex;gap:25px;align-items:center;flex-wrap:wrap}.score-box{text-align:center}.score-label{font-size:.7rem;color:#bee3f8;text-transform:uppercase;letter-spacing:1px}.score-value{font-size:1.8rem;font-weight:700;font-family:'Monaco','Consolas',monospace}
+        .score-value.good{color:#68d391}.score-value.bad{color:#fc8181}.score-value.month{color:#fbd38d}
+        .game-controls{display:flex;gap:10px}.game-btn{padding:10px 20px;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+        .btn-start{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff}.btn-start:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(72,187,120,.4)}.btn-pause{background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff}.btn-reset{background:#4a5568;color:#fff}
+
+        /* Full-width graph on top */
+        .graph-section{position:relative;background:#fff;border-radius:12px;padding:14px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:15px}
+        .graph-section canvas{display:block;width:100%;height:auto;border-radius:8px}
+        .plot-actions{position:absolute;top:8px;right:8px;z-index:10;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+        .graph-section:hover .plot-actions{opacity:1}
+        .plot-action-btn{background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1px solid rgba(226,232,240,.7);border-radius:6px;padding:4px 8px;font-size:.7rem;color:#a0aec0;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1}
+        .plot-action-btn:hover{background:#fff;color:#4a5568;border-color:#cbd5e0}.plot-action-btn:active{background:#edf2f7}.plot-action-btn.copied{color:#38a169;border-color:#c6f6d5;background:rgba(240,255,244,.9)}.plot-action-btn svg{width:12px;height:12px;flex-shrink:0}
+        .market-info{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+        .info-box{background:#f7fafc;padding:10px;border-radius:8px;text-align:center;border:1px solid #e2e8f0}.info-label{font-size:.65rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}.info-value{font-size:1rem;font-weight:700;font-family:'Monaco','Consolas',monospace;margin-top:2px}
+        .info-value.price-x{color:#e53e3e}.info-value.price-y{color:#3182ce}.info-value.income{color:#38a169}.info-value.mrs{color:#805ad5}
+        .news-ticker{background:linear-gradient(135deg,#2d3748,#1a202c);border-radius:8px;padding:10px 15px;margin-top:12px;display:flex;align-items:center;gap:10px;min-height:45px}.news-icon{font-size:1.2rem}.news-text{color:#e2e8f0;font-size:.85rem;flex:1}
+        .news-text.shock-good{color:#68d391}.news-text.shock-bad{color:#fc8181}.news-text.shock-neutral{color:#fbd38d}
+
+        /* Two-column below */
+        .bottom-layout{display:grid;grid-template-columns:320px 1fr;gap:15px}@media(max-width:900px){.bottom-layout{grid-template-columns:1fr}}
+        .panel{background:#fff;border-radius:12px;padding:14px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e2e8f0}
+        .panel-title{font-size:.9rem;font-weight:600;color:#1a202c}.panel-badge{font-size:.65rem;padding:3px 8px;border-radius:10px;font-weight:500}
+        .badge-control{background:rgba(66,153,225,.15);color:#2b6cb0}.badge-history{background:rgba(236,201,75,.15);color:#b7791f}
+
+        /* Bundle */
+        .bundle-display{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+        .good-box{text-align:center;padding:15px;border-radius:10px;border:2px solid}
+        .good-box.good-x{background:linear-gradient(135deg,rgba(229,62,62,.08),rgba(252,129,129,.05));border-color:#e53e3e}
+        .good-box.good-y{background:linear-gradient(135deg,rgba(49,130,206,.08),rgba(99,179,237,.05));border-color:#3182ce}
+        .good-label{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}.good-x .good-label{color:#c53030}.good-y .good-label{color:#2b6cb0}
+        .good-value{font-size:2.2rem;font-weight:700;font-family:'Monaco','Consolas',monospace;line-height:1.2}.good-x .good-value{color:#e53e3e}.good-y .good-value{color:#3182ce}
+        .good-price{font-size:.75rem;color:#718096;margin-top:3px}
+        .control-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:15px}
+        .ctrl-btn{padding:12px 8px;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px}
+        .ctrl-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}.ctrl-btn .label{font-size:.65rem;font-weight:500}
+        .btn-x-up{background:linear-gradient(135deg,#fc8181,#f56565);color:#fff}.btn-x-down{background:linear-gradient(135deg,#feb2b2,#fc8181);color:#742a2a}
+        .btn-y-up{background:linear-gradient(135deg,#63b3ed,#4299e1);color:#fff}.btn-y-down{background:linear-gradient(135deg,#90cdf4,#63b3ed);color:#2a4365}
+        .ctrl-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+        .budget-section{background:#f7fafc;border-radius:8px;padding:12px;margin-bottom:15px}
+        .budget-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.budget-label{font-size:.75rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}.budget-values{font-size:.85rem;font-family:'Monaco','Consolas',monospace}.budget-spent{color:#e53e3e}.budget-total{color:#38a169}
+        .budget-bar{height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden}.budget-fill{height:100%;border-radius:6px;transition:width .3s,background .3s}
+        .budget-fill.under{background:linear-gradient(90deg,#48bb78,#68d391)}.budget-fill.near{background:linear-gradient(90deg,#ed8936,#f6ad55)}.budget-fill.over{background:linear-gradient(90deg,#e53e3e,#fc8181)}
+        .budget-warning{font-size:.7rem;color:#e53e3e;text-align:center;margin-top:5px;font-weight:600}
+
+        .action-points{background:#f7fafc;border-radius:8px;padding:12px;margin-bottom:15px}
+        .ap-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.ap-label{font-size:.75rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}
+        .ap-value{font-size:1rem;font-weight:700;color:#805ad5;font-family:'Monaco','Consolas',monospace}
+        .ap-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.ap-fill{height:100%;background:linear-gradient(90deg,#805ad5,#b794f4);border-radius:5px;transition:width .3s}.ap-recharge{font-size:.7rem;color:#a0aec0;text-align:right;margin-top:4px}
+
+        .utility-display{text-align:center;padding:15px;background:linear-gradient(135deg,rgba(56,161,105,.1),rgba(72,187,120,.05));border:2px solid #38a169;border-radius:10px;margin-bottom:15px}
+        .utility-label{font-size:.7rem;color:#276749;text-transform:uppercase;letter-spacing:1px}.utility-value{font-size:2.5rem;font-weight:700;color:#38a169;font-family:'Monaco','Consolas',monospace;line-height:1.2}
+        .utility-value.invalid{color:#e53e3e;font-size:1.5rem}.utility-optimal{font-size:.75rem;color:#718096;margin-top:5px}.utility-optimal span{color:#d69e2e;font-weight:600}
+        .speed-control{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:#f7fafc;border-radius:8px}
+        .speed-label{font-size:.75rem;color:#718096}.speed-buttons{display:flex;gap:5px}
+        .speed-btn{padding:5px 12px;border:1px solid #e2e8f0;background:#fff;border-radius:5px;font-size:.75rem;cursor:pointer;transition:all .15s}
+        .speed-btn.active{background:#3182ce;color:#fff;border-color:#3182ce}.speed-btn:hover:not(.active){background:#edf2f7}
+
+        /* Utility history panel */
+        .history-section{display:flex;flex-direction:column;height:100%}
+        .monthly-utility{text-align:center;padding:15px;background:#f7fafc;border-radius:10px;margin-bottom:12px}
+        .monthly-label{font-size:.7rem;color:#718096;text-transform:uppercase;letter-spacing:1px}
+        .monthly-value{font-size:1.8rem;font-weight:700;font-family:'Monaco','Consolas',monospace}.monthly-value.high{color:#38a169}.monthly-value.medium{color:#d69e2e}.monthly-value.low{color:#e53e3e}
+        .efficiency-meter{background:#f7fafc;border-radius:8px;padding:12px;margin-bottom:12px}
+        .efficiency-header{display:flex;justify-content:space-between;margin-bottom:8px}.efficiency-label{font-size:.7rem;color:#718096;text-transform:uppercase}.efficiency-value{font-size:.85rem;font-weight:700;color:#805ad5}
+        .efficiency-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}.efficiency-fill{height:100%;background:linear-gradient(90deg,#e53e3e 0%,#ed8936 30%,#ecc94b 50%,#48bb78 80%,#38a169 100%);border-radius:4px;transition:width .3s}
+        .chart-container{flex:1;min-height:220px}.chart-container canvas{display:block;width:100%;height:auto}
+        .high-score{background:linear-gradient(135deg,rgba(214,158,46,.15),rgba(236,201,75,.1));border:1px solid rgba(214,158,46,.3);border-radius:8px;padding:12px;margin-top:12px;text-align:center}
+        .hs-label{font-size:.7rem;color:#b7791f;text-transform:uppercase;letter-spacing:1px}.hs-value{font-size:1.3rem;font-weight:700;color:#d69e2e;font-family:'Monaco','Consolas',monospace}
+
+        /* Explanation */
+        .explanation{margin-top:15px;background:#fff;border-radius:12px;padding:24px 28px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .explanation .panel-title{font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:14px;font-weight:600}
+        .explanation p{margin:0 0 14px;line-height:1.7;font-size:.95rem;color:#4a5568}.explanation p:last-child{margin-bottom:0}
+
+        /* Display options */
+        .display-options-wrapper{margin-top:24px}.display-options-toggle{background:none;border:none;color:#a0aec0;font-size:.78rem;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:4px}.display-options-toggle:hover{color:#718096}
+        .display-options-toggle .arrow{font-size:.6rem;transition:transform .2s}.display-options-toggle .arrow.open{transform:rotate(90deg)}
+        .display-options-panel{display:none;margin-top:8px;background:#fff;border-radius:12px;padding:16px 20px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08)}.display-options-panel.open{display:block}
+        .display-options-panel .panel-title{font-size:.75rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;color:#718096;font-weight:600}
+        .opt-row{display:flex;align-items:center;gap:8px;padding:3px 0}.opt-row label{font-size:.8rem;color:#4a5568;cursor:pointer;white-space:nowrap}
+        .opt-row input[type="checkbox"]{accent-color:#4299e1;cursor:pointer;margin:0;width:14px;height:14px}
+        .opt-row input[type="text"]{font-size:.78rem;padding:2px 6px;border:1px solid #e2e8f0;border-radius:4px;color:#4a5568;width:100px;font-family:'Segoe UI',system-ui,sans-serif}.opt-row input[type="text"]:focus{outline:none;border-color:#4299e1}
+        .opt-section-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:#a0aec0;margin:10px 0 4px;font-weight:600}.opt-section-label:first-child{margin-top:0}
+        .nudge-group{display:inline-flex;align-items:center;gap:1px;margin-left:auto;flex-shrink:0}
+        .nudge-btn{width:18px;height:18px;padding:0;border:1px solid #e2e8f0;background:#f7fafc;color:#a0aec0;font-size:9px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:background .1s,color .1s}
+        .nudge-btn:hover{background:#edf2f7;color:#4a5568}.nudge-btn:active{background:#e2e8f0}
+
+        .katex{font-size:1em}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="title-section"><h1>Utility Maximization — Game</h1><p class="subtitle">Maximize your utility by choosing the optimal bundle as prices and income change!</p></div>
+        <div class="score-section">
+            <div class="score-box"><div class="score-label">Month</div><div class="score-value month" id="current-month">1</div></div>
+            <div class="score-box"><div class="score-label">Total Utility</div><div class="score-value good" id="cumulative-utility">0</div></div>
+            <div class="game-controls">
+                <button class="game-btn btn-start" id="start-btn" onclick="toggleGame()">▶️ Start</button>
+                <button class="game-btn btn-reset" onclick="resetGame()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-width graph -->
+    <div class="graph-section" id="graph-panel">
+        <div class="plot-actions">
+            <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="copy-label">Copy</span></button>
+            <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="save-label">Save</span></button>
+        </div>
+        <div class="panel-header"><div class="panel-title">📊 Budget &amp; Preferences</div><span class="panel-badge" style="background:rgba(128,90,213,.15);color:#805ad5">Indifference Map</span></div>
+        <canvas id="ic-canvas" width="1400" height="700"></canvas>
+        <div class="market-info">
+            <div class="info-box"><div class="info-label">Price of \(X\)</div><div class="info-value price-x" id="info-px">$2.00</div></div>
+            <div class="info-box"><div class="info-label">Price of \(Y\)</div><div class="info-value price-y" id="info-py">$2.00</div></div>
+            <div class="info-box"><div class="info-label">Income</div><div class="info-value income" id="info-income">$100</div></div>
+            <div class="info-box"><div class="info-label">Your MRS</div><div class="info-value mrs" id="info-mrs">1.00</div></div>
+        </div>
+        <div class="news-ticker"><span class="news-icon">📰</span><span class="news-text" id="news-text">Game paused. Press Start to begin shopping!</span></div>
+    </div>
+
+    <!-- Consumer + Utility in two columns -->
+    <div class="bottom-layout">
+        <div class="panel">
+            <div class="panel-header"><div class="panel-title">🎮 Consumption Choices</div><span class="panel-badge badge-control">Your Bundle</span></div>
+            <div class="bundle-display">
+                <div class="good-box good-x"><div class="good-label">Good \(X\)</div><div class="good-value" id="current-x">20</div><div class="good-price">@ $<span id="display-px">2.00</span></div></div>
+                <div class="good-box good-y"><div class="good-label">Good \(Y\)</div><div class="good-value" id="current-y">20</div><div class="good-price">@ $<span id="display-py">2.00</span></div></div>
+            </div>
+            <div class="control-grid">
+                <button class="ctrl-btn btn-x-up" id="btn-x-up" onclick="changeBundle(1,0)"><span>\(X\) +5</span><span class="label">More \(X\)</span></button>
+                <button class="ctrl-btn btn-y-up" id="btn-y-up" onclick="changeBundle(0,1)"><span>\(Y\) +5</span><span class="label">More \(Y\)</span></button>
+                <button class="ctrl-btn btn-x-down" id="btn-x-down" onclick="changeBundle(-1,0)"><span>\(X\) −5</span><span class="label">Less \(X\)</span></button>
+                <button class="ctrl-btn btn-y-down" id="btn-y-down" onclick="changeBundle(0,-1)"><span>\(Y\) −5</span><span class="label">Less \(Y\)</span></button>
+            </div>
+            <div class="budget-section"><div class="budget-header"><span class="budget-label">Budget Constraint</span><span class="budget-values"><span class="budget-spent" id="budget-spent">$80</span> / <span class="budget-total" id="budget-total">$100</span></span></div><div class="budget-bar"><div class="budget-fill under" id="budget-fill" style="width:80%"></div></div><div class="budget-warning" id="budget-warning" style="display:none">⚠️ Over budget! Utility counts as 0 this month!</div></div>
+            <div class="action-points"><div class="ap-header"><span class="ap-label">Action Points</span><span class="ap-value" id="ap-value">5 / 5</span></div><div class="ap-bar"><div class="ap-fill" id="ap-fill" style="width:100%"></div></div><div class="ap-recharge">+1 AP every 2.5 seconds</div></div>
+            <div class="utility-display"><div class="utility-label">Current Utility</div><div class="utility-value" id="current-utility">20.0</div><div class="utility-optimal">Optimal: <span id="optimal-utility">25.0</span></div></div>
+            <div class="speed-control"><span class="speed-label">Game Speed:</span><div class="speed-buttons"><button class="speed-btn" onclick="setSpeed(0.5)">0.5x</button><button class="speed-btn active" onclick="setSpeed(1)">1x</button><button class="speed-btn" onclick="setSpeed(2)">2x</button><button class="speed-btn" onclick="setSpeed(3)">3x</button></div></div>
+        </div>
+
+        <div class="panel history-section">
+            <div class="panel-header"><div class="panel-title">📈 Utility History</div><span class="panel-badge badge-history">Performance</span></div>
+            <div class="monthly-utility"><div class="monthly-label">This Month's Utility</div><div class="monthly-value high" id="monthly-utility">0.0</div></div>
+            <div class="efficiency-meter"><div class="efficiency-header"><span class="efficiency-label">\(U / U^*\) Efficiency</span><span class="efficiency-value" id="efficiency-value">100%</span></div><div class="efficiency-bar"><div class="efficiency-fill" id="efficiency-fill" style="width:100%"></div></div></div>
+            <div class="chart-container"><canvas id="history-canvas" width="1200" height="500"></canvas></div>
+            <div class="high-score"><div class="hs-label">🏆 Best Run (12 months)</div><div class="hs-value" id="high-score">0</div></div>
+        </div>
+    </div>
+
+    <div class="explanation">
+        <div class="panel-title">Explanation</div>
+        <p>This game simulates the real-world challenge a consumer faces: prices and income change unpredictably each month, and you must re-optimize your consumption bundle to keep utility high. Each "month" lasts a few seconds, during which random shocks — price spikes, income changes, or preference shifts — alter the economic environment. You have a limited number of action points to adjust your bundle of goods \(X\) and \(Y\), forcing you to prioritize which changes matter most.</p>
+        <p>The indifference curve graph shows your current position relative to the budget constraint and the optimal bundle. When the budget line shifts (because a price or income changed), the old optimal is no longer optimal — you need to move. The closer your indifference curve sits to the budget line's tangency point, the higher your efficiency score. Over a 12-month "year," your cumulative utility measures how well you adapted to changing conditions.</p>
+        <p>The core economic lesson is that optimization isn't a one-time decision but an ongoing process. In a world with changing prices and income, consumers must continuously re-evaluate their spending. The tangency condition \(\mathrm{MRS} = P_x/P_y\) must hold at every moment, and deviations from it — whether from inattention or constraints on adjustment — carry real welfare costs that compound over time.</p>
+    </div>
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Plot Element Visibility, Labels &amp; Position</div>
+            <div class="opt-section-label">Axes</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"><div class="nudge-group" data-target="xaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"><div class="nudge-group" data-target="yaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+            <div class="opt-section-label">Budget</div>
+            <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget constraint line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-feasible" checked><label for="show-feasible">Feasible region shading</label></div>
+            <div class="opt-section-label">Curves &amp; Points</div>
+            <div class="opt-row"><input type="checkbox" id="show-player-ic" checked><label for="show-player-ic">Your indifference curve</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-ic" checked><label for="show-opt-ic">Optimal indifference curve</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal point</label><div class="nudge-group" data-target="opt-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-player-point" checked><label for="show-player-point">Your bundle point</label><div class="nudge-group" data-target="player-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-dashed-lines" checked><label for="show-dashed-lines">Dashed projection lines</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-labels" checked><label for="show-labels">Text labels on plot</label></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
+document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
+
+const nudgeOffsets={};const NUDGE_PX=4;const S=2;
+document.querySelectorAll('.nudge-btn').forEach(btn=>{btn.addEventListener('click',()=>{const t=btn.closest('.nudge-group').dataset.target;if(!nudgeOffsets[t])nudgeOffsets[t]={dx:0,dy:0};const d=btn.dataset.dir;if(d==='left')nudgeOffsets[t].dx-=NUDGE_PX;if(d==='right')nudgeOffsets[t].dx+=NUDGE_PX;if(d==='up')nudgeOffsets[t].dy-=NUDGE_PX;if(d==='down')nudgeOffsets[t].dy+=NUDGE_PX;updateDisplay();});});
+function getNudge(t){const o=nudgeOffsets[t];return o?{dx:o.dx*S,dy:o.dy*S}:{dx:0,dy:0};}
+function isVis(id){const e=document.getElementById(id);return e?e.checked:true;}
+function getLabel(id,fb){const e=document.getElementById(id);return e&&e.value.trim()?e.value.trim():fb;}
+
+const icCanvas=document.getElementById('ic-canvas'),historyCanvas=document.getElementById('history-canvas');
+const icCtx=icCanvas.getContext('2d'),historyCtx=historyCanvas.getContext('2d');
+
+let gameRunning=false,gameSpeed=1,currentMonth=1,cumulativeUtility=0,highScore=0,monthlyUtilities=[];
+let actionPoints=5;const maxActionPoints=5;let lastAPRecharge=Date.now();const apRechargeTime=2500;
+let playerX=20,playerY=20,wasAffordable=true;
+let marketParams={priceX:2,priceY:2,income:100,alpha:0.5};
+
+const shockMessages={priceXUp:["⚠️ Tariffs imposed on Good X! Price rises!","⚠️ Supply shortage drives up X prices!","⚠️ Popular demand spikes Good X price!"],priceXDown:["✅ New competitor enters X market! Prices fall!","✅ Tech breakthrough reduces X costs!","✅ Good X goes on sale!"],priceYUp:["⚠️ Good Y faces supply disruption!","⚠️ Import restrictions raise Y prices!","⚠️ Raw material costs spike for Good Y!"],priceYDown:["✅ Bumper harvest reduces Y prices!","✅ Trade deal lowers Y import costs!","✅ Good Y manufacturer offers rebates!"],incomeUp:["💰 You got a raise! Income increases!","💰 Bonus payment received!","💰 Tax refund arrives!","💰 Investment dividends pay out!"],incomeDown:["📉 Hours cut at work. Income falls.","📉 Unexpected medical bill reduces budget.","📉 Car repair eats into savings.","📉 Rent increase squeezes budget."],preferenceShift:["🔄 Your tastes are shifting...","🔄 New hobby changes your preferences!","🔄 Health kick affects what you want!"]};
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function utility(x,y){return(x<=0||y<=0)?0:Math.pow(x,marketParams.alpha)*Math.pow(y,1-marketParams.alpha);}
+function optimalBundle(){const x=(marketParams.alpha*marketParams.income)/marketParams.priceX,y=((1-marketParams.alpha)*marketParams.income)/marketParams.priceY;return{x,y,utility:utility(x,y)};}
+function isAffordable(x,y){return(marketParams.priceX*x+marketParams.priceY*y)<=marketParams.income*1.001;}
+function spending(x,y){return marketParams.priceX*x+marketParams.priceY*y;}
+function MRS(x,y){return x<=0?Infinity:(marketParams.alpha/(1-marketParams.alpha))*(y/x);}
+function getICY(x,u){if(x<=0)return null;const y=Math.pow(u/Math.pow(x,marketParams.alpha),1/(1-marketParams.alpha));return isFinite(y)?y:null;}
+
+function clipLine(x0,y0,x1,y1,mX,mY){function code(x,y){let c=0;if(x<0)c|=1;else if(x>mX)c|=2;if(y<0)c|=4;else if(y>mY)c|=8;return c;}let c0=code(x0,y0),c1=code(x1,y1);for(let i=0;i<20;i++){if(!(c0|c1))return{x0,y0,x1,y1};if(c0&c1)return null;let c=c0||c1,x,y;if(c&8){y=mY;x=x0+(x1-x0)*(mY-y0)/(y1-y0);}else if(c&4){y=0;x=x0+(x1-x0)*(0-y0)/(y1-y0);}else if(c&2){x=mX;y=y0+(y1-y0)*(mX-x0)/(x1-x0);}else{x=0;y=y0+(y1-y0)*(0-x0)/(x1-x0);}if(c===c0){x0=x;y0=y;c0=code(x0,y0);}else{x1=x;y1=y;c1=code(x1,y1);}}return null;}
+
+function drawICGraph(){
+    const margin={top:50,right:40,bottom:80,left:100},w=icCanvas.width-margin.left-margin.right,h=icCanvas.height-margin.top-margin.bottom;
+    icCtx.fillStyle='#fff';icCtx.fillRect(0,0,icCanvas.width,icCanvas.height);
+    const maxX=80,maxY=80;
+    const toX=x=>margin.left+(x/maxX)*w,toY=y=>margin.top+h-(y/maxY)*h;
+
+    // Grid
+    if(isVis('show-gridlines')){icCtx.strokeStyle='#edf2f7';icCtx.lineWidth=S;for(let i=0;i<=4;i++){const gx=margin.left+(i/4)*w,gy=margin.top+(i/4)*h;icCtx.beginPath();icCtx.moveTo(gx,margin.top);icCtx.lineTo(gx,margin.top+h);icCtx.stroke();icCtx.beginPath();icCtx.moveTo(margin.left,gy);icCtx.lineTo(margin.left+w,gy);icCtx.stroke();}}
+
+    // Axes
+    icCtx.strokeStyle='#a0aec0';icCtx.lineWidth=2*S;icCtx.beginPath();icCtx.moveTo(margin.left,margin.top);icCtx.lineTo(margin.left,margin.top+h);icCtx.lineTo(margin.left+w,margin.top+h);icCtx.stroke();
+
+    if(isVis('show-axis-numbers')){icCtx.fillStyle='#718096';icCtx.font=`${10*S}px Segoe UI`;icCtx.textAlign='center';for(let i=0;i<=4;i++)icCtx.fillText((i*maxX/4).toFixed(0),toX(i*maxX/4),margin.top+h+15*S);icCtx.textAlign='right';for(let i=0;i<=4;i++)icCtx.fillText((i*maxY/4).toFixed(0),margin.left-5*S,toY(i*maxY/4)+4*S);}
+    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');icCtx.fillStyle='#4a5568';icCtx.font=`italic ${11*S}px Georgia,serif`;icCtx.textAlign='center';icCtx.fillText(getLabel('label-xaxis','Good X'),margin.left+w/2+n.dx,icCanvas.height-5*S+n.dy);}
+    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');icCtx.fillStyle='#4a5568';icCtx.font=`italic ${11*S}px Georgia,serif`;icCtx.textAlign='center';icCtx.save();icCtx.translate(12*S+n.dx,margin.top+h/2+n.dy);icCtx.rotate(-Math.PI/2);icCtx.fillText(getLabel('label-yaxis','Good Y'),0,0);icCtx.restore();}
+
+    const xInt=marketParams.income/marketParams.priceX,yInt=marketParams.income/marketParams.priceY;
+
+    // Feasible
+    if(isVis('show-feasible')){icCtx.fillStyle='rgba(72,187,120,0.1)';icCtx.beginPath();icCtx.moveTo(toX(0),toY(0));icCtx.lineTo(toX(0),toY(Math.min(yInt,maxY)));
+        if(xInt<=maxX&&yInt<=maxY)icCtx.lineTo(toX(xInt),toY(0));
+        else if(yInt>maxY&&xInt<=maxX){const xa=(marketParams.income-marketParams.priceY*maxY)/marketParams.priceX;icCtx.lineTo(toX(Math.max(0,xa)),toY(maxY));icCtx.lineTo(toX(xInt),toY(0));}
+        else if(yInt<=maxY&&xInt>maxX){const ya=(marketParams.income-marketParams.priceX*maxX)/marketParams.priceY;icCtx.lineTo(toX(maxX),toY(Math.max(0,ya)));icCtx.lineTo(toX(maxX),toY(0));}
+        else{const xa=(marketParams.income-marketParams.priceY*maxY)/marketParams.priceX,ya=(marketParams.income-marketParams.priceX*maxX)/marketParams.priceY;if(xa>=0&&xa<=maxX)icCtx.lineTo(toX(xa),toY(maxY));if(ya>=0&&ya<=maxY)icCtx.lineTo(toX(maxX),toY(ya));icCtx.lineTo(toX(maxX),toY(0));}
+        icCtx.closePath();icCtx.fill();}
+
+    // Budget line clipped
+    if(isVis('show-bc')){const cl=clipLine(0,yInt,xInt,0,maxX,maxY);if(cl){icCtx.strokeStyle='#e53e3e';icCtx.lineWidth=3*S;icCtx.beginPath();icCtx.moveTo(toX(cl.x0),toY(cl.y0));icCtx.lineTo(toX(cl.x1),toY(cl.y1));icCtx.stroke();}}
+
+    const opt=optimalBundle(),playerU=utility(playerX,playerY),affordable=isAffordable(playerX,playerY);
+
+    // Optimal IC
+    if(isVis('show-opt-ic')&&opt.utility>0){icCtx.strokeStyle='rgba(214,158,46,0.5)';icCtx.lineWidth=2*S;icCtx.setLineDash([6*S,4*S]);icCtx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.5){const y=getICY(x,opt.utility);if(y!==null&&y>0&&y<=maxY){if(!st){icCtx.moveTo(toX(x),toY(y));st=true;}else icCtx.lineTo(toX(x),toY(y));}}icCtx.stroke();icCtx.setLineDash([]);}
+
+    // Player IC
+    if(isVis('show-player-ic')&&playerU>0){icCtx.strokeStyle=affordable?'#3182ce':'#a0aec0';icCtx.lineWidth=3*S;icCtx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.5){const y=getICY(x,playerU);if(y!==null&&y>0&&y<=maxY){if(!st){icCtx.moveTo(toX(x),toY(y));st=true;}else icCtx.lineTo(toX(x),toY(y));}}icCtx.stroke();}
+
+    // Opt point
+    if(isVis('show-opt-point')&&opt.x<=maxX&&opt.y<=maxY){const n=getNudge('opt-label');icCtx.fillStyle='rgba(214,158,46,0.3)';icCtx.beginPath();icCtx.arc(toX(opt.x),toY(opt.y),12*S,0,Math.PI*2);icCtx.fill();icCtx.fillStyle='#d69e2e';icCtx.beginPath();icCtx.arc(toX(opt.x),toY(opt.y),5*S,0,Math.PI*2);icCtx.fill();icCtx.strokeStyle='#fff';icCtx.lineWidth=1.5*S;icCtx.stroke();if(isVis('show-labels')){icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#d69e2e';icCtx.textAlign='left';icCtx.fillText('Optimal',toX(opt.x)+10*S+n.dx,toY(opt.y)-5*S+n.dy);}}
+
+    // Player point
+    if(isVis('show-player-point')&&playerX<=maxX&&playerY<=maxY){
+        if(isVis('show-dashed-lines')){icCtx.strokeStyle='#a0aec0';icCtx.lineWidth=S;icCtx.setLineDash([4*S,3*S]);icCtx.beginPath();icCtx.moveTo(toX(playerX),toY(playerY));icCtx.lineTo(toX(playerX),toY(0));icCtx.stroke();icCtx.beginPath();icCtx.moveTo(toX(playerX),toY(playerY));icCtx.lineTo(toX(0),toY(playerY));icCtx.stroke();icCtx.setLineDash([]);}
+        const gr=icCtx.createRadialGradient(toX(playerX),toY(playerY),0,toX(playerX),toY(playerY),18*S);gr.addColorStop(0,affordable?'rgba(49,130,206,0.5)':'rgba(229,62,62,0.5)');gr.addColorStop(1,affordable?'rgba(49,130,206,0)':'rgba(229,62,62,0)');icCtx.fillStyle=gr;icCtx.beginPath();icCtx.arc(toX(playerX),toY(playerY),18*S,0,Math.PI*2);icCtx.fill();
+        icCtx.fillStyle=affordable?'#3182ce':'#e53e3e';icCtx.beginPath();icCtx.arc(toX(playerX),toY(playerY),8*S,0,Math.PI*2);icCtx.fill();icCtx.strokeStyle='#fff';icCtx.lineWidth=2*S;icCtx.stroke();
+        if(isVis('show-labels')){const n=getNudge('player-label');icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#3182ce';icCtx.textAlign='left';icCtx.fillText('You',toX(playerX)+12*S+n.dx,toY(playerY)+4*S+n.dy);}
+    }
+
+    if(isVis('show-labels')&&isVis('show-bc')){icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#e53e3e';icCtx.textAlign='left';icCtx.fillText('Budget',toX(Math.min(xInt*.7,maxX*.6)),toY(yInt-(yInt/xInt)*Math.min(xInt*.7,maxX*.6))-8*S);}
+}
+
+function drawHistoryChart(){
+    const margin={top:40,right:30,bottom:50,left:80},w=historyCanvas.width-margin.left-margin.right,h=historyCanvas.height-margin.top-margin.bottom;
+    historyCtx.fillStyle='#fff';historyCtx.fillRect(0,0,historyCanvas.width,historyCanvas.height);
+    const maxMonths=12,utils=monthlyUtilities.slice(-maxMonths);
+    let maxU=30;utils.forEach(u=>{if(u>maxU)maxU=u;});maxU=Math.ceil(maxU/10)*10+10;
+    const toX=i=>margin.left+((i+.5)/maxMonths)*w,toY=u=>margin.top+h-(u/maxU)*h,bw=(w/maxMonths)*.7;
+
+    historyCtx.strokeStyle='#edf2f7';historyCtx.lineWidth=S;for(let i=0;i<=4;i++){const y=margin.top+(i/4)*h;historyCtx.beginPath();historyCtx.moveTo(margin.left,y);historyCtx.lineTo(margin.left+w,y);historyCtx.stroke();}
+    historyCtx.strokeStyle='#a0aec0';historyCtx.lineWidth=2*S;historyCtx.beginPath();historyCtx.moveTo(margin.left,margin.top);historyCtx.lineTo(margin.left,margin.top+h);historyCtx.lineTo(margin.left+w,margin.top+h);historyCtx.stroke();
+    historyCtx.fillStyle='#718096';historyCtx.font=`${9*S}px Segoe UI`;historyCtx.textAlign='right';for(let i=0;i<=4;i++)historyCtx.fillText((i/4*maxU).toFixed(0),margin.left-5*S,toY(i/4*maxU)+3*S);
+    historyCtx.fillStyle='#4a5568';historyCtx.font=`${10*S}px Segoe UI`;historyCtx.textAlign='center';historyCtx.fillText('Month',margin.left+w/2,historyCanvas.height-3*S);
+    const opt=optimalBundle();
+    utils.forEach((u,i)=>{const x=toX(i)-bw/2,eff=opt.utility>0?u/opt.utility:0;let gr;if(eff>=.9){gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#38a169');gr.addColorStop(1,'#68d391');}else if(eff>=.7){gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#d69e2e');gr.addColorStop(1,'#ecc94b');}else{gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#e53e3e');gr.addColorStop(1,'#fc8181');}historyCtx.fillStyle=gr;historyCtx.fillRect(x,toY(u),bw,toY(0)-toY(u));historyCtx.fillStyle='#718096';historyCtx.font=`${8*S}px Segoe UI`;historyCtx.textAlign='center';const mn=currentMonth-utils.length+i+1;if(mn>0)historyCtx.fillText(mn.toString(),toX(i),margin.top+h+12*S);});
+}
+
+function updateDisplay(){
+    const opt=optimalBundle(),playerU=utility(playerX,playerY),affordable=isAffordable(playerX,playerY),spent=spending(playerX,playerY);
+    const eff=opt.utility>0?(playerU/opt.utility):0,effectiveU=affordable?playerU:0;
+    document.getElementById('current-x').textContent=playerX;document.getElementById('current-y').textContent=playerY;
+    document.getElementById('display-px').textContent=marketParams.priceX.toFixed(2);document.getElementById('display-py').textContent=marketParams.priceY.toFixed(2);
+    document.getElementById('budget-spent').textContent=`$${spent.toFixed(0)}`;document.getElementById('budget-total').textContent=`$${marketParams.income.toFixed(0)}`;
+    const bp=(spent/marketParams.income)*100,bf=document.getElementById('budget-fill');bf.style.width=`${Math.min(bp,100)}%`;bf.className='budget-fill '+(bp<=85?'under':bp<=100?'near':'over');
+    document.getElementById('budget-warning').style.display=affordable?'none':'block';
+    const ue=document.getElementById('current-utility');if(affordable){ue.textContent=playerU.toFixed(1);ue.className='utility-value';}else{ue.textContent='OVER BUDGET!';ue.className='utility-value invalid';}
+    document.getElementById('optimal-utility').textContent=opt.utility.toFixed(1);
+    document.getElementById('info-px').textContent=`$${marketParams.priceX.toFixed(2)}`;document.getElementById('info-py').textContent=`$${marketParams.priceY.toFixed(2)}`;
+    document.getElementById('info-income').textContent=`$${marketParams.income.toFixed(0)}`;document.getElementById('info-mrs').textContent=MRS(playerX,playerY).toFixed(2);
+    document.getElementById('ap-value').textContent=`${actionPoints} / ${maxActionPoints}`;document.getElementById('ap-fill').style.width=`${(actionPoints/maxActionPoints)*100}%`;
+    document.getElementById('btn-x-up').disabled=actionPoints<1;document.getElementById('btn-x-down').disabled=actionPoints<1||playerX<=5;
+    document.getElementById('btn-y-up').disabled=actionPoints<1;document.getElementById('btn-y-down').disabled=actionPoints<1||playerY<=5;
+    const me=document.getElementById('monthly-utility');me.textContent=effectiveU.toFixed(1);me.className='monthly-value '+(eff>=.9?'high':eff>=.7?'medium':'low');
+    const ep=Math.min(100,eff*100);document.getElementById('efficiency-value').textContent=`${ep.toFixed(0)}%`;document.getElementById('efficiency-fill').style.width=`${ep}%`;
+    drawICGraph();drawHistoryChart();return effectiveU;
+}
+
+function changeBundle(dx,dy){if(actionPoints<1)return;const nx=playerX+dx*5,ny=playerY+dy*5;if(nx<5||ny<5)return;actionPoints--;playerX=nx;playerY=ny;updateDisplay();}
+
+function generateShock(){const r=Math.random();let msg="",cls="shock-neutral";if(r<.25){const d=Math.random()<.5?1:-1,m=.25+Math.random()*.75;marketParams.priceX=Math.max(.5,Math.min(5,marketParams.priceX+d*m));msg=d>0?pick(shockMessages.priceXUp):pick(shockMessages.priceXDown);cls=d>0?"shock-bad":"shock-good";}else if(r<.5){const d=Math.random()<.5?1:-1,m=.25+Math.random()*.75;marketParams.priceY=Math.max(.5,Math.min(5,marketParams.priceY+d*m));msg=d>0?pick(shockMessages.priceYUp):pick(shockMessages.priceYDown);cls=d>0?"shock-bad":"shock-good";}else if(r<.8){const d=Math.random()<.5?1:-1,m=10+Math.random()*20;marketParams.income=Math.max(50,Math.min(200,marketParams.income+d*m));msg=d>0?pick(shockMessages.incomeUp):pick(shockMessages.incomeDown);cls=d>0?"shock-good":"shock-bad";}else if(r<.9){marketParams.alpha=Math.max(.3,Math.min(.7,marketParams.alpha+(Math.random()-.5)*.15));msg=pick(shockMessages.preferenceShift);}else{msg="📊 Markets stable this month. No major changes.";}document.getElementById('news-text').textContent=msg;document.getElementById('news-text').className=`news-text ${cls}`;}
+
+let lastUpdate=Date.now(),monthProgress=0;const monthDuration=5000;
+function gameLoop(){if(!gameRunning){requestAnimationFrame(gameLoop);return;}const now=Date.now(),delta=now-lastUpdate;lastUpdate=now;if(now-lastAPRecharge>=apRechargeTime/gameSpeed){if(actionPoints<maxActionPoints){actionPoints++;updateDisplay();}lastAPRecharge=now;}monthProgress+=delta*gameSpeed;if(monthProgress>=monthDuration){monthProgress=0;const mu=isAffordable(playerX,playerY)?utility(playerX,playerY):0;monthlyUtilities.push(mu);cumulativeUtility+=mu;currentMonth++;document.getElementById('cumulative-utility').textContent=cumulativeUtility.toFixed(0);document.getElementById('current-month').textContent=currentMonth;if(currentMonth===13){if(cumulativeUtility>highScore){highScore=cumulativeUtility;document.getElementById('high-score').textContent=highScore.toFixed(0);}document.getElementById('news-text').textContent=`🎉 Year complete! Total utility: ${cumulativeUtility.toFixed(0)}. Starting new year...`;document.getElementById('news-text').className='news-text shock-good';currentMonth=1;cumulativeUtility=0;monthlyUtilities=[];}else generateShock();updateDisplay();}requestAnimationFrame(gameLoop);}
+
+function toggleGame(){gameRunning=!gameRunning;const btn=document.getElementById('start-btn');if(gameRunning){btn.textContent='⏸️ Pause';btn.className='game-btn btn-pause';lastUpdate=Date.now();lastAPRecharge=Date.now();document.getElementById('news-text').textContent='🛒 Game started! Adjust your bundle!';document.getElementById('news-text').className='news-text shock-neutral';}else{btn.textContent='▶️ Resume';btn.className='game-btn btn-start';document.getElementById('news-text').textContent='⏸️ Game paused.';document.getElementById('news-text').className='news-text shock-neutral';}}
+function resetGame(){gameRunning=false;currentMonth=1;cumulativeUtility=0;monthlyUtilities=[];actionPoints=maxActionPoints;playerX=20;playerY=20;monthProgress=0;marketParams={priceX:2,priceY:2,income:100,alpha:.5};document.getElementById('start-btn').textContent='▶️ Start';document.getElementById('start-btn').className='game-btn btn-start';document.getElementById('current-month').textContent='1';document.getElementById('cumulative-utility').textContent='0';document.getElementById('cumulative-utility').className='score-value good';document.getElementById('news-text').textContent='Game reset. Press Start to begin!';document.getElementById('news-text').className='news-text shock-neutral';updateDisplay();}
+function setSpeed(s){gameSpeed=s;document.querySelectorAll('.speed-btn').forEach(b=>{b.classList.remove('active');if(b.textContent===`${s}x`)b.classList.add('active');});}
+
+document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
+document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',()=>updateDisplay());i.addEventListener('change',()=>updateDisplay());});
+
+document.getElementById('copy-plot-btn').addEventListener('click',async()=>{const btn=document.getElementById('copy-plot-btn'),lbl=document.getElementById('copy-label');try{const blob=await new Promise(r=>icCanvas.toBlob(r,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.classList.add('copied');lbl.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Copy';},1500);}catch(e){lbl.textContent='Failed';setTimeout(()=>{lbl.textContent='Copy';},1500);}});
+document.getElementById('save-plot-btn').addEventListener('click',()=>{const btn=document.getElementById('save-plot-btn'),lbl=document.getElementById('save-label');const a=document.createElement('a');a.href=icCanvas.toDataURL('image/png');a.download='utility_maximization_game.png';a.click();btn.classList.add('copied');lbl.textContent='Saved!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Save';},1500);});
+
+updateDisplay();requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

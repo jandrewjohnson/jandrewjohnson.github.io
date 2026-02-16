@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Maximization — Drag the Sliders</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1300px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 20px; font-size: 0.95rem; }
+        .main-content { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+        @media (max-width: 1000px) { .main-content { grid-template-columns: 1fr; } }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+        .graph-container { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; }
+        canvas { display: block; width: 100%; height: auto; }
+
+        .plot-actions { position: absolute; top: 8px; right: 8px; z-index: 10; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+        .graph-container:hover .plot-actions { opacity: 1; }
+        .plot-action-btn { background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border: 1px solid rgba(226,232,240,0.7); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; color: #a0aec0; cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1; }
+        .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .plot-action-btn:active { background: #edf2f7; }
+        .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
+        .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+        .utility-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; pointer-events: none; }
+        .utility-label { font-size: 1rem; color: #718096; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+        .utility-value { font-size: 4.5rem; font-weight: 700; font-family: 'Monaco','Consolas',monospace; color: #319795; text-shadow: 0 0 30px rgba(49,151,149,0.3); transition: all 0.1s; }
+        .utility-value.infeasible { color: #e53e3e; text-shadow: 0 0 30px rgba(229,62,62,0.3); }
+        .utility-value.optimal { color: #d69e2e; text-shadow: 0 0 40px rgba(214,158,46,0.5); animation: pulse 0.5s ease-in-out; }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+        @keyframes shake { 0%,100%{transform:translateX(-50%)} 10%,30%,50%,70%,90%{transform:translateX(calc(-50% - 5px))} 20%,40%,60%,80%{transform:translateX(calc(-50% + 5px))} }
+        .overlay-banner { position: absolute; top: 140px; left: 50%; transform: translateX(-50%); padding: 12px 30px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; color: #fff; }
+        .error-banner { background: linear-gradient(135deg,#e53e3e,#c53030); box-shadow: 0 4px 20px rgba(229,62,62,0.4); }
+        .error-banner.visible { opacity: 1; animation: shake 0.5s ease-in-out; }
+        .success-banner { background: linear-gradient(135deg,#d69e2e,#c05621); box-shadow: 0 4px 20px rgba(214,158,46,0.4); }
+        .success-banner.visible { opacity: 1; }
+
+        .explanation { margin-top: 20px; background: #fff; border-radius: 12px; padding: 24px 28px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .explanation p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .explanation p:last-child { margin-bottom: 0; }
+
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        .control-panel { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .control-panel.choice-panel { border: 2px solid #319795; background: linear-gradient(135deg,rgba(49,151,149,0.05),#fff); }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
+        .panel-title.highlight { color: #319795; font-size: 0.95rem; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-group:last-child { margin-bottom: 0; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 4px 10px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.85rem; color: #2b6cb0; font-weight: 500; }
+        .slider-value.large { font-size: 1.1rem; padding: 6px 14px; color: #319795; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"].choice-slider { height: 10px; }
+        input[type="range"].choice-slider::-webkit-slider-thumb { width: 24px; height: 24px; background: #319795; box-shadow: 0 2px 12px rgba(49,151,149,0.4); }
+        .info-box { background: #f7fafc; border-radius: 8px; padding: 16px; border-left: 3px solid #4299e1; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.9rem; }
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco','Consolas',monospace; color: #1a202c; }
+        .info-value.highlight { color: #2b6cb0; font-weight: 600; }
+        .info-value.warning { color: #e53e3e; font-weight: 600; }
+        .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #4a5568; }
+        .legend-line { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; font-size: 1.05rem; }
+        .instructions { background: linear-gradient(135deg,rgba(49,151,149,0.08),rgba(66,153,225,0.05)); border: 1px solid rgba(49,151,149,0.3); border-radius: 8px; padding: 16px; }
+        .instructions h3 { color: #319795; margin: 0 0 10px; font-size: 0.95rem; font-weight: 600; }
+        .instructions p { margin: 0; font-size: 0.85rem; line-height: 1.5; color: #4a5568; }
+        .score-panel { background: #f7fafc; border-radius: 8px; padding: 16px; text-align: center; border: 1px solid #e2e8f0; }
+        .score-label { font-size: 0.8rem; color: #718096; text-transform: uppercase; letter-spacing: 1px; }
+        .score-value { font-size: 2rem; font-weight: 700; color: #d69e2e; font-family: 'Monaco','Consolas',monospace; }
+        .score-optimal { font-size: 0.85rem; color: #2b6cb0; margin-top: 4px; }
+        .proximity-meter { margin-top: 12px; padding: 12px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .proximity-label { font-size: 0.8rem; color: #718096; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .proximity-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .proximity-fill { height: 100%; background: linear-gradient(90deg,#e53e3e 0%,#d69e2e 50%,#319795 100%); border-radius: 4px; transition: width 0.1s; }
+        .reset-btn { width: 100%; padding: 12px; background: linear-gradient(135deg,#319795,#2c7a7b); border: none; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-transform: uppercase; letter-spacing: 1px; }
+        .reset-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(49,151,149,0.4); }
+        .hint-btn { width: 100%; padding: 10px; background: transparent; border: 2px solid #d69e2e; border-radius: 8px; color: #d69e2e; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+        .hint-btn:hover { background: rgba(214,158,46,0.1); }
+        .budget-bar { margin-top: 16px; padding: 12px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .budget-label { font-size: 0.8rem; color: #718096; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .budget-label .over { color: #e53e3e; font-weight: 600; }
+        .budget-track { height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; position: relative; }
+        .budget-fill { height: 100%; background: linear-gradient(90deg,#319795,#38b2ac); border-radius: 6px; transition: width 0.15s, background 0.15s; }
+        .budget-fill.over { background: linear-gradient(90deg,#e53e3e,#fc8181); }
+        .budget-limit { position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: #1a202c; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
+        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 100px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+        .opt-section-label:first-child { margin-top: 0; }
+        .nudge-group { display: inline-flex; align-items: center; gap: 1px; margin-left: auto; flex-shrink: 0; }
+        .nudge-btn { width: 18px; height: 18px; padding: 0; border: 1px solid #e2e8f0; background: #f7fafc; color: #a0aec0; font-size: 9px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.1s, color 0.1s; }
+        .nudge-btn:hover { background: #edf2f7; color: #4a5568; }
+        .nudge-btn:active { background: #e2e8f0; }
+
+        .katex { font-size: 1em; }
+        .info-row .katex { font-size: 0.95em; }
+        .slider-label .katex { font-size: 0.95em; }
+        .equation-box .katex { font-size: 1.1em; }
+        .legend-item .katex { font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Utility Maximization — Drag the Sliders</h1>
+    <p class="subtitle">Adjust \(X\) and \(Y\) to maximize your utility while staying within budget!</p>
+
+    <div class="main-content">
+        <div class="left-column">
+            <div class="graph-container">
+                <div class="plot-actions">
+                    <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="copy-label">Copy</span></button>
+                    <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="save-label">Save</span></button>
+                </div>
+                <div class="utility-display"><div class="utility-label">Total Utility</div><div class="utility-value" id="big-utility">0.0</div></div>
+                <div class="overlay-banner error-banner" id="error-banner"><span>⚠️</span> UNAFFORDABLE! Over Budget!</div>
+                <div class="overlay-banner success-banner" id="success-banner"><span>🎉</span> OPTIMAL! Maximum Utility!</div>
+                <canvas id="graph" width="1500" height="1300"></canvas>
+            </div>
+
+            <div class="explanation">
+                <div class="panel-title">Explanation</div>
+                <p>In this version of the game you control the quantities of each good directly using sliders, rather than clicking on the graph. This makes it easier to see how the budget constraint binds: as you increase \(X\), spending rises by \(P_x\) per unit, eating into the income available for \(Y\). The budget bar gives you real-time feedback on whether your chosen bundle is affordable. Bundles above the budget line turn the indifference curve red to signal infeasibility.</p>
+                <p>The key economic insight is that maximizing utility requires spending all your income (exhausting the budget) and allocating it so that the marginal utility per dollar is equalized across goods. With Cobb-Douglas preferences, this leads to a beautifully simple rule: the consumer spends a fraction \(\alpha\) of income on \(X\) and \((1-\alpha)\) on \(Y\), regardless of prices. Prices only determine how many units each dollar buys, not the expenditure share.</p>
+                <p>Try pushing one slider to an extreme and watch what happens to utility — even if you can afford a lot of one good, utility suffers because Cobb-Douglas preferences exhibit diminishing marginal returns. The sweet spot is always an interior solution where both goods are consumed in proportion to the preference parameter \(\alpha\).</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-panel"><div class="instructions"><h3>🎯 How to Play</h3><p>Use the \(X\) and \(Y\) sliders to choose your consumption bundle. Try to find the combination that gives you the <strong>highest utility</strong> while keeping total spending <strong>within your budget</strong>!</p></div></div>
+
+            <div class="control-panel choice-panel">
+                <div class="panel-title highlight">🎯 Your Choices</div>
+                <div class="slider-group"><div class="slider-label"><span>Good \(X\)</span><span class="slider-value large" id="user-x-value">20.0</span></div><input type="range" class="choice-slider" id="user-x" min="0" max="80" value="20" step="0.5"></div>
+                <div class="slider-group"><div class="slider-label"><span>Good \(Y\)</span><span class="slider-value large" id="user-y-value">20.0</span></div><input type="range" class="choice-slider" id="user-y" min="0" max="80" value="20" step="0.5"></div>
+                <div class="budget-bar"><div class="budget-label"><span>Budget Used</span><span id="budget-status">$80 / $100</span></div><div class="budget-track"><div class="budget-fill" id="budget-fill" style="width:80%"></div><div class="budget-limit"></div></div></div>
+            </div>
+
+            <div class="control-panel">
+                <div class="panel-title">Your Score</div>
+                <div class="score-panel"><div class="score-label">Current Utility</div><div class="score-value" id="score-value">0.0</div><div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div></div>
+                <div class="proximity-meter"><div class="proximity-label"><span>Proximity to Optimal</span><span id="proximity-pct">0%</span></div><div class="proximity-bar"><div class="proximity-fill" id="proximity-fill" style="width:0%"></div></div></div>
+                <button class="reset-btn" onclick="resetGame()">🔄 New Challenge</button>
+                <button class="hint-btn" onclick="showHintToggle()">💡 Show Optimal</button>
+            </div>
+
+            <div class="control-panel">
+                <div class="panel-title">Budget Constraint</div>
+                <div class="slider-group"><div class="slider-label"><span>Income \(M\)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
+                <div class="slider-group"><div class="slider-label"><span>Price of \(X\) &ensp;\((P_x)\)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="10" value="2" step="0.5"></div>
+                <div class="slider-group"><div class="slider-label"><span>Price of \(Y\) &ensp;\((P_y)\)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="10" value="2" step="0.5"></div>
+                <div class="equation-box">\( P_x \cdot X + P_y \cdot Y \leq M \)</div>
+            </div>
+
+            <div class="control-panel">
+                <div class="panel-title">Preferences</div>
+                <div class="slider-group"><div class="slider-label"><span>Preference \(\alpha\)</span><span class="slider-value" id="alpha-value">0.50</span></div><input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01"></div>
+                <div class="equation-box">\( U(X,Y) = X^{\alpha} \cdot Y^{1-\alpha} \)</div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-line" style="background:#e53e3e;"></div><span>Budget Constraint</span></div>
+                    <div class="legend-item"><div class="legend-line" style="background:#319795;"></div><span>Your Indifference Curve</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#319795;"></div><span>Your Bundle</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Plot Element Visibility, Labels &amp; Position</div>
+            <div class="opt-section-label">Axes</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"><div class="nudge-group" data-target="xaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"><div class="nudge-group" data-target="yaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+            <div class="opt-section-label">Budget Constraint</div>
+            <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget constraint line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-feasible" checked><label for="show-feasible">Feasible region shading</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label><div class="nudge-group" data-target="bc-intercept-x"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="bc-intercept-y"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-section-label">User Bundle</div>
+            <div class="opt-row"><input type="checkbox" id="show-user-ic" checked><label for="show-user-ic">Your indifference curve</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-user-point" checked><label for="show-user-point">Your bundle point</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-user-label" checked><label for="show-user-label">Coordinates label</label><div class="nudge-group" data-target="user-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-section-label">Optimal (when shown)</div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-ic" checked><label for="show-opt-ic">Optimal indifference curve</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal point &amp; label</label><div class="nudge-group" data-target="opt-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
+document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
+
+const nudgeOffsets={};const NUDGE_PX=4;const DPR=2;
+document.querySelectorAll('.nudge-btn').forEach(btn=>{btn.addEventListener('click',()=>{const t=btn.closest('.nudge-group').dataset.target;if(!nudgeOffsets[t])nudgeOffsets[t]={dx:0,dy:0};const d=btn.dataset.dir;if(d==='left')nudgeOffsets[t].dx-=NUDGE_PX;if(d==='right')nudgeOffsets[t].dx+=NUDGE_PX;if(d==='up')nudgeOffsets[t].dy-=NUDGE_PX;if(d==='down')nudgeOffsets[t].dy+=NUDGE_PX;drawGraph();});});
+function getNudge(t){const o=nudgeOffsets[t];return o?{dx:o.dx*DPR,dy:o.dy*DPR}:{dx:0,dy:0};}
+
+const canvas=document.getElementById('graph'),ctx=canvas.getContext('2d');
+const incomeSlider=document.getElementById('income'),pxSlider=document.getElementById('px'),pySlider=document.getElementById('py'),alphaSlider=document.getElementById('alpha');
+const userXSlider=document.getElementById('user-x'),userYSlider=document.getElementById('user-y');
+const errorBanner=document.getElementById('error-banner'),successBanner=document.getElementById('success-banner'),bigUtility=document.getElementById('big-utility');
+
+const margin={top:200,right:80,bottom:120,left:140};
+const maxX=80,maxY=80;
+let showOptimal=false,wasAffordable=true;
+
+function getGD(){return{width:canvas.width-margin.left-margin.right,height:canvas.height-margin.top-margin.bottom};}
+function tCX(x){return margin.left+(x/maxX)*getGD().width;}
+function tCY(y){return margin.top+getGD().height-(y/maxY)*getGD().height;}
+
+function calcOpt(M,Px,Py,a){const x=(a*M)/Px,y=((1-a)*M)/Py;return{xStar:x,yStar:y,utility:Math.pow(x,a)*Math.pow(y,1-a)};}
+function calcU(x,y,a){return(x<=0||y<=0)?0:Math.pow(x,a)*Math.pow(y,1-a);}
+function getICY(x,u,a){return x<=0?null:Math.pow(u/Math.pow(x,a),1/(1-a));}
+function isAffordable(x,y,M,Px,Py){return(Px*x+Py*y)<=M*1.001;}
+function isVis(id){const e=document.getElementById(id);return e?e.checked:true;}
+function getLabel(id,fb){const e=document.getElementById(id);return e&&e.value.trim()?e.value.trim():fb;}
+
+function clipLine(x0,y0,x1,y1){
+    function code(x,y){let c=0;if(x<0)c|=1;else if(x>maxX)c|=2;if(y<0)c|=4;else if(y>maxY)c|=8;return c;}
+    let c0=code(x0,y0),c1=code(x1,y1);
+    for(let i=0;i<20;i++){if(!(c0|c1))return{x0,y0,x1,y1};if(c0&c1)return null;let c=c0||c1,x,y;if(c&8){y=maxY;x=x0+(x1-x0)*(maxY-y0)/(y1-y0);}else if(c&4){y=0;x=x0+(x1-x0)*(0-y0)/(y1-y0);}else if(c&2){x=maxX;y=y0+(y1-y0)*(maxX-x0)/(x1-x0);}else{x=0;y=y0+(y1-y0)*(0-x0)/(x1-x0);}if(c===c0){x0=x;y0=y;c0=code(x0,y0);}else{x1=x;y1=y;c1=code(x1,y1);}}return null;
+}
+
+function drawSubText(bx,by,main,sub,tail,align){
+    const S=DPR,mF=`italic ${12*S}px Georgia,serif`,sF=`italic ${9*S}px Georgia,serif`;
+    ctx.font=mF;const mW=ctx.measureText(main);ctx.font=sF;const sW=ctx.measureText(sub);ctx.font=mF;const tW=ctx.measureText(tail);
+    const tot=mW.width+sW.width+tW.width;let sx=bx;if(align==='center')sx=bx-tot/2;
+    ctx.font=mF;ctx.textAlign='left';ctx.fillText(main,sx,by);ctx.font=sF;ctx.fillText(sub,sx+mW.width,by+3*S);ctx.font=mF;ctx.fillText(tail,sx+mW.width+sW.width,by);
+}
+
+function drawGraph(){
+    const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),alpha=parseFloat(alphaSlider.value);
+    const userX=parseFloat(userXSlider.value),userY=parseFloat(userYSlider.value);
+    document.getElementById('income-value').textContent=M;document.getElementById('px-value').textContent=Px;
+    document.getElementById('py-value').textContent=Py;document.getElementById('alpha-value').textContent=alpha.toFixed(2);
+    document.getElementById('user-x-value').textContent=userX.toFixed(1);document.getElementById('user-y-value').textContent=userY.toFixed(1);
+
+    const{xStar,yStar,utility:optU}=calcOpt(M,Px,Py,alpha);
+    const userU=calcU(userX,userY,alpha),spending=Px*userX+Py*userY,affordable=isAffordable(userX,userY,M,Px,Py);
+    const nearOptimal=affordable&&Math.abs(userU-optU)/optU<0.02;
+
+    const budgetPct=Math.min((spending/M)*100,150);
+    document.getElementById('budget-fill').style.width=`${Math.min(budgetPct,100)}%`;
+    document.getElementById('budget-fill').className='budget-fill'+(!affordable?' over':'');
+    document.getElementById('budget-status').innerHTML=affordable?`$${spending.toFixed(0)} / $${M}`:`<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
+
+    document.getElementById('score-value').textContent=affordable?userU.toFixed(1):'—';document.getElementById('optimal-utility').textContent=optU.toFixed(1);
+    const prox=affordable?Math.min(100,(userU/optU)*100):0;
+    document.getElementById('proximity-pct').textContent=`${prox.toFixed(0)}%`;document.getElementById('proximity-fill').style.width=`${prox}%`;
+    bigUtility.textContent=affordable?userU.toFixed(1):'—';
+    bigUtility.className='utility-value'+(!affordable?' infeasible':(nearOptimal?' optimal':''));
+
+    const nowUnaffordable=!affordable;
+    if(nowUnaffordable&&wasAffordable){errorBanner.classList.remove('visible');void errorBanner.offsetWidth;errorBanner.classList.add('visible');}
+    else if(nowUnaffordable){errorBanner.classList.add('visible');}
+    else{errorBanner.classList.remove('visible');}
+    wasAffordable=affordable;
+    successBanner.className='overlay-banner success-banner'+(nearOptimal?' visible':'');
+
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    const{width,height}=getGD(),S=DPR;
+
+    // Grid
+    if(isVis('show-gridlines')){ctx.strokeStyle='#edf2f7';ctx.lineWidth=S;for(let i=0;i<=8;i++){const gx=margin.left+(i/8)*width,gy=margin.top+(i/8)*height;ctx.beginPath();ctx.moveTo(gx,margin.top);ctx.lineTo(gx,margin.top+height);ctx.stroke();ctx.beginPath();ctx.moveTo(margin.left,gy);ctx.lineTo(margin.left+width,gy);ctx.stroke();}}
+
+    // Feasible region
+    const xInt=M/Px,yInt=M/Py;
+    if(isVis('show-feasible')){
+        ctx.fillStyle='rgba(49,151,149,0.08)';ctx.beginPath();ctx.moveTo(tCX(0),tCY(0));
+        ctx.lineTo(tCX(0),tCY(Math.min(yInt,maxY)));
+        if(yInt<=maxY&&xInt<=maxX){ctx.lineTo(tCX(xInt),tCY(0));}
+        else if(yInt>maxY&&xInt<=maxX){const xA=(M-Py*maxY)/Px;ctx.lineTo(tCX(Math.max(0,xA)),tCY(maxY));ctx.lineTo(tCX(xInt),tCY(0));}
+        else if(yInt<=maxY&&xInt>maxX){const yA=(M-Px*maxX)/Py;ctx.lineTo(tCX(maxX),tCY(Math.max(0,yA)));ctx.lineTo(tCX(maxX),tCY(0));}
+        else{const xA=(M-Py*maxY)/Px,yA=(M-Px*maxX)/Py;if(xA>=0&&xA<=maxX)ctx.lineTo(tCX(xA),tCY(maxY));if(yA>=0&&yA<=maxY)ctx.lineTo(tCX(maxX),tCY(yA));ctx.lineTo(tCX(maxX),tCY(0));}
+        ctx.closePath();ctx.fill();
+    }
+
+    // Axes
+    ctx.strokeStyle='#a0aec0';ctx.lineWidth=2*S;ctx.beginPath();ctx.moveTo(margin.left,margin.top);ctx.lineTo(margin.left,margin.top+height);ctx.lineTo(margin.left+width,margin.top+height);ctx.stroke();
+
+    // Tick labels
+    if(isVis('show-axis-numbers')){ctx.fillStyle='#718096';ctx.font=`${14*S}px Segoe UI`;ctx.textAlign='center';for(let i=0;i<=8;i++){const v=(i/8)*maxX;ctx.fillText(v.toFixed(0),tCX(v),margin.top+height+25*S);}ctx.textAlign='right';for(let i=0;i<=8;i++){const v=(i/8)*maxY;ctx.fillText(v.toFixed(0),margin.left-10*S,tCY(v)+5*S);}}
+
+    // Axis titles
+    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.fillText(getLabel('label-xaxis','Good X'),margin.left+width/2+n.dx,canvas.height-10*S+n.dy);}
+    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.save();ctx.translate(20*S+n.dx,margin.top+height/2+n.dy);ctx.rotate(-Math.PI/2);ctx.fillText(getLabel('label-yaxis','Good Y'),0,0);ctx.restore();}
+
+    // Budget constraint — clipped
+    if(isVis('show-bc')){const cl=clipLine(0,yInt,xInt,0);if(cl){ctx.strokeStyle='#e53e3e';ctx.lineWidth=4*S;ctx.beginPath();ctx.moveTo(tCX(cl.x0),tCY(cl.y0));ctx.lineTo(tCX(cl.x1),tCY(cl.y1));ctx.stroke();}}
+
+    // User IC
+    if(isVis('show-user-ic')&&userU>0){ctx.strokeStyle=affordable?'#319795':'#e53e3e';ctx.lineWidth=3*S;ctx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.3){const y=getICY(x,userU,alpha);if(y!==null&&y<=maxY&&y>=0){if(!st){ctx.moveTo(tCX(x),tCY(y));st=true;}else ctx.lineTo(tCX(x),tCY(y));}}ctx.stroke();}
+
+    // Optimal (when shown)
+    if(showOptimal){
+        if(isVis('show-opt-ic')){ctx.strokeStyle='rgba(214,158,46,0.6)';ctx.lineWidth=2*S;ctx.setLineDash([8*S,4*S]);ctx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.3){const y=getICY(x,optU,alpha);if(y!==null&&y<=maxY&&y>=0){if(!st){ctx.moveTo(tCX(x),tCY(y));st=true;}else ctx.lineTo(tCX(x),tCY(y));}}ctx.stroke();ctx.setLineDash([]);}
+        if(isVis('show-opt-point')&&xStar<=maxX&&yStar<=maxY){const n=getNudge('opt-label');ctx.fillStyle='#d69e2e';ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),10*S,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2*S;ctx.stroke();ctx.fillStyle='#d69e2e';ctx.font=`bold ${12*S}px Segoe UI`;ctx.textAlign='left';ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`,tCX(xStar)+16*S+n.dx,tCY(yStar)+4*S+n.dy);}
+    }
+
+    // User point
+    if(isVis('show-user-point')&&userX>0&&userY>0&&userX<=maxX&&userY<=maxY){
+        const g=ctx.createRadialGradient(tCX(userX),tCY(userY),0,tCX(userX),tCY(userY),25*S);
+        if(affordable){g.addColorStop(0,nearOptimal?'rgba(214,158,46,0.5)':'rgba(49,151,149,0.3)');g.addColorStop(1,'rgba(49,151,149,0)');}
+        else{g.addColorStop(0,'rgba(229,62,62,0.4)');g.addColorStop(1,'rgba(229,62,62,0)');}
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(tCX(userX),tCY(userY),25*S,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle=affordable?(nearOptimal?'#d69e2e':'#319795'):'#e53e3e';ctx.beginPath();ctx.arc(tCX(userX),tCY(userY),10*S,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3*S;ctx.stroke();
+        if(isVis('show-user-label')){const n=getNudge('user-label');ctx.fillStyle='#1a202c';ctx.font=`bold ${12*S}px Segoe UI`;const lx=userX<60?tCX(userX)+16*S:tCX(userX)-80*S;ctx.textAlign='left';ctx.fillText(`(${userX.toFixed(1)}, ${userY.toFixed(1)})`,lx+n.dx,tCY(userY)-8*S+n.dy);}
+    }
+
+    // Intercept labels
+    if(isVis('show-bc-intercepts')){ctx.fillStyle='#e53e3e';
+        if(xInt<=maxX){const n=getNudge('bc-intercept-x');drawSubText(tCX(xInt)+n.dx,tCY(0)+40*S+n.dy,'M/P','x',` = ${xInt.toFixed(1)}`,'center');}
+        if(yInt<=maxY){const n=getNudge('bc-intercept-y');drawSubText(tCX(0)+10*S+n.dx,tCY(yInt)-10*S+n.dy,'M/P','y',` = ${yInt.toFixed(1)}`,'left');}
+    }
+}
+
+[incomeSlider,pxSlider,pySlider,alphaSlider].forEach(s=>s.addEventListener('input',()=>{showOptimal=false;drawGraph();}));
+[userXSlider,userYSlider].forEach(s=>s.addEventListener('input',drawGraph));
+
+function resetGame(){incomeSlider.value=60+Math.random()*100;pxSlider.value=(1+Math.random()*6).toFixed(1);pySlider.value=(1+Math.random()*6).toFixed(1);alphaSlider.value=(0.2+Math.random()*0.6).toFixed(2);userXSlider.value=10+Math.random()*20;userYSlider.value=10+Math.random()*20;showOptimal=false;drawGraph();}
+function showHintToggle(){showOptimal=!showOptimal;drawGraph();}
+
+document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
+document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',drawGraph);i.addEventListener('change',drawGraph);});
+
+document.getElementById('copy-plot-btn').addEventListener('click',async()=>{const btn=document.getElementById('copy-plot-btn'),lbl=document.getElementById('copy-label');try{const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.classList.add('copied');lbl.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Copy';},1500);}catch(e){lbl.textContent='Failed';setTimeout(()=>{lbl.textContent='Copy';},1500);}});
+document.getElementById('save-plot-btn').addEventListener('click',()=>{const btn=document.getElementById('save-plot-btn'),lbl=document.getElementById('save-label');const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='utility_maximization_drag_the_sliders.png';a.click();btn.classList.add('copied');lbl.textContent='Saved!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Save';},1500);});
+
+drawGraph();
+</script>
+</body>
+</html>

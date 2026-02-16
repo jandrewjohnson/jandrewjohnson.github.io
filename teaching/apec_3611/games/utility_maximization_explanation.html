@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Maximization</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 24px; font-size: 0.95rem; }
+        .main-content { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+        .graph-container { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; }
+        canvas { display: block; width: 100%; height: auto; }
+        .plot-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
+        }
+        .graph-container:hover .plot-actions { opacity: 1; }
+        .plot-action-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
+        .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .plot-action-btn:active { background: #edf2f7; }
+        .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
+        .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        .control-panel { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 4px 10px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.85rem; color: #2b6cb0; font-weight: 500; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .info-box { background: #f7fafc; border-radius: 8px; padding: 16px; border-left: 3px solid #4299e1; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.9rem; }
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco','Consolas',monospace; color: #1a202c; }
+        .info-value.highlight { color: #2b6cb0; font-weight: 600; }
+        .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #4a5568; }
+        .legend-line { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; font-size: 1.05rem; }
+        .tangency-condition { margin-top: 16px; padding: 14px; background: rgba(66,153,225,0.08); border-radius: 8px; border: 1px solid rgba(66,153,225,0.2); }
+        .tangency-title { font-size: 0.8rem; color: #2b6cb0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tangency-eq { text-align: center; font-size: 1.05rem; color: #1a202c; margin-bottom: 4px; }
+        .tangency-eq-sub { text-align: center; font-size: 0.9rem; color: #718096; margin-top: 6px; }
+
+        /* Collapsible left-column sections */
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+        .left-section-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-toggle { background: none; border: none; color: #a0aec0; font-size: 0.7rem; cursor: pointer; padding: 2px 6px; transition: transform 0.2s; }
+        .left-section-toggle.collapsed { transform: rotate(-90deg); }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+
+        .worked-step { padding: 4px 0; font-size: 0.95rem; line-height: 1.9; color: #4a5568; }
+        .worked-step .step-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; font-weight: 600; margin-top: 10px; margin-bottom: 2px; }
+        .worked-step .step-math { padding: 2px 0 2px 12px; border-left: 2px solid #e2e8f0; }
+        .worked-step .step-math.highlight-result { border-left-color: #4299e1; background: rgba(66,153,225,0.04); padding: 6px 12px; border-radius: 0 6px 6px 0; margin: 4px 0; }
+
+        .formal-math { margin: 8px 0 18px 0; text-align: center; font-size: 1.15rem; line-height: 2.2; }
+        .formal-solution { padding: 12px 16px; background: #f7fafc; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; font-size: 1rem; line-height: 2; }
+        .formal-solution-label { color: #718096; font-size: 0.85rem; margin-bottom: 4px; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
+        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 110px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+        .opt-section-label:first-child { margin-top: 0; }
+        .nudge-group { display: inline-flex; align-items: center; gap: 1px; margin-left: auto; flex-shrink: 0; }
+        .nudge-btn { width: 18px; height: 18px; padding: 0; border: 1px solid #e2e8f0; background: #f7fafc; color: #a0aec0; font-size: 9px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.1s, color 0.1s; }
+        .nudge-btn:hover { background: #edf2f7; color: #4a5568; }
+        .nudge-btn:active { background: #e2e8f0; }
+
+        /* KaTeX sizing */
+        .katex { font-size: 1em; }
+        .info-row .katex { font-size: 0.95em; }
+        .slider-label .katex { font-size: 0.95em; }
+        .equation-box .katex { font-size: 1.1em; }
+        .tangency-eq .katex { font-size: 1.1em; }
+        .tangency-eq-sub .katex { font-size: 0.95em; }
+        .formal-math .katex-display { margin: 0.4em 0; }
+        .formal-solution .katex { font-size: 1.05em; }
+        .legend-item .katex { font-size: 0.9em; }
+        .worked-step .katex { font-size: 1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Utility Maximization</h1>
+    <p class="subtitle">The optimal bundle occurs where the indifference curve is tangent to the budget constraint</p>
+    <div class="main-content">
+        <div class="left-column">
+            <div class="graph-container">
+                <div class="plot-actions">
+                    <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        <span id="copy-label">Copy</span>
+                    </button>
+                    <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span id="save-label">Save</span>
+                    </button>
+                </div>
+                <canvas id="graph" width="1400" height="1200"></canvas>
+            </div>
+
+            <!-- Explanation (collapsible) -->
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">Explanation</div>
+                    <span class="left-section-toggle" id="toggle-explanation">▼</span>
+                </div>
+                <div class="left-section-body" id="body-explanation">
+                    <p>This graph illustrates the core insight of consumer choice theory: a rational consumer maximizes utility by choosing the bundle of goods where their indifference curve is exactly tangent to their budget constraint. At this tangency point, the marginal rate of substitution (\(\mathrm{MRS}\))—the rate at which the consumer is <em>willing</em> to trade \(Y\) for \(X\)—equals the price ratio \(P_x / P_y\)—the rate at which the market <em>allows</em> them to trade. Any other affordable bundle on the budget line lies on a lower indifference curve, meaning less satisfaction.</p>
+                    <p>Experiment with the sliders to build intuition for how the optimal bundle shifts. Increasing \(P_x\) pivots the budget constraint inward along the \(X\)-axis, reducing the affordable set and pulling the optimal bundle toward less \(X\) and more \(Y\). Changing the preference parameter \(\alpha\) redistributes spending: a higher \(\alpha\) means the consumer values \(X\) more and devotes a larger share of income to it, shifting the tangency point rightward. Notice that no matter where the parameters land, the tangency condition \(\mathrm{MRS} = P_x/P_y\) always holds at the optimum.</p>
+                    <p>The dashed indifference curves above and below the optimal one reinforce why tangency is special. Curves above the budget line represent higher utility but are unaffordable. Curves below it are affordable but leave money on the table—the consumer could do better by moving along the budget line toward the tangency point. Only the curve that just touches the budget line achieves the highest feasible utility, making it the unique solution to the consumer's optimization problem.</p>
+                </div>
+            </div>
+
+            <!-- Worked Solution (collapsible) -->
+            <div class="left-section" id="section-worked">
+                <div class="left-section-header" onclick="toggleSection('worked')">
+                    <div class="panel-title" style="margin-bottom:0">Solving with Current Parameters</div>
+                    <span class="left-section-toggle" id="toggle-worked">▼</span>
+                </div>
+                <div class="left-section-body" id="body-worked">
+                    <div id="worked-content"></div>
+                </div>
+            </div>
+
+            <!-- Consumer's Problem (collapsible) -->
+            <div class="left-section" id="section-formal">
+                <div class="left-section-header" onclick="toggleSection('formal')">
+                    <div class="panel-title" style="margin-bottom:0">The Consumer's Problem</div>
+                    <span class="left-section-toggle" id="toggle-formal">▼</span>
+                </div>
+                <div class="left-section-body" id="body-formal">
+                    <div class="formal-math">
+                        \[ \max_{X,\, Y} \; U(X, Y) = X^{\alpha} \cdot Y^{1-\alpha} \]
+                        \[ \text{s.t.} \quad P_x \cdot X + P_y \cdot Y \leq M, \qquad X \geq 0, \quad Y \geq 0 \]
+                    </div>
+                    <div class="formal-solution-label">Solution</div>
+                    <div class="formal-solution">
+                        \( X^* = \dfrac{\alpha \, M}{P_x} \qquad Y^* = \dfrac{(1-\alpha)\, M}{P_y} \qquad U^* = \left(\dfrac{\alpha \, M}{P_x}\right)^{\!\alpha} \!\cdot \left(\dfrac{(1-\alpha)\, M}{P_y}\right)^{\!1-\alpha} \)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-panel">
+                <div class="panel-title">Budget Constraint</div>
+                <div class="slider-group"><div class="slider-label"><span>Income \( M \)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
+                <div class="slider-group"><div class="slider-label"><span>Price of \( X \) &ensp;\( (P_x) \)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="10" value="2" step="0.5"></div>
+                <div class="slider-group"><div class="slider-label"><span>Price of \( Y \) &ensp;\( (P_y) \)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="10" value="2" step="0.5"></div>
+                <div class="equation-box">\( M = P_x \cdot X + P_y \cdot Y \)</div>
+            </div>
+            <div class="control-panel">
+                <div class="panel-title">Optimal Bundle</div>
+                <div class="info-box">
+                    <div class="info-row"><span class="info-label">\( X^* \)</span><span class="info-value highlight" id="opt-x">25.0</span></div>
+                    <div class="info-row"><span class="info-label">\( Y^* \)</span><span class="info-value highlight" id="opt-y">25.0</span></div>
+                    <div class="info-row"><span class="info-label">Utility \( U^* \)</span><span class="info-value" id="opt-u">25.0</span></div>
+                    <div class="info-row"><span class="info-label">\(\mathrm{MRS}\) at optimum</span><span class="info-value" id="opt-mrs">1.00</span></div>
+                    <div class="info-row"><span class="info-label">Price ratio \( P_x / P_y \)</span><span class="info-value" id="price-ratio">1.00</span></div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-line" style="background:#e53e3e;"></div><span>Budget Constraint</span></div>
+                    <div class="legend-item"><div class="legend-line" style="background:#319795;"></div><span>Optimal Indifference Curve</span></div>
+                    <div class="legend-item"><div class="legend-line" style="background:rgba(49,151,149,0.3);"></div><span>Other Indifference Curves</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#d69e2e;"></div><span>Optimal Bundle \((X^*,\, Y^*)\)</span></div>
+                </div>
+            </div>
+            <div class="control-panel">
+                <div class="panel-title">Utility Function (Cobb-Douglas)</div>
+                <div class="slider-group"><div class="slider-label"><span>Preference \( \alpha \)</span><span class="slider-value" id="alpha-value">0.50</span></div><input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01"></div>
+                <div class="equation-box">\( U(X,Y) = X^{\alpha} \cdot Y^{1-\alpha} \)</div>
+                <div class="tangency-condition"><div class="tangency-title">Tangency Condition</div><div class="tangency-eq">\( \mathrm{MRS} = \dfrac{P_x}{P_y} \)</div><div class="tangency-eq-sub">\( \dfrac{\alpha \, Y}{(1-\alpha)\, X} = \dfrac{P_x}{P_y} \)</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Plot Element Visibility, Labels &amp; Position</div>
+            <div class="opt-section-label">Axes</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"><div class="nudge-group" data-target="xaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"><div class="nudge-group" data-target="yaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+            <div class="opt-section-label">Budget Constraint</div>
+            <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget constraint line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label><div class="nudge-group" data-target="bc-intercept-x"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="bc-intercept-y"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-section-label">Indifference Curves</div>
+            <div class="opt-row"><input type="checkbox" id="show-optimal-ic" checked><label for="show-optimal-ic">Optimal indifference curve</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-other-ics" checked><label for="show-other-ics">Other indifference curves</label></div>
+            <div class="opt-section-label">Optimal Point</div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal bundle point</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-coords" checked><label for="show-opt-coords">Axis annotations X*, Y*</label><div class="nudge-group" data-target="opt-xstar"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="opt-ystar"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-utility" checked><label for="show-opt-utility">Utility annotation</label><input type="text" id="label-utility-prefix" value="U"><div class="nudge-group" data-target="opt-utility"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-tangent-line" checked><label for="show-tangent-line">Tangent line at optimum</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-perpendicular" checked><label for="show-perpendicular">Perpendicular dashed lines</label></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [{left: "\\[", right: "\\]", display: true},{left: "\\(", right: "\\)", display: false}],
+            throwOnError: false
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", renderAllMath);
+window.addEventListener('load', renderAllMath);
+
+// Collapse/expand
+function toggleSection(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    toggle.classList.toggle('collapsed', collapsed);
+    toggle.textContent = collapsed ? '▶' : '▼';
+}
+
+// Nudge offsets
+const nudgeOffsets = {};
+const NUDGE_PX = 4;
+document.querySelectorAll('.nudge-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.closest('.nudge-group').dataset.target;
+        if (!nudgeOffsets[target]) nudgeOffsets[target] = { dx: 0, dy: 0 };
+        const dir = btn.dataset.dir;
+        if (dir === 'left') nudgeOffsets[target].dx -= NUDGE_PX;
+        if (dir === 'right') nudgeOffsets[target].dx += NUDGE_PX;
+        if (dir === 'up') nudgeOffsets[target].dy -= NUDGE_PX;
+        if (dir === 'down') nudgeOffsets[target].dy += NUDGE_PX;
+        drawGraph();
+    });
+});
+function getNudge(t) { const o = nudgeOffsets[t]; return o ? { dx: o.dx * DPR, dy: o.dy * DPR } : { dx: 0, dy: 0 }; }
+
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+const DPR = 2;
+const incomeSlider = document.getElementById('income');
+const pxSlider = document.getElementById('px');
+const pySlider = document.getElementById('py');
+const alphaSlider = document.getElementById('alpha');
+const margin = { top: 80, right: 80, bottom: 120, left: 140 };
+const maxX = 80, maxY = 80;
+
+function getGD() { return { width: canvas.width-margin.left-margin.right, height: canvas.height-margin.top-margin.bottom }; }
+function tCX(x) { return margin.left + (x/maxX)*getGD().width; }
+function tCY(y) { return margin.top + getGD().height - (y/maxY)*getGD().height; }
+
+function calcOpt(M,Px,Py,a) {
+    const xS=(a*M)/Px, yS=((1-a)*M)/Py;
+    return { xStar:xS, yStar:yS, utility:Math.pow(xS,a)*Math.pow(yS,1-a), mrs:(a*yS)/((1-a)*xS) };
+}
+function getICY(x,u,a) { return x<=0?null:Math.pow(u/Math.pow(x,a),1/(1-a)); }
+function isVis(id) { const e=document.getElementById(id); return e?e.checked:true; }
+function getLabel(id,fb) { const e=document.getElementById(id); return e&&e.value.trim()?e.value.trim():fb; }
+
+function clipLine(x0,y0,x1,y1) {
+    function code(x,y){let c=0;if(x<0)c|=1;else if(x>maxX)c|=2;if(y<0)c|=4;else if(y>maxY)c|=8;return c;}
+    let c0=code(x0,y0),c1=code(x1,y1);
+    for(let i=0;i<20;i++){
+        if(!(c0|c1))return{x0,y0,x1,y1};if(c0&c1)return null;
+        let c=c0||c1,x,y;
+        if(c&8){y=maxY;x=x0+(x1-x0)*(maxY-y0)/(y1-y0);}
+        else if(c&4){y=0;x=x0+(x1-x0)*(0-y0)/(y1-y0);}
+        else if(c&2){x=maxX;y=y0+(y1-y0)*(maxX-x0)/(x1-x0);}
+        else{x=0;y=y0+(y1-y0)*(0-x0)/(x1-x0);}
+        if(c===c0){x0=x;y0=y;c0=code(x0,y0);}else{x1=x;y1=y;c1=code(x1,y1);}
+    }
+    return null;
+}
+
+function drawSubText(bx,by,main,sub,tail,align) {
+    const S=DPR,mF=`italic ${12*S}px Georgia,serif`,sF=`italic ${9*S}px Georgia,serif`;
+    ctx.font=mF;const mW=ctx.measureText(main);ctx.font=sF;const sW=ctx.measureText(sub);ctx.font=mF;const tW=ctx.measureText(tail);
+    const tot=mW.width+sW.width+tW.width;let sx=bx;if(align==='center')sx=bx-tot/2;
+    ctx.font=mF;ctx.textAlign='left';ctx.fillText(main,sx,by);ctx.font=sF;ctx.fillText(sub,sx+mW.width,by+3*S);ctx.font=mF;ctx.fillText(tail,sx+mW.width+sW.width,by);
+}
+
+function updateWorked(M,Px,Py,alpha) {
+    const xS=(alpha*M)/Px,yS=((1-alpha)*M)/Py,u=Math.pow(xS,alpha)*Math.pow(yS,1-alpha),sX=Px*xS,sY=Py*yS,mrs=(alpha*yS)/((1-alpha)*xS);
+    const a=alpha.toFixed(2),oma=(1-alpha).toFixed(2);
+    document.getElementById('worked-content').innerHTML = `
+        <div class="worked-step"><div class="step-label">Given</div><div class="step-math">\\( M = ${M}, \\quad P_x = ${Px}, \\quad P_y = ${Py}, \\quad \\alpha = ${a} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 1 — Budget constraint</div><div class="step-math">\\( ${Px}\\,X + ${Py}\\,Y = ${M} \\quad\\Longrightarrow\\quad Y = \\dfrac{${M} - ${Px}\\,X}{${Py}} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 2 — Tangency condition</div><div class="step-math">\\( \\mathrm{MRS} = \\dfrac{\\alpha\\,Y}{(1-\\alpha)\\,X} = \\dfrac{P_x}{P_y} = \\dfrac{${Px}}{${Py}} = ${(Px/Py).toFixed(2)} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 3 — Solve for \\(X^*\\)</div><div class="step-math">\\( X^* = \\dfrac{\\alpha \\cdot M}{P_x} = \\dfrac{${a} \\times ${M}}{${Px}} = ${xS.toFixed(2)} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 4 — Solve for \\(Y^*\\)</div><div class="step-math">\\( Y^* = \\dfrac{(1-\\alpha) \\cdot M}{P_y} = \\dfrac{${oma} \\times ${M}}{${Py}} = ${yS.toFixed(2)} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 5 — Spending</div><div class="step-math">\\( \\text{Spent on } X: \\; P_x \\cdot X^* = ${Px} \\times ${xS.toFixed(2)} = ${sX.toFixed(2)} \\)<br>\\( \\text{Spent on } Y: \\; P_y \\cdot Y^* = ${Py} \\times ${yS.toFixed(2)} = ${sY.toFixed(2)} \\)<br>\\( \\text{Total} = ${sX.toFixed(2)} + ${sY.toFixed(2)} = ${(sX+sY).toFixed(2)} = M \\;\\checkmark \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 6 — Verify tangency</div><div class="step-math">\\( \\mathrm{MRS} = \\dfrac{${a} \\times ${yS.toFixed(2)}}{${oma} \\times ${xS.toFixed(2)}} = ${mrs.toFixed(4)} \\approx \\dfrac{P_x}{P_y} = ${(Px/Py).toFixed(4)} \\;\\checkmark \\)</div></div>
+        <div class="worked-step"><div class="step-label">Result — Maximum utility</div><div class="step-math highlight-result">\\( U^* = (${xS.toFixed(2)})^{${a}} \\cdot (${yS.toFixed(2)})^{${oma}} = ${u.toFixed(2)} \\)</div></div>`;
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.getElementById('section-worked'), {
+            delimiters: [{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}], throwOnError: false
+        });
+    }
+}
+
+function drawGraph() {
+    const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),alpha=parseFloat(alphaSlider.value);
+    document.getElementById('income-value').textContent=M;
+    document.getElementById('px-value').textContent=Px;
+    document.getElementById('py-value').textContent=Py;
+    document.getElementById('alpha-value').textContent=alpha.toFixed(2);
+    const{xStar,yStar,utility,mrs}=calcOpt(M,Px,Py,alpha);
+    document.getElementById('opt-x').textContent=xStar.toFixed(1);
+    document.getElementById('opt-y').textContent=yStar.toFixed(1);
+    document.getElementById('opt-u').textContent=utility.toFixed(1);
+    document.getElementById('opt-mrs').textContent=mrs.toFixed(2);
+    document.getElementById('price-ratio').textContent=(Px/Py).toFixed(2);
+    updateWorked(M,Px,Py,alpha);
+
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    const{width,height}=getGD(),S=DPR;
+
+    // Grid
+    if(isVis('show-gridlines')){ctx.strokeStyle='#edf2f7';ctx.lineWidth=S;for(let i=0;i<=8;i++){const gx=margin.left+(i/8)*width,gy=margin.top+(i/8)*height;ctx.beginPath();ctx.moveTo(gx,margin.top);ctx.lineTo(gx,margin.top+height);ctx.stroke();ctx.beginPath();ctx.moveTo(margin.left,gy);ctx.lineTo(margin.left+width,gy);ctx.stroke();}}
+
+    // Axes
+    ctx.strokeStyle='#a0aec0';ctx.lineWidth=2*S;ctx.beginPath();ctx.moveTo(margin.left,margin.top);ctx.lineTo(margin.left,margin.top+height);ctx.lineTo(margin.left+width,margin.top+height);ctx.stroke();
+
+    // Tick labels
+    if(isVis('show-axis-numbers')){ctx.fillStyle='#718096';ctx.font=`${14*S}px Segoe UI`;ctx.textAlign='center';for(let i=0;i<=8;i++){const v=(i/8)*maxX;ctx.fillText(v.toFixed(0),tCX(v),margin.top+height+25*S);}ctx.textAlign='right';for(let i=0;i<=8;i++){const v=(i/8)*maxY;ctx.fillText(v.toFixed(0),margin.left-10*S,tCY(v)+5*S);}}
+
+    // Axis titles
+    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.fillText(getLabel('label-xaxis','Good X'),margin.left+width/2+n.dx,canvas.height-10*S+n.dy);}
+    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.save();ctx.translate(20*S+n.dx,margin.top+height/2+n.dy);ctx.rotate(-Math.PI/2);ctx.fillText(getLabel('label-yaxis','Good Y'),0,0);ctx.restore();}
+
+    // Other ICs
+    if(isVis('show-other-ics')){const uL=[utility*0.5,utility*0.75,utility*1.25,utility*1.5];ctx.strokeStyle='rgba(49,151,149,0.25)';ctx.lineWidth=1.5*S;ctx.setLineDash([5*S,5*S]);for(const u of uL){ctx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.5){const y=getICY(x,u,alpha);if(y!==null&&y<=maxY&&y>=0){if(!st){ctx.moveTo(tCX(x),tCY(y));st=true;}else ctx.lineTo(tCX(x),tCY(y));}}ctx.stroke();}ctx.setLineDash([]);}
+
+    // Budget constraint
+    if(isVis('show-bc')){const cl=clipLine(0,M/Py,M/Px,0);if(cl){ctx.strokeStyle='#e53e3e';ctx.lineWidth=3*S;ctx.beginPath();ctx.moveTo(tCX(cl.x0),tCY(cl.y0));ctx.lineTo(tCX(cl.x1),tCY(cl.y1));ctx.stroke();}}
+
+    // Optimal IC
+    if(isVis('show-optimal-ic')){ctx.strokeStyle='#319795';ctx.lineWidth=3*S;ctx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.3){const y=getICY(x,utility,alpha);if(y!==null&&y<=maxY&&y>=0){if(!st){ctx.moveTo(tCX(x),tCY(y));st=true;}else ctx.lineTo(tCX(x),tCY(y));}}ctx.stroke();}
+
+    // Tangent line
+    if(isVis('show-tangent-line')){const tL=15,sl=-Px/Py;ctx.strokeStyle='rgba(214,158,46,0.5)';ctx.lineWidth=2*S;ctx.setLineDash([4*S,4*S]);ctx.beginPath();ctx.moveTo(tCX(xStar-tL),tCY(yStar+sl*tL));ctx.lineTo(tCX(xStar+tL),tCY(yStar-sl*tL));ctx.stroke();ctx.setLineDash([]);}
+
+    // Perpendicular lines
+    if(isVis('show-perpendicular')&&xStar<=maxX&&yStar<=maxY){ctx.strokeStyle='rgba(214,158,46,0.35)';ctx.lineWidth=1.5*S;ctx.setLineDash([4*S,4*S]);ctx.beginPath();ctx.moveTo(tCX(xStar),tCY(yStar));ctx.lineTo(tCX(xStar),tCY(0));ctx.stroke();ctx.beginPath();ctx.moveTo(tCX(xStar),tCY(yStar));ctx.lineTo(tCX(0),tCY(yStar));ctx.stroke();ctx.setLineDash([]);}
+
+    // Optimal point dot
+    if(isVis('show-opt-point')&&xStar<=maxX&&yStar<=maxY){
+        const g=ctx.createRadialGradient(tCX(xStar),tCY(yStar),0,tCX(xStar),tCY(yStar),20*S);g.addColorStop(0,'rgba(214,158,46,0.3)');g.addColorStop(1,'rgba(214,158,46,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),20*S,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#d69e2e';ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),8*S,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2*S;ctx.stroke();
+
+        // Utility label near the point
+        if(isVis('show-opt-utility')){
+            const n=getNudge('opt-utility'),uPfx=getLabel('label-utility-prefix','U');
+            ctx.fillStyle='#319795';ctx.font=`italic ${12*S}px Georgia,serif`;ctx.textAlign='left';
+            ctx.fillText(`${uPfx} = ${utility.toFixed(1)}`,tCX(xStar)+15*S+n.dx,tCY(yStar)-5*S+n.dy);
+        }
+    }
+
+    // X* and Y* annotations ON THE AXES (instead of near the tangency point)
+    if(isVis('show-opt-coords')&&xStar<=maxX&&yStar<=maxY){
+        // X* tick on x-axis
+        const nX=getNudge('opt-xstar');
+        const xTickCX=tCX(xStar)+nX.dx, xTickCY=margin.top+height+nX.dy;
+        // small tick mark
+        ctx.strokeStyle='#d69e2e';ctx.lineWidth=2*S;
+        ctx.beginPath();ctx.moveTo(xTickCX,xTickCY-5*S);ctx.lineTo(xTickCX,xTickCY+5*S);ctx.stroke();
+        // label
+        ctx.fillStyle='#d69e2e';ctx.font=`bold italic ${11*S}px Georgia,serif`;ctx.textAlign='center';
+        ctx.fillText(`X* = ${xStar.toFixed(1)}`,xTickCX,xTickCY+22*S);
+
+        // Y* tick on y-axis
+        const nY=getNudge('opt-ystar');
+        const yTickCX=margin.left+nY.dx, yTickCY=tCY(yStar)+nY.dy;
+        ctx.strokeStyle='#d69e2e';ctx.lineWidth=2*S;
+        ctx.beginPath();ctx.moveTo(yTickCX-5*S,yTickCY);ctx.lineTo(yTickCX+5*S,yTickCY);ctx.stroke();
+        ctx.fillStyle='#d69e2e';ctx.font=`bold italic ${11*S}px Georgia,serif`;ctx.textAlign='right';
+        ctx.fillText(`Y* = ${yStar.toFixed(1)}`,yTickCX-10*S,yTickCY+4*S);
+    }
+
+    // Intercept labels
+    if(isVis('show-bc-intercepts')){
+        const xInt=M/Px,yInt=M/Py;ctx.fillStyle='#e53e3e';
+        if(xInt<=maxX){const n=getNudge('bc-intercept-x');drawSubText(tCX(xInt)+n.dx,tCY(0)+40*S+n.dy,'M/P','x',` = ${xInt.toFixed(1)}`,'center');}
+        if(yInt<=maxY){const n=getNudge('bc-intercept-y');drawSubText(tCX(0)+10*S+n.dx,tCY(yInt)-10*S+n.dy,'M/P','y',` = ${yInt.toFixed(1)}`,'left');}
+    }
+}
+
+[incomeSlider,pxSlider,pySlider,alphaSlider].forEach(s=>s.addEventListener('input',drawGraph));
+document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
+document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',drawGraph);i.addEventListener('change',drawGraph);});
+
+// Copy plot to clipboard at full canvas resolution (1400x1200)
+document.getElementById('copy-plot-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-plot-btn');
+    const label = document.getElementById('copy-label');
+    try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        btn.classList.add('copied'); label.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Copy'; }, 1500);
+    } catch (err) {
+        label.textContent = 'Failed';
+        setTimeout(() => { label.textContent = 'Copy'; }, 1500);
+    }
+});
+
+// Save plot as PNG download
+document.getElementById('save-plot-btn').addEventListener('click', () => {
+    const btn = document.getElementById('save-plot-btn');
+    const label = document.getElementById('save-label');
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url; a.download = 'utility_maximization.png'; a.click();
+    btn.classList.add('copied'); label.textContent = 'Saved!';
+    setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Save'; }, 1500);
+});
+
+drawGraph();
+</script>
+</body>
+</html>

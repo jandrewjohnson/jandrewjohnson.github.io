@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Circular Flow of Economic Activity</title>
+<style>
+  :root {
+    --bg:#f5f7fa;--surface:#fff;--border:#e2e8f0;--text:#2d3748;--text-heading:#1a202c;
+    --text-dim:#718096;--accent:#4299e1;--shadow:rgba(0,0,0,.06);
+    --hh-fill:#ebf4ff;--hh-stroke:#4299e1;--hh-text:#2b6cb0;
+    --fi-fill:#fef3e2;--fi-stroke:#d69e2e;--fi-text:#975a16;
+    --gm-fill:#f0fff4;--gm-stroke:#38a169;--gm-text:#276749;
+    --fm-fill:#faf5ff;--fm-stroke:#805ad5;--fm-text:#553c9a;
+    --money:#c53030;--money-a:rgba(197,48,48,.7);
+    --real:#2b6cb0;--real-a:rgba(43,108,176,.7);
+    --math-text:#4a5568;--canvas-bg:#fff;
+    --act-bg:rgba(255,255,255,.85);--act-border:rgba(226,232,240,.7);
+    --act-text:#a0aec0;--act-hover:#4a5568;
+  }
+  .dark {
+    --bg:#0f1117;--surface:#181b24;--border:#2a2e3d;--text:#e2e4ea;--text-heading:#fff;
+    --text-dim:#8b8fa3;--accent:#5ba4f5;--shadow:rgba(0,0,0,.3);
+    --hh-fill:rgba(91,164,245,.15);--hh-stroke:#5ba4f5;--hh-text:#7db8f7;
+    --fi-fill:rgba(232,147,74,.15);--fi-stroke:#e8934a;--fi-text:#f0b06e;
+    --gm-fill:rgba(78,203,141,.15);--gm-stroke:#4ecb8d;--gm-text:#6dd9a5;
+    --fm-fill:rgba(155,109,227,.15);--fm-stroke:#9b6de3;--fm-text:#b48ef0;
+    --money:#fc8181;--money-a:rgba(252,129,129,.7);
+    --real:#63b3ed;--real-a:rgba(99,179,237,.7);
+    --math-text:#b0b4c8;--canvas-bg:#12141d;
+    --act-bg:rgba(24,27,36,.85);--act-border:rgba(42,46,61,.7);
+    --act-text:#555a6e;--act-hover:#c0c4d4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px;transition:background .3s,color .3s}
+  h1{text-align:center;color:var(--text-heading);font-size:1.75rem;font-weight:700;margin-bottom:4px}
+  .subtitle{text-align:center;color:var(--text-dim);font-size:.92rem;margin-bottom:20px;max-width:750px;margin-left:auto;margin-right:auto;line-height:1.5}
+  .app{max-width:1420px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
+  @media(max-width:1000px){.app{grid-template-columns:1fr}.ctrl{position:static!important}}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px var(--shadow);transition:background .3s,border-color .3s}
+  .pt{font-size:.78rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);margin-bottom:14px;font-weight:600}
+  .ctrl{position:sticky;top:20px;display:flex;flex-direction:column;gap:14px}
+  .ch{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:4px 0}
+  .ch .ar{font-size:.7rem;transition:transform .2s;color:var(--text-dim)}
+  .ch.open .ar{transform:rotate(90deg)}
+  .cc{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .cc.open{max-height:2000px}
+  .tr{display:flex;align-items:center;justify-content:space-between;padding:4px 0;gap:10px}
+  .tl{font-size:.84rem;color:var(--text);flex:1}
+  .ts{position:relative;width:36px;height:20px;flex-shrink:0}
+  .ts input{opacity:0;width:0;height:0}
+  .sl{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:20px;transition:.2s}
+  .sl::before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+  .ts input:checked+.sl{background:var(--accent)}
+  .ts input:checked+.sl::before{transform:translateX(16px)}
+  .ep{line-height:1.65;font-size:.92rem;color:var(--text)}
+  .ep p{margin-bottom:10px}
+  .lr{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.84rem}
+  .cd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .sd{border:0;border-top:1px solid var(--border);margin:8px 0}
+  .sr{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--text);padding:4px 0}
+  .sr input[type=range]{flex:1;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none}
+  .sr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+  .sv{min-width:30px;text-align:right;color:var(--accent);font-weight:600;font-size:.82rem}
+  .sl2{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600}
+  .dw{position:relative}
+  .dc{width:100%;display:block;border-radius:8px;cursor:default}
+  .pa{position:absolute;top:8px;right:8px;z-index:10;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+  .dw:hover .pa{opacity:1}
+  .pb{background:var(--act-bg);backdrop-filter:blur(4px);border:1px solid var(--act-border);border-radius:6px;padding:4px 8px;font-size:.7rem;color:var(--act-text);cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1}
+  .pb:hover{color:var(--act-hover);border-color:var(--accent)}
+  .pb.cp{color:#38a169;border-color:#c6f6d5}
+  .pb svg{width:12px;height:12px;flex-shrink:0}
+</style>
+</head>
+<body>
+<h1>The Circular Flow of Economic Activity</h1>
+<p class="subtitle">An interactive diagram showing how households and firms interact through product and factor markets. Drag boxes to rearrange.</p>
+<div class="app">
+  <div class="ctrl">
+    <div class="panel">
+      <div class="ch open" onclick="tgl(this)"><span class="ar">▶</span><span class="pt" style="margin-bottom:0">Explanation</span></div>
+      <div class="cc open"><div class="ep" style="padding-top:10px">
+        <p>The <strong>circular flow diagram</strong> is the foundational model of a market economy. <strong>Households</strong> and <strong>firms</strong> are connected through two markets.</p>
+        <p>In the <strong>product market</strong> (top), firms supply goods &amp; services and households purchase them. In the <strong>factor market</strong> (bottom), households supply factors of production and firms hire them.</p>
+        <p>The <span style="color:var(--money);font-weight:600">monetary flow</span> (solid, inner) circulates clockwise: expenditure → revenue → factor payments → income.</p>
+        <p>The <span style="color:var(--real);font-weight:600">real flow</span> (dashed, outer) circulates counter-clockwise: goods flow to households, factors flow to firms.</p>
+        <p>Every dollar spent by one agent is income for the other — GDP measured by expenditure, income, or output are equivalent.</p>
+      </div></div>
+    </div>
+    <div class="panel">
+      <div class="pt">Legend</div>
+      <div class="lr"><span class="cd" style="background:var(--hh-stroke)"></span> Households</div>
+      <div class="lr"><span class="cd" style="background:var(--fi-stroke)"></span> Firms</div>
+      <div class="lr"><span class="cd" style="background:var(--gm-stroke)"></span> Product Market</div>
+      <div class="lr"><span class="cd" style="background:var(--fm-stroke)"></span> Factor Market</div>
+      <hr class="sd">
+      <div class="lr"><svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="var(--money)" stroke-width="2.5"/></svg> Monetary flow (clockwise)</div>
+      <div class="lr"><svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="var(--real)" stroke-width="2.5" stroke-dasharray="4 3"/></svg> Real flow (counter-clockwise)</div>
+    </div>
+    <div class="panel">
+      <div class="pt">Animation</div>
+      <div class="tr"><span class="tl">Animate flows</span><label class="ts"><input type="checkbox" id="togAnim" checked><span class="sl"></span></label></div>
+      <div class="sr"><span>Speed</span><input type="range" id="spdSlider" min="0.2" max="3" step="0.1" value="1"><span class="sv" id="spdVal">1.0×</span></div>
+    </div>
+    <div class="panel">
+      <div class="ch open" onclick="tgl(this)"><span class="ar">▶</span><span class="pt" style="margin-bottom:0">Display Options</span></div>
+      <div class="cc open"><div style="padding-top:6px">
+        <div class="sl2">Theme</div>
+        <div class="tr"><span class="tl">☀️ Light / 🌙 Dark</span><label class="ts"><input type="checkbox" id="themeSwitch"><span class="sl"></span></label></div>
+        <div class="sl2">Agents</div>
+        <div class="tr"><span class="tl">Households</span><label class="ts"><input type="checkbox" data-v="households" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Firms</span><label class="ts"><input type="checkbox" data-v="firms" checked><span class="sl"></span></label></div>
+        <div class="sl2">Markets</div>
+        <div class="tr"><span class="tl">Product market</span><label class="ts"><input type="checkbox" data-v="goodsMarket" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Factor market</span><label class="ts"><input type="checkbox" data-v="factorMarket" checked><span class="sl"></span></label></div>
+        <div class="sl2">Flows</div>
+        <div class="tr"><span class="tl">Monetary flow</span><label class="ts"><input type="checkbox" data-v="moneyFlow" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Real flow</span><label class="ts"><input type="checkbox" data-v="realFlow" checked><span class="sl"></span></label></div>
+        <div class="sl2">Labels</div>
+        <div class="tr"><span class="tl">Agent labels</span><label class="ts"><input type="checkbox" data-v="agentLabels" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Market labels</span><label class="ts"><input type="checkbox" data-v="marketLabels" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Flow labels</span><label class="ts"><input type="checkbox" data-v="flowLabels" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Icons</span><label class="ts"><input type="checkbox" data-v="icons" checked><span class="sl"></span></label></div>
+        <div class="tr"><span class="tl">Agent mathematics</span><label class="ts"><input type="checkbox" data-v="math" checked><span class="sl"></span></label></div>
+      </div></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="panel" style="padding:12px">
+      <div class="dw">
+        <div class="pa">
+          <button class="pb" id="btnCopy" title="Copy to clipboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="cpLbl">Copy</span>
+          </button>
+          <button class="pb" id="btnSave" title="Save as PNG">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Save</span>
+          </button>
+        </div>
+        <canvas id="diagram" class="dc"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const V={households:1,firms:1,goodsMarket:1,factorMarket:1,moneyFlow:1,realFlow:1,agentLabels:1,marketLabels:1,flowLabels:1,icons:1,math:1};
+let anim=true,speed=1,aT=0,lF=0;
+const C=document.getElementById('diagram'),X=C.getContext('2d');
+let W,H,sc;
+
+// Box positions (center). Agent boxes are wider for math content.
+const B={
+  hh:{x:0,y:0,w:0,h:0},fi:{x:0,y:0,w:0,h:0},
+  gm:{x:0,y:0,w:0,h:0},fm:{x:0,y:0,w:0,h:0}
+};
+let inited=false;
+
+function initL(){
+  const s=sc,cx=W/2,cy=H/2;
+  B.hh={x:cx-275*s,y:cy,w:170*s,h:100*s};
+  B.fi={x:cx+275*s,y:cy,w:170*s,h:100*s};
+  B.gm={x:cx,y:cy-220*s,w:210*s,h:56*s};
+  B.fm={x:cx,y:cy+220*s,w:210*s,h:56*s};
+  inited=true;
+}
+function updSz(){
+  const s=sc;
+  B.hh.w=170*s;B.hh.h=100*s;B.fi.w=170*s;B.fi.h=100*s;
+  B.gm.w=210*s;B.gm.h=56*s;B.fm.w=210*s;B.fm.h=56*s;
+}
+function resize(){
+  const cw=C.parentElement.clientWidth-24;
+  const ch=Math.min(cw*.78,innerHeight-180);
+  C.width=cw*devicePixelRatio;C.height=ch*devicePixelRatio;
+  C.style.width=cw+'px';C.style.height=ch+'px';
+  X.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  W=cw;H=ch;sc=Math.min(W/860,H/660);
+  if(!inited)initL();else updSz();
+}
+resize();
+addEventListener('resize',()=>{resize();draw()});
+
+// Controls
+const ts=document.getElementById('themeSwitch');
+ts.addEventListener('change',()=>{document.body.classList.toggle('dark',ts.checked);if(!anim)setTimeout(draw,60)});
+function tgl(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open')}
+document.querySelectorAll('[data-v]').forEach(i=>i.addEventListener('change',()=>{V[i.dataset.v]=i.checked?1:0;if(!anim)draw()}));
+document.getElementById('togAnim').addEventListener('change',function(){anim=this.checked;if(anim){lF=performance.now();requestAnimationFrame(loop)}});
+const ss=document.getElementById('spdSlider'),sve=document.getElementById('spdVal');
+ss.addEventListener('input',()=>{speed=+ss.value;sve.textContent=speed.toFixed(1)+'×'});
+document.getElementById('btnCopy').addEventListener('click',()=>{
+  C.toBlob(b=>{navigator.clipboard.write([new ClipboardItem({'image/png':b})]).then(()=>{
+    const l=document.getElementById('cpLbl');l.textContent='Copied!';
+    document.getElementById('btnCopy').classList.add('cp');
+    setTimeout(()=>{l.textContent='Copy';document.getElementById('btnCopy').classList.remove('cp')},1500);
+  })});
+});
+document.getElementById('btnSave').addEventListener('click',()=>{
+  const a=document.createElement('a');a.download='circular_flow.png';a.href=C.toDataURL('image/png');a.click();
+});
+function cv(n){return getComputedStyle(document.body).getPropertyValue(n).trim()}
+
+// Drag — supports boxes AND flow labels
+let dKey=null,dOff={x:0,y:0},dType=null; // dType: 'box' or 'label'
+// Per-label manual offsets (added to default position). Keyed by flow id.
+const lblOff={m0:{x:0,y:0},m1:{x:0,y:0},m2:{x:0,y:0},m3:{x:0,y:0},r0:{x:0,y:0},r1:{x:0,y:0},r2:{x:0,y:0},r3:{x:0,y:0}};
+// Last-drawn label bounding boxes for hit testing
+const lblBB={};
+function cP(e){const r=C.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;const cy=e.touches?e.touches[0].clientY:e.clientY;return{x:cx-r.left,y:cy-r.top}}
+function htBox(px,py){for(const k of['fm','gm','fi','hh']){const b=B[k];if(px>=b.x-b.w/2&&px<=b.x+b.w/2&&py>=b.y-b.h/2&&py<=b.y+b.h/2)return k}return null}
+function htLbl(px,py){for(const k in lblBB){const b=lblBB[k];if(px>=b.x&&px<=b.x+b.w&&py>=b.y&&py<=b.y+b.h)return k}return null}
+function onDown(e){
+  const p=cP(e);
+  // Labels first (on top)
+  const lk=htLbl(p.x,p.y);
+  if(lk&&V.flowLabels){dKey=lk;dType='label';dOff.x=lblOff[lk].x-p.x;dOff.y=lblOff[lk].y-p.y;C.style.cursor='grabbing';e.preventDefault();return}
+  const bk=htBox(p.x,p.y);
+  if(bk){dKey=bk;dType='box';dOff.x=B[bk].x-p.x;dOff.y=B[bk].y-p.y;C.style.cursor='grabbing';e.preventDefault()}
+}
+function onMove(e){
+  const p=cP(e);
+  if(dKey){
+    if(dType==='label'){lblOff[dKey].x=p.x+dOff.x;lblOff[dKey].y=p.y+dOff.y}
+    else{B[dKey].x=p.x+dOff.x;B[dKey].y=p.y+dOff.y}
+    if(!anim)draw();e.preventDefault();
+  } else {
+    C.style.cursor=(htLbl(p.x,p.y)&&V.flowLabels)||htBox(p.x,p.y)?'grab':'default';
+  }
+}
+function onUp(){if(dKey){dKey=null;dType=null;C.style.cursor='default'}}
+C.addEventListener('mousedown',onDown);
+C.addEventListener('mousemove',onMove);
+addEventListener('mouseup',onUp);
+C.addEventListener('touchstart',e=>onDown(e),{passive:false});
+C.addEventListener('touchmove',e=>onMove(e),{passive:false});
+addEventListener('touchend',onUp);
+
+// ============ DRAWING ============
+function rr(x,y,w,h,r,fill,stroke,lw){
+  X.beginPath();X.roundRect(x,y,w,h,r);
+  if(fill){X.fillStyle=fill;X.fill()}
+  if(stroke){X.strokeStyle=stroke;X.lineWidth=lw||2;X.stroke()}
+}
+function arrow(x,y,a,sz,col){
+  X.save();X.translate(x,y);X.rotate(a);
+  X.beginPath();X.moveTo(0,0);X.lineTo(-sz,-sz*.45);X.lineTo(-sz,sz*.45);X.closePath();
+  X.fillStyle=col;X.fill();X.restore();
+}
+
+/* ============ FLOW GEOMETRY ============
+ *
+ * The diagram is a CIRCLE (well, ellipse) with 4 boxes at the cardinal positions.
+ *
+ * Each flow arc connects an AGENT box (left/right) to a MARKET pill (top/bottom).
+ *
+ * AGENT attach points: TOP and BOTTOM edges, at 1/3 and 2/3 across the width.
+ * MARKET attach points: LEFT and RIGHT edges, at 1/3 and 2/3 down the height.
+ *
+ * Each arc is a QUARTER-CIRCLE-LIKE curve (single bend) using a quadratic bezier.
+ * The control point sits at the corner of the bounding rectangle of the two endpoints,
+ * creating a smooth 90° arc.
+ *
+ * For example, HH-top to GM-left:
+ *   Start: (hh_x + w*f, hh_top)  — a point on HH's top edge
+ *   End:   (gm_left, gm_y + h*f) — a point on GM's left edge
+ *   Control: (start.x, end.y)     — directly above start, level with end
+ *   This makes the curve depart vertically from HH and arrive horizontally at GM.
+ *
+ * INNER (money, clockwise) uses the attach points closer to diagram center:
+ *   HH: 2/3 across (right side of top/bottom edge)
+ *   FI: 1/3 across (left side of top/bottom edge)
+ *   GM: 2/3 down on left, 1/3 down on right (lower-left, upper-right = inner)
+ *   FM: 1/3 down on left, 2/3 down on right (upper-left, lower-right = inner)
+ *
+ * OUTER (real, counter-clockwise) uses the attach points further from center:
+ *   HH: 1/3 across (left side of top/bottom edge)
+ *   FI: 2/3 across (right side of top/bottom edge)
+ *   GM: 1/3 down on left, 2/3 down on right (upper-left, lower-right = outer)
+ *   FM: 2/3 down on left, 1/3 down on right (lower-left, upper-right = outer)
+ */
+
+function getFlows(){
+  const {hh,fi,gm,fm}=B;
+  // helpers
+  const xAt=(b,f)=>b.x-b.w/2+b.w*f;  // fraction across width
+  const yAt=(b,f)=>b.y-b.h/2+b.h*f;  // fraction down height
+  const top=(b)=>b.y-b.h/2;
+  const bot=(b)=>b.y+b.h/2;
+  const lft=(b)=>b.x-b.w/2;
+  const rgt=(b)=>b.x+b.w/2;
+
+  // A quadratic bezier arc from a vertical edge to a horizontal edge.
+  // p1 is on agent top/bottom, p2 is on market left/right.
+  // The control point is at (p1.x, p2.y) — making curve leave vertically and arrive horizontally.
+  function arc(x1,y1, x2,y2, label){
+    return {x1,y1, cpx:x1, cpy:y2, x2,y2, label};
+  }
+  // Reverse: from market side to agent top/bottom.
+  // p1 on market left/right, p2 on agent top/bottom.
+  // Control at (p2.x, p1.y) — leave horizontally, arrive vertically.
+  function arcR(x1,y1, x2,y2, label){
+    return {x1,y1, cpx:x2, cpy:y1, x2,y2, label};
+  }
+
+  // ---- MONETARY (inner, clockwise) ----
+  const m1 = arc(xAt(hh,2/3), top(hh),   lft(gm), yAt(gm,2/3),  'Expenditure ($)');  m1.id='m0';
+  const m2 = arcR(rgt(gm), yAt(gm,2/3),  xAt(fi,1/3), top(fi),   'Revenue ($)');  m2.id='m1';
+  const m3 = arc(xAt(fi,1/3), bot(fi),    rgt(fm), yAt(fm,1/3),   'Wages, Rent,\nInterest, Profit ($)');  m3.id='m2';
+  const m4 = arcR(lft(fm), yAt(fm,1/3),   xAt(hh,2/3), bot(hh),   'Income ($)');  m4.id='m3';
+
+  // ---- REAL (outer, counter-clockwise) ----
+  const r1 = arc(xAt(fi,2/3), top(fi),    rgt(gm), yAt(gm,1/3),  'Goods &\nServices');  r1.id='r0';
+  const r2 = arcR(lft(gm), yAt(gm,1/3),   xAt(hh,1/3), top(hh),  'Goods &\nServices');  r2.id='r1';
+  const r3 = arc(xAt(hh,1/3), bot(hh),    lft(fm), yAt(fm,2/3),   'Labor, Land,\nCapital');  r3.id='r2';
+  const r4 = arcR(rgt(fm), yAt(fm,2/3),   xAt(fi,2/3), bot(fi),   'Factors of\nProduction');  r4.id='r3';
+
+  return {money:[m1,m2,m3,m4], real:[r1,r2,r3,r4]};
+}
+
+// Quadratic bezier helpers
+function qB(t,a,b,c){const u=1-t;return u*u*a+2*u*t*b+t*t*c}
+function qBD(t,a,b,c){return 2*(1-t)*(b-a)+2*t*(c-b)}
+
+function drawArc(p,color,dashed,showLbl,s){
+  X.save();
+  X.lineWidth=2.5*s;X.strokeStyle=color;
+  X.setLineDash(dashed?[8*s,5*s]:[]);
+  X.beginPath();X.moveTo(p.x1,p.y1);
+  X.quadraticCurveTo(p.cpx,p.cpy,p.x2,p.y2);
+  X.stroke();X.setLineDash([]);
+  // Arrow at 97%
+  const t=.97;
+  const ax=qB(t,p.x1,p.cpx,p.x2),ay=qB(t,p.y1,p.cpy,p.y2);
+  const dx=qBD(t,p.x1,p.cpx,p.x2),dy=qBD(t,p.y1,p.cpy,p.y2);
+  arrow(ax,ay,Math.atan2(dy,dx),10*s,color);
+  X.restore();
+  if(showLbl&&p.label&&p.id){
+    const mt=.5;
+    const mx=qB(mt,p.x1,p.cpx,p.x2),my=qB(mt,p.y1,p.cpy,p.y2);
+    // Default: push label away from curve. Real=outward, Money=inward.
+    const dcx=W/2,dcy=H/2;
+    const ndx=mx-dcx,ndy=my-dcy;
+    const nd=Math.sqrt(ndx*ndx+ndy*ndy)||1;
+    const isInner=p.id.startsWith('m');
+    const push=isInner?-28*s:32*s;
+    const defX=mx+(ndx/nd)*push, defY=my+(ndy/nd)*push;
+    // Apply manual offset
+    const off=lblOff[p.id]||{x:0,y:0};
+    const lx=defX+off.x, ly=defY+off.y;
+    X.save();
+    X.font=`600 ${10.5*s}px 'Segoe UI',sans-serif`;
+    const lines=p.label.split('\n');
+    // Measure total bounding box
+    let maxW=0;
+    lines.forEach(ln=>{const m=X.measureText(ln);if(m.width>maxW)maxW=m.width});
+    const lineH=13*s;
+    const totalH=lines.length*lineH;
+    const padX=6*s, padY=3*s;
+    const bgX=lx-maxW/2-padX, bgY=ly-totalH/2-padY;
+    const bgW=maxW+padX*2, bgH=totalH+padY*2;
+    // Semi-transparent background
+    const isDark=document.body.classList.contains('dark');
+    X.fillStyle=isDark?'rgba(18,20,29,0.8)':'rgba(255,255,255,0.85)';
+    X.beginPath();X.roundRect(bgX,bgY,bgW,bgH,4*s);X.fill();
+    // Text
+    X.fillStyle=color;X.textAlign='center';X.textBaseline='middle';
+    lines.forEach((ln,i)=>X.fillText(ln,lx,ly+(i-(lines.length-1)/2)*lineH));
+    X.restore();
+    // Store bounding box for hit testing
+    lblBB[p.id]={x:bgX,y:bgY,w:bgW,h:bgH};
+  }
+}
+
+function drawPtcl(paths,color,n){
+  paths.forEach(p=>{
+    for(let i=0;i<n;i++){
+      const t=((aT*.12+i/n)%1);
+      const px=qB(t,p.x1,p.cpx,p.x2),py=qB(t,p.y1,p.cpy,p.y2);
+      X.beginPath();X.arc(px,py,3.5*sc,0,Math.PI*2);
+      X.fillStyle=color;X.globalAlpha=.75;X.fill();X.globalAlpha=1;
+    }
+  });
+}
+
+function drawBox(o,fV,sV,tV,label,icon,show,sLbl,sIco,mth){
+  if(!show)return;
+  const hasMath=V.math&&mth;
+  const dH=hasMath?o.h:o.h-15*sc;
+  const x=o.x-o.w/2,y=o.y-dH/2;
+  rr(x,y,o.w,dH,12*sc,cv(fV),cv(sV),2*sc);
+  if(sLbl){
+    X.save();X.textAlign='center';X.textBaseline='middle';
+    let ty=y+(hasMath?22*sc:dH/2);
+    if(sIco&&icon){X.font=`${20*sc}px sans-serif`;X.fillText(icon,o.x,ty-2*sc);ty+=16*sc}
+    X.font=`700 ${14*sc}px 'Segoe UI',sans-serif`;X.fillStyle=cv(tV);
+    X.fillText(label,o.x,ty);
+    if(hasMath){
+      X.font=`italic ${10*sc}px 'Segoe UI',serif`;X.fillStyle=cv('--math-text');
+      const mY=ty+16*sc;
+      mth.forEach((ml,i)=>X.fillText(ml,o.x,mY+i*13*sc));
+    }
+    X.restore();
+  }
+}
+
+function drawPill(o,fV,sV,tV,label,sub,icon,show,sLbl,sIco){
+  if(!show)return;
+  rr(o.x-o.w/2,o.y-o.h/2,o.w,o.h,o.h/2,cv(fV),cv(sV),2*sc);
+  if(sLbl){
+    X.save();X.textAlign='center';X.textBaseline='middle';
+    X.font=`700 ${12.5*sc}px 'Segoe UI',sans-serif`;X.fillStyle=cv(tV);
+    X.fillText(label,o.x,o.y-(sub?7*sc:0));
+    if(sub){X.font=`${10*sc}px 'Segoe UI',sans-serif`;X.globalAlpha=.65;X.fillText(sub,o.x,o.y+9*sc);X.globalAlpha=1}
+    if(sIco&&icon){X.font=`${15*sc}px sans-serif`;X.fillText(icon,o.x-o.w/2+22*sc,o.y)}
+    X.restore();
+  }
+}
+
+function draw(){
+  const fl=getFlows(),s=sc;
+  X.fillStyle=cv('--canvas-bg');X.fillRect(0,0,W,H);
+
+  // Draw flows (behind boxes)
+  if(V.moneyFlow)fl.money.forEach(p=>drawArc(p,cv('--money'),false,V.flowLabels,s));
+  if(V.realFlow)fl.real.forEach(p=>drawArc(p,cv('--real'),true,V.flowLabels,s));
+
+  // Particles
+  if(anim){
+    if(V.moneyFlow)drawPtcl(fl.money,cv('--money-a'),5);
+    if(V.realFlow)drawPtcl(fl.real,cv('--real-a'),5);
+  }
+
+  // Boxes
+  drawBox(B.hh,'--hh-fill','--hh-stroke','--hh-text','Households','🏠',V.households,V.agentLabels,V.icons,['max U(X₁, X₂, …)','s.t.  p·X ≤ M']);
+  drawBox(B.fi,'--fi-fill','--fi-stroke','--fi-text','Firms','🏭',V.firms,V.agentLabels,V.icons,['max π = p·f(L,K) − wL − rK','s.t.  Y = f(L, K)']);
+  drawPill(B.gm,'--gm-fill','--gm-stroke','--gm-text','Product Market','(Goods & Services)','🛒',V.goodsMarket,V.marketLabels,V.icons);
+  drawPill(B.fm,'--fm-fill','--fm-stroke','--fm-text','Factor Market','(Labor, Land, Capital)','⚙️',V.factorMarket,V.marketLabels,V.icons);
+}
+
+function loop(ts){
+  if(!anim)return;
+  const dt=(ts-lF)/1000;lF=ts;aT+=dt*speed;
+  draw();requestAnimationFrame(loop);
+}
+lF=performance.now();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

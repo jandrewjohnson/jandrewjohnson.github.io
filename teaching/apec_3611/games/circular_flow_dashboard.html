@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circular Flow Dashboard — Linked General Equilibrium</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:#2d3748;min-height:100vh;padding:12px 12px 0}
+h1{text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:2px;color:#1a202c}
+.sub{text-align:center;color:#718096;font-size:.85rem;margin-bottom:8px;max-width:850px;margin-left:auto;margin-right:auto;line-height:1.4}
+.wrap{max-width:1500px;margin:0 auto}
+.canvas-panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:10px;position:relative}
+.canvas-panel canvas{width:100%;display:block;border-radius:6px}
+.pa{position:absolute;top:12px;right:12px;z-index:10;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+.canvas-panel:hover .pa{opacity:1}
+.pb{background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1px solid rgba(226,232,240,.7);border-radius:6px;padding:4px 8px;font-size:.7rem;color:#a0aec0;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1}
+.pb:hover{color:#4a5568;border-color:#4299e1}
+.pb.cp{color:#38a169;border-color:#c6f6d5}
+.pb svg{width:12px;height:12px;flex-shrink:0}
+.bottom-strip{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-bottom:12px;align-items:start}
+@media(max-width:900px){.bottom-strip{grid-template-columns:1fr}}
+.game-panel{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px;min-width:280px;max-width:320px}
+.game-panel h3{font-size:.88rem;margin-bottom:8px;color:#1a202c;display:flex;align-items:center;gap:6px}
+.mode-toggle{display:flex;border-radius:6px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:10px}
+.mode-btn{flex:1;padding:6px 10px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;background:#f7fafc;color:#718096;transition:all .15s;font-family:inherit}
+.mode-btn.active{background:#4299e1;color:#fff}
+.challenge-card{background:linear-gradient(135deg,#ebf8ff,#f0fff4);border:1.5px solid #bee3f8;border-radius:8px;padding:10px;margin-bottom:10px;display:none}
+.challenge-card.show{display:block}
+.cc-title{font-size:.82rem;font-weight:700;color:#2b6cb0;margin-bottom:4px}
+.cc-desc{font-size:.76rem;color:#4a5568;line-height:1.4;margin-bottom:6px}
+.cc-target{font-size:.72rem;color:#718096;background:#fff;border-radius:4px;padding:4px 6px;border:1px solid #e2e8f0}
+.guess-section{display:none;margin-bottom:8px}
+.guess-section.show{display:block}
+.guess-label{font-size:.76rem;font-weight:600;margin-bottom:2px;display:flex;justify-content:space-between}
+.guess-val{font-weight:700;color:#e53e3e;font-size:.82rem}
+input[type=range].guess-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:linear-gradient(to right,#bee3f8,#e53e3e,#bee3f8);border-radius:3px;outline:none;margin-bottom:4px}
+input[type=range].guess-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#e53e3e;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.score-display{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.score-chip{font-size:.72rem;background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:2px 6px}
+.score-chip b{color:#d69e2e}
+.chal-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chal-btn{padding:5px 10px;font-size:.74rem;font-weight:600;border:1.5px solid #4299e1;border-radius:6px;background:#ebf8ff;color:#2b6cb0;cursor:pointer;transition:all .15s;font-family:inherit}
+.chal-btn:hover{background:#4299e1;color:#fff}
+.chal-btn.next{border-color:#38a169;background:#f0fff4;color:#276749}
+.chal-btn.next:hover{background:#38a169;color:#fff}
+.chal-btn.finish{border-color:#805ad5;background:#faf5ff;color:#553c9a}
+.chal-btn.finish:hover{background:#805ad5;color:#fff}
+/* Overlays */
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;background:rgba(0,0,0,.5);align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.overlay-card{background:#fff;border-radius:16px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:popIn .4s ease;max-width:460px;width:90%}
+@keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.overlay-card h2{font-size:1.5rem;margin-bottom:4px}
+.overlay-card .stars{font-size:2rem;margin:8px 0}
+.overlay-card p{font-size:.88rem;color:#4a5568;margin-bottom:12px}
+.v-stats{display:flex;gap:12px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.v-stat{text-align:center}
+.v-stat .n{font-size:1.3rem;font-weight:700;color:#2b6cb0}
+.v-stat .l{font-size:.68rem;color:#718096}
+.v-btn{padding:8px 20px;border-radius:8px;border:none;background:#4299e1;color:#fff;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;margin:4px}
+.v-btn:hover{background:#3182ce}
+.v-btn.green{background:#38a169}.v-btn.green:hover{background:#2f855a}
+.v-btn.purple{background:#805ad5}.v-btn.purple:hover{background:#6b46c1}
+/* Validation code */
+.val-code{background:#f7fafc;border:2px dashed #4299e1;border-radius:8px;padding:8px 12px;margin:10px 0;font-family:'Courier New',monospace;font-size:.92rem;font-weight:700;color:#2b6cb0;letter-spacing:1px;user-select:all;cursor:text}
+/* Summary table */
+.sum-table{width:100%;border-collapse:collapse;font-size:.76rem;margin:10px 0}
+.sum-table th{background:#f7fafc;padding:4px 8px;text-align:left;border-bottom:1px solid #e2e8f0;color:#718096;font-weight:600}
+.sum-table td{padding:4px 8px;border-bottom:1px solid #edf2f7}
+.sum-table .star-col{text-align:center}
+/* Param sliders */
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+@media(max-width:900px){.controls{grid-template-columns:1fr 1fr}}
+.ctrl-sec{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px}
+.ctrl-sec.locked{opacity:.5;pointer-events:none;position:relative}
+.ctrl-sec.locked::after{content:'🔒 Set by Challenge';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.8rem;color:#e53e3e;font-weight:600;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.ctrl-title{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#718096;font-weight:600;margin-bottom:6px}
+.sg{margin-bottom:6px}
+.sg-label{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:1px}
+.sg-val{color:#2b6cb0;font-weight:600;font-size:.76rem}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e2e8f0;border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#4299e1;cursor:pointer}
+.eq-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.eq-chip{background:#f0fff4;border:1px solid #c6f6d5;border-radius:5px;padding:2px 7px;font-size:.74rem}
+.eq-chip b{font-weight:600;color:#276749}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Circular Flow Dashboard</h1>
+<p class="sub">Household utility maximization, firm profit maximization, and market equilibrium — linked through the circular flow. <b>Explore</b> with sliders or <b>Challenge</b> yourself to find the equilibrium!</p>
+
+<div class="canvas-panel">
+  <div class="pa">
+    <button class="pb" id="btnCopy" title="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="cpLbl">Copy</span></button>
+    <button class="pb" id="btnSave" title="Save as PNG"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Save</span></button>
+  </div>
+  <canvas id="C"></canvas>
+</div>
+
+<div class="bottom-strip">
+  <div class="game-panel">
+    <h3>🎯 Mode</h3>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mExplore" onclick="setMode('explore')">📊 Explore</button>
+      <button class="mode-btn" id="mChallenge" onclick="setMode('challenge')">🎮 Challenge</button>
+    </div>
+    <div class="challenge-card" id="chalCard">
+      <div class="cc-title" id="chalTitle">Challenge 1</div>
+      <div class="cc-desc" id="chalDesc"></div>
+      <div class="cc-target" id="chalTarget"></div>
+    </div>
+    <div class="guess-section" id="guessSection">
+      <div class="guess-label"><span>Your Price guess (P)</span><span class="guess-val" id="gPval">$2.00</span></div>
+      <input type="range" class="guess-slider" id="gP" min=".5" max="15" value="2" step=".05">
+      <div class="guess-label"><span>Your Wage guess (w)</span><span class="guess-val" id="gWval">$10.00</span></div>
+      <input type="range" class="guess-slider" id="gW" min=".5" max="15" value="10" step=".1">
+      <div class="score-display">
+        <span class="score-chip">⏱ <b id="scTime">0s</b></span>
+        <span class="score-chip">📋 <b id="scChal">0/8</b></span>
+        <span class="score-chip">🏆 <b id="scStars">0</b>⭐</span>
+      </div>
+    </div>
+    <div class="chal-btns" id="chalBtns" style="display:none">
+      <button class="chal-btn next" onclick="nextChallenge()">▶ Next Challenge</button>
+      <button class="chal-btn finish" onclick="showResults()" id="btnFinish" style="display:none">📊 View Results</button>
+    </div>
+  </div>
+
+  <div class="controls" id="paramControls">
+    <div class="ctrl-sec" id="secHH">
+      <div class="ctrl-title">🏠 Household</div>
+      <div class="sg"><div class="sg-label"><span>Income (M)</span><span class="sg-val" id="vM">100</span></div><input type="range" id="sM" min="40" max="200" value="100" step="5"></div>
+      <div class="sg"><div class="sg-label"><span>Preference α</span><span class="sg-val" id="vAlpha">0.50</span></div><input type="range" id="sAlpha" min=".2" max=".8" value=".5" step=".05"></div>
+      <div class="sg"><div class="sg-label"><span>Price of Y (Pᵧ)</span><span class="sg-val" id="vPy">2.00</span></div><input type="range" id="sPy" min="1" max="5" value="2" step=".25"></div>
+      <div class="sg"><div class="sg-label"><span># Consumers</span><span class="sg-val" id="vNC">100</span></div><input type="range" id="sNC" min="20" max="200" value="100" step="10"></div>
+    </div>
+    <div class="ctrl-sec" id="secFI">
+      <div class="ctrl-title">🏭 Firm</div>
+      <div class="sg"><div class="sg-label"><span>Fixed Cost</span><span class="sg-val" id="vFC">20</span></div><input type="range" id="sFC" min="0" max="60" value="20" step="5"></div>
+      <div class="sg"><div class="sg-label"><span>MC base (a)</span><span class="sg-val" id="vA">0.50</span></div><input type="range" id="sA" min=".1" max="3" value=".5" step=".1"></div>
+      <div class="sg"><div class="sg-label"><span>MC curvature (c)</span><span class="sg-val" id="vC">0.010</span></div><input type="range" id="sC" min=".002" max=".05" value=".01" step=".002"></div>
+      <div class="sg"><div class="sg-label"><span># Firms</span><span class="sg-val" id="vNF">50</span></div><input type="range" id="sNF" min="10" max="150" value="50" step="5"></div>
+    </div>
+    <div class="ctrl-sec" id="secFM">
+      <div class="ctrl-title">⚙️ Factor Market</div>
+      <div class="sg"><div class="sg-label"><span>Labor supply elasticity</span><span class="sg-val" id="vLSE">1.0</span></div><input type="range" id="sLSE" min=".3" max="3" value="1" step=".1"></div>
+      <div class="eq-row" style="margin-top:10px">
+        <div class="eq-chip"><b>P*</b> <span id="eqP">—</span></div>
+        <div class="eq-chip"><b>Q*</b> <span id="eqQ">—</span></div>
+        <div class="eq-chip"><b>w*</b> <span id="eqW">—</span></div>
+        <div class="eq-chip"><b>L*</b> <span id="eqL">—</span></div>
+      </div>
+    </div>
+    <div class="ctrl-sec" id="secEq">
+      <div class="ctrl-title">📊 Equilibrium Flows</div>
+      <div class="eq-row"><div class="eq-chip"><b>Expenditure</b> <span id="eqExp">—</span></div><div class="eq-chip"><b>Revenue</b> <span id="eqRev">—</span></div></div>
+      <div class="eq-row"><div class="eq-chip"><b>Wage Bill</b> <span id="eqWB">—</span></div><div class="eq-chip"><b>Firm π</b> <span id="eqProf">—</span></div></div>
+      <div class="eq-row"><div class="eq-chip"><b>HH Utility</b> <span id="eqU">—</span></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Victory overlay -->
+<div class="overlay" id="victoryOverlay">
+  <div class="overlay-card">
+    <h2 style="color:#38a169">🎉 Equilibrium Found!</h2>
+    <div class="stars" id="victoryStars">⭐⭐⭐</div>
+    <p id="victoryMsg"></p>
+    <div class="v-stats">
+      <div class="v-stat"><div class="n" id="vTime">—</div><div class="l">seconds</div></div>
+      <div class="v-stat"><div class="n" id="vAccP">—</div><div class="l">P* accuracy</div></div>
+      <div class="v-stat"><div class="n" id="vAccW">—</div><div class="l">w* accuracy</div></div>
+      <div class="v-stat"><div class="n" id="vScore">—</div><div class="l">score</div></div>
+    </div>
+    <button class="v-btn green" onclick="closeVictory()">Next Challenge →</button>
+  </div>
+</div>
+
+<!-- Final Results overlay -->
+<div class="overlay" id="resultsOverlay">
+  <div class="overlay-card">
+    <h2 style="color:#2b6cb0">📊 Challenge Results</h2>
+    <div class="stars" id="totalStarsDisp"></div>
+    <p id="totalScoreMsg"></p>
+    <table class="sum-table">
+      <thead><tr><th>#</th><th>Challenge</th><th>Time</th><th>Score</th><th class="star-col">Stars</th></tr></thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+    <div class="val-code" id="valCode"></div>
+    <p style="font-size:.7rem;color:#a0aec0;margin-bottom:8px">Copy the validation code above to submit your results.</p>
+    <button class="v-btn" onclick="document.getElementById('resultsOverlay').classList.remove('show')">Close</button>
+    <button class="v-btn purple" onclick="restartAll()">🔄 Restart All</button>
+  </div>
+</div>
+
+<script>
+// ====== CANVAS ======
+const C=document.getElementById('C'),X=C.getContext('2d');
+let CW,CH;
+function resizeCanvas(){const pw=C.parentElement.clientWidth-16;CW=pw;CH=Math.min(pw*.68,innerHeight-240);const d=Math.max(2,devicePixelRatio||2);C.width=CW*d;C.height=CH*d;C.style.width=CW+'px';C.style.height=CH+'px';X.setTransform(d,0,0,d,0,0);}
+resizeCanvas();addEventListener('resize',()=>{resizeCanvas();updateAll()});
+document.getElementById('btnCopy').addEventListener('click',()=>{C.toBlob(b=>{navigator.clipboard.write([new ClipboardItem({'image/png':b})]).then(()=>{const l=document.getElementById('cpLbl');l.textContent='Copied!';document.getElementById('btnCopy').classList.add('cp');setTimeout(()=>{l.textContent='Copy';document.getElementById('btnCopy').classList.remove('cp')},1500)})})});
+document.getElementById('btnSave').addEventListener('click',()=>{const a=document.createElement('a');a.download='circular_flow_dashboard.png';a.href=C.toDataURL('image/png');a.click()});
+
+// ====== SLIDERS ======
+const S={};['M','Alpha','Py','NC','FC','A','C','NF','LSE'].forEach(k=>S[k]=document.getElementById('s'+k));
+const gPsl=document.getElementById('gP'),gWsl=document.getElementById('gW');
+
+// ====== GAME STATE ======
+let mode='explore';
+let trueEqP=0,trueEqW=0,trueEqQ=0,trueLeq=0;
+let chalStart=0,totalSolved=0,chalIdx=0;
+let solved=false,victoryParticles=[];
+let totalStars=0;
+// Per-challenge results: {name,time,stars,score,pAcc,wAcc}
+const results=[];
+
+// ====== CHALLENGES (all verified solvable within slider ranges) ======
+const challenges=[
+  {name:'Baseline Economy',desc:'A standard economy with moderate preferences and costs. Find P* and w*.',M:100,Alpha:.5,Py:2,NC:100,FC:20,A:.5,C:.01,NF:50,LSE:1,initP:2.0,initW:6.0},
+  {name:'Consumer Boom',desc:'High income and strong preferences for Good X drive up demand.',M:150,Alpha:.65,Py:2,NC:120,FC:20,A:.5,C:.01,NF:60,LSE:1,initP:3.0,initW:2.0},
+  {name:'Few Firms',desc:'Only 20 firms compete in a market of 80 consumers. Supply is tight.',M:100,Alpha:.5,Py:2,NC:80,FC:20,A:.5,C:.012,NF:20,LSE:1,initP:4.0,initW:6.0},
+  {name:'Expensive Inputs',desc:'High MC base ($1.50) and curvature make production costly.',M:100,Alpha:.5,Py:2,NC:80,FC:30,A:1.5,C:.02,NF:50,LSE:1,initP:2.5,initW:6.0},
+  {name:'Elastic Labor',desc:'Workers are very responsive to wages (ε=2.5). How does this affect prices?',M:120,Alpha:.55,Py:3,NC:100,FC:15,A:.4,C:.008,NF:60,LSE:2.5,initP:2.0,initW:2.0},
+  {name:'Population Surge',desc:'180 consumers flood the market while only 50 firms produce.',M:80,Alpha:.5,Py:1.5,NC:180,FC:25,A:.8,C:.015,NF:50,LSE:.8,initP:3.0,initW:6.0},
+  {name:'Tech Revolution',desc:'Low-cost production (a=$0.10, c=0.005) with 80 efficient firms.',M:100,Alpha:.45,Py:2.5,NC:100,FC:10,A:.1,C:.005,NF:80,LSE:1.2,initP:6.0,initW:5.0},
+  {name:'Luxury Economy',desc:'High income ($140), strong X preference (α=0.6), costly production, few firms.',M:140,Alpha:.6,Py:4,NC:70,FC:35,A:1,C:.018,NF:45,LSE:.7,initP:3.0,initW:7.0},
+];
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mExplore').classList.toggle('active',m==='explore');
+  document.getElementById('mChallenge').classList.toggle('active',m==='challenge');
+  const show=m==='challenge';
+  document.getElementById('chalCard').classList.toggle('show',show);
+  document.getElementById('guessSection').classList.toggle('show',show);
+  document.getElementById('chalBtns').style.display=show?'flex':'none';
+  ['secHH','secFI','secFM'].forEach(id=>document.getElementById(id).classList.toggle('locked',show));
+  if(show){solved=false;totalStars=0;totalSolved=0;results.length=0;startChallenge(0);}
+  else{solved=false;updateAll();}
+}
+
+function startChallenge(idx){
+  if(idx>=challenges.length){showResults();return;}
+  chalIdx=idx;
+  const ch=challenges[chalIdx];
+  S.M.value=ch.M;S.Alpha.value=ch.Alpha;S.Py.value=ch.Py;S.NC.value=ch.NC;
+  S.FC.value=ch.FC;S.A.value=ch.A;S.C.value=ch.C;S.NF.value=ch.NF;S.LSE.value=ch.LSE;
+  const eq=findProductEq();trueEqP=eq.P;trueEqQ=eq.Q;
+  const fq=findFactorEq(trueEqP);trueEqW=fq.wEq;trueLeq=fq.Leq;
+  // Set dynamic slider ranges: ±generous range around true values
+  const pMax=Math.max(12,trueEqP*2.5),wMax=Math.max(10,trueEqW*3);
+  gPsl.min=(.3).toFixed(2);gPsl.max=pMax.toFixed(1);gPsl.step=(.05).toFixed(2);
+  gWsl.min=(.3).toFixed(2);gWsl.max=wMax.toFixed(1);gWsl.step=(.1).toFixed(1);
+  // Fixed initial guesses (deterministic)
+  gPsl.value=ch.initP;gWsl.value=ch.initW;
+  document.getElementById('chalTitle').textContent=`Challenge ${chalIdx+1} of ${challenges.length}: ${ch.name}`;
+  document.getElementById('chalDesc').textContent=ch.desc;
+  document.getElementById('chalTarget').textContent=`M=$${ch.M}  α=${ch.Alpha}  Pᵧ=$${ch.Py}  nC=${ch.NC}  FC=$${ch.FC}  a=$${ch.A}  c=${ch.C}  nF=${ch.NF}  ε=${ch.LSE}`;
+  document.getElementById('scChal').textContent=`${totalSolved}/${challenges.length}`;
+  document.getElementById('scStars').textContent=totalStars;
+  document.getElementById('btnFinish').style.display=totalSolved>0?'inline-block':'none';
+  chalStart=Date.now();solved=false;
+  updateAll();
+}
+function nextChallenge(){startChallenge(chalIdx+1);}
+
+// ====== ECONOMICS ======
+function consDemandX(Px,M,a){return a*M/Px}
+function consUtil(x,y,a){return x>0&&y>0?Math.pow(x,a)*Math.pow(y,1-a):0}
+function indiffY(x,U,a){return x>0?Math.pow(U/Math.pow(x,a),1/(1-a)):null}
+function mcFn(q,a,c){return a+c*q*q}
+function fQ(P,a,c){return P>a?Math.sqrt((P-a)/c):0}
+function tcFn(q,FC,a,c){return FC+a*q+c*q*q*q/3}
+function avcFn(q,a,c){return q>0?a+c*q*q/3:a}
+function atcFn(q,FC,a,c){return q>0?tcFn(q,FC,a,c)/q:999}
+function findProductEq(){
+  const M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value,a=+S.A.value,c=+S.C.value,nF=+S.NF.value;
+  let lo=a+.01,hi=30,p=(lo+hi)/2;
+  for(let i=0;i<80;i++){const qd=nC*alpha*M/p,qs=nF*fQ(p,a,c);if(Math.abs(qd-qs)<.3)break;if(qd>qs)lo=p;else hi=p;p=(lo+hi)/2;}
+  return{P:p,Q:nC*alpha*M/p};
+}
+function findFactorEq(eqP){
+  const nF=+S.NF.value,nC=+S.NC.value,eps=+S.LSE.value;
+  const Ld=w=>nF*Math.pow(eqP/(2*w),2);const Ls=w=>nC*Math.pow(w/10,eps);
+  let lo=.3,hi=40;for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(Ld(mid)>Ls(mid))lo=mid;else hi=mid;}
+  const wEq=(lo+hi)/2;return{wEq,Leq:Ld(wEq)};
+}
+function getExcess(guessP,guessW){
+  const M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value,a=+S.A.value,c=+S.C.value,nF=+S.NF.value,eps=+S.LSE.value;
+  return{Qd:nC*alpha*M/guessP,Qs:nF*fQ(guessP,a,c),excessD_PM:nC*alpha*M/guessP-nF*fQ(guessP,a,c),Ld:nF*Math.pow(guessP/(2*guessW),2),Ls:nC*Math.pow(guessW/10,eps),excessD_FM:nF*Math.pow(guessP/(2*guessW),2)-nC*Math.pow(guessW/10,eps)};
+}
+
+// ====== SCORING ======
+function computeScore(timeSec,pAcc,wAcc){
+  // Score 0-1000. Accuracy weighted 70%, speed 30%.
+  const accScore=(pAcc+wAcc)/2; // 0-100
+  const speedScore=Math.max(0,100-timeSec); // 100 at 0s, 0 at 100s
+  return Math.round(accScore*7+speedScore*3);
+}
+function computeStars(timeSec){
+  if(timeSec<20)return 3;
+  if(timeSec<45)return 2;
+  return 1;
+}
+
+// ====== MINI-GRAPH HELPERS ======
+function miniAxes(ox,oy,gw,gh,maxX,maxY,xLbl,yLbl,borderColor){
+  const mg={t:14,r:6,b:18,l:28};const pw=gw-mg.l-mg.r,ph=gh-mg.t-mg.b;
+  const toX=x=>ox+mg.l+(x/maxX)*pw,toY=y=>oy+mg.t+ph-(y/maxY)*ph;
+  X.fillStyle='rgba(255,255,255,.92)';X.strokeStyle=borderColor||'#cbd5e0';X.lineWidth=1.5;
+  X.beginPath();X.roundRect(ox,oy,gw,gh,6);X.fill();X.stroke();
+  X.strokeStyle='#edf2f7';X.lineWidth=.5;
+  for(let i=1;i<4;i++){const x2=ox+mg.l+(i/4)*pw;X.beginPath();X.moveTo(x2,oy+mg.t);X.lineTo(x2,oy+mg.t+ph);X.stroke();const y2=oy+mg.t+(i/4)*ph;X.beginPath();X.moveTo(ox+mg.l,y2);X.lineTo(ox+mg.l+pw,y2);X.stroke();}
+  X.strokeStyle='#a0aec0';X.lineWidth=1;X.beginPath();X.moveTo(ox+mg.l,oy+mg.t);X.lineTo(ox+mg.l,oy+mg.t+ph);X.lineTo(ox+mg.l+pw,oy+mg.t+ph);X.stroke();
+  X.fillStyle='#718096';X.font='7px Segoe UI';X.textAlign='center';X.fillText(xLbl,ox+mg.l+pw/2,oy+gh-2);
+  X.save();X.translate(ox+5,oy+mg.t+ph/2);X.rotate(-Math.PI/2);X.fillText(yLbl,0,0);X.restore();
+  X.font='6.5px Segoe UI';for(let i=0;i<=4;i+=2){X.textAlign='center';X.fillText(maxX>100?(i*maxX/4).toFixed(0):(i*maxX/4).toFixed(1),toX(i*maxX/4),oy+mg.t+ph+10);X.textAlign='right';X.fillText(maxY>20?(i*maxY/4).toFixed(0):(i*maxY/4).toFixed(1),ox+mg.l-3,toY(i*maxY/4)+2.5);}
+  return{toX,toY};
+}
+function mPlot(toX,toY,maxX,maxY,fn,color,lw,dash){X.strokeStyle=color;X.lineWidth=lw||1.5;X.setLineDash(dash||[]);X.beginPath();let s=false;for(let x=.3;x<=maxX;x+=maxX/150){const y=fn(x);if(y>=0&&y<=maxY*1.1){if(!s){X.moveTo(toX(x),toY(y));s=true;}else X.lineTo(toX(x),toY(y));}}X.stroke();X.setLineDash([]);}
+function mDot(toX,toY,x,y,color,r){X.fillStyle=color;X.beginPath();X.arc(toX(x),toY(y),r,0,Math.PI*2);X.fill();X.strokeStyle='#fff';X.lineWidth=1;X.stroke();}
+function mDash(toX,toY,x1,y1,x2,y2){X.strokeStyle='#a0aec0';X.lineWidth=.7;X.setLineDash([3,2]);X.beginPath();X.moveTo(toX(x1),toY(y1));X.lineTo(toX(x2),toY(y2));X.stroke();X.setLineDash([]);}
+function mHLine(toX,toY,maxX,y,color){X.strokeStyle=color;X.lineWidth=1;X.beginPath();X.moveTo(toX(0),toY(y));X.lineTo(toX(maxX),toY(y));X.stroke();}
+function mLabel(toX,toY,x,y,txt,color){X.fillStyle=color;X.font='bold 7px Segoe UI';X.textAlign='left';X.fillText(txt,toX(x),toY(y)-3);}
+function drawExcessArrow(toX,toY,maxX,maxY,qd,qs,priceY,isLabor){
+  const excess=qd-qs;if(Math.abs(excess)<(isLabor?2:20))return;
+  const dir=excess>0?1:-1,mag=Math.min(Math.abs(excess)/(isLabor?50:500),1);
+  const midQ=(qd+qs)/2,ax=toX(Math.min(Math.max(midQ,maxX*.1),maxX*.9)),ay=toY(priceY),sz=8+mag*12;
+  X.save();X.globalAlpha=.7+mag*.3;X.fillStyle=excess>0?'#e53e3e':'#3182ce';
+  X.beginPath();X.moveTo(ax+dir*sz,ay);X.lineTo(ax,ay-sz*.35);X.lineTo(ax,ay+sz*.35);X.closePath();X.fill();
+  X.font=`bold ${7+mag*2}px Segoe UI`;X.textAlign='center';
+  X.fillText(excess>0?(isLabor?'Excess Lᵈ':'Excess Qᵈ'):(isLabor?'Excess Lˢ':'Excess Qˢ'),ax,ay-sz*.5-4);
+  X.globalAlpha=1;X.restore();
+}
+
+// ====== MAIN DRAW ======
+let flowAnim=0;
+function drawAll(dispP,dispQ,dispW,dispL,excess){
+  X.fillStyle='#fff';X.fillRect(0,0,CW,CH);
+  const cx=CW/2,cy=CH/2,s=Math.min(CW/1100,CH/680);
+  const hh={x:cx-220*s,y:cy,w:130*s,h:75*s},fi={x:cx+220*s,y:cy,w:130*s,h:75*s};
+  const gm={x:cx,y:cy-165*s,w:160*s,h:42*s},fm={x:cx,y:cy+165*s,w:160*s,h:42*s};
+  const xAt=(b,f)=>b.x-b.w/2+b.w*f,yAt=(b,f)=>b.y-b.h/2+b.h*f;
+  const topE=b=>b.y-b.h/2,botE=b=>b.y+b.h/2,lftE=b=>b.x-b.w/2,rgtE=b=>b.x+b.w/2;
+  function qB(t,a,b,c){const u=1-t;return u*u*a+2*u*t*b+t*t*c;}
+  function qBD(t,a,b,c){return 2*(1-t)*(b-a)+2*t*(c-b);}
+  // Imbalance glow
+  if(mode==='challenge'&&excess&&!solved){
+    [[gm,excess.excessD_PM,dispQ],[fm,excess.excessD_FM,dispL]].forEach(([bx,ex,ref])=>{
+      const rel=Math.abs(ex)/(ref||1);if(rel>.05){
+        const col=ex>0?'rgba(229,62,62,':'rgba(49,130,206,';
+        const grd=X.createRadialGradient(bx.x,bx.y,bx.w*.3,bx.x,bx.y,bx.w*1.2);
+        grd.addColorStop(0,col+(Math.min(rel,.6)*.5)+')');grd.addColorStop(1,col+'0)');
+        X.fillStyle=grd;X.fillRect(bx.x-bx.w,bx.y-bx.h*2,bx.w*2,bx.h*4);
+      }
+    });
+  }
+  function drawArc(x1,y1,cpx,cpy,x2,y2,color,dash,flowRate,lbl){
+    X.strokeStyle=color;X.lineWidth=2*s;X.setLineDash(dash?[6*s,4*s]:[]);X.beginPath();X.moveTo(x1,y1);X.quadraticCurveTo(cpx,cpy,x2,y2);X.stroke();X.setLineDash([]);
+    const t=.95,ax=qB(t,x1,cpx,x2),ay=qB(t,y1,cpy,y2),dx=qBD(t,x1,cpx,x2),dy=qBD(t,y1,cpy,y2),ang=Math.atan2(dy,dx),sz2=7*s;
+    X.save();X.translate(ax,ay);X.rotate(ang);X.fillStyle=color;X.beginPath();X.moveTo(0,0);X.lineTo(-sz2,-sz2*.4);X.lineTo(-sz2,sz2*.4);X.closePath();X.fill();X.restore();
+    const n=Math.max(2,Math.min(6,Math.round(flowRate)));
+    for(let i=0;i<n;i++){const pt=((flowAnim*.1+i/n)%1);const px=qB(pt,x1,cpx,x2),py=qB(pt,y1,cpy,y2);X.beginPath();X.arc(px,py,2.5*s,0,Math.PI*2);X.fillStyle=color;X.globalAlpha=.6;X.fill();X.globalAlpha=1;}
+    if(lbl){const mt=.5,mx=qB(mt,x1,cpx,x2),my=qB(mt,y1,cpy,y2),ndx=mx-cx,ndy=my-cy,nd=Math.sqrt(ndx*ndx+ndy*ndy)||1,isM=!dash,push=isM?-18*s:22*s,lx=mx+(ndx/nd)*push,ly=my+(ndy/nd)*push;X.save();X.font=`600 ${8.5*s}px 'Segoe UI',sans-serif`;const lines=lbl.split('\n');let maxW=0;lines.forEach(l=>{const m=X.measureText(l);if(m.width>maxW)maxW=m.width;});const lh=10*s,th=lines.length*lh,px2=4*s,py2=2*s;X.fillStyle='rgba(255,255,255,.85)';X.beginPath();X.roundRect(lx-maxW/2-px2,ly-th/2-py2,maxW+px2*2,th+py2*2,3*s);X.fill();X.fillStyle=color;X.textAlign='center';X.textBaseline='middle';lines.forEach((l,i)=>X.fillText(l,lx,ly+(i-(lines.length-1)/2)*lh));X.restore();}
+  }
+  function arc(x1,y1,x2,y2){return[x1,y1,x1,y2,x2,y2];}function arcR(x1,y1,x2,y2){return[x1,y1,x2,y1,x2,y2];}
+  const fr=Math.max(1,dispP*dispQ/500);
+  drawArc(...arc(xAt(hh,2/3),topE(hh),lftE(gm),yAt(gm,2/3)),'#c53030',false,fr,'Expenditure ($)');
+  drawArc(...arcR(rgtE(gm),yAt(gm,2/3),xAt(fi,1/3),topE(fi)),'#c53030',false,fr,'Revenue ($)');
+  drawArc(...arc(xAt(fi,1/3),botE(fi),rgtE(fm),yAt(fm,1/3)),'#c53030',false,fr,'Wages, Rent,\nInterest, Profit\n(π ≥ 0; = 0 if CRS)');
+  drawArc(...arcR(lftE(fm),yAt(fm,1/3),xAt(hh,2/3),botE(hh)),'#c53030',false,fr,'Income ($)');
+  drawArc(...arc(xAt(fi,2/3),topE(fi),rgtE(gm),yAt(gm,1/3)),'#2b6cb0',true,fr,'Goods &\nServices');
+  drawArc(...arcR(lftE(gm),yAt(gm,1/3),xAt(hh,1/3),topE(hh)),'#2b6cb0',true,fr,'Goods &\nServices');
+  drawArc(...arc(xAt(hh,1/3),botE(hh),lftE(fm),yAt(fm,2/3)),'#2b6cb0',true,fr,'Labor, Land,\nCapital');
+  drawArc(...arcR(rgtE(fm),yAt(fm,2/3),xAt(fi,2/3),botE(fi)),'#2b6cb0',true,fr,'Factors of\nProduction');
+  // Boxes
+  function drawBox(b,fill,stroke,txt,m1,m2){X.fillStyle=fill;X.strokeStyle=stroke;X.lineWidth=2*s;X.beginPath();X.roundRect(b.x-b.w/2,b.y-b.h/2,b.w,b.h,10*s);X.fill();X.stroke();X.fillStyle=stroke;X.font=`bold ${12*s}px Segoe UI`;X.textAlign='center';X.textBaseline='middle';X.fillText(txt,b.x,b.y-14*s);if(m1){X.font=`italic ${8.5*s}px 'Segoe UI',serif`;X.fillStyle='#4a5568';X.fillText(m1,b.x,b.y+4*s);if(m2)X.fillText(m2,b.x,b.y+16*s);}}
+  function drawPill(b,fill,stroke,txt,sub){X.fillStyle=fill;X.strokeStyle=stroke;X.lineWidth=2*s;X.beginPath();X.roundRect(b.x-b.w/2,b.y-b.h/2,b.w,b.h,b.h/2);X.fill();X.stroke();X.fillStyle=stroke;X.font=`bold ${11*s}px Segoe UI`;X.textAlign='center';X.textBaseline='middle';X.fillText(txt,b.x,b.y-(sub?5*s:0));if(sub){X.font=`${8*s}px Segoe UI`;X.globalAlpha=.55;X.fillText(sub,b.x,b.y+8*s);X.globalAlpha=1;}}
+  drawBox(hh,'#ebf4ff','#4299e1','Households','max U(X, Y)','s.t.  PₓX + PᵧY ≤ M');
+  drawBox(fi,'#fef3e2','#d69e2e','Firms','max p·f(L,K) − wL − rK','p = MC(q)  (price taker)');
+  if(mode==='challenge'){
+    const gP=+gPsl.value,gW=+gWsl.value;
+    const pmOK=excess&&Math.abs(excess.excessD_PM)<(dispQ*.05);
+    const fmOK=excess&&Math.abs(excess.excessD_FM)<(dispL*.05);
+    drawPill(gm,'#f0fff4','#38a169','Product Market',`P = $${gP.toFixed(2)}  ${solved?'✓':pmOK?'≈':'⚠'}`);
+    drawPill(fm,'#faf5ff','#805ad5','Factor Market',`w = $${gW.toFixed(2)}  ${solved?'✓':fmOK?'≈':'⚠'}`);
+  } else {
+    drawPill(gm,'#f0fff4','#38a169','Product Market',`P* = $${dispP.toFixed(2)}`);
+    drawPill(fm,'#faf5ff','#805ad5','Factor Market',`w* = $${dispW.toFixed(2)}`);
+  }
+  // Victory sparkles
+  if(solved&&victoryParticles.length>0){victoryParticles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.15;p.life-=.02;if(p.life>0){X.globalAlpha=p.life;X.fillStyle=p.color;X.beginPath();X.arc(p.x,p.y,p.r,0,Math.PI*2);X.fill();X.globalAlpha=1;}});victoryParticles=victoryParticles.filter(p=>p.life>0);}
+  // Mini graphs
+  const gw=175*s,gh=135*s,gmGH=120*s;
+  drawHHGraph(hh.x-hh.w/2-gw-12*s,hh.y-gh/2,gw,gh,dispP);
+  drawFirmGraph(fi.x+fi.w/2+12*s,fi.y-gh/2,gw,gh,dispP);
+  drawGMGraph(gm.x-gw/2,gm.y-gm.h/2-gmGH-10*s,gw,gmGH,dispP,dispQ,excess);
+  drawFMGraph(fm.x-gw/2,fm.y+fm.h/2+10*s,gw,gmGH,dispP,dispW,dispL,excess);
+
+  // ---- FLOW LEGEND ----
+  const lx=12*s, ly=CH-40*s;
+  X.save();
+  X.font=`600 ${7.5*s}px Segoe UI`;X.textAlign='left';
+  // Nominal
+  X.strokeStyle='#c53030';X.lineWidth=2*s;X.setLineDash([]);
+  X.beginPath();X.moveTo(lx,ly);X.lineTo(lx+20*s,ly);X.stroke();
+  X.fillStyle='#c53030';X.fillText('Nominal flows ($)',lx+24*s,ly+2.5*s);
+  // Real
+  X.strokeStyle='#2b6cb0';X.setLineDash([5*s,3*s]);
+  X.beginPath();X.moveTo(lx,ly+12*s);X.lineTo(lx+20*s,ly+12*s);X.stroke();X.setLineDash([]);
+  X.fillStyle='#2b6cb0';X.fillText('Real flows (goods, labor)',lx+24*s,ly+14.5*s);
+  X.restore();
+
+  // ---- OWNERSHIP NOTE ----
+  const ox2=CW-12*s;
+  X.save();X.font=`italic ${6.5*s}px Segoe UI`;X.textAlign='right';X.fillStyle='#a0aec0';
+  X.fillText('Households own firms; profits distributed as dividends',ox2,CH-28*s);
+  X.fillText('Competitive equilibrium: all agents are price takers',ox2,CH-18*s);
+  X.restore();
+}
+
+// ====== MINI GRAPHS ======
+function drawHHGraph(ox,oy,gw,gh,Px){const M=+S.M.value,alpha=+S.Alpha.value,Py=+S.Py.value,maxX=80,maxY=80;const{toX,toY}=miniAxes(ox,oy,gw,gh,maxX,maxY,'Good X','Good Y','#4299e1');const xInt=M/Px,yInt=M/Py;X.fillStyle='rgba(49,130,206,.06)';X.beginPath();X.moveTo(toX(0),toY(0));X.lineTo(toX(0),toY(Math.min(yInt,maxY)));X.lineTo(toX(Math.min(xInt,maxX)),toY(0));X.closePath();X.fill();X.strokeStyle='#e53e3e';X.lineWidth=1.5;X.beginPath();X.moveTo(toX(0),toY(Math.min(yInt,maxY)));X.lineTo(toX(Math.min(xInt,maxX)),toY(0));X.stroke();const xS=consDemandX(Px,M,alpha),yS=(1-alpha)*M/Py,U=consUtil(xS,yS,alpha);if(U>0)mPlot(toX,toY,maxX,maxY,x=>indiffY(x,U,alpha)||0,'#3182ce',1.5);if(xS<=maxX&&yS<=maxY){mDash(toX,toY,xS,yS,xS,0);mDash(toX,toY,xS,yS,0,yS);mDot(toX,toY,xS,yS,'#d69e2e',4);}mLabel(toX,toY,2,yInt>maxY?maxY-3:yInt-3,'Budget','#e53e3e');mLabel(toX,toY,Math.min(xS+4,maxX-12),(indiffY(Math.min(xS+8,maxX-4),U,alpha)||yS),'IC','#3182ce');}
+function drawFirmGraph(ox,oy,gw,gh,Px){const FC=+S.FC.value,a=+S.A.value,cc=+S.C.value,maxQ=30,maxP=Math.max(8,Px*1.8);const{toX,toY}=miniAxes(ox,oy,gw,gh,maxQ,maxP,'Output (q)','$/unit','#d69e2e');const qS=fQ(Px,a,cc);if(qS>0){const atcS=atcFn(qS,FC,a,cc);X.fillStyle=Px>atcS?'rgba(56,161,105,.12)':'rgba(229,62,62,.1)';const y1=Math.min(Px,atcS),y2=Math.max(Px,atcS);X.fillRect(toX(0),toY(y2),toX(qS)-toX(0),toY(y1)-toY(y2));}mHLine(toX,toY,maxQ,Px,'#38a169');X.fillStyle='#38a169';X.font='bold 6.5px Segoe UI';X.textAlign='right';X.fillText('P',toX(maxQ)-2,toY(Px)-3);mPlot(toX,toY,maxQ,maxP,q=>mcFn(q,a,cc),'#e53e3e',1.8);mPlot(toX,toY,maxQ,maxP,q=>atcFn(q,FC,a,cc),'#805ad5',1.2,[3,2]);mPlot(toX,toY,maxQ,maxP,q=>avcFn(q,a,cc),'#d69e2e',1,[2,2]);if(qS>0&&qS<=maxQ){mDash(toX,toY,qS,Px,qS,0);mDot(toX,toY,qS,Px,'#d69e2e',4);}mLabel(toX,toY,maxQ*.6,mcFn(maxQ*.6,a,cc),'MC','#e53e3e');}
+function drawGMGraph(ox,oy,gw,gh,dispP,dispQ,excess){const M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value,a=+S.A.value,cc=+S.C.value,nF=+S.NF.value;const maxQ=Math.max(3000,dispQ*2.2),maxP=8;const{toX,toY}=miniAxes(ox,oy,gw,gh,maxQ,maxP,'Mkt Qty (Q)','Price ($)','#38a169');mPlot(toX,toY,maxQ,maxP,Q=>nC*alpha*M/Q,'#3182ce',1.8);mPlot(toX,toY,maxQ,maxP,Q=>a+cc*Math.pow(Q/nF,2),'#e53e3e',1.8);if(mode==='challenge'&&excess&&!solved){const gP=+gPsl.value;mHLine(toX,toY,maxQ,gP,'rgba(229,62,62,.4)');drawExcessArrow(toX,toY,maxQ,maxP,excess.Qd,excess.Qs,gP,false);}if(dispP<=maxP&&dispQ<=maxQ){mDash(toX,toY,dispQ,dispP,dispQ,0);mDash(toX,toY,dispQ,dispP,0,dispP);mDot(toX,toY,dispQ,dispP,'#319795',4);}mLabel(toX,toY,maxQ*.12,nC*alpha*M/(maxQ*.12),'D(p)','#3182ce');const sQ=maxQ*.6,sP=a+cc*Math.pow(sQ/nF,2);if(sP<maxP*.9)mLabel(toX,toY,sQ,sP,'S(p)','#e53e3e');}
+function drawFMGraph(ox,oy,gw,gh,dispP,dispW,dispL,excess){const nF=+S.NF.value,nC=+S.NC.value,eps=+S.LSE.value;const maxL=Math.max(200,dispL*2.5),maxW=Math.max(20,dispW*2.5);const{toX,toY}=miniAxes(ox,oy,gw,gh,maxL,maxW,'Labor (L)','Wage ($)','#805ad5');mPlot(toX,toY,maxL,maxW,L=>L>0?dispP/(2*Math.sqrt(L/nF)):maxW,'#805ad5',1.8);mPlot(toX,toY,maxL,maxW,L=>10*Math.pow(L/nC,1/eps),'#d69e2e',1.8);if(mode==='challenge'&&excess&&!solved){const gW=+gWsl.value;mHLine(toX,toY,maxL,gW,'rgba(128,90,213,.4)');drawExcessArrow(toX,toY,maxL,maxW,excess.Ld,excess.Ls,gW,true);}if(dispW>0&&dispW<=maxW&&dispL>0&&dispL<=maxL){mDash(toX,toY,dispL,dispW,dispL,0);mDash(toX,toY,dispL,dispW,0,dispW);mDot(toX,toY,dispL,dispW,'#553c9a',4);}mLabel(toX,toY,maxL*.08,dispP/(2*Math.sqrt(maxL*.08/nF)),'Lᵈ(w,p)','#805ad5');mLabel(toX,toY,maxL*.6,10*Math.pow(maxL*.6/nC,1/eps),'Lˢ(w)','#d69e2e');X.fillStyle='#553c9a';X.font='italic 6px Segoe UI';X.textAlign='left';X.fillText('w = p·MPₗ',toX(maxL*.35),toY(maxW*.88));}
+
+// ====== UPDATE ======
+function updateAll(){
+  document.getElementById('vM').textContent=S.M.value;document.getElementById('vAlpha').textContent=(+S.Alpha.value).toFixed(2);document.getElementById('vPy').textContent=(+S.Py.value).toFixed(2);document.getElementById('vNC').textContent=S.NC.value;document.getElementById('vFC').textContent=S.FC.value;document.getElementById('vA').textContent=(+S.A.value).toFixed(2);document.getElementById('vC').textContent=(+S.C.value).toFixed(3);document.getElementById('vNF').textContent=S.NF.value;document.getElementById('vLSE').textContent=(+S.LSE.value).toFixed(1);
+  const{P:eqP,Q:eqQ}=findProductEq(),{wEq,Leq}=findFactorEq(eqP);
+  let dispP,dispQ,dispW,dispL,excess=null;
+  if(mode==='challenge'){
+    const gP=+gPsl.value,gW=+gWsl.value;
+    document.getElementById('gPval').textContent=`$${gP.toFixed(2)}`;document.getElementById('gWval').textContent=`$${gW.toFixed(2)}`;
+    dispP=gP;dispW=gW;const M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value;dispQ=nC*alpha*M/gP;const nF=+S.NF.value;dispL=nF*Math.pow(gP/(2*gW),2);excess=getExcess(gP,gW);
+    if(!solved){document.getElementById('scTime').textContent=((Date.now()-chalStart)/1000).toFixed(0)+'s';}
+    document.getElementById('scChal').textContent=`${totalSolved}/${challenges.length}`;document.getElementById('scStars').textContent=totalStars;
+    const pAcc=Math.max(0,(1-Math.abs(gP-trueEqP)/trueEqP)*100);
+    const wAcc=Math.max(0,(1-Math.abs(gW-trueEqW)/trueEqW)*100);
+    if(!solved&&pAcc>95&&wAcc>95)triggerVictory(pAcc,wAcc);
+    ['eqP','eqQ','eqW','eqL','eqExp','eqRev','eqWB','eqProf','eqU'].forEach(id=>document.getElementById(id).textContent='???');
+  } else {
+    dispP=eqP;dispQ=eqQ;dispW=wEq;dispL=Leq;
+    document.getElementById('eqP').textContent=`$${eqP.toFixed(2)}`;document.getElementById('eqQ').textContent=eqQ.toFixed(0);document.getElementById('eqW').textContent=`$${wEq.toFixed(2)}`;document.getElementById('eqL').textContent=Leq.toFixed(0);
+    const M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value,nF=+S.NF.value;
+    document.getElementById('eqExp').textContent=`$${(nC*alpha*M).toFixed(0)}`;document.getElementById('eqRev').textContent=`$${(eqP*eqQ).toFixed(0)}`;document.getElementById('eqWB').textContent=`$${(wEq*Leq).toFixed(0)}`;
+    const a=+S.A.value,cc=+S.C.value,FC=+S.FC.value,qS=fQ(eqP,a,cc),prof=eqP*qS-tcFn(qS,FC,a,cc);
+    document.getElementById('eqProf').textContent=`$${(prof*nF).toFixed(0)}`;
+    const Py=+S.Py.value,xS=consDemandX(eqP,M,alpha),yS=(1-alpha)*M/Py;document.getElementById('eqU').textContent=consUtil(xS,yS,alpha).toFixed(1);
+  }
+  drawAll(dispP,dispQ,dispW,dispL,excess);
+}
+Object.values(S).forEach(sl=>sl.addEventListener('input',updateAll));
+gPsl.addEventListener('input',updateAll);gWsl.addEventListener('input',updateAll);
+
+// ====== VICTORY ======
+function triggerVictory(pAcc,wAcc){
+  solved=true;totalSolved++;
+  const elapsed=+((Date.now()-chalStart)/1000).toFixed(1);
+  const stars=computeStars(elapsed);
+  const score=computeScore(elapsed,pAcc,wAcc);
+  totalStars+=stars;
+  results.push({name:challenges[chalIdx].name,time:elapsed,stars,score,pAcc:pAcc.toFixed(1),wAcc:wAcc.toFixed(1)});
+  const cx=CW/2,cy=CH/2;
+  for(let i=0;i<60;i++){victoryParticles.push({x:cx,y:cy,vx:(Math.cos(i/60*Math.PI*2))*4+((i%3)-1)*2,vy:(Math.sin(i/60*Math.PI*2))*4-2,r:2+((i*7)%4),life:1,color:['#38a169','#d69e2e','#4299e1','#805ad5','#e53e3e'][i%5]});}
+  document.getElementById('btnFinish').style.display='inline-block';
+  setTimeout(()=>{
+    document.getElementById('vTime').textContent=elapsed+'s';
+    document.getElementById('vAccP').textContent=pAcc.toFixed(1)+'%';
+    document.getElementById('vAccW').textContent=wAcc.toFixed(1)+'%';
+    document.getElementById('vScore').textContent=score;
+    document.getElementById('victoryStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+    document.getElementById('victoryMsg').textContent=stars===3?'Perfect! Lightning fast!':stars===2?'Great work!':'Solved it!';
+    document.getElementById('victoryOverlay').classList.add('show');
+  },600);
+}
+function closeVictory(){document.getElementById('victoryOverlay').classList.remove('show');nextChallenge();}
+
+// ====== RESULTS ======
+function showResults(){
+  document.getElementById('victoryOverlay').classList.remove('show');
+  const tbody=document.getElementById('resultsBody');
+  tbody.innerHTML='';
+  let totalScore=0;
+  results.forEach((r,i)=>{
+    totalScore+=r.score;
+    tbody.innerHTML+=`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.time}s</td><td>${r.score}</td><td class="star-col">${'⭐'.repeat(r.stars)}</td></tr>`;
+  });
+  // Unplayed challenges
+  for(let i=results.length;i<challenges.length;i++){
+    tbody.innerHTML+=`<tr style="opacity:.4"><td>${i+1}</td><td>${challenges[i].name}</td><td>—</td><td>—</td><td class="star-col">—</td></tr>`;
+  }
+  document.getElementById('totalStarsDisp').textContent='⭐'.repeat(totalStars)+'☆'.repeat(challenges.length*3-totalStars);
+  document.getElementById('totalScoreMsg').textContent=`Total Score: ${totalScore} / ${challenges.length*1000}  •  ${totalStars} / ${challenges.length*3} stars  •  ${totalSolved} / ${challenges.length} completed`;
+  // Validation code: deterministic hash from results
+  const raw=results.map(r=>`${r.score}-${r.time}`).join('|');
+  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash+raw.charCodeAt(i))|0;}
+  const hex=(hash>>>0).toString(16).toUpperCase().padStart(8,'0');
+  const code=`CFD-${totalStars}S-${totalScore}P-${hex.slice(0,4)}-${hex.slice(4)}`;
+  document.getElementById('valCode').textContent=code;
+  document.getElementById('resultsOverlay').classList.add('show');
+}
+function restartAll(){document.getElementById('resultsOverlay').classList.remove('show');totalStars=0;totalSolved=0;results.length=0;startChallenge(0);}
+
+// ====== ANIMATION ======
+let lastT=0;
+function animLoop(ts){
+  if(ts-lastT>35){lastT=ts;flowAnim+=.03;
+    if(mode==='explore'){const{P:eqP,Q:eqQ}=findProductEq(),{wEq,Leq}=findFactorEq(eqP);drawAll(eqP,eqQ,wEq,Leq,null);}
+    else{const gP=+gPsl.value,gW=+gWsl.value,M=+S.M.value,alpha=+S.Alpha.value,nC=+S.NC.value,nF=+S.NF.value;drawAll(gP,nC*alpha*M/gP,gW,nF*Math.pow(gP/(2*gW),2),getExcess(gP,gW));if(!solved)document.getElementById('scTime').textContent=((Date.now()-chalStart)/1000).toFixed(0)+'s';}
+  }
+  requestAnimationFrame(animLoop);
+}
+updateAll();requestAnimationFrame(animLoop);
+</script>
+</body>
+</html>

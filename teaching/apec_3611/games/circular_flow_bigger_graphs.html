@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circular Flow Dashboard — Linked General Equilibrium</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:#2d3748;min-height:100vh;padding:12px}
+h1{text-align:center;font-size:1.55rem;font-weight:700;margin-bottom:2px;color:#1a202c}
+.subtitle{text-align:center;color:#718096;font-size:.88rem;margin-bottom:12px;max-width:900px;margin-left:auto;margin-right:auto;line-height:1.45}
+
+/* 2×3 grid: top row = HH graph | flow diagram | Firm graph. Bottom = Factor mkt | sliders | Product mkt */
+.dashboard{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:1fr 1.3fr 1fr;grid-template-rows:auto auto;gap:10px}
+@media(max-width:1100px){.dashboard{grid-template-columns:1fr;grid-template-rows:auto}}
+
+.panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.panel canvas{width:100%;display:block;border-radius:6px}
+.panel-hdr{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #edf2f7}
+.panel-ttl{font-size:.88rem;font-weight:600}
+.hh-color{color:#2b6cb0} .fi-color{color:#975a16} .gm-color{color:#276749} .fm-color{color:#553c9a}
+
+/* Sliders panel */
+.sliders-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.slider-section{background:#f7fafc;border-radius:8px;padding:10px}
+.slider-section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:#718096;font-weight:600;margin-bottom:8px}
+.sg{margin-bottom:8px}
+.sg-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:2px}
+.sg-val{color:#2b6cb0;font-weight:600;font-size:.78rem}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e2e8f0;border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#4299e1;cursor:pointer}
+
+/* Flow diagram mini canvas */
+.flow-panel{display:flex;align-items:center;justify-content:center}
+
+/* Equilibrium readouts */
+.eq-bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.eq-chip{background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;padding:3px 8px;font-size:.76rem;display:flex;gap:4px;align-items:center}
+.eq-chip .v{font-weight:700;color:#319795}
+.eq-chip.warn .v{color:#e53e3e}
+
+/* Info readouts below graphs */
+.info-row{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.info-chip{font-size:.72rem;background:#f7fafc;border-radius:4px;padding:2px 6px;border:1px solid #edf2f7}
+.info-chip b{font-weight:600}
+</style>
+</head>
+<body>
+<h1>Circular Flow Dashboard</h1>
+<p class="subtitle">Four linked panels show how household utility maximization, firm profit maximization, and market equilibrium are connected. Adjust parameters and watch the entire economy respond.</p>
+
+<div class="dashboard">
+  <!-- Row 1, Col 1: Household -->
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-ttl hh-color">🏠 Household — Utility Maximization</span></div>
+    <canvas id="hhCanvas" width="420" height="340"></canvas>
+    <div class="info-row" id="hhInfo"></div>
+  </div>
+
+  <!-- Row 1, Col 2: Circular Flow Diagram -->
+  <div class="panel flow-panel">
+    <canvas id="flowCanvas" width="480" height="380"></canvas>
+  </div>
+
+  <!-- Row 1, Col 3: Firm -->
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-ttl fi-color">🏭 Firm — Profit Maximization</span></div>
+    <canvas id="fiCanvas" width="420" height="340"></canvas>
+    <div class="info-row" id="fiInfo"></div>
+  </div>
+
+  <!-- Row 2, Col 1: Factor Market -->
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-ttl fm-color">⚙️ Factor Market (Labor)</span></div>
+    <canvas id="fmCanvas" width="420" height="300"></canvas>
+    <div class="info-row" id="fmInfo"></div>
+  </div>
+
+  <!-- Row 2, Col 2: Parameters -->
+  <div class="panel">
+    <div class="sliders-panel">
+      <div class="slider-section">
+        <div class="slider-section-title">Household</div>
+        <div class="sg"><div class="sg-label"><span>Income (M)</span><span class="sg-val" id="vM">100</span></div><input type="range" id="sM" min="40" max="200" value="100" step="5"></div>
+        <div class="sg"><div class="sg-label"><span>Preference α</span><span class="sg-val" id="vAlpha">0.50</span></div><input type="range" id="sAlpha" min=".2" max=".8" value=".5" step=".05"></div>
+        <div class="sg"><div class="sg-label"><span>Price of Y (Pᵧ)</span><span class="sg-val" id="vPy">2.00</span></div><input type="range" id="sPy" min="1" max="5" value="2" step=".25"></div>
+        <div class="sg"><div class="sg-label"><span># Consumers</span><span class="sg-val" id="vNC">100</span></div><input type="range" id="sNC" min="20" max="200" value="100" step="10"></div>
+      </div>
+      <div class="slider-section">
+        <div class="slider-section-title">Firm</div>
+        <div class="sg"><div class="sg-label"><span>Fixed Cost</span><span class="sg-val" id="vFC">20</span></div><input type="range" id="sFC" min="0" max="60" value="20" step="5"></div>
+        <div class="sg"><div class="sg-label"><span>MC base (a)</span><span class="sg-val" id="vA">0.50</span></div><input type="range" id="sA" min=".1" max="3" value=".5" step=".1"></div>
+        <div class="sg"><div class="sg-label"><span>MC curvature (c)</span><span class="sg-val" id="vC">0.010</span></div><input type="range" id="sC" min=".002" max=".05" value=".01" step=".002"></div>
+        <div class="sg"><div class="sg-label"><span># Firms</span><span class="sg-val" id="vNF">50</span></div><input type="range" id="sNF" min="10" max="150" value="50" step="5"></div>
+      </div>
+      <div class="slider-section">
+        <div class="slider-section-title">Factor Market</div>
+        <div class="sg"><div class="sg-label"><span>Wage (w)</span><span class="sg-val" id="vW">10</span></div><input type="range" id="sW" min="2" max="25" value="10" step="1"></div>
+        <div class="sg"><div class="sg-label"><span>Labor supply elasticity</span><span class="sg-val" id="vLSE">1.0</span></div><input type="range" id="sLSE" min=".3" max="3" value="1" step=".1"></div>
+      </div>
+      <div class="slider-section">
+        <div class="slider-section-title">Equilibrium</div>
+        <div class="eq-bar">
+          <div class="eq-chip">P*: <span class="v" id="eqP">—</span></div>
+          <div class="eq-chip">Q*: <span class="v" id="eqQ">—</span></div>
+          <div class="eq-chip">w*: <span class="v" id="eqW">—</span></div>
+          <div class="eq-chip">L*: <span class="v" id="eqL">—</span></div>
+        </div>
+        <div class="eq-bar" style="margin-top:4px">
+          <div class="eq-chip">Revenue: <span class="v" id="eqRev">—</span></div>
+          <div class="eq-chip">Expenditure: <span class="v" id="eqExp">—</span></div>
+          <div class="eq-chip">Profit: <span class="v" id="eqProf">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2, Col 3: Product Market -->
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-ttl gm-color">🛒 Product Market (Good X)</span></div>
+    <canvas id="gmCanvas" width="420" height="300"></canvas>
+    <div class="info-row" id="gmInfo"></div>
+  </div>
+</div>
+
+<script>
+// ====== CANVASES ======
+const canvasIds = ['hhCanvas','fiCanvas','gmCanvas','fmCanvas','flowCanvas'];
+const cvs = {}, ctx = {};
+canvasIds.forEach(id => {
+  cvs[id] = document.getElementById(id);
+  ctx[id] = cvs[id].getContext('2d');
+  const dpr = devicePixelRatio || 1;
+  const w = cvs[id].width, h = cvs[id].height;
+  cvs[id].width = w * dpr; cvs[id].height = h * dpr;
+  ctx[id].scale(dpr, dpr);
+  cvs[id].style.width = w + 'px'; cvs[id].style.height = h + 'px';
+  cvs[id]._w = w; cvs[id]._h = h;
+});
+
+// ====== SLIDER REFS ======
+const S = {};
+['M','Alpha','Py','NC','FC','A','C','NF','W','LSE'].forEach(k => {
+  S[k] = document.getElementById('s'+k);
+});
+
+// ====== ECONOMICS ======
+// Consumer: Cobb-Douglas U = X^α Y^(1-α), demand for X: Xd = αM/Px
+function consumerDemandX(Px, M, alpha) { return alpha * M / Px; }
+function consumerUtility(x, y, alpha) { return x > 0 && y > 0 ? Math.pow(x, alpha) * Math.pow(y, 1 - alpha) : 0; }
+function indiffY(x, U, alpha) { return x > 0 ? Math.pow(U / Math.pow(x, alpha), 1 / (1 - alpha)) : null; }
+
+// Firm: TC = FC + a*q + c*q³/3, MC = a + c*q², supply: q* = sqrt((P-a)/c)
+function MC(q, a, c) { return a + c * q * q; }
+function firmQ(P, a, c) { return P > a ? Math.sqrt((P - a) / c) : 0; }
+function TC(q, FC, a, c) { return FC + a * q + c * q * q * q / 3; }
+function AVC(q, a, c) { return q > 0 ? a + c * q * q / 3 : a; }
+function ATC(q, FC, a, c) { return q > 0 ? TC(q, FC, a, c) / q : Infinity; }
+
+// Factor market: labor demand from firms, labor supply from households
+// Firm demand for labor: derived from production. Simplify: q = sqrt(L) => L = q², so Ld(w) = nF * (firmQ(P,a,c))²
+// Labor supply: Ls(w) = k * w^ε (upward sloping)
+function laborDemand(w, P, a, c, nF) {
+  // Each firm produces q*; with q=sqrt(L), L=q². Total Ld = nF * q*²
+  const q = firmQ(P, a, c);
+  return nF * q * q;
+}
+function laborSupply(w, nC, epsilon) {
+  // Ls = nC * (w/10)^epsilon — normalized so Ls = nC at w=10
+  return nC * Math.pow(w / 10, epsilon);
+}
+
+// Product market equilibrium: Qd = nC * α*M/P, Qs = nF * firmQ(P, a, c)
+function findProductEq() {
+  const M = +S.M.value, alpha = +S.Alpha.value, nC = +S.NC.value;
+  const a = +S.A.value, c = +S.C.value, nF = +S.NF.value;
+  let pLo = a + 0.01, pHi = 20, pEq = (pLo + pHi) / 2;
+  for (let i = 0; i < 60; i++) {
+    const qd = nC * alpha * M / pEq;
+    const qs = nF * firmQ(pEq, a, c);
+    if (Math.abs(qd - qs) < 0.5) break;
+    if (qd > qs) pLo = pEq; else pHi = pEq;
+    pEq = (pLo + pHi) / 2;
+  }
+  return { P: pEq, Q: nC * alpha * M / pEq };
+}
+
+// ====== GENERIC GRAPH HELPERS ======
+const mg = { top: 16, right: 12, bottom: 30, left: 44 };
+
+function drawAxes(c, cv, maxX, maxY, xLabel, yLabel) {
+  const W = cv._w, H = cv._h;
+  const gw = W - mg.left - mg.right, gh = H - mg.top - mg.bottom;
+  const toX = x => mg.left + (x / maxX) * gw;
+  const toY = y => mg.top + gh - (y / maxY) * gh;
+
+  // Clear
+  c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+
+  // Grid
+  c.strokeStyle = '#edf2f7'; c.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const x = mg.left + (i / 4) * gw, y = mg.top + (i / 4) * gh;
+    c.beginPath(); c.moveTo(x, mg.top); c.lineTo(x, mg.top + gh); c.stroke();
+    c.beginPath(); c.moveTo(mg.left, y); c.lineTo(mg.left + gw, y); c.stroke();
+  }
+  // Axes
+  c.strokeStyle = '#a0aec0'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(mg.left, mg.top); c.lineTo(mg.left, mg.top + gh); c.lineTo(mg.left + gw, mg.top + gh); c.stroke();
+  // Tick labels
+  c.fillStyle = '#718096'; c.font = '9px Segoe UI'; c.textAlign = 'center';
+  for (let i = 0; i <= 4; i++) c.fillText((i * maxX / 4).toFixed(maxX > 100 ? 0 : 1), toX(i * maxX / 4), mg.top + gh + 13);
+  c.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) c.fillText(maxY > 50 ? (i * maxY / 4).toFixed(0) : (i * maxY / 4).toFixed(1), mg.left - 4, toY(i * maxY / 4) + 3);
+  // Axis labels
+  c.fillStyle = '#4a5568'; c.font = '10px Segoe UI'; c.textAlign = 'center';
+  c.fillText(xLabel, mg.left + gw / 2, H - 4);
+  c.save(); c.translate(10, mg.top + gh / 2); c.rotate(-Math.PI / 2); c.fillText(yLabel, 0, 0); c.restore();
+
+  return { toX, toY, gw, gh };
+}
+
+function plotCurve(c, toX, toY, maxX, maxY, fn, color, lw, dash) {
+  c.strokeStyle = color; c.lineWidth = lw || 2; c.setLineDash(dash || []);
+  c.beginPath(); let started = false;
+  for (let x = 0.3; x <= maxX; x += maxX / 200) {
+    const y = fn(x);
+    if (y >= 0 && y <= maxY * 1.1) {
+      if (!started) { c.moveTo(toX(x), toY(y)); started = true; } else c.lineTo(toX(x), toY(y));
+    }
+  }
+  c.stroke(); c.setLineDash([]);
+}
+
+function plotPoint(c, toX, toY, x, y, color, r) {
+  // hex to rgba helper
+  const h = color.replace('#','');
+  const rr=parseInt(h.substring(0,2),16), gg=parseInt(h.substring(2,4),16), bb=parseInt(h.substring(4,6),16);
+  const grd = c.createRadialGradient(toX(x), toY(y), 0, toX(x), toY(y), r * 2.5);
+  grd.addColorStop(0, `rgba(${rr},${gg},${bb},.4)`);
+  grd.addColorStop(1, `rgba(${rr},${gg},${bb},0)`);
+  c.fillStyle = grd; c.beginPath(); c.arc(toX(x), toY(y), r * 2.5, 0, Math.PI * 2); c.fill();
+  // Dot
+  c.fillStyle = color; c.beginPath(); c.arc(toX(x), toY(y), r, 0, Math.PI * 2); c.fill();
+  c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.stroke();
+}
+
+function hLine(c, toX, toY, maxX, y, color) {
+  c.strokeStyle = color; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(toX(0), toY(y)); c.lineTo(toX(maxX), toY(y)); c.stroke();
+}
+
+function dashed(c, toX, toY, x1, y1, x2, y2) {
+  c.strokeStyle = '#a0aec0'; c.lineWidth = 1; c.setLineDash([4, 3]);
+  c.beginPath(); c.moveTo(toX(x1), toY(y1)); c.lineTo(toX(x2), toY(y2)); c.stroke(); c.setLineDash([]);
+}
+
+function label(c, toX, toY, x, y, txt, color, align) {
+  c.fillStyle = color; c.font = 'bold 9px Segoe UI'; c.textAlign = align || 'left'; c.fillText(txt, toX(x), toY(y) - 5);
+}
+
+// ====== DRAW HOUSEHOLD ======
+function drawHH(Px) {
+  const c = ctx.hhCanvas, cv = cvs.hhCanvas;
+  const M = +S.M.value, alpha = +S.Alpha.value, Py = +S.Py.value;
+  const maxX = 80, maxY = 80;
+  const { toX, toY } = drawAxes(c, cv, maxX, maxY, 'Good X', 'Good Y');
+
+  // Budget constraint
+  const xInt = M / Px, yInt = M / Py;
+  c.fillStyle = 'rgba(49,130,206,.06)';
+  c.beginPath(); c.moveTo(toX(0), toY(0)); c.lineTo(toX(0), toY(Math.min(yInt, maxY))); c.lineTo(toX(Math.min(xInt, maxX)), toY(0)); c.closePath(); c.fill();
+  c.strokeStyle = '#e53e3e'; c.lineWidth = 2.5;
+  c.beginPath(); c.moveTo(toX(0), toY(Math.min(yInt, maxY))); c.lineTo(toX(Math.min(xInt, maxX)), toY(0)); c.stroke();
+
+  // Optimal bundle
+  const xS = consumerDemandX(Px, M, alpha);
+  const yS = (1 - alpha) * M / Py;
+  const U = consumerUtility(xS, yS, alpha);
+
+  // Indifference curve
+  if (U > 0) plotCurve(c, toX, toY, maxX, maxY, x => indiffY(x, U, alpha), '#3182ce', 2.5);
+
+  // Optimal point
+  if (xS <= maxX && yS <= maxY) {
+    dashed(c, toX, toY, xS, yS, xS, 0);
+    dashed(c, toX, toY, xS, yS, 0, yS);
+    plotPoint(c, toX, toY, xS, yS, '#d69e2e', 5);
+  }
+
+  // Labels
+  label(c, toX, toY, 2, yInt - 2, 'Budget', '#e53e3e');
+  label(c, toX, toY, Math.min(xS + 3, maxX - 15), indiffY(Math.min(xS + 10, maxX - 5), U, alpha) || yS, 'IC', '#3182ce');
+
+  // MRS = Px/Py annotation
+  c.fillStyle = '#4a5568'; c.font = '9px Segoe UI'; c.textAlign = 'left';
+  c.fillText(`MRS = Pₓ/Pᵧ = ${(Px / Py).toFixed(2)}`, mg.left + 4, mg.top + 12);
+
+  // Info chips
+  document.getElementById('hhInfo').innerHTML =
+    `<span class="info-chip"><b>X*</b>=${xS.toFixed(1)}</span>` +
+    `<span class="info-chip"><b>Y*</b>=${yS.toFixed(1)}</span>` +
+    `<span class="info-chip"><b>U*</b>=${U.toFixed(1)}</span>` +
+    `<span class="info-chip"><b>Spending</b>=$${(Px * xS).toFixed(0)}</span>`;
+}
+
+// ====== DRAW FIRM ======
+function drawFirm(Px) {
+  const c = ctx.fiCanvas, cv = cvs.fiCanvas;
+  const FC = +S.FC.value, a = +S.A.value, cc = +S.C.value;
+  const maxQ = 30, maxP = Math.max(8, Px * 1.8);
+  const { toX, toY } = drawAxes(c, cv, maxQ, maxP, 'Firm Output (q)', '$ / unit');
+
+  const qS = firmQ(Px, a, cc);
+
+  // Profit/loss shading
+  if (qS > 0) {
+    const atcS = ATC(qS, FC, a, cc);
+    if (Px > atcS) {
+      c.fillStyle = 'rgba(56,161,105,.15)';
+      c.fillRect(toX(0), toY(Px), toX(qS) - toX(0), toY(atcS) - toY(Px));
+    } else {
+      c.fillStyle = 'rgba(229,62,62,.12)';
+      c.fillRect(toX(0), toY(atcS), toX(qS) - toX(0), toY(Px) - toY(atcS));
+    }
+  }
+
+  // Price line
+  hLine(c, toX, toY, maxQ, Px, '#38a169');
+  label(c, toX, toY, maxQ * .7, Px + maxP * .03, 'P = MR', '#38a169', 'right');
+
+  // MC, ATC, AVC
+  plotCurve(c, toX, toY, maxQ, maxP, q => MC(q, a, cc), '#e53e3e', 2.5);
+  plotCurve(c, toX, toY, maxQ, maxP, q => ATC(q, FC, a, cc), '#805ad5', 2, [4, 3]);
+  plotCurve(c, toX, toY, maxQ, maxP, q => AVC(q, a, cc), '#d69e2e', 1.5, [3, 2]);
+
+  // Optimal point
+  if (qS > 0 && qS <= maxQ) {
+    dashed(c, toX, toY, qS, Px, qS, 0);
+    plotPoint(c, toX, toY, qS, Px, '#d69e2e', 5);
+  }
+
+  label(c, toX, toY, maxQ * .75, MC(maxQ * .75, a, cc), 'MC', '#e53e3e');
+  label(c, toX, toY, maxQ * .8, ATC(maxQ * .8, FC, a, cc), 'ATC', '#805ad5');
+
+  // Info
+  const rev = Px * qS, cost = TC(qS, FC, a, cc), profit = rev - cost;
+  document.getElementById('fiInfo').innerHTML =
+    `<span class="info-chip"><b>q*</b>=${qS.toFixed(1)}</span>` +
+    `<span class="info-chip"><b>Rev</b>=$${rev.toFixed(1)}</span>` +
+    `<span class="info-chip"><b>Cost</b>=$${cost.toFixed(1)}</span>` +
+    `<span class="info-chip" style="color:${profit >= 0 ? '#38a169' : '#e53e3e'}"><b>π</b>=$${profit.toFixed(1)}</span>`;
+}
+
+// ====== DRAW PRODUCT MARKET ======
+function drawGM(eqP, eqQ) {
+  const c = ctx.gmCanvas, cv = cvs.gmCanvas;
+  const M = +S.M.value, alpha = +S.Alpha.value, nC = +S.NC.value;
+  const a = +S.A.value, cc = +S.C.value, nF = +S.NF.value;
+  const maxQ = Math.max(3000, eqQ * 2.2), maxP = 8;
+  const { toX, toY } = drawAxes(c, cv, maxQ, maxP, 'Market Quantity (Q)', 'Price ($)');
+
+  // CS shading
+  c.fillStyle = 'rgba(49,130,206,.1)';
+  c.beginPath(); c.moveTo(toX(0), toY(maxP));
+  for (let q = 1; q <= eqQ; q += eqQ / 50) { const p = nC * alpha * M / q; if (p <= maxP) c.lineTo(toX(q), toY(p)); }
+  c.lineTo(toX(eqQ), toY(eqP)); c.lineTo(toX(0), toY(eqP)); c.closePath(); c.fill();
+
+  // PS shading
+  c.fillStyle = 'rgba(229,62,62,.1)';
+  c.beginPath(); c.moveTo(toX(0), toY(a));
+  for (let q = 1; q <= eqQ; q += eqQ / 50) { const p = a + cc * Math.pow(q / nF, 2); if (p <= maxP) c.lineTo(toX(q), toY(p)); }
+  c.lineTo(toX(eqQ), toY(eqP)); c.lineTo(toX(0), toY(eqP)); c.closePath(); c.fill();
+
+  // Demand curve
+  plotCurve(c, toX, toY, maxQ, maxP, Q => nC * alpha * M / Q, '#3182ce', 2.5);
+  // Supply curve
+  plotCurve(c, toX, toY, maxQ, maxP, Q => a + cc * Math.pow(Q / nF, 2), '#e53e3e', 2.5);
+
+  // Eq point
+  if (eqP <= maxP && eqQ <= maxQ) {
+    dashed(c, toX, toY, eqQ, eqP, eqQ, 0);
+    dashed(c, toX, toY, eqQ, eqP, 0, eqP);
+    plotPoint(c, toX, toY, eqQ, eqP, '#319795', 6);
+  }
+
+  label(c, toX, toY, maxQ * .15, nC * alpha * M / (maxQ * .15), 'D', '#3182ce');
+  const sLQ = maxQ * .7, sLP = a + cc * Math.pow(sLQ / nF, 2);
+  if (sLP <= maxP * .9) label(c, toX, toY, sLQ, sLP, 'S', '#e53e3e');
+
+  document.getElementById('gmInfo').innerHTML =
+    `<span class="info-chip"><b>P*</b>=$${eqP.toFixed(2)}</span>` +
+    `<span class="info-chip"><b>Q*</b>=${eqQ.toFixed(0)}</span>` +
+    `<span class="info-chip" style="color:#3182ce"><b>CS</b></span>` +
+    `<span class="info-chip" style="color:#e53e3e"><b>PS</b></span>`;
+}
+
+// ====== DRAW FACTOR MARKET ======
+function drawFM(eqP) {
+  const c = ctx.fmCanvas, cv = cvs.fmCanvas;
+  const a = +S.A.value, cc = +S.C.value, nF = +S.NF.value;
+  const nC = +S.NC.value, eps = +S.LSE.value;
+  const w = +S.W.value;
+  const maxL = 400, maxW = 30;
+  const { toX, toY } = drawAxes(c, cv, maxL, maxW, 'Labor (L)', 'Wage ($)');
+
+  // Labor demand: for a given wage, firm produces q* = firmQ(P, a+w_effect, c)
+  // Simplified: Ld(w) = nF * [firmQ(P, a, c)]² — but this doesn't depend on w directly
+  // Better: use MRP_L. With q=sqrt(L), MP_L = 1/(2*sqrt(L)), so MRP_L = P/(2*sqrt(L))
+  // Firm hires until w = MRP_L => w = P/(2*sqrt(L)) => L = (P/(2w))²
+  // Total Ld = nF * (P/(2w))²
+  function Ld(ww) { return nF * Math.pow(eqP / (2 * ww), 2); }
+  function Ls(ww) { return nC * Math.pow(ww / 10, eps); }
+
+  // Find labor market eq
+  let wLo = 0.5, wHi = maxW, wEq = w;
+  for (let i = 0; i < 50; i++) {
+    const mid = (wLo + wHi) / 2;
+    if (Ld(mid) > Ls(mid)) wLo = mid; else wHi = mid;
+    wEq = (wLo + wHi) / 2;
+  }
+  const Leq = Ld(wEq);
+
+  // Demand curve (downward)
+  plotCurve(c, toX, toY, maxL, maxW, L => L > 0 ? eqP / (2 * Math.sqrt(L / nF)) : maxW, '#805ad5', 2.5);
+  // Supply curve (upward)
+  plotCurve(c, toX, toY, maxL, maxW, L => 10 * Math.pow(L / nC, 1 / eps), '#d69e2e', 2.5);
+
+  // Eq point
+  if (wEq > 0 && wEq <= maxW && Leq > 0 && Leq <= maxL) {
+    dashed(c, toX, toY, Leq, wEq, Leq, 0);
+    dashed(c, toX, toY, Leq, wEq, 0, wEq);
+    plotPoint(c, toX, toY, Leq, wEq, '#553c9a', 5);
+  }
+
+  label(c, toX, toY, maxL * .15, eqP / (2 * Math.sqrt(maxL * .15 / nF)), 'Lᵈ', '#805ad5');
+  label(c, toX, toY, maxL * .7, 10 * Math.pow(maxL * .7 / nC, 1 / eps), 'Lˢ', '#d69e2e');
+
+  document.getElementById('fmInfo').innerHTML =
+    `<span class="info-chip"><b>w*</b>=$${wEq.toFixed(2)}</span>` +
+    `<span class="info-chip"><b>L*</b>=${Leq.toFixed(0)}</span>` +
+    `<span class="info-chip"><b>Wage bill</b>=$${(wEq * Leq).toFixed(0)}</span>`;
+
+  return { wEq, Leq };
+}
+
+// ====== DRAW CIRCULAR FLOW (mini) ======
+let flowAnim = 0;
+function drawFlow(eqP, eqQ, wEq, Leq) {
+  const c = ctx.flowCanvas, cv = cvs.flowCanvas;
+  const W = cv._w, H = cv._h;
+  c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2;
+  const s = Math.min(W / 500, H / 420);
+
+  // Box positions
+  const hh = { x: cx - 160 * s, y: cy, w: 100 * s, h: 55 * s };
+  const fi = { x: cx + 160 * s, y: cy, w: 100 * s, h: 55 * s };
+  const gm = { x: cx, y: cy - 130 * s, w: 120 * s, h: 36 * s };
+  const fm = { x: cx, y: cy + 130 * s, w: 120 * s, h: 36 * s };
+
+  const xAt = (b, f) => b.x - b.w / 2 + b.w * f;
+  const yAt = (b, f) => b.y - b.h / 2 + b.h * f;
+  const topE = b => b.y - b.h / 2, botE = b => b.y + b.h / 2;
+  const lftE = b => b.x - b.w / 2, rgtE = b => b.x + b.w / 2;
+
+  function qB(t, a, b, cc) { const u = 1 - t; return u * u * a + 2 * u * t * b + t * t * cc; }
+
+  // Flow arc + particles
+  function drawArc(x1, y1, cpx, cpy, x2, y2, color, dash, flowRate) {
+    c.strokeStyle = color; c.lineWidth = 2 * s; c.setLineDash(dash ? [5 * s, 4 * s] : []);
+    c.beginPath(); c.moveTo(x1, y1); c.quadraticCurveTo(cpx, cpy, x2, y2); c.stroke(); c.setLineDash([]);
+    // Arrow
+    const t = .95, ax = qB(t, x1, cpx, x2), ay = qB(t, y1, cpy, y2);
+    const dx = 2 * (1 - t) * (cpx - x1) + 2 * t * (x2 - cpx), dy = 2 * (1 - t) * (cpy - y1) + 2 * t * (y2 - cpy);
+    const ang = Math.atan2(dy, dx), sz = 6 * s;
+    c.save(); c.translate(ax, ay); c.rotate(ang);
+    c.fillStyle = color; c.beginPath(); c.moveTo(0, 0); c.lineTo(-sz, -sz * .4); c.lineTo(-sz, sz * .4); c.closePath(); c.fill(); c.restore();
+    // Particles
+    const n = Math.max(2, Math.min(6, Math.round(flowRate)));
+    for (let i = 0; i < n; i++) {
+      const pt = ((flowAnim * .1 + i / n) % 1);
+      const px = qB(pt, x1, cpx, x2), py = qB(pt, y1, cpy, y2);
+      c.beginPath(); c.arc(px, py, 2.5 * s, 0, Math.PI * 2);
+      c.fillStyle = color; c.globalAlpha = .6; c.fill(); c.globalAlpha = 1;
+    }
+  }
+
+  // Expenditure flow rate scales with total spending
+  const spending = eqP * eqQ / 500;
+  const wageBill = wEq * Leq / 500;
+
+  // Money (inner): HH top 2/3 → GM bot 1/3, GM bot 2/3 → FI top 1/3, FI bot 1/3 → FM top 2/3, FM top 1/3 → HH bot 2/3
+  function arc(x1, y1, x2, y2) { return { x1, y1, cpx: x1, cpy: y2, x2, y2 }; }
+  function arcR(x1, y1, x2, y2) { return { x1, y1, cpx: x2, cpy: y1, x2, y2 }; }
+
+  const m1 = arc(xAt(hh, 2 / 3), topE(hh), lftE(gm), yAt(gm, 2 / 3));
+  const m2 = arcR(rgtE(gm), yAt(gm, 2 / 3), xAt(fi, 1 / 3), topE(fi));
+  const m3 = arc(xAt(fi, 1 / 3), botE(fi), rgtE(fm), yAt(fm, 1 / 3));
+  const m4 = arcR(lftE(fm), yAt(fm, 1 / 3), xAt(hh, 2 / 3), botE(hh));
+
+  const r1 = arc(xAt(fi, 2 / 3), topE(fi), rgtE(gm), yAt(gm, 1 / 3));
+  const r2 = arcR(lftE(gm), yAt(gm, 1 / 3), xAt(hh, 1 / 3), topE(hh));
+  const r3 = arc(xAt(hh, 1 / 3), botE(hh), lftE(fm), yAt(fm, 2 / 3));
+  const r4 = arcR(rgtE(fm), yAt(fm, 2 / 3), xAt(fi, 2 / 3), botE(fi));
+
+  [m1, m2, m3, m4].forEach(f => drawArc(f.x1, f.y1, f.cpx, f.cpy, f.x2, f.y2, '#c53030', false, spending));
+  [r1, r2, r3, r4].forEach(f => drawArc(f.x1, f.y1, f.cpx, f.cpy, f.x2, f.y2, '#2b6cb0', true, spending));
+
+  // Boxes
+  function drawBox(b, fill, stroke, txt) {
+    c.fillStyle = fill; c.strokeStyle = stroke; c.lineWidth = 1.5 * s;
+    c.beginPath(); c.roundRect(b.x - b.w / 2, b.y - b.h / 2, b.w, b.h, 8 * s); c.fill(); c.stroke();
+    c.fillStyle = stroke; c.font = `bold ${11 * s}px Segoe UI`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(txt, b.x, b.y);
+  }
+  function drawPill(b, fill, stroke, txt, sub) {
+    c.fillStyle = fill; c.strokeStyle = stroke; c.lineWidth = 1.5 * s;
+    c.beginPath(); c.roundRect(b.x - b.w / 2, b.y - b.h / 2, b.w, b.h, b.h / 2); c.fill(); c.stroke();
+    c.fillStyle = stroke; c.font = `bold ${10 * s}px Segoe UI`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(txt, b.x, b.y - (sub ? 5 * s : 0));
+    if (sub) { c.font = `${8 * s}px Segoe UI`; c.globalAlpha = .6; c.fillText(sub, b.x, b.y + 7 * s); c.globalAlpha = 1; }
+  }
+
+  drawBox(hh, '#ebf4ff', '#4299e1', 'Households');
+  drawBox(fi, '#fef3e2', '#d69e2e', 'Firms');
+  drawPill(gm, '#f0fff4', '#38a169', 'Product Mkt', `P*=$${eqP.toFixed(2)}`);
+  drawPill(fm, '#faf5ff', '#805ad5', 'Factor Mkt', `w*=$${wEq.toFixed(2)}`);
+}
+
+// ====== MASTER UPDATE ======
+function updateAll() {
+  // Update slider readouts
+  document.getElementById('vM').textContent = S.M.value;
+  document.getElementById('vAlpha').textContent = (+S.Alpha.value).toFixed(2);
+  document.getElementById('vPy').textContent = (+S.Py.value).toFixed(2);
+  document.getElementById('vNC').textContent = S.NC.value;
+  document.getElementById('vFC').textContent = S.FC.value;
+  document.getElementById('vA').textContent = (+S.A.value).toFixed(2);
+  document.getElementById('vC').textContent = (+S.C.value).toFixed(3);
+  document.getElementById('vNF').textContent = S.NF.value;
+  document.getElementById('vW').textContent = S.W.value;
+  document.getElementById('vLSE').textContent = (+S.LSE.value).toFixed(1);
+
+  // Product market equilibrium
+  const { P: eqP, Q: eqQ } = findProductEq();
+
+  // Draw four panels
+  drawHH(eqP);
+  drawFirm(eqP);
+  drawGM(eqP, eqQ);
+  const { wEq, Leq } = drawFM(eqP);
+
+  // Circular flow
+  drawFlow(eqP, eqQ, wEq, Leq);
+
+  // Equilibrium readouts
+  document.getElementById('eqP').textContent = `$${eqP.toFixed(2)}`;
+  document.getElementById('eqQ').textContent = eqQ.toFixed(0);
+  document.getElementById('eqW').textContent = `$${wEq.toFixed(2)}`;
+  document.getElementById('eqL').textContent = Leq.toFixed(0);
+
+  const nC = +S.NC.value, alpha = +S.Alpha.value, M = +S.M.value;
+  const totalExp = nC * alpha * M;
+  document.getElementById('eqExp').textContent = `$${totalExp.toFixed(0)}`;
+  const nF = +S.NF.value, qS = firmQ(eqP, +S.A.value, +S.C.value);
+  const firmRev = eqP * qS;
+  document.getElementById('eqRev').textContent = `$${(firmRev * nF).toFixed(0)}`;
+  const firmProfit = firmRev - TC(qS, +S.FC.value, +S.A.value, +S.C.value);
+  document.getElementById('eqProf').textContent = `$${(firmProfit * nF).toFixed(0)}`;
+}
+
+// Bind all sliders
+Object.values(S).forEach(sl => sl.addEventListener('input', updateAll));
+
+// Animation loop for flow particles
+function animLoop(ts) {
+  flowAnim += 0.02;
+  drawFlow._pending = true;
+  requestAnimationFrame(animLoop);
+}
+
+// Redraw flow on animation frames
+let lastFlowDraw = 0;
+function animFlowLoop(ts) {
+  if (ts - lastFlowDraw > 40) { // ~25fps for flow only
+    lastFlowDraw = ts;
+    flowAnim += 0.03;
+    const { P: eqP, Q: eqQ } = findProductEq();
+    const nC = +S.NC.value, eps = +S.LSE.value, a = +S.A.value, cc = +S.C.value, nF = +S.NF.value;
+    // Quick factor market eq
+    let wLo = 0.5, wHi = 30, wEq = 10;
+    for (let i = 0; i < 40; i++) {
+      const mid = (wLo + wHi) / 2;
+      const ld = nF * Math.pow(eqP / (2 * mid), 2);
+      const ls = nC * Math.pow(mid / 10, eps);
+      if (ld > ls) wLo = mid; else wHi = mid;
+      wEq = (wLo + wHi) / 2;
+    }
+    const Leq = nF * Math.pow(eqP / (2 * wEq), 2);
+    drawFlow(eqP, eqQ, wEq, Leq);
+  }
+  requestAnimationFrame(animFlowLoop);
+}
+
+// Initial draw + start animation
+updateAll();
+requestAnimationFrame(animFlowLoop);
+</script>
+</body>
+</html>
+</html>

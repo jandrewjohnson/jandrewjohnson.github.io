@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Solow Growth Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #2d3748;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.5;
+  }
+
+  h1 {
+    text-align: center;
+    color: #1a202c;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #718096;
+    font-size: 0.92rem;
+    margin-bottom: 18px;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.55;
+  }
+
+  .app-container {
+    max-width: 1420px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (max-width: 1000px) {
+    .app-container { grid-template-columns: 1fr; }
+    .controls-col { position: static !important; }
+  }
+
+  .panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .panel-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #718096;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .controls-col {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .main-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .collapsible-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 0;
+  }
+  .collapsible-header .arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+    color: #718096;
+  }
+  .collapsible-header.open .arrow { transform: rotate(90deg); }
+  .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .collapsible-content.open { max-height: 3000px; }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+    gap: 10px;
+  }
+  .toggle-label { font-size: 0.84rem; color: #2d3748; flex: 1; }
+  .toggle-switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: #e2e8f0; border-radius: 20px; transition: 0.2s;
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute; height: 14px; width: 14px;
+    left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider { background: #4299e1; }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+  .slider-group { margin-bottom: 14px; }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .slider-name {
+    font-size: 0.84rem;
+    color: #4a5568;
+    font-weight: 500;
+  }
+
+  .slider-value {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #2b6cb0;
+    background: #edf2f7;
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #4299e1;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(66,153,225,0.4);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #4299e1;
+    cursor: pointer;
+    border: none;
+  }
+
+  .eq-section { margin-bottom: 12px; }
+  .eq-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 6px;
+  }
+  .eq-box {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.05rem;
+    color: #2d3748;
+    line-height: 1.7;
+  }
+  .eq-box .hl { color: #2b6cb0; font-weight: 600; }
+  .eq-box .accent { color: #e53e3e; font-weight: 600; }
+  .eq-box .green { color: #2f855a; font-weight: 600; }
+  .eq-note {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.82rem;
+    color: #718096;
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .metric-card {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .metric-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #718096;
+    margin-bottom: 2px;
+  }
+  .metric-val {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2b6cb0;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  canvas { width: 100%; display: block; border-radius: 8px; }
+
+  .graph-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 800px) {
+    .graph-grid { grid-template-columns: 1fr; }
+  }
+
+  .explanation {
+    font-size: 0.88rem;
+    color: #4a5568;
+    line-height: 1.65;
+  }
+  .explanation p { margin-bottom: 8px; }
+  .explanation strong { color: #2d3748; }
+
+  .separator { height: 1px; background: #e2e8f0; margin: 12px 0; }
+
+  .reset-btn {
+    display: block; width: 100%; padding: 8px;
+    border: 1px solid #e2e8f0; background: #f7fafc; color: #718096;
+    border-radius: 8px; font-size: 0.82rem; cursor: pointer; transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: #4299e1; color: #2b6cb0; background: #ebf8ff; }
+
+  .deriv-step {
+    padding: 4px 0 4px 12px;
+    border-left: 2px solid #e2e8f0;
+    margin: 6px 0;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1rem;
+    color: #4a5568;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<h1>The Solow Growth Model</h1>
+<p class="subtitle">A discrete-time model of capital accumulation. Adjust parameters to explore how savings, depreciation, and factor shares determine the economy's steady state.</p>
+
+<div class="app-container">
+  <div class="controls-col">
+
+    <div class="panel">
+      <div class="panel-title">Parameters</div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Savings rate (s)</span>
+          <span class="slider-value" id="val-s">0.20</span>
+        </div>
+        <input type="range" id="sl-s" min="0.01" max="0.60" step="0.01" value="0.20">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Depreciation (δ)</span>
+          <span class="slider-value" id="val-d">0.10</span>
+        </div>
+        <input type="range" id="sl-d" min="0.01" max="0.30" step="0.01" value="0.10">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Capital share (α)</span>
+          <span class="slider-value" id="val-a">0.30</span>
+        </div>
+        <input type="range" id="sl-a" min="0.10" max="0.70" step="0.01" value="0.30">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Labor (L)</span>
+          <span class="slider-value" id="val-L">100</span>
+        </div>
+        <input type="range" id="sl-L" min="10" max="500" step="10" value="100">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Initial K₀</span>
+          <span class="slider-value" id="val-K0">50</span>
+        </div>
+        <input type="range" id="sl-K0" min="1" max="2000" step="1" value="50">
+      </div>
+
+      <div class="separator"></div>
+      <button class="reset-btn" id="resetBtn">Reset to Defaults</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Display Options</div>
+      <div class="toggle-row">
+        <span class="toggle-label">Show per-capita values</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="togPC">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Show golden rule</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="togGR" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Phase arrows</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="togArrows" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Steady State (per capita)</div>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">k*</div>
+          <div class="metric-val" id="ss-k">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">y*</div>
+          <div class="metric-val" id="ss-y">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">c*</div>
+          <div class="metric-val" id="ss-c">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">k*ᴳᴿ</div>
+          <div class="metric-val" id="ss-kgr">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="main-area">
+
+    <!-- Model Setup matching the slide -->
+    <div class="panel">
+      <div class="collapsible-header open" data-target="eqSetup">
+        <span class="arrow">▶</span>
+        <span class="panel-title" style="margin-bottom:0">Model Setup</span>
+      </div>
+      <div class="collapsible-content open" id="eqSetup">
+        <div style="padding-top:10px">
+
+          <div class="eq-section">
+            <div class="eq-title">1. Production Function</div>
+            <div class="eq-box">
+              Y<sub>t</sub> = K<sub>t</sub><sup>α</sup> · L<sub>t</sub><sup>1−α</sup>
+              &nbsp;&nbsp;⟹&nbsp;&nbsp;
+              <span class="hl" id="eq-prod"></span>
+            </div>
+            <div class="eq-note">Cobb-Douglas with constant returns to scale. α is capital's share of income, (1−α) is labor's share.</div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">2. Capital Accumulation</div>
+            <div class="eq-box">
+              K<sub>t+1</sub> = <span class="accent">(1 − δ) · K<sub>t</sub></span> + <span class="hl">I<sub>t</sub></span>
+            </div>
+            <div class="eq-note">Next period's capital equals undepreciated current capital plus new investment.</div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">3. Investment = Savings</div>
+            <div class="eq-box">
+              I<sub>t</sub> = s · Y<sub>t</sub>
+            </div>
+            <div class="eq-note">A constant fraction s of output is saved and invested. No government, no trade.</div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">Combined: Substituting (1) and (3) into (2)</div>
+            <div class="eq-box">
+              K<sub>t+1</sub> = (1 − δ) · K<sub>t</sub> + s · K<sub>t</sub><sup>α</sup> · L<sup>1−α</sup>
+            </div>
+            <div class="eq-note">This single equation governs the entire dynamics of the economy.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Derivation -->
+    <div class="panel">
+      <div class="collapsible-header open" data-target="eqSolve">
+        <span class="arrow">▶</span>
+        <span class="panel-title" style="margin-bottom:0">Solving for the Steady State</span>
+      </div>
+      <div class="collapsible-content open" id="eqSolve">
+        <div style="padding-top:10px">
+
+          <div class="eq-section">
+            <div class="eq-title">Per-capita form: divide by L (treating L as constant)</div>
+            <div class="eq-box">
+              Let k<sub>t</sub> = K<sub>t</sub>/L, &nbsp; y<sub>t</sub> = Y<sub>t</sub>/L. &nbsp; Then: &nbsp; y<sub>t</sub> = k<sub>t</sub><sup>α</sup>
+            </div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">Per-capita law of motion</div>
+            <div class="eq-box">
+              k<sub>t+1</sub> = (1 − δ) · k<sub>t</sub> + s · k<sub>t</sub><sup>α</sup>
+            </div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">At steady state: k<sub>t+1</sub> = k<sub>t</sub> = k*</div>
+            <div class="deriv-step">
+              k* = (1 − δ) · k* + s · (k*)<sup>α</sup>
+            </div>
+            <div class="deriv-step">
+              k* − (1 − δ) · k* = s · (k*)<sup>α</sup>
+            </div>
+            <div class="deriv-step">
+              δ · k* = s · (k*)<sup>α</sup>
+            </div>
+            <div class="deriv-step">
+              (k*)<sup>1−α</sup> = s / δ
+            </div>
+            <div class="eq-box">
+              <span class="hl">k* = (s / δ)<sup>1/(1−α)</sup></span>
+              &nbsp;=&nbsp;
+              <span class="hl" id="eq-kstar"></span>
+            </div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">Steady-state output &amp; consumption</div>
+            <div class="eq-box">
+              y* = (k*)<sup>α</sup> = (s/δ)<sup>α/(1−α)</sup>
+              &nbsp;&nbsp;|&nbsp;&nbsp;
+              c* = (1 − s) · y*
+            </div>
+          </div>
+
+          <div class="eq-section">
+            <div class="eq-title">Golden Rule: max c* w.r.t. s</div>
+            <div class="eq-box">
+              <span class="green">s<sub>GR</sub> = α</span>
+              &nbsp;⟹&nbsp;
+              <span class="green">k*<sub>GR</sub> = (α / δ)<sup>1/(1−α)</sup> = <span id="eq-kgr"></span></span>
+            </div>
+            <div class="eq-note">Consumption is maximized when the savings rate equals the capital share.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphs -->
+    <div class="graph-grid">
+      <div class="panel">
+        <div class="panel-title">Solow Diagram (per capita)</div>
+        <canvas id="canvasSolow" width="600" height="460"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title" id="timeTitle">Transition Dynamics</div>
+        <canvas id="canvasTime" width="600" height="460"></canvas>
+      </div>
+    </div>
+
+    <!-- Intuition -->
+    <div class="panel">
+      <div class="collapsible-header open" data-target="explContent">
+        <span class="arrow">▶</span>
+        <span class="panel-title" style="margin-bottom:0">Intuition</span>
+      </div>
+      <div class="collapsible-content open" id="explContent">
+        <div class="explanation" style="padding-top:10px">
+          <p><strong>Production:</strong> Y<sub>t</sub> = K<sub>t</sub><sup>α</sup> L<sup>1−α</sup> exhibits diminishing returns to capital. Each additional unit of K raises output, but by less and less.</p>
+          <p><strong>Capital accumulation:</strong> K<sub>t+1</sub> = (1−δ)K<sub>t</sub> + sY<sub>t</sub>. Each period, a fraction δ of the capital stock wears out and a fraction s of output is reinvested. Capital grows when investment exceeds depreciation.</p>
+          <p><strong>Steady state:</strong> At k*, the investment curve s·k<sup>α</sup> crosses the depreciation line δ·k. New investment exactly replaces worn-out capital, so k stops changing. The closed-form k* = (s/δ)<sup>1/(1−α)</sup> shows higher savings or lower depreciation raise the long-run capital stock.</p>
+          <p><strong>Convergence:</strong> Below k*, investment exceeds depreciation, so k rises. Above k*, depreciation exceeds investment, so k falls. The economy always converges regardless of where it starts.</p>
+          <p id="dynEffNote" style="font-weight:500;"></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const P = { s: 0.20, d: 0.10, a: 0.30, L: 100, K0: 50 };
+const defaults = { ...P };
+
+const sliders = {}, vals = {};
+['s','d','a','L','K0'].forEach(id => {
+  sliders[id] = document.getElementById('sl-' + id);
+  vals[id] = document.getElementById('val-' + id);
+});
+
+const togPC = document.getElementById('togPC');
+const togGR = document.getElementById('togGR');
+const togArrows = document.getElementById('togArrows');
+
+document.querySelectorAll('.collapsible-header').forEach(h => {
+  h.addEventListener('click', () => {
+    h.classList.toggle('open');
+    document.getElementById(h.dataset.target).classList.toggle('open');
+  });
+});
+
+function fk(k) { return Math.pow(Math.max(k, 0.0001), P.a); }
+function kStar() { return Math.pow(P.s / P.d, 1 / (1 - P.a)); }
+function kGR() { return Math.pow(P.a / P.d, 1 / (1 - P.a)); }
+function yStar() { return fk(kStar()); }
+function cStar() { return (1 - P.s) * yStar(); }
+
+function fmt(v) {
+  if (v >= 1000) return v.toFixed(0);
+  if (v >= 100) return v.toFixed(1);
+  if (v >= 10) return v.toFixed(2);
+  return v.toFixed(3);
+}
+
+function update() {
+  P.s = parseFloat(sliders.s.value);
+  P.d = parseFloat(sliders.d.value);
+  P.a = parseFloat(sliders.a.value);
+  P.L = parseFloat(sliders.L.value);
+  P.K0 = parseFloat(sliders.K0.value);
+
+  vals.s.textContent = P.s.toFixed(2);
+  vals.d.textContent = P.d.toFixed(2);
+  vals.a.textContent = P.a.toFixed(2);
+  vals.L.textContent = P.L.toFixed(0);
+  vals.K0.textContent = P.K0.toFixed(0);
+
+  const ks = kStar(), ys = yStar(), cs = cStar(), kg = kGR();
+
+  document.getElementById('ss-k').textContent = fmt(ks);
+  document.getElementById('ss-y').textContent = fmt(ys);
+  document.getElementById('ss-c').textContent = fmt(cs);
+  document.getElementById('ss-kgr').textContent = fmt(kg);
+
+  document.getElementById('eq-prod').innerHTML =
+    `Y<sub>t</sub> = K<sub>t</sub><sup>${P.a.toFixed(2)}</sup> · ${P.L.toFixed(0)}<sup>${(1-P.a).toFixed(2)}</sup>`;
+  document.getElementById('eq-kstar').textContent =
+    `(${P.s.toFixed(2)} / ${P.d.toFixed(2)})^${(1/(1-P.a)).toFixed(2)} = ${fmt(ks)}`;
+  document.getElementById('eq-kgr').textContent = fmt(kg);
+
+  const note = document.getElementById('dynEffNote');
+  if (P.s > P.a + 0.01) {
+    note.style.color = '#c53030';
+    note.textContent = `⚠ s = ${P.s.toFixed(2)} > α = ${P.a.toFixed(2)}. The economy over-saves (dynamically inefficient). Reducing s would raise both current and future consumption.`;
+  } else if (P.s < P.a - 0.01) {
+    note.style.color = '#2f855a';
+    note.textContent = `s = ${P.s.toFixed(2)} < α = ${P.a.toFixed(2)}. Raising s toward α would increase steady-state consumption, though the transition requires sacrifice.`;
+  } else {
+    note.style.color = '#2b6cb0';
+    note.textContent = `Savings rate is near the golden rule (s ≈ α = ${P.a.toFixed(2)}), approximately maximizing steady-state consumption.`;
+  }
+
+  drawSolow();
+  drawTime();
+}
+
+const dpr = window.devicePixelRatio || 1;
+function setupCanvas(id) {
+  const c = document.getElementById(id);
+  const rect = c.getBoundingClientRect();
+  const w = rect.width || c.width;
+  const h = rect.height || c.height;
+  c.width = w * dpr; c.height = h * dpr;
+  c.style.width = w + 'px'; c.style.height = h + 'px';
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function drawSolow() {
+  const { ctx, w, h } = setupCanvas('canvasSolow');
+  const m = { t: 30, r: 30, b: 55, l: 60 };
+  const pw = w - m.l - m.r, ph = h - m.t - m.b;
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+
+  const ks = kStar(), kg = kGR(), k0pc = P.K0 / P.L;
+  const kMax = Math.max(ks * 1.6, kg * 1.5, k0pc * 1.3, 5);
+  const vMax = Math.max(fk(kMax) * 0.65, P.d * kMax * 1.1);
+
+  const tx = k => m.l + (k / kMax) * pw;
+  const ty = v => m.t + ph - (v / vMax) * ph;
+
+  // Grid
+  ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    let x = m.l + (i/5)*pw, y = m.t + (i/5)*ph;
+    ctx.beginPath(); ctx.moveTo(x, m.t); ctx.lineTo(x, m.t+ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.l, y); ctx.lineTo(m.l+pw, y); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(m.l, m.t); ctx.lineTo(m.l, m.t+ph); ctx.lineTo(m.l+pw, m.t+ph); ctx.stroke();
+
+  ctx.fillStyle = '#718096'; ctx.font = '11px Source Sans 3, sans-serif'; ctx.textAlign = 'center';
+  for (let i = 0; i <= 5; i++) ctx.fillText(((i/5)*kMax).toFixed(1), m.l+(i/5)*pw, m.t+ph+18);
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 5; i++) ctx.fillText(((i/5)*vMax).toFixed(1), m.l-8, ty((i/5)*vMax)+4);
+
+  ctx.fillStyle = '#4a5568'; ctx.font = '13px Source Sans 3, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('k = K/L', m.l+pw/2, h-8);
+  ctx.save(); ctx.translate(14, m.t+ph/2); ctx.rotate(-Math.PI/2); ctx.fillText('Per worker', 0, 0); ctx.restore();
+
+  const N = 300;
+
+  // f(k) dashed
+  ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) { const k=(i/N)*kMax; i===0?ctx.moveTo(tx(k),ty(fk(k))):ctx.lineTo(tx(k),ty(fk(k))); }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // s·f(k)
+  ctx.strokeStyle = '#3182ce'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) { const k=(i/N)*kMax; i===0?ctx.moveTo(tx(k),ty(P.s*fk(k))):ctx.lineTo(tx(k),ty(P.s*fk(k))); }
+  ctx.stroke();
+
+  // δk
+  ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(tx(0), ty(0)); ctx.lineTo(tx(kMax), ty(P.d*kMax)); ctx.stroke();
+
+  // Gap shading at k0
+  if (Math.abs(k0pc - ks) > kMax * 0.03) {
+    const sf = P.s*fk(k0pc), dk = P.d*k0pc;
+    const top = Math.min(ty(sf), ty(dk)), bot = Math.max(ty(sf), ty(dk));
+    ctx.fillStyle = sf > dk ? 'rgba(49,130,206,0.08)' : 'rgba(229,62,62,0.08)';
+    ctx.fillRect(tx(k0pc)-10, top, 20, bot-top);
+  }
+
+  // Golden rule
+  if (togGR.checked) {
+    ctx.strokeStyle = '#38a169'; ctx.lineWidth = 1.5; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(tx(kg), m.t); ctx.lineTo(tx(kg), m.t+ph); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#38a169'; ctx.font = '11px Source Sans 3, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('k*ᴳᴿ', tx(kg), m.t-6);
+  }
+
+  // Steady state
+  ctx.strokeStyle = '#805ad5'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(tx(ks), m.t); ctx.lineTo(tx(ks), m.t+ph); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#805ad5';
+  ctx.beginPath(); ctx.arc(tx(ks), ty(P.s*fk(ks)), 5, 0, Math.PI*2); ctx.fill();
+  ctx.font = '11px Source Sans 3, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('k*', tx(ks), m.t-6);
+
+  // Phase arrows
+  if (togArrows.checked) {
+    [0.05,0.15,0.25,0.4,0.55,0.7,0.85,0.95].map(f=>f*kMax).forEach(k => {
+      if (Math.abs(k-ks) < kMax*0.06) return;
+      const gap = P.s*fk(k) - P.d*k, dir = gap>0?1:-1;
+      const by = ty(P.d*k)+14, ax = tx(k), len = 12;
+      ctx.strokeStyle = dir>0?'rgba(49,130,206,0.5)':'rgba(229,62,62,0.5)';
+      ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ax,by); ctx.lineTo(ax+dir*len,by); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ax+dir*len,by); ctx.lineTo(ax+dir*(len-4),by-4); ctx.lineTo(ax+dir*(len-4),by+4); ctx.closePath(); ctx.fill();
+    });
+  }
+
+  // k0
+  ctx.fillStyle = '#d69e2e';
+  ctx.beginPath(); ctx.arc(tx(k0pc), ty(P.s*fk(k0pc)), 5, 0, Math.PI*2); ctx.fill();
+  ctx.font = 'bold 11px Source Sans 3, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('k₀', tx(k0pc), ty(P.s*fk(k0pc))-10);
+
+  // Legend
+  const lx = m.l+pw-135, ly = m.t+10;
+  ctx.font = '11px Source Sans 3, sans-serif';
+  ctx.fillStyle='#a0aec0'; ctx.fillRect(lx,ly,16,2); ctx.fillText('f(k) = kᵅ', lx+22, ly+5);
+  ctx.fillStyle='#3182ce'; ctx.fillRect(lx,ly+16,16,3); ctx.fillText('s·f(k)  (investment)', lx+22, ly+21);
+  ctx.fillStyle='#e53e3e'; ctx.fillRect(lx,ly+32,16,3); ctx.fillText('δ·k  (depreciation)', lx+22, ly+37);
+}
+
+function drawTime() {
+  const { ctx, w, h } = setupCanvas('canvasTime');
+  const m = { t: 30, r: 30, b: 55, l: 60 };
+  const pw = w-m.l-m.r, ph = h-m.t-m.b;
+
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+
+  const T = 100;
+  const k0 = P.K0/P.L;
+  const kA=[k0], yA=[fk(k0)], cA=[(1-P.s)*fk(k0)];
+  const KA=[P.K0], YA=[Math.pow(P.K0,P.a)*Math.pow(P.L,1-P.a)];
+  const CA=[(1-P.s)*YA[0]];
+
+  let k=k0, K=P.K0;
+  for (let t=1; t<=T; t++) {
+    k = (1-P.d)*k + P.s*fk(k); k=Math.max(0.001,k);
+    kA.push(k); yA.push(fk(k)); cA.push((1-P.s)*fk(k));
+    const Y=Math.pow(K,P.a)*Math.pow(P.L,1-P.a);
+    K = (1-P.d)*K + P.s*Y; K=Math.max(0.1,K);
+    KA.push(K); YA.push(Math.pow(K,P.a)*Math.pow(P.L,1-P.a)); CA.push((1-P.s)*YA[YA.length-1]);
+  }
+
+  const pc = togPC.checked;
+  const sK=pc?kA:KA, sY=pc?yA:YA, sC=pc?cA:CA;
+  document.getElementById('timeTitle').textContent = pc ? 'Transition Dynamics (per capita)' : 'Transition Dynamics (levels)';
+
+  const vMax = Math.max(...sK,...sY,...sC)*1.12;
+  const tx = t => m.l+(t/T)*pw;
+  const ty = v => m.t+ph-(v/vMax)*ph;
+
+  ctx.strokeStyle='#edf2f7'; ctx.lineWidth=1;
+  for (let i=0;i<=5;i++){
+    let x=m.l+(i/5)*pw, y=m.t+(i/5)*ph;
+    ctx.beginPath();ctx.moveTo(x,m.t);ctx.lineTo(x,m.t+ph);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(m.l+pw,y);ctx.stroke();
+  }
+
+  ctx.strokeStyle='#a0aec0'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(m.l,m.t);ctx.lineTo(m.l,m.t+ph);ctx.lineTo(m.l+pw,m.t+ph);ctx.stroke();
+
+  ctx.fillStyle='#718096'; ctx.font='11px Source Sans 3, sans-serif'; ctx.textAlign='center';
+  for(let i=0;i<=5;i++) ctx.fillText(((i/5)*T).toFixed(0), m.l+(i/5)*pw, m.t+ph+18);
+  ctx.textAlign='right';
+  for(let i=0;i<=5;i++){const v=(i/5)*vMax; ctx.fillText(v>=100?v.toFixed(0):v.toFixed(1), m.l-8, ty(v)+4);}
+
+  ctx.fillStyle='#4a5568'; ctx.font='13px Source Sans 3, sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Period (t)', m.l+pw/2, h-8);
+
+  // SS lines
+  const ks=kStar(), ys=yStar();
+  const ssK=pc?ks:ks*P.L, ssY=pc?ys:ys*P.L;
+  ctx.setLineDash([5,4]); ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(128,90,213,0.4)';
+  ctx.beginPath();ctx.moveTo(m.l,ty(ssK));ctx.lineTo(m.l+pw,ty(ssK));ctx.stroke();
+  ctx.strokeStyle='rgba(49,130,206,0.3)';
+  ctx.beginPath();ctx.moveTo(m.l,ty(ssY));ctx.lineTo(m.l+pw,ty(ssY));ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.font='11px Source Sans 3, sans-serif'; ctx.textAlign='left';
+  ctx.fillStyle='#805ad5'; ctx.fillText(pc?'k*':'K*', m.l+pw+4, ty(ssK)+4);
+  ctx.fillStyle='#3182ce'; ctx.fillText(pc?'y*':'Y*', m.l+pw+4, ty(ssY)+4);
+
+  function drawPath(arr,color,lw){
+    ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.beginPath();
+    for(let t=0;t<=T;t++){t===0?ctx.moveTo(tx(t),ty(arr[t])):ctx.lineTo(tx(t),ty(arr[t]));}
+    ctx.stroke();
+  }
+
+  drawPath(sY,'#3182ce',2);
+  drawPath(sC,'#38a169',2);
+  drawPath(sK,'#805ad5',2.5);
+
+  const lx=m.l+pw-90, ly=m.t+10;
+  ctx.font='11px Source Sans 3, sans-serif';
+  [['#805ad5',pc?'k(t)':'K(t)'],['#3182ce',pc?'y(t)':'Y(t)'],['#38a169',pc?'c(t)':'C(t)']].forEach(([c,l],i)=>{
+    const yy=ly+i*16; ctx.fillStyle=c; ctx.fillRect(lx,yy+1,16,3); ctx.fillText(l,lx+22,yy+6);
+  });
+}
+
+['s','d','a','L','K0'].forEach(id=>sliders[id].addEventListener('input', update));
+[togPC,togGR,togArrows].forEach(t=>t.addEventListener('change', update));
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  Object.keys(defaults).forEach(k=>{P[k]=defaults[k];sliders[k].value=defaults[k];});
+  update();
+});
+window.addEventListener('resize', update);
+update();
+</script>
+</body>
+</html>

@@ -15,14 +15,26 @@
         .subtitle { text-align: center; color: #718096; margin-bottom: 24px; font-size: 0.95rem; }
         .main-content { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
         @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+        .main-content.left-empty { grid-template-columns: 0 1fr; }
+        .main-content.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty .left-column { display: none; }
+        .main-content.right-empty .controls { display: none; }
         .left-column { display: flex; flex-direction: column; gap: 0; }
-        .graph-container { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; }
-        canvas { display: block; width: 100%; height: auto; }
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
+        canvas { display: block; width: 100%; height: auto; cursor: default; }
+        canvas.dragging { cursor: grabbing; }
+        canvas.hovering-label { cursor: grab; }
         .plot-actions {
             position: absolute; top: 8px; right: 8px; z-index: 10;
             display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
         }
-        .graph-container:hover .plot-actions { opacity: 1; }
+        .graph-container:hover .plot-actions, .graph-body:hover .plot-actions { opacity: 1; }
         .plot-action-btn {
             background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
             border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
@@ -35,8 +47,59 @@
         .plot-action-btn:active { background: #edf2f7; }
         .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
         .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+        /* Universal panel close button */
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1; flex-shrink: 0;
+        }
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
+        }
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-closed { display: none !important; }
+
+        /* Hover to reveal actions on all panel types */
+        .left-section { position: relative; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .control-panel { position: relative; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+
+        /* Restore closed panels bar */
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+        }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
+
         .controls { display: flex; flex-direction: column; gap: 16px; }
-        .control-panel { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .control-panel { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 20px 20px 20px; }
+        .control-panel-body.collapsed { display: none; }
         .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
         .slider-group { margin-bottom: 16px; }
         .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
@@ -60,12 +123,10 @@
         .tangency-eq-sub { text-align: center; font-size: 0.9rem; color: #718096; margin-top: 6px; }
 
         /* Collapsible left-column sections */
-        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
-        .left-section-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
-        .left-section-header:hover { background: #f7fafc; }
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
         .left-section-header .panel-title { margin-bottom: 0; }
-        .left-section-toggle { background: none; border: none; color: #a0aec0; font-size: 0.7rem; cursor: pointer; padding: 2px 6px; transition: transform 0.2s; }
-        .left-section-toggle.collapsed { transform: rotate(-90deg); }
         .left-section-body { padding: 0 24px 20px 24px; }
         .left-section-body.collapsed { display: none; }
         .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
@@ -96,10 +157,39 @@
         .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
         .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
         .opt-section-label:first-child { margin-top: 0; }
-        .nudge-group { display: inline-flex; align-items: center; gap: 1px; margin-left: auto; flex-shrink: 0; }
-        .nudge-btn { width: 18px; height: 18px; padding: 0; border: 1px solid #e2e8f0; background: #f7fafc; color: #a0aec0; font-size: 9px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.1s, color 0.1s; }
-        .nudge-btn:hover { background: #edf2f7; color: #4a5568; }
-        .nudge-btn:active { background: #e2e8f0; }
+        .drag-hint { font-size: 0.65rem; color: #a0aec0; margin-left: auto; font-style: italic; white-space: nowrap; }
+
+        /* Embed mode fullscreen button */
+        .embed-open-btn {
+            display: none;
+            position: absolute; top: 8px; left: 8px; z-index: 10;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.15s; line-height: 1;
+            text-decoration: none;
+        }
+        .embed-open-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .embed-mode .embed-open-btn { display: flex; align-items: center; gap: 4px; }
+
+        /* Embed mode */
+        body.embed-mode { padding: 8px; background: transparent; min-height: auto; }
+        .embed-mode h1,
+        .embed-mode .subtitle,
+        .embed-mode .left-section,
+        .embed-mode .display-options-wrapper,
+        .embed-mode .url-state-bar { display: none !important; }
+        .embed-mode .container { max-width: none; }
+        .embed-mode .graph-container { border: none; box-shadow: none; padding: 10px; }
+        .embed-mode .control-panel { padding: 14px; }
+
+        /* Granular hide support: ?embed=1&hide=controls,explanation,worked,formal */
+        body.embed-hide-controls .controls { display: none !important; }
+        body.embed-hide-controls .main-content { grid-template-columns: 1fr; }
+        body.embed-hide-explanation #section-explanation { display: none !important; }
+        body.embed-hide-worked #section-worked { display: none !important; }
+        body.embed-hide-formal #section-formal { display: none !important; }
 
         /* KaTeX sizing */
         .katex { font-size: 1em; }
@@ -112,33 +202,74 @@
         .formal-solution .katex { font-size: 1.05em; }
         .legend-item .katex { font-size: 0.9em; }
         .worked-step .katex { font-size: 1em; }
+
+        /* URL state bar */
+        .url-state-bar {
+            margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .url-state-bar button {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Utility Maximization</h1>
-    <p class="subtitle">The optimal bundle occurs where the indifference curve is tangent to the budget constraint</p>
+    <div id="section-title" class="title-wrapper" style="position:relative">
+        <h1>Utility Maximization</h1>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle" style="margin-bottom:24px">The optimal bundle occurs where the indifference curve is tangent to the budget constraint</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
     <div class="main-content">
         <div class="left-column">
-            <div class="graph-container">
-                <div class="plot-actions">
-                    <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        <span id="copy-label">Copy</span>
-                    </button>
-                    <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        <span id="save-label">Save</span>
-                    </button>
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleGraph()">
+                    <div class="panel-title" style="margin-bottom:0">A. Indifference Curve and Budget Constraint</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleGraph()" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
                 </div>
-                <canvas id="graph" width="1400" height="1200"></canvas>
+                <div class="graph-body" id="body-graph">
+                    <a class="embed-open-btn" id="embed-open-btn" title="Open full interactive version" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        Open full version
+                    </a>
+                    <div class="plot-actions">
+                        <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            <span id="copy-label">Copy</span>
+                        </button>
+                        <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span id="save-label">Save</span>
+                        </button>
+                    </div>
+                    <canvas id="graph" width="1400" height="1200"></canvas>
+                </div>
             </div>
 
             <!-- Explanation (collapsible) -->
             <div class="left-section" id="section-explanation">
                 <div class="left-section-header" onclick="toggleSection('explanation')">
                     <div class="panel-title" style="margin-bottom:0">Explanation</div>
-                    <span class="left-section-toggle" id="toggle-explanation">▼</span>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
+                    </div>
                 </div>
                 <div class="left-section-body" id="body-explanation">
                     <p>This graph illustrates the core insight of consumer choice theory: a rational consumer maximizes utility by choosing the bundle of goods where their indifference curve is exactly tangent to their budget constraint. At this tangency point, the marginal rate of substitution (\(\mathrm{MRS}\))—the rate at which the consumer is <em>willing</em> to trade \(Y\) for \(X\)—equals the price ratio \(P_x / P_y\)—the rate at which the market <em>allows</em> them to trade. Any other affordable bundle on the budget line lies on a lower indifference curve, meaning less satisfaction.</p>
@@ -151,7 +282,10 @@
             <div class="left-section" id="section-worked">
                 <div class="left-section-header" onclick="toggleSection('worked')">
                     <div class="panel-title" style="margin-bottom:0">Solving with Current Parameters</div>
-                    <span class="left-section-toggle" id="toggle-worked">▼</span>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-worked" onclick="event.stopPropagation();toggleSection('worked')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('worked')" title="Close">✕</button>
+                    </div>
                 </div>
                 <div class="left-section-body" id="body-worked">
                     <div id="worked-content"></div>
@@ -162,7 +296,10 @@
             <div class="left-section" id="section-formal">
                 <div class="left-section-header" onclick="toggleSection('formal')">
                     <div class="panel-title" style="margin-bottom:0">The Consumer's Problem</div>
-                    <span class="left-section-toggle" id="toggle-formal">▼</span>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-formal" onclick="event.stopPropagation();toggleSection('formal')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('formal')" title="Close">✕</button>
+                    </div>
                 </div>
                 <div class="left-section-body" id="body-formal">
                     <div class="formal-math">
@@ -178,15 +315,30 @@
         </div>
 
         <div class="controls">
-            <div class="control-panel">
-                <div class="panel-title">Budget Constraint</div>
+            <div class="control-panel" id="section-budget">
+                <div class="control-panel-header" onclick="togglePanel('budget')">
+                    <div class="panel-title" style="margin-bottom:0">Budget Constraint</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-budget" onclick="event.stopPropagation();togglePanel('budget')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('budget')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-budget">
                 <div class="slider-group"><div class="slider-label"><span>Income \( M \)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
                 <div class="slider-group"><div class="slider-label"><span>Price of \( X \) &ensp;\( (P_x) \)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="10" value="2" step="0.5"></div>
                 <div class="slider-group"><div class="slider-label"><span>Price of \( Y \) &ensp;\( (P_y) \)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="10" value="2" step="0.5"></div>
                 <div class="equation-box">\( M = P_x \cdot X + P_y \cdot Y \)</div>
+                </div>
             </div>
-            <div class="control-panel">
-                <div class="panel-title">Optimal Bundle</div>
+            <div class="control-panel" id="section-optimal">
+                <div class="control-panel-header" onclick="togglePanel('optimal')">
+                    <div class="panel-title" style="margin-bottom:0">Optimal Bundle</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-optimal" onclick="event.stopPropagation();togglePanel('optimal')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('optimal')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-optimal">
                 <div class="info-box">
                     <div class="info-row"><span class="info-label">\( X^* \)</span><span class="info-value highlight" id="opt-x">25.0</span></div>
                     <div class="info-row"><span class="info-label">\( Y^* \)</span><span class="info-value highlight" id="opt-y">25.0</span></div>
@@ -200,12 +352,21 @@
                     <div class="legend-item"><div class="legend-line" style="background:rgba(49,151,149,0.3);"></div><span>Other Indifference Curves</span></div>
                     <div class="legend-item"><div class="legend-dot" style="background:#d69e2e;"></div><span>Optimal Bundle \((X^*,\, Y^*)\)</span></div>
                 </div>
+                </div>
             </div>
-            <div class="control-panel">
-                <div class="panel-title">Utility Function (Cobb-Douglas)</div>
+            <div class="control-panel" id="section-utility">
+                <div class="control-panel-header" onclick="togglePanel('utility')">
+                    <div class="panel-title" style="margin-bottom:0">Utility Function (Cobb-Douglas)</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-utility" onclick="event.stopPropagation();togglePanel('utility')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('utility')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-utility">
                 <div class="slider-group"><div class="slider-label"><span>Preference \( \alpha \)</span><span class="slider-value" id="alpha-value">0.50</span></div><input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01"></div>
                 <div class="equation-box">\( U(X,Y) = X^{\alpha} \cdot Y^{1-\alpha} \)</div>
                 <div class="tangency-condition"><div class="tangency-title">Tangency Condition</div><div class="tangency-eq">\( \mathrm{MRS} = \dfrac{P_x}{P_y} \)</div><div class="tangency-eq-sub">\( \dfrac{\alpha \, Y}{(1-\alpha)\, X} = \dfrac{P_x}{P_y} \)</div></div>
+                </div>
             </div>
         </div>
     </div>
@@ -214,29 +375,58 @@
     <div class="display-options-wrapper">
         <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
         <div class="display-options-panel" id="display-panel">
-            <div class="panel-title">Plot Element Visibility, Labels &amp; Position</div>
+            <div class="panel-title">Plot Element Visibility &amp; Labels <span style="font-weight:400;font-size:0.65rem;color:#a0aec0;text-transform:none;letter-spacing:0"> — drag labels directly on the graph to reposition</span></div>
             <div class="opt-section-label">Axes</div>
-            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"><div class="nudge-group" data-target="xaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
-            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"><div class="nudge-group" data-target="yaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"></div>
             <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
             <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
             <div class="opt-section-label">Budget Constraint</div>
             <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget constraint line</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label><div class="nudge-group" data-target="bc-intercept-x"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="bc-intercept-y"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label></div>
             <div class="opt-section-label">Indifference Curves</div>
             <div class="opt-row"><input type="checkbox" id="show-optimal-ic" checked><label for="show-optimal-ic">Optimal indifference curve</label></div>
             <div class="opt-row"><input type="checkbox" id="show-other-ics" checked><label for="show-other-ics">Other indifference curves</label></div>
             <div class="opt-section-label">Optimal Point</div>
             <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal bundle point</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-opt-coords" checked><label for="show-opt-coords">Axis annotations X*, Y*</label><div class="nudge-group" data-target="opt-xstar"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="opt-ystar"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
-            <div class="opt-row"><input type="checkbox" id="show-opt-utility" checked><label for="show-opt-utility">Utility annotation</label><input type="text" id="label-utility-prefix" value="U"><div class="nudge-group" data-target="opt-utility"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-coords" checked><label for="show-opt-coords">Axis annotations X*, Y*</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-utility" checked><label for="show-opt-utility">Utility annotation</label><input type="text" id="label-utility-prefix" value="U"></div>
             <div class="opt-row"><input type="checkbox" id="show-tangent-line" checked><label for="show-tangent-line">Tangent line at optimum</label></div>
             <div class="opt-row"><input type="checkbox" id="show-perpendicular" checked><label for="show-perpendicular">Perpendicular dashed lines</label></div>
+
+            <!-- Restore closed panels -->
+            <div class="restore-bar" id="restore-bar"></div>
+
+            <!-- URL State -->
+            <div class="url-state-bar">
+                <button id="copy-url-btn" title="Copy a URL that encodes the current slider values and display options">📋 Copy link with current state</button>
+                <button id="reset-url-btn" title="Reset all parameters and display options to defaults">↺ Reset to defaults</button>
+                <span class="url-hint">Link encodes sliders, display options, labels, and label positions</span>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+// ─── Embed mode detection ───
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('embed')) {
+        document.body.classList.add('embed-mode');
+        const hide = params.get('hide');
+        if (hide) {
+            hide.split(',').forEach(s => {
+                document.body.classList.add('embed-hide-' + s.trim());
+            });
+        }
+        // Set the "open full version" link to the same page without ?embed, keeping the hash
+        const openBtn = document.getElementById('embed-open-btn');
+        if (openBtn) {
+            openBtn.href = window.location.pathname + window.location.hash;
+        }
+    }
+})();
+
 function renderAllMath() {
     if (typeof renderMathInElement !== 'undefined') {
         renderMathInElement(document.body, {
@@ -248,32 +438,95 @@ function renderAllMath() {
 document.addEventListener("DOMContentLoaded", renderAllMath);
 window.addEventListener('load', renderAllMath);
 
-// Collapse/expand
+// Collapse/expand graph
+function toggleGraph() {
+    const body = document.getElementById('body-graph');
+    const toggle = document.getElementById('toggle-graph');
+    const collapsed = body.classList.toggle('collapsed');
+    toggle.textContent = collapsed ? '▶' : '▼';
+}
+
+// Collapse/expand left sections
 function toggleSection(name) {
     const body = document.getElementById('body-' + name);
     const toggle = document.getElementById('toggle-' + name);
     const collapsed = body.classList.toggle('collapsed');
-    toggle.classList.toggle('collapsed', collapsed);
     toggle.textContent = collapsed ? '▶' : '▼';
 }
 
-// Nudge offsets
-const nudgeOffsets = {};
-const NUDGE_PX = 4;
-document.querySelectorAll('.nudge-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const target = btn.closest('.nudge-group').dataset.target;
-        if (!nudgeOffsets[target]) nudgeOffsets[target] = { dx: 0, dy: 0 };
-        const dir = btn.dataset.dir;
-        if (dir === 'left') nudgeOffsets[target].dx -= NUDGE_PX;
-        if (dir === 'right') nudgeOffsets[target].dx += NUDGE_PX;
-        if (dir === 'up') nudgeOffsets[target].dy -= NUDGE_PX;
-        if (dir === 'down') nudgeOffsets[target].dy += NUDGE_PX;
-        drawGraph();
-    });
-});
-function getNudge(t) { const o = nudgeOffsets[t]; return o ? { dx: o.dx * DPR, dy: o.dy * DPR } : { dx: 0, dy: 0 }; }
+// Collapse/expand right-column control panels
+function togglePanel(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    toggle.textContent = collapsed ? '▶' : '▼';
+}
 
+// ─── Close / Restore panels ───
+const PANEL_NAMES = {
+    title: 'Title',
+    subtitle: 'Subtitle',
+    graph: 'A. Indifference Curve and Budget Constraint',
+    explanation: 'Explanation',
+    worked: 'Worked Solution',
+    formal: "Consumer's Problem",
+    budget: 'Budget Constraint',
+    optimal: 'Optimal Bundle',
+    utility: 'Utility Function'
+};
+
+const LEFT_PANELS = ['graph', 'explanation', 'worked', 'formal'];
+const RIGHT_PANELS = ['budget', 'optimal', 'utility'];
+
+function closePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.add('panel-closed');
+    updateRestoreBar();
+    updateLayout();
+}
+
+function restorePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.remove('panel-closed');
+    updateRestoreBar();
+    updateLayout();
+}
+
+function updateLayout() {
+    const mc = document.querySelector('.main-content');
+    const leftAllClosed = LEFT_PANELS.every(n =>
+        document.getElementById('section-' + n)?.classList.contains('panel-closed')
+    );
+    const rightAllClosed = RIGHT_PANELS.every(n =>
+        document.getElementById('section-' + n)?.classList.contains('panel-closed')
+    );
+    mc.classList.toggle('left-empty', leftAllClosed);
+    mc.classList.toggle('right-empty', rightAllClosed);
+}
+
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n =>
+        document.getElementById('section-' + n)?.classList.contains('panel-closed')
+    );
+    if (closed.length === 0) {
+        bar.innerHTML = '';
+        return;
+    }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' +
+        closed.map(n =>
+            `<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`
+        ).join('');
+}
+
+// ─── Label offset system (replaces nudge buttons) ───
+const nudgeOffsets = {};
+function getNudge(t) {
+    const o = nudgeOffsets[t];
+    return o ? { dx: o.dx * DPR, dy: o.dy * DPR } : { dx: 0, dy: 0 };
+}
+
+// ─── Canvas setup ───
 const canvas = document.getElementById('graph');
 const ctx = canvas.getContext('2d');
 const DPR = 2;
@@ -337,7 +590,137 @@ function updateWorked(M,Px,Py,alpha) {
     }
 }
 
+// ─── Draggable label hit-testing ───
+// Each draggable label registers its bounding box after drawing.
+// We store these in canvas-pixel coordinates (pre-DPR scaling accounted for).
+let labelHitBoxes = []; // { key, x, y, w, h } in canvas coords
+
+function registerLabel(key, cx, cy, w, h) {
+    labelHitBoxes.push({ key, x: cx - w/2, y: cy - h/2, w, h });
+}
+function registerLabelLTWH(key, lx, ty, w, h) {
+    labelHitBoxes.push({ key, x: lx, y: ty, w, h });
+}
+
+// Convert mouse event to canvas pixel coords
+function mouseToCanvas(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+    };
+}
+
+function hitTestLabels(cx, cy) {
+    // Check in reverse so topmost drawn labels are tested first
+    for (let i = labelHitBoxes.length - 1; i >= 0; i--) {
+        const b = labelHitBoxes[i];
+        if (cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h) {
+            return b.key;
+        }
+    }
+    return null;
+}
+
+// Drag state
+let dragTarget = null;
+let dragStartX = 0, dragStartY = 0;
+let dragStartOffsetX = 0, dragStartOffsetY = 0;
+
+canvas.addEventListener('mousedown', (e) => {
+    const pos = mouseToCanvas(e);
+    const hit = hitTestLabels(pos.x, pos.y);
+    if (hit) {
+        dragTarget = hit;
+        dragStartX = pos.x;
+        dragStartY = pos.y;
+        if (!nudgeOffsets[hit]) nudgeOffsets[hit] = { dx: 0, dy: 0 };
+        dragStartOffsetX = nudgeOffsets[hit].dx;
+        dragStartOffsetY = nudgeOffsets[hit].dy;
+        canvas.classList.add('dragging');
+        e.preventDefault();
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    const pos = mouseToCanvas(e);
+    if (dragTarget) {
+        const ddx = (pos.x - dragStartX) / DPR;
+        const ddy = (pos.y - dragStartY) / DPR;
+        nudgeOffsets[dragTarget].dx = dragStartOffsetX + ddx;
+        nudgeOffsets[dragTarget].dy = dragStartOffsetY + ddy;
+        drawGraph();
+    } else {
+        // Hover cursor
+        const hit = hitTestLabels(pos.x, pos.y);
+        if (hit) {
+            canvas.classList.add('hovering-label');
+            canvas.classList.remove('dragging');
+        } else {
+            canvas.classList.remove('hovering-label');
+        }
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    if (dragTarget) {
+        dragTarget = null;
+        canvas.classList.remove('dragging');
+    }
+});
+
+canvas.addEventListener('mouseleave', () => {
+    if (dragTarget) {
+        dragTarget = null;
+        canvas.classList.remove('dragging');
+    }
+    canvas.classList.remove('hovering-label');
+});
+
+// Touch support for dragging
+canvas.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const pos = { x: (touch.clientX - rect.left) * scaleX, y: (touch.clientY - rect.top) * scaleY };
+    const hit = hitTestLabels(pos.x, pos.y);
+    if (hit) {
+        dragTarget = hit;
+        dragStartX = pos.x;
+        dragStartY = pos.y;
+        if (!nudgeOffsets[hit]) nudgeOffsets[hit] = { dx: 0, dy: 0 };
+        dragStartOffsetX = nudgeOffsets[hit].dx;
+        dragStartOffsetY = nudgeOffsets[hit].dy;
+        e.preventDefault();
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    if (dragTarget) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const pos = { x: (touch.clientX - rect.left) * scaleX, y: (touch.clientY - rect.top) * scaleY };
+        const ddx = (pos.x - dragStartX) / DPR;
+        const ddy = (pos.y - dragStartY) / DPR;
+        nudgeOffsets[dragTarget].dx = dragStartOffsetX + ddx;
+        nudgeOffsets[dragTarget].dy = dragStartOffsetY + ddy;
+        drawGraph();
+        e.preventDefault();
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { dragTarget = null; });
+
+// ─── Draw graph ───
 function drawGraph() {
+    // Clear hit boxes for this frame
+    labelHitBoxes = [];
+
     const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),alpha=parseFloat(alphaSlider.value);
     document.getElementById('income-value').textContent=M;
     document.getElementById('px-value').textContent=Px;
@@ -363,9 +746,27 @@ function drawGraph() {
     // Tick labels
     if(isVis('show-axis-numbers')){ctx.fillStyle='#718096';ctx.font=`${14*S}px Segoe UI`;ctx.textAlign='center';for(let i=0;i<=8;i++){const v=(i/8)*maxX;ctx.fillText(v.toFixed(0),tCX(v),margin.top+height+25*S);}ctx.textAlign='right';for(let i=0;i<=8;i++){const v=(i/8)*maxY;ctx.fillText(v.toFixed(0),margin.left-10*S,tCY(v)+5*S);}}
 
-    // Axis titles
-    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.fillText(getLabel('label-xaxis','Good X'),margin.left+width/2+n.dx,canvas.height-10*S+n.dy);}
-    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.save();ctx.translate(20*S+n.dx,margin.top+height/2+n.dy);ctx.rotate(-Math.PI/2);ctx.fillText(getLabel('label-yaxis','Good Y'),0,0);ctx.restore();}
+    // Axis titles (draggable)
+    if(isVis('show-xaxis-label')){
+        const n=getNudge('xaxis-label');
+        const lbl=getLabel('label-xaxis','Good X');
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';
+        const bx=margin.left+width/2+n.dx, by=canvas.height-10*S+n.dy;
+        ctx.fillText(lbl,bx,by);
+        const tw=ctx.measureText(lbl).width;
+        registerLabelLTWH('xaxis-label', bx-tw/2-4*S, by-18*S, tw+8*S, 24*S);
+    }
+    if(isVis('show-yaxis-label')){
+        const n=getNudge('yaxis-label');
+        const lbl=getLabel('label-yaxis','Good Y');
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';
+        ctx.save();
+        const bx=20*S+n.dx, by=margin.top+height/2+n.dy;
+        ctx.translate(bx,by);ctx.rotate(-Math.PI/2);ctx.fillText(lbl,0,0);ctx.restore();
+        const tw=ctx.measureText(lbl).width;
+        // Hit box for rotated text: approximate with a vertical rectangle
+        registerLabelLTWH('yaxis-label', bx-14*S, by-tw/2-4*S, 28*S, tw+8*S);
+    }
 
     // Other ICs
     if(isVis('show-other-ics')){const uL=[utility*0.5,utility*0.75,utility*1.25,utility*1.5];ctx.strokeStyle='rgba(49,151,149,0.25)';ctx.lineWidth=1.5*S;ctx.setLineDash([5*S,5*S]);for(const u of uL){ctx.beginPath();let st=false;for(let x=0.5;x<=maxX;x+=0.5){const y=getICY(x,u,alpha);if(y!==null&&y<=maxY&&y>=0){if(!st){ctx.moveTo(tCX(x),tCY(y));st=true;}else ctx.lineTo(tCX(x),tCY(y));}}ctx.stroke();}ctx.setLineDash([]);}
@@ -388,40 +789,59 @@ function drawGraph() {
         ctx.fillStyle=g;ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),20*S,0,Math.PI*2);ctx.fill();
         ctx.fillStyle='#d69e2e';ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),8*S,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2*S;ctx.stroke();
 
-        // Utility label near the point
+        // Utility label (draggable)
         if(isVis('show-opt-utility')){
             const n=getNudge('opt-utility'),uPfx=getLabel('label-utility-prefix','U');
+            const txt=`${uPfx} = ${utility.toFixed(1)}`;
             ctx.fillStyle='#319795';ctx.font=`italic ${12*S}px Georgia,serif`;ctx.textAlign='left';
-            ctx.fillText(`${uPfx} = ${utility.toFixed(1)}`,tCX(xStar)+15*S+n.dx,tCY(yStar)-5*S+n.dy);
+            const lx=tCX(xStar)+15*S+n.dx, ly=tCY(yStar)-5*S+n.dy;
+            ctx.fillText(txt,lx,ly);
+            const tw=ctx.measureText(txt).width;
+            registerLabelLTWH('opt-utility', lx-2*S, ly-14*S, tw+4*S, 20*S);
         }
     }
 
-    // X* and Y* annotations ON THE AXES (instead of near the tangency point)
+    // X* and Y* annotations on axes (draggable)
     if(isVis('show-opt-coords')&&xStar<=maxX&&yStar<=maxY){
-        // X* tick on x-axis
+        // X* tick
         const nX=getNudge('opt-xstar');
         const xTickCX=tCX(xStar)+nX.dx, xTickCY=margin.top+height+nX.dy;
-        // small tick mark
         ctx.strokeStyle='#d69e2e';ctx.lineWidth=2*S;
         ctx.beginPath();ctx.moveTo(xTickCX,xTickCY-5*S);ctx.lineTo(xTickCX,xTickCY+5*S);ctx.stroke();
-        // label
+        const xTxt=`X* = ${xStar.toFixed(1)}`;
         ctx.fillStyle='#d69e2e';ctx.font=`bold italic ${11*S}px Georgia,serif`;ctx.textAlign='center';
-        ctx.fillText(`X* = ${xStar.toFixed(1)}`,xTickCX,xTickCY+22*S);
+        ctx.fillText(xTxt,xTickCX,xTickCY+22*S);
+        const xTw=ctx.measureText(xTxt).width;
+        registerLabelLTWH('opt-xstar', xTickCX-xTw/2-4*S, xTickCY-8*S, xTw+8*S, 36*S);
 
-        // Y* tick on y-axis
+        // Y* tick
         const nY=getNudge('opt-ystar');
         const yTickCX=margin.left+nY.dx, yTickCY=tCY(yStar)+nY.dy;
         ctx.strokeStyle='#d69e2e';ctx.lineWidth=2*S;
         ctx.beginPath();ctx.moveTo(yTickCX-5*S,yTickCY);ctx.lineTo(yTickCX+5*S,yTickCY);ctx.stroke();
+        const yTxt=`Y* = ${yStar.toFixed(1)}`;
         ctx.fillStyle='#d69e2e';ctx.font=`bold italic ${11*S}px Georgia,serif`;ctx.textAlign='right';
-        ctx.fillText(`Y* = ${yStar.toFixed(1)}`,yTickCX-10*S,yTickCY+4*S);
+        ctx.fillText(yTxt,yTickCX-10*S,yTickCY+4*S);
+        const yTw=ctx.measureText(yTxt).width;
+        registerLabelLTWH('opt-ystar', yTickCX-10*S-yTw-4*S, yTickCY-10*S, yTw+16*S, 24*S);
     }
 
-    // Intercept labels
+    // Intercept labels (draggable)
     if(isVis('show-bc-intercepts')){
         const xInt=M/Px,yInt=M/Py;ctx.fillStyle='#e53e3e';
-        if(xInt<=maxX){const n=getNudge('bc-intercept-x');drawSubText(tCX(xInt)+n.dx,tCY(0)+40*S+n.dy,'M/P','x',` = ${xInt.toFixed(1)}`,'center');}
-        if(yInt<=maxY){const n=getNudge('bc-intercept-y');drawSubText(tCX(0)+10*S+n.dx,tCY(yInt)-10*S+n.dy,'M/P','y',` = ${yInt.toFixed(1)}`,'left');}
+        if(xInt<=maxX){
+            const n=getNudge('bc-intercept-x');
+            const bx=tCX(xInt)+n.dx, by=tCY(0)+40*S+n.dy;
+            drawSubText(bx,by,'M/P','x',` = ${xInt.toFixed(1)}`,'center');
+            // Approximate hit box
+            registerLabelLTWH('bc-intercept-x', bx-50*S, by-16*S, 100*S, 24*S);
+        }
+        if(yInt<=maxY){
+            const n=getNudge('bc-intercept-y');
+            const bx=tCX(0)+10*S+n.dx, by=tCY(yInt)-10*S+n.dy;
+            drawSubText(bx,by,'M/P','y',` = ${yInt.toFixed(1)}`,'left');
+            registerLabelLTWH('bc-intercept-y', bx-4*S, by-16*S, 100*S, 24*S);
+        }
     }
 }
 
@@ -429,7 +849,7 @@ function drawGraph() {
 document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
 document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',drawGraph);i.addEventListener('change',drawGraph);});
 
-// Copy plot to clipboard at full canvas resolution (1400x1200)
+// Copy plot to clipboard
 document.getElementById('copy-plot-btn').addEventListener('click', async () => {
     const btn = document.getElementById('copy-plot-btn');
     const label = document.getElementById('copy-label');
@@ -444,7 +864,7 @@ document.getElementById('copy-plot-btn').addEventListener('click', async () => {
     }
 });
 
-// Save plot as PNG download
+// Save plot as PNG
 document.getElementById('save-plot-btn').addEventListener('click', () => {
     const btn = document.getElementById('save-plot-btn');
     const label = document.getElementById('save-label');
@@ -455,6 +875,267 @@ document.getElementById('save-plot-btn').addEventListener('click', () => {
     setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Save'; }, 1500);
 });
 
+// ═══════════════════════════════════════════════════════
+// URL STATE ENCODING / DECODING
+// ═══════════════════════════════════════════════════════
+
+const DEFAULTS = {
+    // Sliders
+    M: 100, Px: 2, Py: 2, alpha: 0.5,
+    // Checkboxes (all default true)
+    'show-xaxis-label': true, 'show-yaxis-label': true, 'show-axis-numbers': true,
+    'show-gridlines': true, 'show-bc': true, 'show-bc-intercepts': true,
+    'show-optimal-ic': true, 'show-other-ics': true, 'show-opt-point': true,
+    'show-opt-coords': true, 'show-opt-utility': true, 'show-tangent-line': true,
+    'show-perpendicular': true,
+    // Labels
+    'label-xaxis': 'Good X', 'label-yaxis': 'Good Y', 'label-utility-prefix': 'U',
+    // Section collapse states (default open)
+    'sec-graph': true, 'sec-explanation': true, 'sec-worked': true, 'sec-formal': true,
+    // Control panel collapse states (default open)
+    'sec-budget': true, 'sec-optimal': true, 'sec-utility': true,
+    // Panel closed states (default: all visible)
+    'closed-title': false, 'closed-subtitle': false,
+    'closed-graph': false, 'closed-explanation': false, 'closed-worked': false,
+    'closed-formal': false, 'closed-budget': false, 'closed-optimal': false,
+    'closed-utility': false,
+    // Display panel open
+    'disp-open': false,
+};
+
+// All checkbox IDs
+const CHECKBOX_IDS = [
+    'show-xaxis-label','show-yaxis-label','show-axis-numbers','show-gridlines',
+    'show-bc','show-bc-intercepts','show-optimal-ic','show-other-ics',
+    'show-opt-point','show-opt-coords','show-opt-utility','show-tangent-line','show-perpendicular'
+];
+
+// All text label IDs
+const LABEL_IDS = ['label-xaxis','label-yaxis','label-utility-prefix'];
+
+// All nudge offset keys
+const NUDGE_KEYS = [
+    'xaxis-label','yaxis-label','opt-utility','opt-xstar','opt-ystar',
+    'bc-intercept-x','bc-intercept-y'
+];
+
+function buildStateObject() {
+    const s = {};
+    // Sliders (only if non-default)
+    const M = parseFloat(incomeSlider.value);
+    const Px = parseFloat(pxSlider.value);
+    const Py = parseFloat(pySlider.value);
+    const alpha = parseFloat(alphaSlider.value);
+    if (M !== DEFAULTS.M) s.M = M;
+    if (Px !== DEFAULTS.Px) s.Px = Px;
+    if (Py !== DEFAULTS.Py) s.Py = Py;
+    if (alpha !== DEFAULTS.alpha) s.a = alpha;
+
+    // Checkboxes (only encode if non-default)
+    for (const id of CHECKBOX_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.checked !== DEFAULTS[id]) {
+            s[id] = el.checked ? 1 : 0;
+        }
+    }
+
+    // Text labels (only if non-default)
+    for (const id of LABEL_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.value !== DEFAULTS[id]) {
+            s[id] = el.value;
+        }
+    }
+
+    // Nudge offsets (only if non-zero)
+    for (const k of NUDGE_KEYS) {
+        const o = nudgeOffsets[k];
+        if (o && (Math.abs(o.dx) > 0.5 || Math.abs(o.dy) > 0.5)) {
+            s['n_' + k] = Math.round(o.dx) + ',' + Math.round(o.dy);
+        }
+    }
+
+    // Section collapse states (left column + right column panels)
+    const allSections = ['graph','explanation','worked','formal','budget','optimal','utility'];
+    for (const sec of allSections) {
+        const body = document.getElementById('body-' + sec);
+        const isOpen = !body.classList.contains('collapsed');
+        if (isOpen !== DEFAULTS['sec-' + sec]) {
+            s['sec-' + sec] = isOpen ? 1 : 0;
+        }
+    }
+
+    // Display panel state
+    const dispOpen = document.getElementById('display-panel').classList.contains('open');
+    if (dispOpen !== DEFAULTS['disp-open']) {
+        s['disp-open'] = dispOpen ? 1 : 0;
+    }
+
+    // Closed panels
+    for (const name of Object.keys(PANEL_NAMES)) {
+        const el = document.getElementById('section-' + name);
+        const isClosed = el && el.classList.contains('panel-closed');
+        if (isClosed !== DEFAULTS['closed-' + name]) {
+            s['closed-' + name] = isClosed ? 1 : 0;
+        }
+    }
+
+    return s;
+}
+
+function stateToHash(state) {
+    const params = new URLSearchParams();
+    for (const [k, v] of Object.entries(state)) {
+        params.set(k, v);
+    }
+    return params.toString();
+}
+
+function loadStateFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+
+    // Sliders
+    if (params.has('M')) incomeSlider.value = params.get('M');
+    if (params.has('Px')) pxSlider.value = params.get('Px');
+    if (params.has('Py')) pySlider.value = params.get('Py');
+    if (params.has('a')) alphaSlider.value = params.get('a');
+
+    // Checkboxes
+    for (const id of CHECKBOX_IDS) {
+        if (params.has(id)) {
+            const el = document.getElementById(id);
+            if (el) el.checked = params.get(id) === '1';
+        }
+    }
+
+    // Text labels
+    for (const id of LABEL_IDS) {
+        if (params.has(id)) {
+            const el = document.getElementById(id);
+            if (el) el.value = params.get(id);
+        }
+    }
+
+    // Nudge offsets
+    for (const k of NUDGE_KEYS) {
+        const key = 'n_' + k;
+        if (params.has(key)) {
+            const parts = params.get(key).split(',');
+            if (parts.length === 2) {
+                nudgeOffsets[k] = { dx: parseFloat(parts[0]), dy: parseFloat(parts[1]) };
+            }
+        }
+    }
+
+    // Section collapse states (left column + right column panels)
+    const allSections = ['graph','explanation','worked','formal','budget','optimal','utility'];
+    for (const sec of allSections) {
+        const key = 'sec-' + sec;
+        if (params.has(key)) {
+            const shouldBeOpen = params.get(key) === '1';
+            const body = document.getElementById('body-' + sec);
+            const toggle = document.getElementById('toggle-' + sec);
+            if (shouldBeOpen) {
+                body.classList.remove('collapsed');
+                if (toggle) toggle.textContent = '▼';
+            } else {
+                body.classList.add('collapsed');
+                if (toggle) toggle.textContent = '▶';
+            }
+        }
+    }
+
+    // Display panel
+    if (params.has('disp-open')) {
+        const shouldBeOpen = params.get('disp-open') === '1';
+        const panel = document.getElementById('display-panel');
+        const arrow = document.getElementById('display-arrow');
+        if (shouldBeOpen) {
+            panel.classList.add('open');
+            arrow.classList.add('open');
+        } else {
+            panel.classList.remove('open');
+            arrow.classList.remove('open');
+        }
+    }
+
+    // Closed panels
+    const panelNames = ['title','subtitle','graph','explanation','worked','formal','budget','optimal','utility'];
+    for (const name of panelNames) {
+        const key = 'closed-' + name;
+        if (params.has(key)) {
+            const el = document.getElementById('section-' + name);
+            if (el) {
+                if (params.get(key) === '1') {
+                    el.classList.add('panel-closed');
+                } else {
+                    el.classList.remove('panel-closed');
+                }
+            }
+        }
+    }
+}
+
+// Copy URL button
+document.getElementById('copy-url-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-url-btn');
+    const state = buildStateObject();
+    const hash = stateToHash(state);
+    const url = window.location.origin + window.location.pathname + (hash ? '#' + hash : '');
+    try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 Copy link with current state'; btn.classList.remove('copied'); }, 2000);
+    } catch {
+        // Fallback
+        prompt('Copy this URL:', url);
+    }
+});
+
+// Reset button
+document.getElementById('reset-url-btn').addEventListener('click', () => {
+    incomeSlider.value = DEFAULTS.M;
+    pxSlider.value = DEFAULTS.Px;
+    pySlider.value = DEFAULTS.Py;
+    alphaSlider.value = DEFAULTS.alpha;
+    for (const id of CHECKBOX_IDS) {
+        const el = document.getElementById(id);
+        if (el) el.checked = DEFAULTS[id];
+    }
+    for (const id of LABEL_IDS) {
+        const el = document.getElementById(id);
+        if (el) el.value = DEFAULTS[id];
+    }
+    // Clear all nudge offsets
+    for (const k of NUDGE_KEYS) { delete nudgeOffsets[k]; }
+    // Reset all sections to open
+    ['graph','explanation','worked','formal','budget','optimal','utility'].forEach(sec => {
+        const body = document.getElementById('body-' + sec);
+        const toggle = document.getElementById('toggle-' + sec);
+        if (body) body.classList.remove('collapsed');
+        if (toggle) toggle.textContent = '▼';
+    });
+    // Close display panel
+    document.getElementById('display-panel').classList.remove('open');
+    document.getElementById('display-arrow').classList.remove('open');
+    // Restore all closed panels
+    ['title','subtitle','graph','explanation','worked','formal','budget','optimal','utility'].forEach(name => {
+        const el = document.getElementById('section-' + name);
+        if (el) el.classList.remove('panel-closed');
+    });
+    updateRestoreBar();
+    updateLayout();
+    // Clear hash
+    history.replaceState(null, '', window.location.pathname);
+    drawGraph();
+});
+
+// ─── Initialize ───
+loadStateFromHash();
+updateRestoreBar();
+updateLayout();
 drawGraph();
 </script>
 </body>

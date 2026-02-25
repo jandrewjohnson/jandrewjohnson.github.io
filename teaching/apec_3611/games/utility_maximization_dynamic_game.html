@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utility Maximization — Dynamic Game</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#2d3748;margin:0;padding:10px;min-height:100vh}.container{max-width:1500px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:12px 18px;background:linear-gradient(135deg,#2c5282,#2b6cb0);border-radius:12px;color:#fff;flex-wrap:wrap;gap:10px;position:relative}
+.title-section h1{font-size:1.5rem;font-weight:600;margin:0 0 4px}.title-section .subtitle{font-size:.85rem;color:#bee3f8;margin:0}
+.score-section{display:flex;gap:25px;align-items:center;flex-wrap:wrap}.score-box{text-align:center}.score-label{font-size:.7rem;color:#bee3f8;text-transform:uppercase;letter-spacing:1px}.score-value{font-size:1.8rem;font-weight:700;font-family:'Monaco','Consolas',monospace}
+.score-value.good{color:#68d391}.score-value.month{color:#fbd38d}
+.game-controls{display:flex;gap:10px;flex-wrap:wrap}.game-btn{padding:10px 20px;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-start{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff}.btn-start:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(72,187,120,.4)}.btn-pause{background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff}.btn-reset{background:#4a5568;color:#fff}
+.main-content{display:grid;grid-template-columns:1fr 360px;gap:10px}@media(max-width:1000px){.main-content{grid-template-columns:1fr}}
+.main-content.left-empty .left-column{display:none}.main-content.right-empty .right-column{display:none}
+.left-column,.right-column{display:flex;flex-direction:column;gap:8px}
+.control-panel{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:visible;position:relative}
+.control-panel.choice-panel{border:2px solid #319795;background:linear-gradient(135deg,rgba(49,151,149,.05),#fff)}
+.control-panel-header{display:flex;align-items:center;padding:14px;cursor:pointer;user-select:none}
+.control-panel-header:hover{background:#f7fafc;border-radius:12px}.control-panel-header .panel-title{margin-bottom:0}
+.control-panel-body{padding:0 14px 14px}.control-panel-body.collapsed{display:none}
+.panel-title{font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:14px;font-weight:600}.panel-title.highlight{color:#319795;font-size:.95rem}
+.news-panel{background:linear-gradient(135deg,#1a202c,#2d3748);border-radius:12px;padding:14px 18px;border:1px solid #4a5568;min-height:70px;position:relative}
+.news-header{font-size:.65rem;color:#a0aec0;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600}
+.news-text{color:#e2e8f0;font-size:1.05rem;font-weight:500;line-height:1.4}
+.news-text.shock-good{color:#68d391}.news-text.shock-bad{color:#fc8181}.news-text.shock-neutral{color:#fbd38d}
+.bundle-display{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.good-box{text-align:center;padding:12px;border-radius:10px;border:2px solid}
+.good-box.good-x{background:linear-gradient(135deg,rgba(229,62,62,.08),rgba(252,129,129,.05));border-color:#e53e3e}
+.good-box.good-y{background:linear-gradient(135deg,rgba(49,130,206,.08),rgba(99,179,237,.05));border-color:#3182ce}
+.good-label{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}.good-x .good-label{color:#c53030}.good-y .good-label{color:#2b6cb0}
+.good-value{font-size:2rem;font-weight:700;font-family:'Monaco','Consolas',monospace;line-height:1.2}.good-x .good-value{color:#e53e3e}.good-y .good-value{color:#3182ce}
+.good-price{font-size:.72rem;color:#718096;margin-top:2px}
+.budget-section{background:#f7fafc;border-radius:8px;padding:10px;margin-bottom:12px}
+.budget-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.budget-label{font-size:.72rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}.budget-values{font-size:.82rem;font-family:'Monaco','Consolas',monospace}.budget-spent{color:#e53e3e}.budget-total{color:#38a169}
+.budget-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden}.budget-fill{height:100%;border-radius:5px;transition:width .3s,background .3s}
+.budget-fill.under{background:linear-gradient(90deg,#48bb78,#68d391)}.budget-fill.near{background:linear-gradient(90deg,#ed8936,#f6ad55)}.budget-fill.over{background:linear-gradient(90deg,#e53e3e,#fc8181)}
+.budget-warning{font-size:.68rem;color:#e53e3e;text-align:center;margin-top:4px;font-weight:600}
+.savings-info{font-size:.68rem;color:#38a169;text-align:center;margin-top:4px;font-weight:600}
+.utility-display{text-align:center;padding:12px;background:linear-gradient(135deg,rgba(56,161,105,.1),rgba(72,187,120,.05));border:2px solid #38a169;border-radius:10px;margin-bottom:12px}
+.utility-label{font-size:.68rem;color:#276749;text-transform:uppercase;letter-spacing:1px}.utility-value-main{font-size:2.2rem;font-weight:700;color:#38a169;font-family:'Monaco','Consolas',monospace;line-height:1.2}
+.utility-value-main.invalid{color:#e53e3e;font-size:1.3rem}.utility-value-main.over-warn{color:#dd6b20}.utility-optimal{font-size:.72rem;color:#718096;margin-top:4px}.utility-optimal span{color:#d69e2e;font-weight:600}
+.speed-control{display:flex;align-items:center;gap:8px;padding:8px;background:#f7fafc;border-radius:8px}
+.speed-label{font-size:.72rem;color:#718096}.speed-buttons{display:flex;gap:4px}
+.speed-btn{padding:4px 10px;border:1px solid #e2e8f0;background:#fff;border-radius:5px;font-size:.72rem;cursor:pointer;transition:all .15s}
+.speed-btn.active{background:#3182ce;color:#fff;border-color:#3182ce}.speed-btn:hover:not(.active){background:#edf2f7}
+.graph-container{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08);position:relative;overflow:visible}
+.graph-header{display:flex;align-items:center;padding:8px 14px;cursor:pointer;user-select:none}
+.graph-header:hover{background:#f7fafc;border-radius:12px 12px 0 0}.graph-header .panel-title{margin-bottom:0}
+.graph-body{padding:0 10px 10px;position:relative}.graph-body.collapsed{display:none}
+.graph-body canvas{display:block;border-radius:8px}
+canvas.hovering-label{cursor:grab}canvas.dragging-label{cursor:grabbing}
+.plot-actions{position:absolute;top:8px;right:8px;z-index:10;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+.graph-container:hover .plot-actions{opacity:1}
+.plot-action-btn{background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1px solid rgba(226,232,240,.7);border-radius:6px;padding:4px 8px;font-size:.7rem;color:#a0aec0;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1}
+.plot-action-btn:hover{background:#fff;color:#4a5568;border-color:#cbd5e0}.plot-action-btn.copied{color:#38a169;border-color:#c6f6d5}.plot-action-btn svg{width:12px;height:12px}
+.market-info{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.info-box{background:#f7fafc;padding:6px;border-radius:6px;text-align:center;border:1px solid #e2e8f0}.info-label{font-size:.58rem;color:#718096;text-transform:uppercase;letter-spacing:.5px}.info-value{font-size:.82rem;font-weight:700;font-family:'Monaco','Consolas',monospace;margin-top:1px}
+.info-value.price-x{color:#e53e3e}.info-value.price-y{color:#3182ce}.info-value.income{color:#38a169}.info-value.mrs{color:#805ad5}
+.below-fold{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}@media(max-width:1000px){.below-fold{grid-template-columns:1fr}}
+.left-section{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:visible;position:relative}
+.left-section-header{display:flex;align-items:center;padding:14px 20px;cursor:pointer;user-select:none}
+.left-section-header:hover{background:#f7fafc;border-radius:12px}.left-section-header .panel-title{margin-bottom:0}
+.left-section-body{padding:0 20px 16px}.left-section-body.collapsed{display:none}
+.left-section-body p{margin:0 0 14px;line-height:1.7;font-size:.95rem;color:#4a5568}.left-section-body p:last-child{margin-bottom:0}
+.chart-container canvas{display:block;width:100%;height:auto}
+.monthly-utility{text-align:center;padding:10px;background:#f7fafc;border-radius:10px;margin-bottom:10px}
+.monthly-label{font-size:.68rem;color:#718096;text-transform:uppercase;letter-spacing:1px}
+.monthly-value{font-size:1.4rem;font-weight:700;font-family:'Monaco','Consolas',monospace}.monthly-value.high{color:#38a169}.monthly-value.medium{color:#d69e2e}.monthly-value.low{color:#e53e3e}
+.efficiency-meter{background:#f7fafc;border-radius:8px;padding:10px;margin-bottom:10px}
+.efficiency-header{display:flex;justify-content:space-between;margin-bottom:6px}.efficiency-label{font-size:.68rem;color:#718096;text-transform:uppercase}.efficiency-value{font-size:.82rem;font-weight:700;color:#805ad5}
+.efficiency-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden}.efficiency-fill{height:100%;background:linear-gradient(90deg,#e53e3e 0%,#ed8936 30%,#ecc94b 50%,#48bb78 80%,#38a169 100%);border-radius:3px;transition:width .3s}
+.high-score{background:linear-gradient(135deg,rgba(214,158,46,.15),rgba(236,201,75,.1));border:1px solid rgba(214,158,46,.3);border-radius:8px;padding:10px;margin-top:10px;text-align:center}
+.hs-label{font-size:.68rem;color:#b7791f;text-transform:uppercase;letter-spacing:1px}.hs-value{font-size:1.2rem;font-weight:700;color:#d69e2e;font-family:'Monaco','Consolas',monospace}
+.panel-close-btn{background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1px solid rgba(226,232,240,.7);border-radius:6px;padding:4px 8px;font-size:.7rem;color:#a0aec0;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1;flex-shrink:0}
+.panel-close-btn:hover{background:#fff;color:#e53e3e;border-color:#feb2b2}
+.panel-header-actions{position:absolute;top:8px;right:8px;z-index:10;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s}
+.panel-collapse-btn{background:rgba(255,255,255,.85);backdrop-filter:blur(4px);border:1px solid rgba(226,232,240,.7);border-radius:6px;padding:4px 8px;font-size:.65rem;color:#a0aec0;cursor:pointer;display:flex;align-items:center;font-family:'Segoe UI',system-ui,sans-serif;transition:all .15s;line-height:1}
+.panel-collapse-btn:hover{background:#fff;color:#4a5568;border-color:#cbd5e0}.panel-closed{display:none!important}
+.left-section:hover .panel-header-actions,.control-panel:hover .panel-header-actions,.graph-container:hover>.graph-header .panel-header-actions,.header:hover .panel-header-actions,.news-panel:hover .panel-header-actions{opacity:1}
+.restore-bar{margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.restore-bar:empty{display:none;margin:0;padding:0;border:none}
+.restore-btn{background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:4px 10px;font-size:.72rem;color:#718096;cursor:pointer;transition:all .15s}.restore-btn:hover{background:#f7fafc;border-color:#cbd5e0;color:#4a5568}
+.restore-label{font-size:.7rem;color:#a0aec0}
+.display-options-wrapper{margin-top:20px}
+.display-options-toggle{background:none;border:none;color:#a0aec0;font-size:.78rem;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:4px}.display-options-toggle:hover{color:#718096}
+.display-options-toggle .arrow{font-size:.6rem;transition:transform .2s}.display-options-toggle .arrow.open{transform:rotate(90deg)}
+.display-options-panel{display:none;margin-top:8px;background:#fff;border-radius:12px;padding:16px 20px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08)}.display-options-panel.open{display:block}
+.display-options-panel .panel-title{font-size:.75rem;margin-bottom:12px}
+.opt-row{display:flex;align-items:center;gap:8px;padding:3px 0}.opt-row label{font-size:.8rem;color:#4a5568;cursor:pointer;white-space:nowrap}
+.opt-row input[type="checkbox"]{accent-color:#4299e1;cursor:pointer;margin:0;width:14px;height:14px}
+.opt-section-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:#a0aec0;margin:10px 0 4px;font-weight:600}.opt-section-label:first-child{margin-top:0}
+.url-state-bar{margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.url-state-bar button{background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:.78rem;color:#4a5568;cursor:pointer;transition:all .15s;white-space:nowrap}
+.url-state-bar button:hover{background:#f7fafc;border-color:#cbd5e0}.url-state-bar button.copied{color:#38a169;border-color:#c6f6d5;background:#f0fff4}
+.url-state-bar .url-hint{font-size:.7rem;color:#a0aec0}
+body.embed-mode{padding:8px;background:transparent;min-height:auto}
+.embed-mode .header,.embed-mode .below-fold,.embed-mode .display-options-wrapper{display:none!important}
+body.embed-hide-controls .right-column{display:none!important}body.embed-hide-controls .main-content{grid-template-columns:1fr}
+.popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center}
+.popup-overlay.visible{display:flex}
+.popup{background:#fff;border-radius:16px;padding:30px 36px;max-width:560px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;max-height:90vh;overflow-y:auto}
+.popup h2{margin:0 0 6px;font-size:1.6rem;color:#1a202c}.popup .popup-sub{color:#718096;font-size:.9rem;margin-bottom:16px}
+.popup .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;text-align:left}
+.popup .sg-label{font-size:.78rem;color:#718096;padding:6px 10px;background:#f7fafc;border-radius:6px}
+.popup .sg-val{font-size:.9rem;font-weight:700;padding:6px 10px;background:#f7fafc;border-radius:6px;text-align:right;font-family:'Monaco','Consolas',monospace}
+.popup .stars{font-size:2rem;margin-bottom:4px}
+.popup .grade{font-size:1.1rem;font-weight:600;margin-bottom:14px}
+.popup .verify-section{background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:16px}
+.popup .verify-label{font-size:.68rem;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.popup .verify-code{font-family:'Monaco','Consolas',monospace;font-size:1rem;font-weight:700;color:#2b6cb0;letter-spacing:2px;user-select:all}
+.popup .popup-btn{padding:12px 30px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;transition:all .15s;margin:4px}
+.popup .popup-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(72,187,120,.4)}
+.popup .popup-btn.secondary{background:linear-gradient(135deg,#4299e1,#3182ce)}
+.popup .popup-btn.secondary:hover{box-shadow:0 4px 12px rgba(66,153,225,.4)}
+.popup .report-section{text-align:left;background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px}
+.popup .report-section h3{margin:0 0 8px;font-size:.9rem;color:#2d3748}.popup .report-section p{margin:0 0 8px;font-size:.82rem;color:#4a5568;line-height:1.5}.popup .report-section p:last-child{margin-bottom:0}
+.popup .report-section .insight{background:#fff;border-left:3px solid #3182ce;padding:8px 12px;margin:8px 0;font-size:.82rem;color:#2d3748;border-radius:0 6px 6px 0}
+.popup .report-section .insight.good{border-left-color:#38a169}.popup .report-section .insight.warn{border-left-color:#d69e2e}.popup .report-section .insight.bad{border-left-color:#e53e3e}
+/* Scenario selector */
+.scenario-selector{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:14px;margin-bottom:10px}
+.scenario-selector .panel-title{margin-bottom:10px}
+.scenario-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.scenario-tab{padding:8px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;color:#718096;flex:1;text-align:center;min-width:120px}
+.scenario-tab:hover{border-color:#a0aec0;color:#4a5568}
+.scenario-tab.active{border-color:#3182ce;background:linear-gradient(135deg,rgba(49,130,206,.08),rgba(99,179,237,.05));color:#2b6cb0}
+.scenario-tab .tab-num{font-size:.65rem;display:block;color:#a0aec0;margin-bottom:2px}.scenario-tab.active .tab-num{color:#3182ce}
+.scenario-tab .tab-best{font-size:.6rem;display:block;color:#d69e2e;margin-top:3px;font-family:'Monaco','Consolas',monospace;min-height:1em}
+.scenario-desc{margin-top:10px;font-size:.78rem;color:#718096;line-height:1.5;padding:8px 10px;background:#f7fafc;border-radius:6px;border-left:3px solid #3182ce}
+.scenario-desc .mechanic-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.mechanic-tag{font-size:.65rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.mechanic-tag.on{background:#c6f6d5;color:#276749}.mechanic-tag.off{background:#fed7d7;color:#9b2c2c}
+.katex{font-size:1em}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header" id="section-header">
+        <div class="title-section"><h1>Utility Maximization — Dynamic Game</h1><p class="subtitle">Maximize utility as prices and income change each month!</p></div>
+        <div class="score-section">
+            <div class="score-box"><div class="score-label">Scenario</div><div class="score-value month" id="current-scenario-display">1</div></div>
+            <div class="score-box"><div class="score-label">Month</div><div class="score-value month" id="current-month">1</div></div>
+            <div class="score-box"><div class="score-label">Total Utility</div><div class="score-value good" id="cumulative-utility">0</div></div>
+            <div class="game-controls"><button class="game-btn btn-start" id="start-btn" onclick="toggleGame()">▶️ Start</button><button class="game-btn btn-reset" onclick="resetGame()">🔄 Reset</button><button class="game-btn" id="next-btn" onclick="advanceMonth()" style="background:#4a5568;color:#fff">⏭️ Next Month</button></div>
+        </div>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)"><button class="panel-close-btn" onclick="closePanel('header')">✕</button></div>
+    </div>
+
+    <!-- Scenario Selector -->
+    <div class="scenario-selector" id="section-scenarios">
+        <div class="panel-title">Choose Scenario</div>
+        <div class="scenario-tabs">
+            <div class="scenario-tab active" id="tab-s1" onclick="selectScenario(1)"><span class="tab-num">Scenario 1</span>Static Optimization<span class="tab-best" id="best-s1"></span></div>
+            <div class="scenario-tab" id="tab-s2" onclick="selectScenario(2)"><span class="tab-num">Scenario 2</span>Investment &amp; Growth<span class="tab-best" id="best-s2"></span></div>
+            <div class="scenario-tab" id="tab-s3" onclick="selectScenario(3)"><span class="tab-num">Scenario 3</span>High Discounting<span class="tab-best" id="best-s3"></span></div>
+            <div class="scenario-tab" id="tab-s4" onclick="selectScenario(4)"><span class="tab-num">Scenario 4</span>Balanced Tradeoff<span class="tab-best" id="best-s4"></span></div>
+        </div>
+        <div class="scenario-desc" id="scenario-desc">
+            <strong>Hit the tangency each month.</strong> No savings carry forward, no investment, no discounting. Over-budget choices are penalized. The optimal strategy is simply to find the tangency condition \(\mathrm{MRS} = P_x/P_y\) each period.
+            <div class="mechanic-tags">
+                <span class="mechanic-tag off">No Investment</span>
+                <span class="mechanic-tag off">No Discounting</span>
+                <span class="mechanic-tag on">Over-budget Penalty</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-column">
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')"><div class="panel-title" style="margin-bottom:0">📊 Indifference Map</div><div class="panel-header-actions"><button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')">▼</button><button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')">✕</button></div></div>
+                <div class="graph-body" id="body-graph">
+                    <div class="plot-actions"><button class="plot-action-btn" id="copy-plot-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="copy-label">Copy</span></button><button class="plot-action-btn" id="save-plot-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="save-label">Save</span></button></div>
+                    <canvas id="ic-canvas" width="1000" height="1000"></canvas>
+                    <div class="market-info" style="grid-template-columns:repeat(4,1fr)"><div class="info-box"><div class="info-label">\(P_x\)</div><div class="info-value price-x" id="info-px">$2.00</div></div><div class="info-box"><div class="info-label">\(P_y\)</div><div class="info-value price-y" id="info-py">$2.00</div></div><div class="info-box"><div class="info-label">\(M\)</div><div class="info-value income" id="info-income">$100</div></div><div class="info-box"><div class="info-label">MRS</div><div class="info-value mrs" id="info-mrs">1.00</div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="news-panel" id="section-news"><div class="news-header">📰 Market News — Month <span id="news-month">1</span></div><div class="news-text shock-neutral" id="news-text">Game paused. Press Start to begin shopping!</div><div class="panel-header-actions"><button class="panel-close-btn" onclick="closePanel('news')">✕</button></div></div>
+            <div class="control-panel choice-panel" id="section-choices">
+                <div class="control-panel-header" onclick="togglePanel('choices')"><div class="panel-title highlight" style="margin-bottom:0">🎮 Consumption Choices</div><div class="panel-header-actions"><button class="panel-collapse-btn" id="toggle-choices" onclick="event.stopPropagation();togglePanel('choices')">▼</button><button class="panel-close-btn" onclick="event.stopPropagation();closePanel('choices')">✕</button></div></div>
+                <div class="control-panel-body" id="body-choices">
+                    <div class="bundle-display"><div class="good-box good-x"><div class="good-label">Good \(X\)</div><div class="good-value" id="current-x">20</div><div class="good-price">@ $<span id="display-px">2.00</span></div></div><div class="good-box good-y"><div class="good-label">Good \(Y\)</div><div class="good-value" id="current-y">20</div><div class="good-price">@ $<span id="display-py">2.00</span></div></div></div>
+                    <div style="text-align:center;padding:8px;background:#f7fafc;border-radius:8px;margin-bottom:12px;font-size:.78rem;color:#718096">👆 Click on the graph to choose your bundle</div>
+                    <div class="budget-section"><div class="budget-header"><span class="budget-label">Budget</span><span class="budget-values"><span class="budget-spent" id="budget-spent">$80</span> / <span class="budget-total" id="budget-total">$100</span></span></div><div class="budget-bar"><div class="budget-fill under" id="budget-fill" style="width:80%"></div></div><div class="budget-warning" id="budget-warning" style="display:none">⚠️ Over budget!</div><div class="savings-info" id="savings-info" style="display:none"></div></div>
+                </div>
+            </div>
+            <div class="control-panel" id="section-score">
+                <div class="control-panel-header" onclick="togglePanel('score')"><div class="panel-title" style="margin-bottom:0">Your Score</div><div class="panel-header-actions"><button class="panel-collapse-btn" id="toggle-score" onclick="event.stopPropagation();togglePanel('score')">▼</button><button class="panel-close-btn" onclick="event.stopPropagation();closePanel('score')">✕</button></div></div>
+                <div class="control-panel-body" id="body-score">
+                    <div class="utility-display"><div class="utility-label">Current Utility</div><div class="utility-value-main" id="current-utility">20.0</div><div class="utility-optimal">Optimal: <span id="optimal-utility">25.0</span></div></div>
+                    <div class="speed-control"><span class="speed-label">Speed:</span><div class="speed-buttons"><button class="speed-btn" onclick="setSpeed(0.5)">0.5x</button><button class="speed-btn active" onclick="setSpeed(1)">1x</button><button class="speed-btn" onclick="setSpeed(2)">2x</button><button class="speed-btn" onclick="setSpeed(3)">3x</button></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="below-fold">
+        <div class="left-section" id="section-history"><div class="left-section-header" onclick="toggleSection('history')"><div class="panel-title" style="margin-bottom:0">📈 Utility History</div><div class="panel-header-actions"><button class="panel-collapse-btn" id="toggle-history" onclick="event.stopPropagation();toggleSection('history')">▼</button><button class="panel-close-btn" onclick="event.stopPropagation();closePanel('history')">✕</button></div></div>
+            <div class="left-section-body" id="body-history"><div class="monthly-utility"><div class="monthly-label">This Month</div><div class="monthly-value high" id="monthly-utility">0.0</div></div><div class="efficiency-meter"><div class="efficiency-header"><span class="efficiency-label">\(U / U^*\) Efficiency</span><span class="efficiency-value" id="efficiency-value">100%</span></div><div class="efficiency-bar"><div class="efficiency-fill" id="efficiency-fill" style="width:100%"></div></div></div><div class="chart-container"><canvas id="history-canvas" width="1200" height="500"></canvas></div><div class="high-score"><div class="hs-label">🏆 Best Run (12 months)</div><div class="hs-value" id="high-score">0</div></div></div>
+        </div>
+        <div class="left-section" id="section-explanation"><div class="left-section-header" onclick="toggleSection('explanation')"><div class="panel-title" style="margin-bottom:0">Explanation</div><div class="panel-header-actions"><button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')">▼</button><button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')">✕</button></div></div>
+            <div class="left-section-body" id="body-explanation"><p id="explanation-text"></p></div>
+        </div>
+    </div>
+    <div class="display-options-wrapper"><button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel"><div class="panel-title">Display Options</div>
+            <div class="opt-section-label">Plot</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Tick numbers</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-feasible" checked><label for="show-feasible">Feasible region</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-player-ic" checked><label for="show-player-ic">Your IC</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-ic"><label for="show-opt-ic">Optimal IC</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-point"><label for="show-opt-point">Optimal point</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-player-point" checked><label for="show-player-point">Your point</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-dashed-lines" checked><label for="show-dashed-lines">Projections</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-labels" checked><label for="show-labels">Labels</label></div>
+            <div class="restore-bar" id="restore-bar"></div>
+            <div class="url-state-bar"><button id="copy-url-btn">📋 Copy link</button><button id="reset-url-btn">↺ Reset</button><span class="url-hint">Encodes display & panel states</span></div>
+        </div>
+    </div>
+</div>
+<div class="popup-overlay" id="popup-overlay"><div class="popup"><div class="stars" id="popup-stars"></div><h2 id="popup-title">Year Complete!</h2><div class="popup-sub" id="popup-sub"></div><div class="grade" id="popup-grade"></div><div class="score-grid" id="popup-scores"></div><div class="report-section" id="popup-report"></div><div class="verify-section"><div class="verify-label">Validation Code</div><div class="verify-code" id="popup-verify"></div></div><div id="popup-buttons"><button class="popup-btn" onclick="closePopup()">Play Again</button></div></div></div>
+
+<script>
+// ─── Embed ───
+(function(){const p=new URLSearchParams(window.location.search);if(p.has('embed')){document.body.classList.add('embed-mode');const h=p.get('hide');if(h)h.split(',').forEach(s=>document.body.classList.add('embed-hide-'+s.trim()));}})();
+function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
+document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
+
+// ─── Collapse/Close/Restore ───
+function toggleSection(n){const b=document.getElementById('body-'+n),t=document.getElementById('toggle-'+n);if(!b)return;const c=b.classList.toggle('collapsed');if(t)t.textContent=c?'▶':'▼';}
+function togglePanel(n){toggleSection(n);}
+const PANEL_NAMES={header:'Header',graph:'Graph',choices:'Choices',score:'Score',news:'News',history:'History',explanation:'Explanation',scenarios:'Scenarios'};
+const LEFT_PANELS=['graph'];const RIGHT_PANELS=['choices','score','news'];
+function closePanel(n){const e=document.getElementById('section-'+n);if(e)e.classList.add('panel-closed');updateRestoreBar();updateLayout();}
+function restorePanel(n){const e=document.getElementById('section-'+n);if(e)e.classList.remove('panel-closed');updateRestoreBar();updateLayout();}
+function updateLayout(){const mc=document.querySelector('.main-content');mc.classList.toggle('left-empty',LEFT_PANELS.every(n=>document.getElementById('section-'+n)?.classList.contains('panel-closed')));mc.classList.toggle('right-empty',RIGHT_PANELS.every(n=>document.getElementById('section-'+n)?.classList.contains('panel-closed')));}
+function updateRestoreBar(){const bar=document.getElementById('restore-bar');const closed=Object.keys(PANEL_NAMES).filter(n=>document.getElementById('section-'+n)?.classList.contains('panel-closed'));if(!closed.length){bar.innerHTML='';return;}bar.innerHTML='<span class="restore-label">Restore:</span>'+closed.map(n=>`<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');}
+
+// ─── Draggable labels ───
+const nudgeOffsets={};const DPR=2;const S=DPR;
+function getNudge(t){const o=nudgeOffsets[t];return o?{dx:o.dx*DPR,dy:o.dy*DPR}:{dx:0,dy:0};}
+let labelHitBoxes=[];
+function registerLabel(key,lx,ty,w,h){labelHitBoxes.push({key,x:lx,y:ty,w,h});}
+function mouseToCanvas(e,c){const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*(c.width/r.width),y:(e.clientY-r.top)*(c.height/r.height)};}
+function hitTestLabels(cx,cy){for(let i=labelHitBoxes.length-1;i>=0;i--){const b=labelHitBoxes[i];if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h)return b.key;}return null;}
+let labelDragTarget=null,labelDragStartX=0,labelDragStartY=0,labelDragStartOX=0,labelDragStartOY=0;
+function isVis(id){const e=document.getElementById(id);return e?e.checked:true;}
+
+// ─── Scenario definitions ───
+const SCENARIOS = {
+    1: {
+        name: 'Static Optimization',
+        debtInterest: 1.5,
+        savingsRate: 0,
+        investmentRate: 0,
+        discountRate: 0,
+        allowSavings: false,
+        allowInvestment: false,
+        desc: '<strong>Hit the tangency each month.</strong> No savings carry forward, no investment, no discounting. Over-budget choices are penalized. The optimal strategy is simply to find the tangency condition <em>MRS = Pₓ/Pᵧ</em> each period.',
+        tags: [{text:'No Investment',on:false},{text:'No Discounting',on:false},{text:'Over-budget Penalty',on:true}],
+        explanation: 'This scenario simulates the static consumer optimization problem repeated over 12 months. Each month, prices and income change via deterministic shocks, and you must re-optimize your consumption bundle. There is no way to transfer resources between periods — you cannot save or invest. The only dynamic element is the over-budget penalty: if you overspend, the overshoot accrues as debt that reduces next month\'s income. Since there is no discounting, every month\'s utility counts equally toward your total. The optimal strategy is simply to hit the tangency condition MRS = Pₓ/Pᵧ on the budget line every single month. Any deviation from the tangency — spending too little or too much — wastes potential utility.'
+    },
+    2: {
+        name: 'Investment & Growth',
+        debtInterest: 1.5,
+        savingsRate: 0,
+        investmentRate: 0.20,
+        discountRate: 0,
+        allowSavings: false,
+        allowInvestment: true,
+        desc: '<strong>Sacrifice now, grow later.</strong> Any income you don\'t spend is automatically invested at a 20% monthly return, boosting future income. No discounting — every month\'s utility counts equally. Can you beat the tangency-every-period strategy by investing early?',
+        tags: [{text:'Investment (20%/mo)',on:true},{text:'No Discounting',on:false},{text:'Over-budget Penalty',on:true}],
+        explanation: 'This scenario adds an investment mechanism: any income you choose not to spend is automatically invested and earns a 20% monthly return. Your investment fund grows each month, and the returns are added to your available income in subsequent periods. Crucially, there is no discounting — utility earned in month 12 counts just as much as utility earned in month 1. This means that by deliberately underspending early (consuming less than the tangency bundle), you can grow your investment fund. The compounding returns mean that by later months, your effective income is substantially higher, allowing you to reach higher indifference curves than would otherwise be possible. The optimal strategy is no longer to simply hit the tangency each period — instead, you should invest heavily in early months and spend more in later months. This demonstrates that when resources can be transferred between periods and there is no time-value penalty, patient investment dominates myopic optimization.'
+    },
+    3: {
+        name: 'High Discounting',
+        debtInterest: 1.5,
+        savingsRate: 0,
+        investmentRate: 0.20,
+        discountRate: 0.40,       // 40% monthly discount — massively favors present
+        allowSavings: false,
+        allowInvestment: true,
+        desc: '<strong>The future is almost worthless.</strong> Investment still earns 20%/month, but a 40% monthly discount rate crushes the value of future utility. Investing is now a losing proposition — the time-value penalty far exceeds the growth. Consume now!',
+        tags: [{text:'Investment (20%/mo)',on:true},{text:'Discount Rate (40%/mo)',on:true},{text:'Over-budget Penalty',on:true}],
+        explanation: 'This scenario keeps the same 20% monthly investment return from Scenario 2, but introduces a punishing 40% monthly discount rate. By month 12, utility is worth only about 1% of its face value. With the discount rate double the investment return, every dollar you invest instead of spending loses net present value — the growth cannot compensate for the time-value penalty. The optimal strategy swings back toward Scenario 1: consume at or near the tangency each period. Investing barely helps because even though your future income grows, the utility you earn from it is so heavily discounted that you would have been better off consuming now. This demonstrates that when the discount rate exceeds the investment return, the patient strategy from Scenario 2 becomes suboptimal and immediate consumption dominates.'
+    },
+    4: {
+        name: 'Balanced Tradeoff',
+        debtInterest: 1.5,
+        savingsRate: 0,
+        investmentRate: 0.20,
+        discountRate: 0.15,       // 15% monthly discount — moderate preference for now
+        allowSavings: false,
+        allowInvestment: true,
+        desc: '<strong>Time is money.</strong> Investment still earns 20%/month, but now a 15% monthly discount rate means future utility is worth less than present utility. The save-and-invest strategy no longer dominates — you must balance growth against the time-value of consumption.',
+        tags: [{text:'Investment (20%/mo)',on:true},{text:'Discount Rate (15%/mo)',on:true},{text:'Over-budget Penalty',on:true}],
+        explanation: 'This scenario keeps the investment mechanism from Scenario 2 (20% monthly return) but adds a 15% monthly discount rate. This means utility earned in the future is worth less in present-value terms: month 2 utility is multiplied by 1/(1.15), month 3 by 1/(1.15)², and so on. By month 12, utility is worth only about 19% of its face value. Unlike Scenario 3 where the discount rate dominated, here the investment return (20%) exceeds the discount rate (15%), so some investment is worthwhile — but not all-in saving like Scenario 2. The optimal strategy is to balance these forces — consume enough each period to capture the time-value of present utility, while still investing some to grow future income. This illustrates the fundamental problem of intertemporal resource allocation: when both forces are present and comparable, you must find the right tradeoff.'
+    }
+};
+let currentScenario = 1;
+
+function updateBestScores(){
+    for(let i=1;i<=4;i++){
+        const el=document.getElementById('best-s'+i);
+        if(el) el.textContent=highScores[i]>0?('🏆 '+highScores[i].toFixed(0)):'';
+    }
+}
+
+function selectScenario(n) {
+    if (gameRunning) return;
+    currentScenario = n;
+    document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-s'+n).classList.add('active');
+    const sc = SCENARIOS[n];
+    document.getElementById('scenario-desc').innerHTML = sc.desc +
+        '<div class="mechanic-tags">' + sc.tags.map(t => `<span class="mechanic-tag ${t.on?'on':'off'}">${t.text}</span>`).join('') + '</div>';
+    document.getElementById('explanation-text').textContent = sc.explanation;
+    document.getElementById('current-scenario-display').textContent = n;
+    resetGame();
+    updateBestScores();
+    renderAllMath();
+}
+
+// ─── Deterministic shock sequence ───
+const SHOCK_SEQUENCE=[
+    {type:'px+',mag:.60,msg:"⚠️ Tariffs imposed on Good X! Price rises $0.60!"},
+    {type:'m+',mag:25,msg:"💰 You got a raise! Income +$25!"},
+    {type:'py+',mag:.45,msg:"⚠️ Good Y supply disruption! Price up $0.45!"},
+    {type:'px-',mag:.35,msg:"✅ New competitor enters X market! Price falls $0.35!"},
+    {type:'m-',mag:20,msg:"📉 Car repair eats into savings. Income −$20."},
+    {type:'pref',mag:.08,msg:"🔄 Health kick shifts preferences! α changes."},
+    {type:'py-',mag:.50,msg:"✅ Trade deal lowers Y costs! Price falls $0.50!"},
+    {type:'px+',mag:.80,msg:"⚠️ Supply shortage drives X prices up $0.80!"},
+    {type:'m+',mag:15,msg:"💰 Tax refund! Income +$15!"},
+    {type:'py+',mag:.70,msg:"⚠️ Import restrictions raise Y prices $0.70!"},
+    {type:'m-',mag:30,msg:"📉 Rent hike squeezes budget −$30."},
+    {type:'stable',mag:0,msg:"📊 Markets stable. No changes this month."}
+];
+function applyShock(idx){
+    const sh=SHOCK_SEQUENCE[idx%SHOCK_SEQUENCE.length];let cls='shock-neutral';
+    if(sh.type==='px+'){marketParams.priceX=Math.min(5,marketParams.priceX+sh.mag);cls='shock-bad';}
+    else if(sh.type==='px-'){marketParams.priceX=Math.max(.5,marketParams.priceX-sh.mag);cls='shock-good';}
+    else if(sh.type==='py+'){marketParams.priceY=Math.min(5,marketParams.priceY+sh.mag);cls='shock-bad';}
+    else if(sh.type==='py-'){marketParams.priceY=Math.max(.5,marketParams.priceY-sh.mag);cls='shock-good';}
+    else if(sh.type==='m+'){marketParams.baseIncome=Math.min(200,marketParams.baseIncome+sh.mag);cls='shock-good';}
+    else if(sh.type==='m-'){marketParams.baseIncome=Math.max(50,marketParams.baseIncome-sh.mag);cls='shock-bad';}
+    else if(sh.type==='pref'){marketParams.alpha=Math.max(.3,Math.min(.7,marketParams.alpha+sh.mag));}
+    // Recalculate effective income = base + investment returns
+    recalcIncome();
+    document.getElementById('news-text').textContent=sh.msg;document.getElementById('news-text').className='news-text '+cls;
+    document.getElementById('news-month').textContent=currentMonth;
+}
+
+function recalcIncome() {
+    const sc = SCENARIOS[currentScenario];
+    // Debt compounds each month it persists
+    if (debt > 0) {
+        debt *= sc.debtInterest;
+    }
+    // effective income = base income + investment returns - debt
+    let eff = marketParams.baseIncome;
+    if (sc.allowInvestment) {
+        eff += investmentFund * sc.investmentRate;
+    }
+    eff -= debt;
+    if (eff < 0) eff = 0;
+    marketParams.income = eff;
+}
+
+// ─── Game state ───
+const icCanvas=document.getElementById('ic-canvas'),historyCanvas=document.getElementById('history-canvas');
+const icCtx=icCanvas.getContext('2d'),historyCtx=historyCanvas.getContext('2d');
+let gameRunning=false,gameSpeed=1,currentMonth=1,cumulativeUtility=0,highScores={1:0,2:0,3:0,4:0},monthlyUtilities=[];
+let playerX=20,playerY=20,wasAffordable=true,totalOptimalUtility=0,debt=0,testMode=false;
+let investmentFund=0; // accumulated investment pool
+let monthlyRawUtilities=[]; // before discounting, for report
+let monthlyIncomes=[]; // track income each month for report
+let marketParams={priceX:2,priceY:2,income:100,baseIncome:100,alpha:0.5};
+
+function utility(x,y){return(x<=0||y<=0)?0:Math.pow(x,marketParams.alpha)*Math.pow(y,1-marketParams.alpha);}
+function optimalBundle(){const x=(marketParams.alpha*marketParams.income)/marketParams.priceX,y=((1-marketParams.alpha)*marketParams.income)/marketParams.priceY;return{x,y,utility:utility(x,y)};}
+function isAffordable(x,y){return(marketParams.priceX*x+marketParams.priceY*y)<=marketParams.income*1.001;}
+function spending(x,y){return marketParams.priceX*x+marketParams.priceY*y;}
+function MRS(x,y){return x<=0?Infinity:(marketParams.alpha/(1-marketParams.alpha))*(y/x);}
+function getICY(x,u){if(x<=0)return null;const y=Math.pow(u/Math.pow(x,marketParams.alpha),1/(1-marketParams.alpha));return isFinite(y)?y:null;}
+function clipLine(x0,y0,x1,y1,mX,mY){function code(x,y){let c=0;if(x<0)c|=1;else if(x>mX)c|=2;if(y<0)c|=4;else if(y>mY)c|=8;return c;}let c0=code(x0,y0),c1=code(x1,y1);for(let i=0;i<20;i++){if(!(c0|c1))return{x0,y0,x1,y1};if(c0&c1)return null;let c=c0||c1,x,y;if(c&8){y=mY;x=x0+(x1-x0)*(mY-y0)/(y1-y0);}else if(c&4){y=0;x=x0+(x1-x0)*(0-y0)/(y1-y0);}else if(c&2){x=mX;y=y0+(y1-y0)*(mX-x0)/(x1-x0);}else{x=0;y=y0+(y1-y0)*(0-x0)/(x1-x0);}if(c===c0){x0=x;y0=y;c0=code(x0,y0);}else{x1=x;y1=y;c1=code(x1,y1);}}return null;}
+
+// ─── Month processing (shared logic) ───
+function processMonth() {
+    const sc = SCENARIOS[currentScenario];
+    const opt = optimalBundle();
+    const spent = spending(playerX, playerY);
+    const overBudget = spent > marketParams.income * 1.001;
+    const mu = utility(playerX, playerY);
+
+    // Discount factor
+    const discountFactor = Math.pow(1 / (1 + sc.discountRate), currentMonth - 1);
+    const discountedU = mu * discountFactor;
+    const discountedOpt = opt.utility * discountFactor;
+
+    monthlyUtilities.push(discountedU);
+    monthlyRawUtilities.push(mu);
+    monthlyIncomes.push(marketParams.income);
+    cumulativeUtility += discountedU;
+    totalOptimalUtility += discountedOpt;
+
+    // Handle over-budget: overshoot becomes debt
+    if (overBudget) {
+        const overshoot = spent - marketParams.income;
+        debt += overshoot;
+    } else {
+        // Handle under-budget
+        const saved = marketParams.income - spent;
+        if (saved > 0) {
+            if (sc.allowInvestment) {
+                // Unspent income goes into investment fund
+                investmentFund += saved;
+            }
+            // In scenario 1: savings are simply lost (no carry forward)
+        }
+    }
+
+    // Grow investment fund (compound within the fund itself)
+    if (sc.allowInvestment && investmentFund > 0) {
+        investmentFund *= (1 + sc.investmentRate);
+    }
+
+    currentMonth++;
+    document.getElementById('cumulative-utility').textContent = cumulativeUtility.toFixed(0);
+    document.getElementById('current-month').textContent = currentMonth;
+
+    if (currentMonth > 12) {
+        showEndPopup();
+    } else {
+        applyShock(currentMonth - 2);
+        updateDisplay();
+    }
+}
+
+// ─── Validation ───
+function makeVerifyCode(cumU,optU,effPct,scenario){
+    const raw=`UMGAME|S${scenario}|${Math.round(cumU*100)}|${Math.round(optU*100)}|${Math.round(effPct*10)}|UMX7`;
+    let h=0;for(let i=0;i<raw.length;i++){h=((h<<5)-h)+raw.charCodeAt(i);h|=0;}
+    return 'UM-S'+scenario+'-'+Math.abs(h).toString(36).toUpperCase().slice(0,4)+'-'+Math.abs(h*7+Math.round(cumU)).toString(36).toUpperCase().slice(0,4)+'-'+Math.round(effPct);
+}
+
+function showEndPopup(){
+    const sc = SCENARIOS[currentScenario];
+    const avgEff = totalOptimalUtility > 0 ? (cumulativeUtility / totalOptimalUtility) * 100 : 0;
+
+    // Update high score for this scenario
+    if (cumulativeUtility > highScores[currentScenario]) {
+        highScores[currentScenario] = cumulativeUtility;
+    }
+    updateBestScores();
+
+    document.getElementById('popup-stars').textContent = '';
+    document.getElementById('popup-title').textContent = `🎉 Scenario ${currentScenario} Complete!`;
+    document.getElementById('popup-sub').textContent = sc.name + ' — 12 months of consumer optimization.';
+    document.getElementById('popup-grade').textContent = `Total Utility: ${cumulativeUtility.toFixed(1)}`;
+    document.getElementById('popup-grade').className = 'grade';
+    document.getElementById('popup-grade').style.color = '#38a169';
+
+    const balLabel = debt > 0 ? 'Remaining Debt' : 'Net Balance';
+    const balColor = debt > 0 ? '#e53e3e' : '#718096';
+    let gridHTML =
+        `<span class="sg-label">Cumulative Utility</span><span class="sg-val" style="color:#38a169">${cumulativeUtility.toFixed(1)}</span>`;
+
+    if (sc.allowInvestment) {
+        gridHTML += `<span class="sg-label">Final Investment Fund</span><span class="sg-val" style="color:#2b6cb0">$${investmentFund.toFixed(0)}</span>`;
+    }
+    if (debt > 0) {
+        gridHTML += `<span class="sg-label">${balLabel}</span><span class="sg-val" style="color:${balColor}">$${Math.abs(debt).toFixed(0)}</span>`;
+    }
+    document.getElementById('popup-scores').innerHTML = gridHTML;
+
+    // Build scenario-specific report
+    const report = document.getElementById('popup-report');
+    report.innerHTML = buildReport(avgEff);
+
+    document.getElementById('popup-verify').textContent = testMode ? '(test run — no code)' : makeVerifyCode(cumulativeUtility, totalOptimalUtility, avgEff, currentScenario);
+
+    // Next scenario button
+    const btns = document.getElementById('popup-buttons');
+    if (currentScenario < 4) {
+        btns.innerHTML = `<button class="popup-btn" onclick="closePopup()">Play Again</button><button class="popup-btn secondary" onclick="closePopup();selectScenario(${currentScenario+1})">Next: ${SCENARIOS[currentScenario+1].name} →</button>`;
+    } else {
+        btns.innerHTML = `<button class="popup-btn" onclick="closePopup()">Play Again</button>`;
+    }
+
+    document.getElementById('popup-overlay').classList.add('visible');
+    gameRunning = false;
+    document.getElementById('start-btn').textContent = '▶️ Start';
+    document.getElementById('start-btn').className = 'game-btn btn-start';
+}
+
+function buildReport(avgEff) {
+    const sc = SCENARIOS[currentScenario];
+    let html = '';
+
+    // All-scores summary at top
+    html += '<h3>🏆 Best Scores Across All Scenarios</h3>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px">';
+    for (let i = 1; i <= 4; i++) {
+        const isCurrent = (i === currentScenario);
+        const score = isCurrent ? Math.max(highScores[i], cumulativeUtility) : highScores[i];
+        const name = SCENARIOS[i].name;
+        const color = score > 0 ? (isCurrent ? '#38a169' : '#4a5568') : '#a0aec0';
+        const bg = isCurrent ? '#f0fff4' : '#f7fafc';
+        const border = isCurrent ? '2px solid #38a169' : '1px solid #e2e8f0';
+        html += `<div style="padding:6px 10px;border-radius:6px;background:${bg};border:${border}">`;
+        html += `<div style="font-size:.65rem;color:#718096;text-transform:uppercase">S${i}: ${name}</div>`;
+        html += `<div style="font-size:1rem;font-weight:700;color:${color};font-family:Monaco,Consolas,monospace">${score > 0 ? score.toFixed(0) : '—'}</div>`;
+        html += '</div>';
+    }
+    html += '</div>';
+
+    if (currentScenario === 1) {
+        html += '<h3>📊 Scenario 1: Static Optimization</h3>';
+        if (avgEff >= 95) {
+            html += '<div class="insight good">Excellent! You stayed near the tangency condition almost every month. This confirms that without dynamics (no savings, investment, or discounting), the optimal strategy is simply to equate MRS = Pₓ/Pᵧ at the budget constraint each period.</div>';
+        } else if (avgEff >= 80) {
+            html += '<div class="insight warn">Good effort. You captured most of the available utility, but some months you strayed from the tangency. Remember: without any way to transfer resources between periods, every dollar not spent optimally is permanently lost utility.</div>';
+        } else {
+            html += '<div class="insight bad">There\'s room for improvement. Each month, you should aim to spend exactly on the budget line where MRS = Pₓ/Pᵧ. Under-spending doesn\'t help you here — unspent income is simply lost.</div>';
+        }
+        html += '<p><strong>Key takeaway:</strong> In a world with no investment and no discounting, the repeated static tangency solution is optimal. There is no strategic benefit to under-spending or over-spending — only hitting the tangency matters.</p>';
+        html += '<p>Try Scenario 2 next to see what happens when you can invest unspent income!</p>';
+    }
+    else if (currentScenario === 2) {
+        const earlySpend = monthlyRawUtilities.slice(0, 4).reduce((a, b) => a + b, 0);
+        const lateSpend = monthlyRawUtilities.slice(8).reduce((a, b) => a + b, 0);
+        const investedHeavily = investmentFund > 50 || lateSpend > earlySpend * 1.5;
+
+        html += '<h3>📊 Scenario 2: Investment & Growth</h3>';
+
+        if (investedHeavily && cumulativeUtility > totalOptimalUtility * 0.85) {
+            html += '<div class="insight good">Smart investing! By sacrificing consumption early and letting your investment fund grow at 20%/month, you built up substantial resources for later months. Since there\'s no discounting, the extra utility from higher late-period income more than compensated for the early sacrifice.</div>';
+        } else if (avgEff >= 90) {
+            html += '<div class="insight warn">You played it safe by hitting tangency each month — a strong baseline. But in this scenario, the investment returns (20%/month) are high enough that deliberately underspending early to build your fund would have yielded higher total utility. Without discounting, future utility is just as valuable as present utility.</div>';
+        } else {
+            html += '<div class="insight bad">The investment mechanism is the key to this scenario. Unspent income compounds at 20%/month. By investing heavily in early months, you could have dramatically increased your later income and total utility.</div>';
+        }
+
+        html += `<p><strong>Your investment fund at game end:</strong> $${investmentFund.toFixed(0)}. Each month it earned 20% returns, which were added to your income.</p>`;
+        html += '<p><strong>Key takeaway:</strong> When investment returns exceed zero and there is no discount rate, the "always hit tangency" strategy from Scenario 1 is no longer optimal. Patient investment dominates because compounding grows your future budget, and without discounting, that future utility counts in full.</p>';
+        html += '<p>Try Scenario 3 to see what happens when the discount rate is very high!</p>';
+    }
+    else if (currentScenario === 3) {
+        const earlyU = monthlyRawUtilities.slice(0, 4).reduce((a, b) => a + b, 0);
+        const lateU = monthlyRawUtilities.slice(8).reduce((a, b) => a + b, 0);
+
+        html += '<h3>📊 Scenario 3: High Discounting</h3>';
+
+        const consumedNow = earlyU > lateU * 1.5;
+        const investedHeavily = lateU > earlyU * 1.5;
+
+        if (consumedNow && avgEff >= 80) {
+            html += '<div class="insight good">Well played! You recognized that with a 40% discount rate dwarfing the 20% investment return, consuming now is the right call. The time-value penalty on future utility far exceeds what investment growth can recover.</div>';
+        } else if (investedHeavily) {
+            html += '<div class="insight bad">You tried the Scenario 2 strategy of heavy investment — but it backfired here. The 40% discount rate means future utility is almost worthless: month 12 utility counts for only ~1% of its face value. The 20% investment return cannot overcome that penalty.</div>';
+        } else {
+            html += '<div class="insight warn">With a 40% discount rate and only 20% investment returns, the math strongly favors present consumption. Every dollar you invest instead of spending loses net present value.</div>';
+        }
+
+        const discFactor12 = Math.pow(1 / (1 + sc.discountRate), 11);
+        html += `<p><strong>Discount impact:</strong> Month 12 utility was worth only ${(discFactor12 * 100).toFixed(1)}% of its face value. Even with 20% investment growth, the 40% discount makes saving a losing trade.</p>`;
+        html += '<p><strong>Key takeaway:</strong> When the discount rate exceeds the investment return, the patient investment strategy from Scenario 2 becomes suboptimal. This is the mirror image of Scenario 2 — now immediate consumption dominates, just like in Scenario 1. The discount rate determines whether patience pays.</p>';
+        html += '<p>Try Scenario 4 to see what happens when investment and discounting are both significant but more balanced!</p>';
+    }
+    else if (currentScenario === 4) {
+        const earlyU = monthlyRawUtilities.slice(0, 4).reduce((a, b) => a + b, 0);
+        const lateU = monthlyRawUtilities.slice(8).reduce((a, b) => a + b, 0);
+        const earlyDiscounted = monthlyUtilities.slice(0, 4).reduce((a, b) => a + b, 0);
+        const lateDiscounted = monthlyUtilities.slice(8).reduce((a, b) => a + b, 0);
+
+        html += '<h3>📊 Scenario 4: Balanced Tradeoff</h3>';
+
+        if (avgEff >= 85) {
+            html += '<div class="insight good">Well balanced! You navigated the tension between investing for growth and consuming now while utility is less discounted. This is the core challenge of intertemporal optimization.</div>';
+        } else if (lateU > earlyU * 2) {
+            html += '<div class="insight warn">You invested heavily like in Scenario 2 — but the 15% monthly discount rate means all that late-period utility was heavily penalized. Month 12 utility is worth only ~19% of month 1 utility in present value. You needed more early consumption.</div>';
+        } else if (earlyU > lateU * 3) {
+            html += '<div class="insight warn">You consumed heavily early, which captures the time-value of money. But some investment would have been worthwhile — the 20% return exceeds the 15% discount rate, so moderate saving could have boosted your total.</div>';
+        } else {
+            html += '<div class="insight">The optimal strategy here requires balancing two forces: (1) the discount rate makes present utility more valuable, but (2) the investment return grows your future budget. Neither extreme — all-consumption nor all-investment — is optimal.</div>';
+        }
+
+        const discFactor12 = Math.pow(1 / (1 + sc.discountRate), 11);
+        html += `<p><strong>Discount impact:</strong> Month 12 utility was worth only ${(discFactor12 * 100).toFixed(1)}% of its face value. Your investment fund earned 20%/month, partially offset by the 15% discount on future utility.</p>`;
+        html += '<p><strong>Key takeaway:</strong> When the investment return (20%) exceeds the discount rate (15%) but not by a huge margin, you must find the right balance. Unlike Scenario 2 (invest everything) or Scenario 3 (consume everything), the optimal strategy here is a mix — moderate early investment with increasing consumption over time. This is the fundamental problem of intertemporal resource allocation.</p>';
+
+        // Final summary since this is the last scenario
+        html += '<h3 style="margin-top:16px">📋 Cross-Scenario Summary</h3>';
+        html += '<p>Across the four scenarios, the key lesson is how <strong>investment returns</strong> and <strong>discount rates</strong> interact:</p>';
+        html += '<div class="insight" style="border-left-color:#805ad5"><strong>S1 (No dynamics):</strong> Just hit the tangency. Static optimization is all you need.</div>';
+        html += '<div class="insight" style="border-left-color:#805ad5"><strong>S2 (Investment, no discounting):</strong> Save everything early, spend big later. Patient investment dominates.</div>';
+        html += '<div class="insight" style="border-left-color:#805ad5"><strong>S3 (Discount ≫ Investment):</strong> Consume now — investing is a losing trade when future utility is nearly worthless.</div>';
+        html += '<div class="insight" style="border-left-color:#805ad5"><strong>S4 (Investment ≳ Discount):</strong> Balance both forces. Moderate saving with increasing consumption is optimal.</div>';
+    }
+
+    return html;
+}
+
+function closePopup(){
+    document.getElementById('popup-overlay').classList.remove('visible');
+    resetGame();
+}
+
+// ─── Draw ───
+let lastMargin,lastMaxX,lastMaxY;
+function maxSpendBudget(){return marketParams.income*2;}
+function getAxisBounds(){
+    const budget=maxSpendBudget();
+    const xInt=budget/marketParams.priceX,yInt=budget/marketParams.priceY;
+    const pad=1.15;
+    const raw=Math.max(xInt,yInt,playerX+5,playerY+5)*pad;
+    const nice=Math.ceil(raw/10)*10;
+    return Math.max(nice,20);
+}
+function drawICGraph(){
+    labelHitBoxes=[];
+    const margin={top:50,right:30,bottom:70,left:70};lastMargin=margin;
+    const w=icCanvas.width-margin.left-margin.right,h=icCanvas.height-margin.top-margin.bottom;
+    icCtx.fillStyle='#fff';icCtx.fillRect(0,0,icCanvas.width,icCanvas.height);
+    const maxX=getAxisBounds(),maxY=maxX;lastMaxX=maxX;lastMaxY=maxY;
+    const toX=x=>margin.left+(x/maxX)*w,toY=y=>margin.top+h-(y/maxY)*h;
+    if(isVis('show-gridlines')){icCtx.strokeStyle='#edf2f7';icCtx.lineWidth=S;for(let i=0;i<=4;i++){const gx=margin.left+(i/4)*w,gy=margin.top+(i/4)*h;icCtx.beginPath();icCtx.moveTo(gx,margin.top);icCtx.lineTo(gx,margin.top+h);icCtx.stroke();icCtx.beginPath();icCtx.moveTo(margin.left,gy);icCtx.lineTo(margin.left+w,gy);icCtx.stroke();}}
+    icCtx.strokeStyle='#a0aec0';icCtx.lineWidth=2*S;icCtx.beginPath();icCtx.moveTo(margin.left,margin.top);icCtx.lineTo(margin.left,margin.top+h);icCtx.lineTo(margin.left+w,margin.top+h);icCtx.stroke();
+    if(isVis('show-axis-numbers')){icCtx.fillStyle='#718096';icCtx.font=`${11*S}px Segoe UI`;icCtx.textAlign='center';for(let i=0;i<=4;i++)icCtx.fillText((i*maxX/4).toFixed(0),toX(i*maxX/4),margin.top+h+16*S);icCtx.textAlign='right';for(let i=0;i<=4;i++)icCtx.fillText((i*maxY/4).toFixed(0),margin.left-5*S,toY(i*maxY/4)+4*S);}
+    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');icCtx.fillStyle='#4a5568';icCtx.font=`italic ${13*S}px Georgia,serif`;icCtx.textAlign='center';const bx=margin.left+w/2+n.dx,by=icCanvas.height-6*S+n.dy;icCtx.fillText('Good X',bx,by);const tw=icCtx.measureText('Good X').width;registerLabel('xaxis-label',bx-tw/2-4*S,by-16*S,tw+8*S,24*S);}
+    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');icCtx.fillStyle='#4a5568';icCtx.font=`italic ${13*S}px Georgia,serif`;icCtx.textAlign='center';icCtx.save();const bx=14*S+n.dx,by=margin.top+h/2+n.dy;icCtx.translate(bx,by);icCtx.rotate(-Math.PI/2);icCtx.fillText('Good Y',0,0);icCtx.restore();const tw=icCtx.measureText('Good Y').width;registerLabel('yaxis-label',bx-12*S,by-tw/2-4*S,24*S,tw+8*S);}
+    const xInt=marketParams.income/marketParams.priceX,yInt=marketParams.income/marketParams.priceY;
+    if(isVis('show-feasible')){icCtx.fillStyle='rgba(72,187,120,0.1)';icCtx.beginPath();icCtx.moveTo(toX(0),toY(0));icCtx.lineTo(toX(0),toY(Math.min(yInt,maxY)));if(xInt<=maxX&&yInt<=maxY)icCtx.lineTo(toX(xInt),toY(0));else if(yInt>maxY&&xInt<=maxX){icCtx.lineTo(toX(Math.max(0,(marketParams.income-marketParams.priceY*maxY)/marketParams.priceX)),toY(maxY));icCtx.lineTo(toX(xInt),toY(0));}else if(yInt<=maxY&&xInt>maxX){icCtx.lineTo(toX(maxX),toY(Math.max(0,(marketParams.income-marketParams.priceX*maxX)/marketParams.priceY)));icCtx.lineTo(toX(maxX),toY(0));}else{const xa=(marketParams.income-marketParams.priceY*maxY)/marketParams.priceX,ya=(marketParams.income-marketParams.priceX*maxX)/marketParams.priceY;if(xa>=0&&xa<=maxX)icCtx.lineTo(toX(xa),toY(maxY));if(ya>=0&&ya<=maxY)icCtx.lineTo(toX(maxX),toY(ya));icCtx.lineTo(toX(maxX),toY(0));}icCtx.closePath();icCtx.fill();}
+    if(isVis('show-bc')){const cl=clipLine(0,yInt,xInt,0,maxX,maxY);if(cl){icCtx.strokeStyle='#e53e3e';icCtx.lineWidth=3*S;icCtx.beginPath();icCtx.moveTo(toX(cl.x0),toY(cl.y0));icCtx.lineTo(toX(cl.x1),toY(cl.y1));icCtx.stroke();}}
+    const opt=optimalBundle(),playerU=utility(playerX,playerY),affordable=isAffordable(playerX,playerY);
+    if(isVis('show-opt-ic')&&opt.utility>0){icCtx.strokeStyle='rgba(214,158,46,0.5)';icCtx.lineWidth=2*S;icCtx.setLineDash([6*S,4*S]);icCtx.beginPath();let st=false;for(let x=.5;x<=maxX;x+=.5){const y=getICY(x,opt.utility);if(y!==null&&y>0&&y<=maxY){if(!st){icCtx.moveTo(toX(x),toY(y));st=true;}else icCtx.lineTo(toX(x),toY(y));}}icCtx.stroke();icCtx.setLineDash([]);}
+    if(isVis('show-player-ic')&&playerU>0){icCtx.strokeStyle=affordable?'#3182ce':'#a0aec0';icCtx.lineWidth=3*S;icCtx.beginPath();let st=false;for(let x=.5;x<=maxX;x+=.5){const y=getICY(x,playerU);if(y!==null&&y>0&&y<=maxY){if(!st){icCtx.moveTo(toX(x),toY(y));st=true;}else icCtx.lineTo(toX(x),toY(y));}}icCtx.stroke();}
+    if(isVis('show-opt-point')&&opt.x<=maxX&&opt.y<=maxY){const n=getNudge('opt-label');icCtx.fillStyle='rgba(214,158,46,0.3)';icCtx.beginPath();icCtx.arc(toX(opt.x),toY(opt.y),10*S,0,Math.PI*2);icCtx.fill();icCtx.fillStyle='#d69e2e';icCtx.beginPath();icCtx.arc(toX(opt.x),toY(opt.y),4*S,0,Math.PI*2);icCtx.fill();icCtx.strokeStyle='#fff';icCtx.lineWidth=1.5*S;icCtx.stroke();if(isVis('show-labels')){icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#d69e2e';icCtx.textAlign='left';const ox=toX(opt.x)+10*S+n.dx,oy=toY(opt.y)-5*S+n.dy;icCtx.fillText('Optimal',ox,oy);const tw=icCtx.measureText('Optimal').width;registerLabel('opt-label',ox-2*S,oy-12*S,tw+4*S,18*S);}}
+    if(isVis('show-player-point')&&playerX<=maxX&&playerY<=maxY){
+        if(isVis('show-dashed-lines')){icCtx.strokeStyle='#a0aec0';icCtx.lineWidth=S;icCtx.setLineDash([4*S,3*S]);icCtx.beginPath();icCtx.moveTo(toX(playerX),toY(playerY));icCtx.lineTo(toX(playerX),toY(0));icCtx.stroke();icCtx.beginPath();icCtx.moveTo(toX(playerX),toY(playerY));icCtx.lineTo(toX(0),toY(playerY));icCtx.stroke();icCtx.setLineDash([]);}
+        const gr=icCtx.createRadialGradient(toX(playerX),toY(playerY),0,toX(playerX),toY(playerY),16*S);gr.addColorStop(0,affordable?'rgba(49,130,206,0.5)':'rgba(229,62,62,0.5)');gr.addColorStop(1,affordable?'rgba(49,130,206,0)':'rgba(229,62,62,0)');icCtx.fillStyle=gr;icCtx.beginPath();icCtx.arc(toX(playerX),toY(playerY),16*S,0,Math.PI*2);icCtx.fill();
+        icCtx.fillStyle=affordable?'#3182ce':'#e53e3e';icCtx.beginPath();icCtx.arc(toX(playerX),toY(playerY),7*S,0,Math.PI*2);icCtx.fill();icCtx.strokeStyle='#fff';icCtx.lineWidth=2*S;icCtx.stroke();
+        if(isVis('show-labels')){const n=getNudge('player-label');icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#3182ce';icCtx.textAlign='right';const tw=icCtx.measureText('You').width;const px=margin.left+w-10*S+n.dx,py=toY(playerY)+4*S+n.dy;icCtx.fillText('You',px,py);registerLabel('player-label',px-tw-2*S,py-12*S,tw+4*S,18*S);}}
+    if(isVis('show-labels')&&isVis('show-bc')){const n=getNudge('budget-label');icCtx.font=`bold ${10*S}px Segoe UI`;icCtx.fillStyle='#e53e3e';icCtx.textAlign='right';const bx_frac=0.85;const bx_goods=Math.min(xInt*bx_frac,maxX*0.85);const by_goods=yInt-(yInt/xInt)*bx_goods;const blx=margin.left+w-10*S+(n?n.dx:0),bly=toY(Math.max(by_goods,0))-8*S+(n?n.dy:0);const tw=icCtx.measureText('Budget').width;icCtx.fillText('Budget',blx,bly);registerLabel('budget-label',blx-tw-2*S,bly-12*S,tw+4*S,18*S);}
+}
+function drawHistoryChart(){
+    const margin={top:40,right:30,bottom:50,left:80},w=historyCanvas.width-margin.left-margin.right,h=historyCanvas.height-margin.top-margin.bottom;
+    historyCtx.fillStyle='#fff';historyCtx.fillRect(0,0,historyCanvas.width,historyCanvas.height);
+    const maxMonths=12,utils=monthlyUtilities.slice(-maxMonths);
+    let maxU=30;utils.forEach(u=>{if(u>maxU)maxU=u;});maxU=Math.ceil(maxU/10)*10+10;
+    const toX=i=>margin.left+((i+.5)/maxMonths)*w,toY=u=>margin.top+h-(u/maxU)*h,bw=(w/maxMonths)*.7;
+    historyCtx.strokeStyle='#edf2f7';historyCtx.lineWidth=S;for(let i=0;i<=4;i++){const y=margin.top+(i/4)*h;historyCtx.beginPath();historyCtx.moveTo(margin.left,y);historyCtx.lineTo(margin.left+w,y);historyCtx.stroke();}
+    historyCtx.strokeStyle='#a0aec0';historyCtx.lineWidth=2*S;historyCtx.beginPath();historyCtx.moveTo(margin.left,margin.top);historyCtx.lineTo(margin.left,margin.top+h);historyCtx.lineTo(margin.left+w,margin.top+h);historyCtx.stroke();
+    historyCtx.fillStyle='#718096';historyCtx.font=`${9*S}px Segoe UI`;historyCtx.textAlign='right';for(let i=0;i<=4;i++)historyCtx.fillText((i/4*maxU).toFixed(0),margin.left-5*S,toY(i/4*maxU)+3*S);
+    historyCtx.fillStyle='#4a5568';historyCtx.font=`${10*S}px Segoe UI`;historyCtx.textAlign='center';
+    const sc=SCENARIOS[currentScenario];
+    const yLabel=sc.discountRate>0?'Discounted Utility':'Utility';
+    historyCtx.fillText('Month',margin.left+w/2,historyCanvas.height-3*S);
+    const opt=optimalBundle();
+    utils.forEach((u,i)=>{const x=toX(i)-bw/2,eff=opt.utility>0?u/opt.utility:0;let gr;if(eff>=.9){gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#38a169');gr.addColorStop(1,'#68d391');}else if(eff>=.7){gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#d69e2e');gr.addColorStop(1,'#ecc94b');}else{gr=historyCtx.createLinearGradient(x,toY(u),x,toY(0));gr.addColorStop(0,'#e53e3e');gr.addColorStop(1,'#fc8181');}historyCtx.fillStyle=gr;historyCtx.fillRect(x,toY(u),bw,toY(0)-toY(u));historyCtx.fillStyle='#718096';historyCtx.font=`${8*S}px Segoe UI`;historyCtx.textAlign='center';const mn=currentMonth-utils.length+i+1;if(mn>0)historyCtx.fillText(mn.toString(),toX(i),margin.top+h+12*S);});
+}
+function updateDisplay(){
+    const sc=SCENARIOS[currentScenario];
+    const opt=optimalBundle(),playerU=utility(playerX,playerY),affordable=isAffordable(playerX,playerY),spent=spending(playerX,playerY);
+    const eff=opt.utility>0?(playerU/opt.utility):0;
+    const overshoot=affordable?0:spent-marketParams.income;
+    document.getElementById('current-x').textContent=playerX;document.getElementById('current-y').textContent=playerY;
+    document.getElementById('display-px').textContent=marketParams.priceX.toFixed(2);document.getElementById('display-py').textContent=marketParams.priceY.toFixed(2);
+    document.getElementById('budget-spent').textContent=`$${spent.toFixed(0)}`;document.getElementById('budget-total').textContent=`$${marketParams.income.toFixed(0)}`;
+    const bp=(spent/marketParams.income)*100,bf=document.getElementById('budget-fill');bf.style.width=`${Math.min(bp,100)}%`;bf.className='budget-fill '+(bp<=85?'under':bp<=100?'near':'over');
+    document.getElementById('budget-warning').style.display=affordable?'none':'block';
+    if(!affordable)document.getElementById('budget-warning').textContent=`⚠️ Over budget by $${overshoot.toFixed(0)}! Debt accrues at ${((sc.debtInterest-1)*100).toFixed(0)}% compound interest per month.`;
+    const ue=document.getElementById('current-utility');ue.textContent=playerU.toFixed(1);ue.className='utility-value-main'+(affordable?'':' over-warn');
+    document.getElementById('optimal-utility').textContent=opt.utility.toFixed(1);
+    document.getElementById('info-px').textContent=`$${marketParams.priceX.toFixed(2)}`;document.getElementById('info-py').textContent=`$${marketParams.priceY.toFixed(2)}`;
+    document.getElementById('info-income').textContent=`$${marketParams.income.toFixed(0)}`;document.getElementById('info-mrs').textContent=MRS(playerX,playerY).toFixed(2);
+    // Show savings/investment info
+    const savings=marketParams.income*1.001-spent;
+    const si=document.getElementById('savings-info');
+    if(affordable&&savings>2){
+        si.style.display='block';
+        if(sc.allowInvestment){
+            si.textContent=`💰 Investing $${savings.toFixed(0)} → grows at ${(sc.investmentRate*100).toFixed(0)}%/mo (Fund: $${investmentFund.toFixed(0)})`;
+        } else {
+            si.textContent=`💸 $${savings.toFixed(0)} unspent — lost (no savings in this scenario)`;
+            si.style.color='#a0aec0';
+        }
+        if(sc.allowInvestment) si.style.color='#38a169';
+        document.getElementById('budget-warning').style.display='none';
+    }else{si.style.display='none';}
+    const me=document.getElementById('monthly-utility');me.textContent=playerU.toFixed(1);me.className='monthly-value '+(eff>=.9?'high':eff>=.7?'medium':'low');
+    const ep=Math.min(100,eff*100);document.getElementById('efficiency-value').textContent=`${ep.toFixed(0)}%`;document.getElementById('efficiency-fill').style.width=`${ep}%`;
+    drawICGraph();drawHistoryChart();return playerU;
+}
+function setBundle(newX,newY){
+    newX=Math.max(1,Math.round(newX));newY=Math.max(1,Math.round(newY));
+    // Cap total spending at 2× current income
+    const maxBudget=maxSpendBudget();
+    const cost=marketParams.priceX*newX+marketParams.priceY*newY;
+    if(cost>maxBudget){
+        const scale=maxBudget/cost;
+        newX=Math.max(1,Math.round(newX*scale));
+        newY=Math.max(1,Math.round(newY*scale));
+    }
+    playerX=newX;playerY=newY;updateDisplay();
+}
+function canvasToGoods(cx,cy){
+    if(!lastMargin||!lastMaxX)return null;
+    const w=icCanvas.width-lastMargin.left-lastMargin.right,h=icCanvas.height-lastMargin.top-lastMargin.bottom;
+    const gx=((cx-lastMargin.left)/w)*lastMaxX,gy=((lastMargin.top+h-cy)/h)*lastMaxY;
+    if(gx<0||gy<0)return null;
+    return{x:gx,y:gy};
+}
+
+let lastUpdate=Date.now(),monthProgress=0;const monthDuration=5000;
+function gameLoop(){
+    if(!gameRunning){requestAnimationFrame(gameLoop);return;}
+    const now=Date.now(),delta=now-lastUpdate;lastUpdate=now;
+    monthProgress+=delta*gameSpeed;
+    if(monthProgress>=monthDuration){
+        monthProgress=0;
+        processMonth();
+    }
+    requestAnimationFrame(gameLoop);
+}
+
+function advanceMonth(){
+    if(gameRunning)return;
+    if(currentMonth>12)return;
+    testMode=true;
+    processMonth();
+    if(currentMonth<=12){
+        document.getElementById('news-text').textContent='🧪 Test run. Use Next Month or press Start for an official game.';
+        document.getElementById('news-text').className='news-text shock-neutral';
+    }
+}
+
+function toggleGame(){
+    if(!gameRunning){
+        resetGame();
+        gameRunning=true;testMode=false;
+        const btn=document.getElementById('start-btn');
+        btn.textContent='⏸️ Pause';btn.className='game-btn btn-pause';
+        lastUpdate=Date.now();monthProgress=0;
+        document.getElementById('news-text').textContent='🛒 Game started! Click the graph to choose your bundle!';
+        document.getElementById('news-text').className='news-text shock-neutral';
+    }else{
+        gameRunning=false;
+        const btn=document.getElementById('start-btn');
+        btn.textContent='▶️ Start';btn.className='game-btn btn-start';
+        document.getElementById('news-text').textContent='⏸️ Game paused. Press Start to restart.';
+        document.getElementById('news-text').className='news-text shock-neutral';
+    }
+}
+function resetGame(){
+    gameRunning=false;testMode=false;currentMonth=1;cumulativeUtility=0;totalOptimalUtility=0;
+    monthlyUtilities=[];monthlyRawUtilities=[];monthlyIncomes=[];
+    playerX=20;playerY=20;monthProgress=0;debt=0;investmentFund=0;
+    marketParams={priceX:2,priceY:2,income:100,baseIncome:100,alpha:.5};
+    document.getElementById('start-btn').textContent='▶️ Start';
+    document.getElementById('start-btn').className='game-btn btn-start';
+    document.getElementById('current-month').textContent='1';
+    document.getElementById('cumulative-utility').textContent='0';
+    document.getElementById('news-text').textContent='Game reset. Press Start!';
+    document.getElementById('news-text').className='news-text shock-neutral';
+    document.getElementById('news-month').textContent='1';
+    document.getElementById('high-score').textContent=(highScores[currentScenario]||0).toFixed(0);
+    updateDisplay();
+}
+function setSpeed(s){gameSpeed=s;document.querySelectorAll('.speed-btn').forEach(b=>{b.classList.remove('active');if(b.textContent===`${s}x`)b.classList.add('active');});}
+
+// ─── Canvas label drag ───
+let clickedWithoutDrag=false,mouseDownPos=null;
+icCanvas.addEventListener('mousedown',e=>{const p=mouseToCanvas(e,icCanvas);const hit=hitTestLabels(p.x,p.y);if(hit){labelDragTarget=hit;labelDragStartX=p.x;labelDragStartY=p.y;if(!nudgeOffsets[hit])nudgeOffsets[hit]={dx:0,dy:0};labelDragStartOX=nudgeOffsets[hit].dx;labelDragStartOY=nudgeOffsets[hit].dy;icCanvas.classList.add('dragging-label');clickedWithoutDrag=false;e.preventDefault();}else{mouseDownPos=p;clickedWithoutDrag=true;}});
+icCanvas.addEventListener('mousemove',e=>{const p=mouseToCanvas(e,icCanvas);if(labelDragTarget){nudgeOffsets[labelDragTarget].dx=labelDragStartOX+(p.x-labelDragStartX)/DPR;nudgeOffsets[labelDragTarget].dy=labelDragStartOY+(p.y-labelDragStartY)/DPR;drawICGraph();clickedWithoutDrag=false;}else{const hit=hitTestLabels(p.x,p.y);icCanvas.classList.toggle('hovering-label',!!hit);if(!hit)icCanvas.style.cursor='crosshair';else icCanvas.style.cursor='';icCanvas.classList.remove('dragging-label');if(mouseDownPos&&(Math.abs(p.x-mouseDownPos.x)>5||Math.abs(p.y-mouseDownPos.y)>5))clickedWithoutDrag=false;}});
+icCanvas.addEventListener('mouseup',e=>{if(clickedWithoutDrag&&!labelDragTarget){const p=mouseToCanvas(e,icCanvas);const g=canvasToGoods(p.x,p.y);if(g)setBundle(g.x,g.y);}labelDragTarget=null;mouseDownPos=null;clickedWithoutDrag=false;icCanvas.classList.remove('dragging-label');});
+icCanvas.addEventListener('mouseleave',()=>{labelDragTarget=null;mouseDownPos=null;clickedWithoutDrag=false;icCanvas.classList.remove('dragging-label','hovering-label');icCanvas.style.cursor='';});
+let touchDragging=false;
+icCanvas.addEventListener('touchstart',e=>{const p=mouseToCanvas(e.touches[0],icCanvas);const hit=hitTestLabels(p.x,p.y);touchDragging=false;if(hit){labelDragTarget=hit;labelDragStartX=p.x;labelDragStartY=p.y;if(!nudgeOffsets[hit])nudgeOffsets[hit]={dx:0,dy:0};labelDragStartOX=nudgeOffsets[hit].dx;labelDragStartOY=nudgeOffsets[hit].dy;touchDragging=true;e.preventDefault();}else{mouseDownPos=p;clickedWithoutDrag=true;}},{passive:false});
+icCanvas.addEventListener('touchmove',e=>{if(labelDragTarget){const p=mouseToCanvas(e.touches[0],icCanvas);nudgeOffsets[labelDragTarget].dx=labelDragStartOX+(p.x-labelDragStartX)/DPR;nudgeOffsets[labelDragTarget].dy=labelDragStartOY+(p.y-labelDragStartY)/DPR;drawICGraph();e.preventDefault();}else{clickedWithoutDrag=false;}},{passive:false});
+icCanvas.addEventListener('touchend',e=>{if(clickedWithoutDrag&&!labelDragTarget&&mouseDownPos){const g=canvasToGoods(mouseDownPos.x,mouseDownPos.y);if(g)setBundle(g.x,g.y);}labelDragTarget=null;mouseDownPos=null;clickedWithoutDrag=false;});
+
+// ─── Display opts / URL state ───
+document.getElementById('display-toggle-btn').addEventListener('click',()=>{document.getElementById('display-panel').classList.toggle('open');document.getElementById('display-arrow').classList.toggle('open');});
+document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',()=>updateDisplay());i.addEventListener('change',()=>updateDisplay());});
+document.getElementById('copy-plot-btn').addEventListener('click',async()=>{const btn=document.getElementById('copy-plot-btn'),lbl=document.getElementById('copy-label');try{const blob=await new Promise(r=>icCanvas.toBlob(r,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.classList.add('copied');lbl.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Copy';},1500);}catch{lbl.textContent='Failed';setTimeout(()=>{lbl.textContent='Copy';},1500);}});
+document.getElementById('save-plot-btn').addEventListener('click',()=>{const a=document.createElement('a');a.href=icCanvas.toDataURL('image/png');a.download='utility_game.png';a.click();});
+
+const CHECKBOX_IDS=['show-xaxis-label','show-yaxis-label','show-axis-numbers','show-gridlines','show-bc','show-feasible','show-player-ic','show-opt-ic','show-opt-point','show-player-point','show-dashed-lines','show-labels'];
+const ALL_SECTIONS=['graph','choices','score','history','explanation'];
+const DEFAULTS={};CHECKBOX_IDS.forEach(id=>DEFAULTS[id]=(id!=='show-opt-ic'&&id!=='show-opt-point'));ALL_SECTIONS.forEach(s=>DEFAULTS['sec-'+s]=true);
+function buildStateObject(){const s={};for(const id of CHECKBOX_IDS){const e=document.getElementById(id);if(e&&e.checked!==DEFAULTS[id])s[id]=e.checked?1:0;}for(const sec of ALL_SECTIONS){const b=document.getElementById('body-'+sec);if(b){const isOpen=!b.classList.contains('collapsed');if(isOpen!==DEFAULTS['sec-'+sec])s['sec-'+sec]=isOpen?1:0;}}for(const n of Object.keys(PANEL_NAMES)){const el=document.getElementById('section-'+n);if(el&&el.classList.contains('panel-closed'))s['closed-'+n]=1;}return s;}
+function loadStateFromHash(){const hash=window.location.hash.slice(1);if(!hash)return;const p=new URLSearchParams(hash);for(const id of CHECKBOX_IDS){if(p.has(id)){const e=document.getElementById(id);if(e)e.checked=p.get(id)==='1';}}for(const sec of ALL_SECTIONS){const key='sec-'+sec;if(p.has(key)){const open=p.get(key)==='1';const b=document.getElementById('body-'+sec),t=document.getElementById('toggle-'+sec);if(b){if(open)b.classList.remove('collapsed');else b.classList.add('collapsed');}if(t)t.textContent=open?'▼':'▶';}}for(const n of Object.keys(PANEL_NAMES)){if(p.has('closed-'+n)){const el=document.getElementById('section-'+n);if(el)el.classList.add('panel-closed');}}}
+document.getElementById('copy-url-btn').addEventListener('click',async()=>{const btn=document.getElementById('copy-url-btn');const state=buildStateObject();const hash=new URLSearchParams(Object.entries(state)).toString();const url=window.location.origin+window.location.pathname+(hash?'#'+hash:'');try{await navigator.clipboard.writeText(url);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='📋 Copy link';btn.classList.remove('copied');},2000);}catch{prompt('Copy:',url);}});
+document.getElementById('reset-url-btn').addEventListener('click',()=>{for(const id of CHECKBOX_IDS){const e=document.getElementById(id);if(e)e.checked=DEFAULTS[id];}ALL_SECTIONS.forEach(s=>{const b=document.getElementById('body-'+s),t=document.getElementById('toggle-'+s);if(b)b.classList.remove('collapsed');if(t)t.textContent='▼';});Object.keys(PANEL_NAMES).forEach(n=>{const e=document.getElementById('section-'+n);if(e)e.classList.remove('panel-closed');});updateRestoreBar();updateLayout();history.replaceState(null,'',window.location.pathname);updateDisplay();});
+
+function sizeCanvas(){
+    const header=document.querySelector('.header');
+    const hh=header?header.offsetHeight:60;
+    const avail=window.innerHeight-hh-80;
+    const maxPx=Math.max(280,Math.min(avail,550));
+    icCanvas.style.width=maxPx+'px';
+    icCanvas.style.height=maxPx+'px';
+}
+sizeCanvas();window.addEventListener('resize',sizeCanvas);
+
+// Initialize
+selectScenario(1);
+loadStateFromHash();updateRestoreBar();updateLayout();updateDisplay();requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

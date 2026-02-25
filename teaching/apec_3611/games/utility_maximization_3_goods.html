@@ -5,1147 +5,775 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Utility Maximization</title>
     <style>
-        * {
-            box-sizing: border-box;
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 20px; font-size: 0.95rem; }
+        .main-content { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+        @media (max-width: 1100px) { .main-content { grid-template-columns: 1fr; } }
+        .main-content.left-empty { grid-template-columns: 0 1fr; }
+        .main-content.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty .left-column { display: none; }
+        .main-content.right-empty .controls { display: none; }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; min-height: 600px; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
+        #three-canvas { width: 100%; height: 550px; border-radius: 8px; }
+
+        /* Panel close/collapse buttons */
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1; flex-shrink: 0;
         }
-        
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1;
         }
-        
-        h1 {
-            text-align: center;
-            font-weight: 400;
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: #1a202c;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #718096;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-        
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 24px;
-        }
-        
-        @media (max-width: 1100px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .graph-container {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            position: relative;
-            min-height: 600px;
-        }
-        
-        #three-canvas {
-            width: 100%;
-            height: 550px;
-            border-radius: 8px;
-        }
-        
-        .utility-display {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 10;
-            pointer-events: none;
-        }
-        
-        .utility-label {
-            font-size: 1rem;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 4px;
-        }
-        
-        .utility-value {
-            font-size: 4rem;
-            font-weight: 700;
-            font-family: 'Monaco', 'Consolas', monospace;
-            color: #319795;
-            text-shadow: 0 0 30px rgba(49, 151, 149, 0.3);
-            transition: all 0.1s ease;
-        }
-        
-        .utility-value.infeasible {
-            color: #e53e3e;
-            text-shadow: 0 0 30px rgba(229, 62, 62, 0.3);
-        }
-        
-        .utility-value.optimal {
-            color: #d69e2e;
-            text-shadow: 0 0 40px rgba(214, 158, 46, 0.5);
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(-50%); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
-            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
-        }
-        
-        .error-banner {
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.4);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            z-index: 10;
-        }
-        
-        .error-banner.visible {
-            opacity: 1;
-            animation: shake 0.5s ease-in-out;
-        }
-        
-        .success-banner {
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #d69e2e 0%, #c05621 100%);
-            color: #ffffff;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(214, 158, 46, 0.4);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            z-index: 10;
-        }
-        
-        .success-banner.visible {
-            opacity: 1;
-        }
-        
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .control-panel {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 18px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        
-        .control-panel.choice-panel {
-            border: 2px solid #319795;
-            background: linear-gradient(135deg, rgba(49, 151, 149, 0.05) 0%, #ffffff 100%);
-        }
-        
-        .panel-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #718096;
-            margin-bottom: 14px;
-            font-weight: 600;
-        }
-        
-        .panel-title.highlight {
-            color: #319795;
-            font-size: 0.95rem;
-        }
-        
-        .slider-group {
-            margin-bottom: 14px;
-        }
-        
-        .slider-group:last-child {
-            margin-bottom: 0;
-        }
-        
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            color: #4a5568;
-        }
-        
-        .slider-value {
-            background: #edf2f7;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 0.8rem;
-            color: #2b6cb0;
-            font-weight: 500;
-        }
-        
-        .slider-value.large {
-            font-size: 1rem;
-            padding: 5px 12px;
-            color: #319795;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #e2e8f0;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #4299e1;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
-        }
-        
-        input[type="range"].choice-slider {
-            height: 8px;
-        }
-        
-        input[type="range"].choice-slider::-webkit-slider-thumb {
-            width: 20px;
-            height: 20px;
-            background: #319795;
-            box-shadow: 0 2px 12px rgba(49, 151, 149, 0.4);
-        }
-        
-        .budget-bar {
-            margin-top: 14px;
-            padding: 10px;
-            background: #f7fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .budget-label {
-            font-size: 0.75rem;
-            color: #718096;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .budget-label .over {
-            color: #e53e3e;
-            font-weight: 600;
-        }
-        
-        .budget-track {
-            height: 10px;
-            background: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .budget-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #319795 0%, #38b2ac 100%);
-            border-radius: 5px;
-            transition: width 0.15s ease, background 0.15s ease;
-        }
-        
-        .budget-fill.over {
-            background: linear-gradient(90deg, #e53e3e 0%, #fc8181 100%);
-        }
-        
-        .score-panel {
-            background: #f7fafc;
-            border-radius: 8px;
-            padding: 14px;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .score-label {
-            font-size: 0.75rem;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .score-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #d69e2e;
-            font-family: 'Monaco', 'Consolas', monospace;
-        }
-        
-        .score-optimal {
-            font-size: 0.8rem;
-            color: #2b6cb0;
-            margin-top: 4px;
-        }
-        
-        .proximity-meter {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f7fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .proximity-label {
-            font-size: 0.75rem;
-            color: #718096;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .proximity-bar {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .proximity-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e53e3e 0%, #d69e2e 50%, #319795 100%);
-            border-radius: 3px;
-            transition: width 0.1s ease;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .reset-btn {
-            background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
-            color: #ffffff;
-        }
-        
-        .reset-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(49, 151, 149, 0.4);
-        }
-        
-        .hint-btn {
-            background: transparent;
-            border: 2px solid #d69e2e !important;
-            color: #d69e2e;
-            margin-top: 8px;
-        }
-        
-        .hint-btn:hover {
-            background: rgba(214, 158, 46, 0.1);
-        }
-        
-        .equation-box {
-            background: #f7fafc;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 0.8rem;
-            color: #4a5568;
-            text-align: center;
-            margin-top: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .legend {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 10px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: #4a5568;
-        }
-        
-        .legend-color {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
-        }
-        
-        .camera-hint {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #e2e8f0;
-            pointer-events: none;
-        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-closed { display: none !important; }
+
+        /* Hover to reveal actions */
+        .left-section { position: relative; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .control-panel { position: relative; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+
+        /* Restore bar */
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
+
+        /* Overlays */
+        .utility-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; pointer-events: none; }
+        .utility-label { font-size: 1rem; color: #718096; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+        .utility-value { font-size: 4rem; font-weight: 700; font-family: 'Monaco','Consolas',monospace; color: #319795; text-shadow: 0 0 30px rgba(49,151,149,0.3); transition: all 0.1s; }
+        .utility-value.infeasible { color: #e53e3e; text-shadow: 0 0 30px rgba(229,62,62,0.3); }
+        .utility-value.optimal { color: #d69e2e; text-shadow: 0 0 40px rgba(214,158,46,0.5); }
+        @keyframes shake { 0%,100%{transform:translateX(-50%)} 10%,30%,50%,70%,90%{transform:translateX(calc(-50% - 5px))} 20%,40%,60%,80%{transform:translateX(calc(-50% + 5px))} }
+        .error-banner { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#e53e3e,#c53030); color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(229,62,62,0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
+        .error-banner.visible { opacity: 1; animation: shake 0.5s ease-in-out; }
+        .success-banner { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#d69e2e,#c05621); color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(214,158,46,0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
+        .success-banner.visible { opacity: 1; }
+        .camera-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; color: #e2e8f0; pointer-events: none; }
+
+        /* Left-column sections */
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+
+        .controls { display: flex; flex-direction: column; gap: 16px; max-height: 90vh; overflow-y: auto; }
+        .control-panel { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel.choice-panel { border: 2px solid #319795; background: linear-gradient(135deg,rgba(49,151,149,0.05),#fff); }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 18px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 18px 18px 18px; }
+        .control-panel-body.collapsed { display: none; }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 14px; font-weight: 600; }
+        .panel-title.highlight { color: #319795; font-size: 0.95rem; }
+        .slider-group { margin-bottom: 14px; }
+        .slider-group:last-child { margin-bottom: 0; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.85rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 3px 8px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.8rem; color: #2b6cb0; font-weight: 500; }
+        .slider-value.large { font-size: 1rem; padding: 5px 12px; color: #319795; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); }
+        input[type="range"].choice-slider { height: 8px; }
+        input[type="range"].choice-slider::-webkit-slider-thumb { width: 20px; height: 20px; background: #319795; box-shadow: 0 2px 12px rgba(49,151,149,0.4); }
+        .budget-bar { margin-top: 14px; padding: 10px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .budget-label { font-size: 0.75rem; color: #718096; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .budget-label .over { color: #e53e3e; font-weight: 600; }
+        .budget-track { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        .budget-fill { height: 100%; background: linear-gradient(90deg,#319795,#38b2ac); border-radius: 5px; transition: width 0.15s, background 0.15s; }
+        .budget-fill.over { background: linear-gradient(90deg,#e53e3e,#fc8181); }
+        .score-panel { background: #f7fafc; border-radius: 8px; padding: 14px; text-align: center; border: 1px solid #e2e8f0; }
+        .score-label { font-size: 0.75rem; color: #718096; text-transform: uppercase; letter-spacing: 1px; }
+        .score-value { font-size: 1.8rem; font-weight: 700; color: #d69e2e; font-family: 'Monaco','Consolas',monospace; }
+        .score-optimal { font-size: 0.8rem; color: #2b6cb0; margin-top: 4px; }
+        .proximity-meter { margin-top: 10px; padding: 10px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .proximity-label { font-size: 0.75rem; color: #718096; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .proximity-bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .proximity-fill { height: 100%; background: linear-gradient(90deg,#e53e3e 0%,#d69e2e 50%,#319795 100%); border-radius: 3px; transition: width 0.1s; }
+        .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-transform: uppercase; letter-spacing: 1px; }
+        .reset-btn { background: linear-gradient(135deg,#319795,#2c7a7b); color: #fff; }
+        .reset-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(49,151,149,0.4); }
+        .hint-btn { background: transparent; border: 2px solid #d69e2e !important; color: #d69e2e; margin-top: 8px; }
+        .hint-btn:hover { background: rgba(214,158,46,0.1); }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 10px 14px; font-family: 'Monaco','Consolas',monospace; font-size: 0.8rem; color: #4a5568; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; }
+        .legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #4a5568; }
+        .legend-color { width: 14px; height: 14px; border-radius: 3px; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 180px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+        .opt-section-label:first-child { margin-top: 0; }
+
+        /* Embed mode */
+        .embed-open-btn { display: none; position: absolute; top: 8px; left: 8px; z-index: 10; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border: 1px solid rgba(226,232,240,0.7); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; color: #a0aec0; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1; text-decoration: none; }
+        .embed-open-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .embed-mode .embed-open-btn { display: flex; align-items: center; gap: 4px; }
+        body.embed-mode { padding: 8px; background: transparent; min-height: auto; }
+        .embed-mode h1, .embed-mode .subtitle, .embed-mode .left-section, .embed-mode .display-options-wrapper, .embed-mode .url-state-bar { display: none !important; }
+        .embed-mode .container { max-width: none; }
+        .embed-mode .graph-container { border: none; box-shadow: none; }
+        body.embed-hide-controls .controls { display: none !important; }
+        body.embed-hide-controls .main-content { grid-template-columns: 1fr; }
+        body.embed-hide-explanation #section-explanation { display: none !important; }
+
+        /* URL state bar */
+        .url-state-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .url-state-bar button { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <div id="section-title" class="title-wrapper" style="position:relative">
         <h1>🎮 3D Utility Maximization</h1>
-        <p class="subtitle">Adjust X, Y, and Z to maximize utility within your budget plane!</p>
-        
-        <div class="main-content">
-            <div class="graph-container">
-                <div class="utility-display">
-                    <div class="utility-label">Total Utility</div>
-                    <div class="utility-value" id="big-utility">0.0</div>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle" style="margin-bottom:20px">Adjust X, Y, and Z to maximize utility within your budget plane!</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-column">
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')">
+                    <div class="panel-title" style="margin-bottom:0">3D Visualization</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
                 </div>
-                <div class="error-banner" id="error-banner">
-                    ⚠️ UNAFFORDABLE! Over Budget!
+                <div class="graph-body" id="body-graph">
+                    <a class="embed-open-btn" id="embed-open-btn" title="Open full interactive version" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        Open full version
+                    </a>
+                    <div class="utility-display"><div class="utility-label">Total Utility</div><div class="utility-value" id="big-utility">0.0</div></div>
+                    <div class="error-banner" id="error-banner">⚠️ UNAFFORDABLE! Over Budget!</div>
+                    <div class="success-banner" id="success-banner">🎉 OPTIMAL! Maximum Utility!</div>
+                    <div id="three-canvas"></div>
+                    <div class="camera-hint">🖱️ Drag to rotate • Scroll to zoom</div>
                 </div>
-                <div class="success-banner" id="success-banner">
-                    🎉 OPTIMAL! Maximum Utility!
-                </div>
-                <div id="three-canvas"></div>
-                <div class="camera-hint">🖱️ Drag to rotate • Scroll to zoom</div>
             </div>
-            
-            <div class="controls">
-                <div class="control-panel choice-panel">
-                    <div class="panel-title highlight">🎯 Your Choices</div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Good X</span>
-                            <span class="slider-value large" id="user-x-value">10</span>
-                        </div>
-                        <input type="range" class="choice-slider" id="user-x" min="0" max="50" value="10" step="0.5">
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Good Y</span>
-                            <span class="slider-value large" id="user-y-value">10</span>
-                        </div>
-                        <input type="range" class="choice-slider" id="user-y" min="0" max="50" value="10" step="0.5">
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Good Z</span>
-                            <span class="slider-value large" id="user-z-value">10</span>
-                        </div>
-                        <input type="range" class="choice-slider" id="user-z" min="0" max="50" value="10" step="0.5">
-                    </div>
-                    
-                    <div class="budget-bar">
-                        <div class="budget-label">
-                            <span>Budget Used</span>
-                            <span id="budget-status">$60 / $100</span>
-                        </div>
-                        <div class="budget-track">
-                            <div class="budget-fill" id="budget-fill" style="width: 60%"></div>
-                        </div>
+
+            <!-- Explanation (collapsible) -->
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">Explanation</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
                     </div>
                 </div>
-                
-                <div class="control-panel">
-                    <div class="panel-title">Your Score</div>
-                    <div class="score-panel">
-                        <div class="score-label">Current Utility</div>
-                        <div class="score-value" id="score-value">0.0</div>
-                        <div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div>
+                <div class="left-section-body" id="body-explanation">
+                    <p>This 3D visualization extends the standard two-good utility maximization problem to three goods. The budget constraint is now a plane in three-dimensional space rather than a line, and the indifference curves become indifference surfaces. The consumer's problem is to find the point on the budget plane that lies on the highest possible indifference surface.</p>
+                    <p>With Cobb-Douglas preferences U = X<sup>α</sup> · Y<sup>β</sup> · Z<sup>(1-α-β)</sup>, the optimal solution allocates income in proportion to the exponents: fraction α to X, β to Y, and (1-α-β) to Z. This elegant result generalizes directly from the two-good case. Rotate the 3D view to see how the indifference surface is tangent to the budget plane at the optimum.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-panel choice-panel" id="section-choices">
+                <div class="control-panel-header" onclick="togglePanel('choices')">
+                    <div class="panel-title highlight" style="margin-bottom:0">🎯 Your Choices</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-choices" onclick="event.stopPropagation();togglePanel('choices')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('choices')" title="Close">✕</button>
                     </div>
-                    
-                    <div class="proximity-meter">
-                        <div class="proximity-label">
-                            <span>Proximity to Optimal</span>
-                            <span id="proximity-pct">0%</span>
-                        </div>
-                        <div class="proximity-bar">
-                            <div class="proximity-fill" id="proximity-fill" style="width: 0%"></div>
-                        </div>
+                </div>
+                <div class="control-panel-body" id="body-choices">
+                    <div class="slider-group"><div class="slider-label"><span>Good X</span><span class="slider-value large" id="user-x-value">10</span></div><input type="range" class="choice-slider" id="user-x" min="0" max="50" value="10" step="0.5"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Good Y</span><span class="slider-value large" id="user-y-value">10</span></div><input type="range" class="choice-slider" id="user-y" min="0" max="50" value="10" step="0.5"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Good Z</span><span class="slider-value large" id="user-z-value">10</span></div><input type="range" class="choice-slider" id="user-z" min="0" max="50" value="10" step="0.5"></div>
+                    <div class="budget-bar"><div class="budget-label"><span>Budget Used</span><span id="budget-status">$60 / $100</span></div><div class="budget-track"><div class="budget-fill" id="budget-fill" style="width:60%"></div></div></div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-score">
+                <div class="control-panel-header" onclick="togglePanel('score')">
+                    <div class="panel-title" style="margin-bottom:0">Your Score</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-score" onclick="event.stopPropagation();togglePanel('score')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('score')" title="Close">✕</button>
                     </div>
-                    
+                </div>
+                <div class="control-panel-body" id="body-score">
+                    <div class="score-panel"><div class="score-label">Current Utility</div><div class="score-value" id="score-value">0.0</div><div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div></div>
+                    <div class="proximity-meter"><div class="proximity-label"><span>Proximity to Optimal</span><span id="proximity-pct">0%</span></div><div class="proximity-bar"><div class="proximity-fill" id="proximity-fill" style="width:0%"></div></div></div>
                     <button class="btn reset-btn" onclick="resetGame()">🔄 New Challenge</button>
                     <button class="btn hint-btn" onclick="toggleHint()">💡 Show Optimal</button>
                 </div>
-                
-                <div class="control-panel">
-                    <div class="panel-title">Budget Constraint</div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Income (M)</span>
-                            <span class="slider-value" id="income-value">100</span>
-                        </div>
-                        <input type="range" id="income" min="40" max="200" value="100">
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Price X (Pₓ)</span>
-                            <span class="slider-value" id="px-value">2</span>
-                        </div>
-                        <input type="range" id="px" min="1" max="8" value="2" step="0.5">
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Price Y (Pᵧ)</span>
-                            <span class="slider-value" id="py-value">2</span>
-                        </div>
-                        <input type="range" id="py" min="1" max="8" value="2" step="0.5">
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Price Z (P_z)</span>
-                            <span class="slider-value" id="pz-value">2</span>
-                        </div>
-                        <input type="range" id="pz" min="1" max="8" value="2" step="0.5">
-                    </div>
-                    
-                    <div class="equation-box">
-                        Pₓ·X + Pᵧ·Y + P_z·Z ≤ M
+            </div>
+
+            <div class="control-panel" id="section-budget">
+                <div class="control-panel-header" onclick="togglePanel('budget')">
+                    <div class="panel-title" style="margin-bottom:0">Budget Constraint</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-budget" onclick="event.stopPropagation();togglePanel('budget')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('budget')" title="Close">✕</button>
                     </div>
                 </div>
-                
-                <div class="control-panel">
-                    <div class="panel-title">Preferences (Cobb-Douglas)</div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>α (weight on X)</span>
-                            <span class="slider-value" id="alpha-value">0.33</span>
-                        </div>
-                        <input type="range" id="alpha" min="0.1" max="0.6" value="0.33" step="0.01">
+                <div class="control-panel-body" id="body-budget">
+                    <div class="slider-group"><div class="slider-label"><span>Income (M)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Price X (Pₓ)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="8" value="2" step="0.5"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Price Y (Pᵧ)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="8" value="2" step="0.5"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Price Z (P_z)</span><span class="slider-value" id="pz-value">2</span></div><input type="range" id="pz" min="1" max="8" value="2" step="0.5"></div>
+                    <div class="equation-box">Pₓ·X + Pᵧ·Y + P_z·Z ≤ M</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-preferences">
+                <div class="control-panel-header" onclick="togglePanel('preferences')">
+                    <div class="panel-title" style="margin-bottom:0">Preferences (Cobb-Douglas)</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-preferences" onclick="event.stopPropagation();togglePanel('preferences')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('preferences')" title="Close">✕</button>
                     </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>β (weight on Y)</span>
-                            <span class="slider-value" id="beta-value">0.33</span>
-                        </div>
-                        <input type="range" id="beta" min="0.1" max="0.6" value="0.33" step="0.01">
-                    </div>
-                    
-                    <div class="equation-box">
-                        U = X<sup>α</sup> · Y<sup>β</sup> · Z<sup>(1-α-β)</sup>
-                    </div>
-                    
+                </div>
+                <div class="control-panel-body" id="body-preferences">
+                    <div class="slider-group"><div class="slider-label"><span>α (weight on X)</span><span class="slider-value" id="alpha-value">0.33</span></div><input type="range" id="alpha" min="0.1" max="0.6" value="0.33" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>β (weight on Y)</span><span class="slider-value" id="beta-value">0.33</span></div><input type="range" id="beta" min="0.1" max="0.6" value="0.33" step="0.01"></div>
+                    <div class="equation-box">U = X<sup>α</sup> · Y<sup>β</sup> · Z<sup>(1-α-β)</sup></div>
                     <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: rgba(229, 62, 62, 0.5);"></div>
-                            <span>Budget Plane</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: rgba(49, 151, 149, 0.6);"></div>
-                            <span>Indifference Surface</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #319795;"></div>
-                            <span>Your Bundle</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #d69e2e;"></div>
-                            <span>Optimal Bundle</span>
-                        </div>
+                        <div class="legend-item"><div class="legend-color" style="background:rgba(229,62,62,0.5);"></div><span>Budget Plane</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background:rgba(49,151,149,0.6);"></div><span>Indifference Surface</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background:#319795;"></div><span>Your Bundle</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background:#d69e2e;"></div><span>Optimal Bundle</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // Three.js setup
-        let scene, camera, renderer, controls;
-        let budgetPlane, indifferenceSurface, userPoint, optimalPoint;
-        let axisLabels = [];
-        let showOptimal = false;
-        let wasAffordable = true;
-        
-        // DOM elements
-        const container = document.getElementById('three-canvas');
-        const userXSlider = document.getElementById('user-x');
-        const userYSlider = document.getElementById('user-y');
-        const userZSlider = document.getElementById('user-z');
-        const incomeSlider = document.getElementById('income');
-        const pxSlider = document.getElementById('px');
-        const pySlider = document.getElementById('py');
-        const pzSlider = document.getElementById('pz');
-        const alphaSlider = document.getElementById('alpha');
-        const betaSlider = document.getElementById('beta');
-        
-        function init() {
-            // Scene
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xffffff);
-            
-            // Camera
-            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(70, 50, 70);
-            camera.lookAt(25, 25, 25);
-            
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
-            
-            // Simple orbit controls (manual implementation)
-            let isDragging = false;
-            let previousMousePosition = { x: 0, y: 0 };
-            let spherical = { theta: Math.PI / 4, phi: Math.PI / 3, radius: 100 };
-            
-            function updateCamera() {
-                camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta) + 25;
-                camera.position.y = spherical.radius * Math.cos(spherical.phi) + 25;
-                camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta) + 25;
-                camera.lookAt(25, 25, 25);
-            }
-            
-            renderer.domElement.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            });
-            
-            renderer.domElement.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-                spherical.theta -= deltaX * 0.01;
-                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - deltaY * 0.01));
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-                updateCamera();
-            });
-            
-            renderer.domElement.addEventListener('mouseup', () => isDragging = false);
-            renderer.domElement.addEventListener('mouseleave', () => isDragging = false);
-            
-            renderer.domElement.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                spherical.radius = Math.max(40, Math.min(200, spherical.radius + e.deltaY * 0.1));
-                updateCamera();
-            });
-            
-            // Touch support
-            renderer.domElement.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    isDragging = true;
-                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                }
-            });
-            
-            renderer.domElement.addEventListener('touchmove', (e) => {
-                if (!isDragging || e.touches.length !== 1) return;
-                e.preventDefault();
-                const deltaX = e.touches[0].clientX - previousMousePosition.x;
-                const deltaY = e.touches[0].clientY - previousMousePosition.y;
-                spherical.theta -= deltaX * 0.01;
-                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - deltaY * 0.01));
-                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                updateCamera();
-            }, { passive: false });
-            
-            renderer.domElement.addEventListener('touchend', () => isDragging = false);
-            
-            updateCamera();
-            
-            // Lighting - enhanced for better 3D shading
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            
-            // Main light from above-front
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(50, 100, 50);
-            scene.add(directionalLight);
-            
-            // Fill light from opposite side
-            const fillLight = new THREE.DirectionalLight(0x319795, 0.3);
-            fillLight.position.set(-50, 50, -50);
-            scene.add(fillLight);
-            
-            // Rim light from below for edge definition
-            const rimLight = new THREE.DirectionalLight(0xffffff, 0.2);
-            rimLight.position.set(0, -50, 0);
-            scene.add(rimLight);
-            
-            // Axes
-            createAxes();
-            
-            // Initial update
-            updateVisualization();
-            
-            // Animation loop
-            animate();
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Display Options</div>
+
+            <div class="opt-section-label">Page Elements</div>
+            <div class="opt-row"><label>Title</label><input type="text" id="label-title" value="🎮 3D Utility Maximization"></div>
+            <div class="opt-row"><label>Subtitle</label><input type="text" id="label-subtitle" value="Adjust X, Y, and Z to maximize utility within your budget plane!"></div>
+
+            <div class="opt-section-label">Panel Titles</div>
+            <div class="opt-row"><label>Figure</label><input type="text" id="label-graph" value="3D Visualization"></div>
+            <div class="opt-row"><label>Explanation</label><input type="text" id="label-explanation" value="Explanation"></div>
+            <div class="opt-row"><label>Choices</label><input type="text" id="label-choices" value="🎯 Your Choices"></div>
+            <div class="opt-row"><label>Score</label><input type="text" id="label-score" value="Your Score"></div>
+            <div class="opt-row"><label>Budget</label><input type="text" id="label-budget" value="Budget Constraint"></div>
+            <div class="opt-row"><label>Preferences</label><input type="text" id="label-preferences" value="Preferences (Cobb-Douglas)"></div>
+
+            <!-- Restore closed panels -->
+            <div class="restore-bar" id="restore-bar"></div>
+
+            <!-- URL State -->
+            <div class="url-state-bar">
+                <button id="copy-url-btn" title="Copy a URL that encodes the current slider values and display options">📋 Copy link with current state</button>
+                <button id="reset-url-btn" title="Reset all parameters and display options to defaults">↺ Reset to defaults</button>
+                <span class="url-hint">Link encodes sliders, display options, and panel states</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── Embed mode detection ───
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('embed')) {
+        document.body.classList.add('embed-mode');
+        const hide = params.get('hide');
+        if (hide) hide.split(',').forEach(s => document.body.classList.add('embed-hide-' + s.trim()));
+        const openBtn = document.getElementById('embed-open-btn');
+        if (openBtn) openBtn.href = window.location.pathname + window.location.hash;
+    }
+})();
+
+// ─── Collapse/expand ───
+function toggleSection(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
+function togglePanel(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
+
+// ─── Close / Restore panels ───
+const PANEL_NAMES = {
+    title: 'Title', subtitle: 'Subtitle', graph: '3D Visualization', explanation: 'Explanation',
+    choices: 'Your Choices', score: 'Your Score', budget: 'Budget Constraint', preferences: 'Preferences'
+};
+const LEFT_PANELS = ['graph', 'explanation'];
+const RIGHT_PANELS = ['choices', 'score', 'budget', 'preferences'];
+
+function closePanel(name) { const el = document.getElementById('section-' + name); if (el) el.classList.add('panel-closed'); updateRestoreBar(); updateLayout(); }
+function restorePanel(name) { const el = document.getElementById('section-' + name); if (el) el.classList.remove('panel-closed'); updateRestoreBar(); updateLayout(); }
+function updateLayout() {
+    const mc = document.querySelector('.main-content');
+    mc.classList.toggle('left-empty', LEFT_PANELS.every(n => document.getElementById('section-' + n)?.classList.contains('panel-closed')));
+    mc.classList.toggle('right-empty', RIGHT_PANELS.every(n => document.getElementById('section-' + n)?.classList.contains('panel-closed')));
+}
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n => document.getElementById('section-' + n)?.classList.contains('panel-closed'));
+    if (!closed.length) { bar.innerHTML = ''; return; }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' + closed.map(n => `<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');
+}
+
+// ─── Sync editable labels ───
+const PANEL_LABEL_MAP = {
+    'label-title': () => document.querySelector('#section-title h1'),
+    'label-subtitle': () => document.querySelector('#section-subtitle .subtitle'),
+    'label-graph': () => document.querySelector('#section-graph .graph-header .panel-title'),
+    'label-explanation': () => document.querySelector('#section-explanation .left-section-header .panel-title'),
+    'label-choices': () => document.querySelector('#section-choices .control-panel-header .panel-title'),
+    'label-score': () => document.querySelector('#section-score .control-panel-header .panel-title'),
+    'label-budget': () => document.querySelector('#section-budget .control-panel-header .panel-title'),
+    'label-preferences': () => document.querySelector('#section-preferences .control-panel-header .panel-title'),
+};
+function syncLabels() {
+    for (const [id, getEl] of Object.entries(PANEL_LABEL_MAP)) {
+        const input = document.getElementById(id); const el = getEl();
+        if (input && el && input.value.trim()) el.textContent = input.value.trim();
+    }
+}
+Object.keys(PANEL_LABEL_MAP).forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', syncLabels); });
+
+// ─── Three.js setup ───
+let scene, camera, renderer;
+let budgetPlane, indifferenceSurface, userPoint, optimalPoint;
+let axisLabels = [];
+let showOptimal = false;
+let wasAffordable = true;
+
+const threeContainer = document.getElementById('three-canvas');
+const userXSlider = document.getElementById('user-x');
+const userYSlider = document.getElementById('user-y');
+const userZSlider = document.getElementById('user-z');
+const incomeSlider = document.getElementById('income');
+const pxSlider = document.getElementById('px');
+const pySlider = document.getElementById('py');
+const pzSlider = document.getElementById('pz');
+const alphaSlider = document.getElementById('alpha');
+const betaSlider = document.getElementById('beta');
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+    camera = new THREE.PerspectiveCamera(60, threeContainer.clientWidth / threeContainer.clientHeight, 0.1, 1000);
+    camera.position.set(70, 50, 70);
+    camera.lookAt(25, 25, 25);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(threeContainer.clientWidth, threeContainer.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    threeContainer.appendChild(renderer.domElement);
+
+    // Manual orbit controls
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let spherical = { theta: Math.PI / 5, phi: Math.PI / 4.5, radius: 110 };
+
+    function updateCamera() {
+        camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta) + 25;
+        camera.position.y = spherical.radius * Math.cos(spherical.phi) + 25;
+        camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta) + 25;
+        camera.lookAt(25, 25, 25);
+    }
+
+    renderer.domElement.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
+    renderer.domElement.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        spherical.theta -= (e.clientX - previousMousePosition.x) * 0.01;
+        spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - (e.clientY - previousMousePosition.y) * 0.01));
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+        updateCamera();
+    });
+    renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+    renderer.domElement.addEventListener('mouseleave', () => isDragging = false);
+    renderer.domElement.addEventListener('wheel', (e) => { e.preventDefault(); spherical.radius = Math.max(40, Math.min(200, spherical.radius + e.deltaY * 0.1)); updateCamera(); });
+
+    renderer.domElement.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { isDragging = true; previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } });
+    renderer.domElement.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return; e.preventDefault();
+        spherical.theta -= (e.touches[0].clientX - previousMousePosition.x) * 0.01;
+        spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - (e.touches[0].clientY - previousMousePosition.y) * 0.01));
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        updateCamera();
+    }, { passive: false });
+    renderer.domElement.addEventListener('touchend', () => isDragging = false);
+
+    updateCamera();
+
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(50, 100, 50); scene.add(dl);
+    const fl = new THREE.DirectionalLight(0x319795, 0.3); fl.position.set(-50, 50, -50); scene.add(fl);
+    const rl = new THREE.DirectionalLight(0xffffff, 0.2); rl.position.set(0, -50, 0); scene.add(rl);
+
+    createAxes();
+    updateVisualization();
+    animate();
+}
+
+function createAxes() {
+    const len = 55, col = 0xa0aec0;
+    const xG = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(len,0,0)]);
+    scene.add(new THREE.Line(xG, new THREE.LineBasicMaterial({ color: 0xe53e3e })));
+    const yG = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,len,0)]);
+    scene.add(new THREE.Line(yG, new THREE.LineBasicMaterial({ color: 0x38a169 })));
+    const zG = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,len)]);
+    scene.add(new THREE.Line(zG, new THREE.LineBasicMaterial({ color: 0x3182ce })));
+    const grid = new THREE.GridHelper(50, 10, 0xa0aec0, 0xe2e8f0); grid.position.set(25, 0, 25); scene.add(grid);
+    for (let i = 10; i <= 50; i += 10) {
+        [new THREE.Vector3(i,0,0), new THREE.Vector3(0,i,0), new THREE.Vector3(0,0,i)].forEach(pos => {
+            const m = new THREE.Mesh(new THREE.SphereGeometry(0.3,8,8), new THREE.MeshBasicMaterial({color:0x718096}));
+            m.position.copy(pos); scene.add(m);
+        });
+    }
+}
+
+function calculateOptimal(M,Px,Py,Pz,alpha,beta) {
+    const gamma=1-alpha-beta; if(gamma<=0)return{xStar:0,yStar:0,zStar:0,utility:0};
+    const xS=(alpha*M)/Px, yS=(beta*M)/Py, zS=(gamma*M)/Pz;
+    return{xStar:xS,yStar:yS,zStar:zS,utility:Math.pow(xS,alpha)*Math.pow(yS,beta)*Math.pow(zS,gamma)};
+}
+function calculateUtility(x,y,z,alpha,beta) {
+    const gamma=1-alpha-beta; if(x<=0||y<=0||z<=0||gamma<=0)return 0;
+    return Math.pow(x,alpha)*Math.pow(y,beta)*Math.pow(z,gamma);
+}
+
+function createBudgetPlane(M,Px,Py,Pz) {
+    if(budgetPlane){scene.remove(budgetPlane);budgetPlane.geometry.dispose();budgetPlane.material.dispose();}
+    const xI=Math.min(M/Px,50),yI=Math.min(M/Py,50),zI=Math.min(M/Pz,50);
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(new Float32Array([xI,0,0,0,yI,0,0,0,zI]),3));
+    g.computeVertexNormals();
+    budgetPlane=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0xe53e3e,transparent:true,opacity:0.25,side:THREE.DoubleSide,depthWrite:false}));
+    scene.add(budgetPlane);
+    // Wireframe edge
+    const eg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xI,0,0),new THREE.Vector3(0,yI,0),new THREE.Vector3(0,0,zI),new THREE.Vector3(xI,0,0)]);
+    budgetPlane.add(new THREE.Line(eg,new THREE.LineBasicMaterial({color:0xe53e3e,linewidth:2})));
+}
+
+function createIndifferenceSurface(targetU,alpha,beta,affordable) {
+    if(indifferenceSurface){scene.remove(indifferenceSurface);indifferenceSurface.traverse(c=>{if(c.geometry)c.geometry.dispose();if(c.material)c.material.dispose();});}
+    if(targetU<=0)return;
+    const gamma=1-alpha-beta; if(gamma<=0)return;
+    const logU=Math.log(targetU), max=50, eps=0.3;
+    const xyCut=max*0.6; // also clip x and y dimensions
+
+    // Step 1: Build a fine grid in x-y, compute z analytically.
+    // Use a z-cutoff to define the "good" region, then rebuild a
+    // clean mesh from only the good vertices with interpolated boundary.
+    const res=60;
+    const zCut=max*0.55; // trim well inside budget plane for cleaner look
+
+    // Compute z for grid point (i,j)
+    function getZ(x,y) {
+        if(x<eps||y<eps) return Infinity;
+        const lz=(logU - alpha*Math.log(x) - beta*Math.log(y))/gamma;
+        const z=Math.exp(lz);
+        if(!isFinite(z)||z<0) return Infinity;
+        return z;
+    }
+
+    // Grid: store z values
+    const zGrid=[];
+    for(let i=0;i<=res;i++){
+        zGrid[i]=[];
+        for(let j=0;j<=res;j++){
+            const x=eps+(i/res)*(xyCut-eps), y=eps+(j/res)*(xyCut-eps);
+            zGrid[i][j]=getZ(x,y);
         }
-        
-        function createAxes() {
-            const axisLength = 55;
-            const axisColor = 0xa0aec0;
-            
-            // X axis (red tint)
-            const xGeom = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(0, 0, 0),
-                new THREE.Vector3(axisLength, 0, 0)
-            ]);
-            const xMat = new THREE.LineBasicMaterial({ color: 0xe53e3e });
-            scene.add(new THREE.Line(xGeom, xMat));
-            
-            // Y axis (green tint)
-            const yGeom = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(0, 0, 0),
-                new THREE.Vector3(0, axisLength, 0)
-            ]);
-            const yMat = new THREE.LineBasicMaterial({ color: 0x38a169 });
-            scene.add(new THREE.Line(yGeom, yMat));
-            
-            // Z axis (blue tint)
-            const zGeom = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(0, 0, 0),
-                new THREE.Vector3(0, 0, axisLength)
-            ]);
-            const zMat = new THREE.LineBasicMaterial({ color: 0x3182ce });
-            scene.add(new THREE.Line(zGeom, zMat));
-            
-            // Grid on XZ plane (floor)
-            const gridHelper = new THREE.GridHelper(50, 10, 0xa0aec0, 0xe2e8f0);
-            gridHelper.position.set(25, 0, 25);
-            scene.add(gridHelper);
-            
-            // Axis tick marks
-            for (let i = 10; i <= 50; i += 10) {
-                // X ticks
-                const xTick = createTickMark();
-                xTick.position.set(i, 0, 0);
-                scene.add(xTick);
-                
-                // Y ticks
-                const yTick = createTickMark();
-                yTick.position.set(0, i, 0);
-                scene.add(yTick);
-                
-                // Z ticks
-                const zTick = createTickMark();
-                zTick.position.set(0, 0, i);
-                scene.add(zTick);
-            }
-        }
-        
-        function createTickMark() {
-            const geometry = new THREE.SphereGeometry(0.3, 8, 8);
-            const material = new THREE.MeshBasicMaterial({ color: 0x718096 });
-            return new THREE.Mesh(geometry, material);
-        }
-        
-        function calculateOptimal(M, Px, Py, Pz, alpha, beta) {
-            const gamma = 1 - alpha - beta;
-            if (gamma <= 0) return { xStar: 0, yStar: 0, zStar: 0, utility: 0 };
-            
-            const xStar = (alpha * M) / Px;
-            const yStar = (beta * M) / Py;
-            const zStar = (gamma * M) / Pz;
-            const utility = Math.pow(xStar, alpha) * Math.pow(yStar, beta) * Math.pow(zStar, gamma);
-            
-            return { xStar, yStar, zStar, utility };
-        }
-        
-        function calculateUtility(x, y, z, alpha, beta) {
-            const gamma = 1 - alpha - beta;
-            if (x <= 0 || y <= 0 || z <= 0 || gamma <= 0) return 0;
-            return Math.pow(x, alpha) * Math.pow(y, beta) * Math.pow(z, gamma);
-        }
-        
-        function createBudgetPlane(M, Px, Py, Pz) {
-            // Remove old plane
-            if (budgetPlane) {
-                scene.remove(budgetPlane);
-                budgetPlane.geometry.dispose();
-                budgetPlane.material.dispose();
-            }
-            
-            // Budget plane vertices: Px*x + Py*y + Pz*z = M
-            const xInt = Math.min(M / Px, 50);
-            const yInt = Math.min(M / Py, 50);
-            const zInt = Math.min(M / Pz, 50);
-            
-            const geometry = new THREE.BufferGeometry();
-            const vertices = new Float32Array([
-                xInt, 0, 0,
-                0, yInt, 0,
-                0, 0, zInt
-            ]);
-            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-            geometry.computeVertexNormals();
-            
-            const material = new THREE.MeshBasicMaterial({
-                color: 0xe53e3e,
-                transparent: true,
-                opacity: 0.35,
-                side: THREE.DoubleSide,
-                depthWrite: false
-            });
-            
-            budgetPlane = new THREE.Mesh(geometry, material);
-            scene.add(budgetPlane);
-            
-            // Add wireframe edges
-            const edgeGeom = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(xInt, 0, 0),
-                new THREE.Vector3(0, yInt, 0),
-                new THREE.Vector3(0, 0, zInt),
-                new THREE.Vector3(xInt, 0, 0)
-            ]);
-            const edgeMat = new THREE.LineBasicMaterial({ color: 0xe53e3e, linewidth: 2 });
-            const edges = new THREE.Line(edgeGeom, edgeMat);
-            budgetPlane.add(edges);
-        }
-        
-        function createIndifferenceSurface(utility, alpha, beta, affordable) {
-            // Remove old surface
-            if (indifferenceSurface) {
-                scene.remove(indifferenceSurface);
-                indifferenceSurface.geometry.dispose();
-                indifferenceSurface.material.dispose();
-            }
-            
-            if (utility <= 0) return;
-            
-            const gamma = 1 - alpha - beta;
-            if (gamma <= 0) return;
-            
-            // Create parametric surface for indifference surface
-            // U = x^α * y^β * z^γ => z = (U / (x^α * y^β))^(1/γ)
-            const segments = 120;
-            const geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            const indices = [];
-            
-            const maxVal = 50;
-            const clipMax = 40; // Hard clip ceiling
-            const minVal = 2.0; // Stay further from axes
-            
-            // Calculate all z values first
-            const zGrid = [];
-            for (let i = 0; i <= segments; i++) {
-                zGrid[i] = [];
-                for (let j = 0; j <= segments; j++) {
-                    const x = minVal + (i / segments) * (maxVal - minVal);
-                    const y = minVal + (j / segments) * (maxVal - minVal);
-                    
-                    const base = utility / (Math.pow(x, alpha) * Math.pow(y, beta));
-                    let z = Math.pow(base, 1 / gamma);
-                    
-                    // Clamp z values
-                    if (!isFinite(z) || z < 0) z = -1; // Mark invalid
-                    else if (z > clipMax) z = -1; // Mark as too high
-                    
-                    zGrid[i][j] = z;
-                }
-            }
-            
-            // Create vertices, marking validity
-            const validMask = [];
-            for (let i = 0; i <= segments; i++) {
-                for (let j = 0; j <= segments; j++) {
-                    const x = minVal + (i / segments) * (maxVal - minVal);
-                    const y = minVal + (j / segments) * (maxVal - minVal);
-                    const z = zGrid[i][j];
-                    
-                    const isValid = z > 0;
-                    validMask.push(isValid);
-                    
-                    // For vertices, use actual z if valid, otherwise placeholder
-                    vertices.push(x, isValid ? z : 0, y);
-                }
-            }
-            
-            // Create faces only where ALL four vertices are valid
-            for (let i = 0; i < segments; i++) {
-                for (let j = 0; j < segments; j++) {
-                    const a = i * (segments + 1) + j;
-                    const b = a + 1;
-                    const c = a + (segments + 1);
-                    const d = c + 1;
-                    
-                    // All four corners must be valid
-                    if (validMask[a] && validMask[b] && validMask[c] && validMask[d]) {
-                        // Also check that the z values aren't too different (avoid steep spikes)
-                        const za = vertices[a * 3 + 1];
-                        const zb = vertices[b * 3 + 1];
-                        const zc = vertices[c * 3 + 1];
-                        const zd = vertices[d * 3 + 1];
-                        
-                        const maxZ = Math.max(za, zb, zc, zd);
-                        const minZ = Math.min(za, zb, zc, zd);
-                        
-                        // Skip faces with too much z variation (would look spiky)
-                        if (maxZ - minZ < 8) {
-                            indices.push(a, b, c);
-                            indices.push(b, d, c);
-                        }
+    }
+
+    // Step 2: Build mesh. For each grid cell, classify corners as
+    // inside (z <= zCut) or outside. For fully-inside cells, emit
+    // the quad. For boundary cells, interpolate edge crossings to
+    // create smooth trimmed triangles.
+    const verts=[], idxMap={};
+    let vCount=0;
+
+    function gridX(i){ return eps+(i/res)*(xyCut-eps); }
+    function gridY(j){ return eps+(j/res)*(xyCut-eps); }
+
+    function addVert(x,y,z){
+        // Deduplicate with a spatial key (rounded to avoid float issues)
+        const key=Math.round(x*100)+'_'+Math.round(y*100);
+        if(idxMap[key]!==undefined) return idxMap[key];
+        verts.push(x,z,y); // Three.js: (x, z_up, y)
+        idxMap[key]=vCount;
+        return vCount++;
+    }
+
+    // Interpolate along an edge between two grid points
+    function interpEdge(x0,y0,z0, x1,y1,z1){
+        // Find t where z = zCut
+        const t=Math.max(0,Math.min(1,(zCut-z0)/(z1-z0)));
+        const ix=x0+t*(x1-x0), iy=y0+t*(y1-y0);
+        return {x:ix, y:iy, z:zCut};
+    }
+
+    const idxs=[];
+
+    for(let i=0;i<res;i++){
+        for(let j=0;j<res;j++){
+            const x00=gridX(i),   y00=gridY(j),   z00=zGrid[i][j];
+            const x10=gridX(i+1), y10=gridY(j),   z10=zGrid[i+1][j];
+            const x11=gridX(i+1), y11=gridY(j+1), z11=zGrid[i+1][j+1];
+            const x01=gridX(i),   y01=gridY(j+1), z01=zGrid[i][j+1];
+
+            const in00=z00<=zCut, in10=z10<=zCut, in11=z11<=zCut, in01=z01<=zCut;
+            const count=in00+in10+in11+in01;
+            if(count===0) continue;
+
+            if(count===4){
+                // All inside — simple quad
+                const a=addVert(x00,y00,z00), b=addVert(x10,y10,z10);
+                const c=addVert(x11,y11,z11), d=addVert(x01,y01,z01);
+                idxs.push(a,b,c, a,c,d);
+            } else {
+                // Boundary cell — collect the polygon of inside corners + edge interpolations
+                // Walk corners in order: 00, 10, 11, 01
+                const corners=[
+                    {x:x00,y:y00,z:z00,inside:in00},
+                    {x:x10,y:y10,z:z10,inside:in10},
+                    {x:x11,y:y11,z:z11,inside:in11},
+                    {x:x01,y:y01,z:z01,inside:in01}
+                ];
+                const poly=[];
+                for(let k=0;k<4;k++){
+                    const cur=corners[k], nxt=corners[(k+1)%4];
+                    if(cur.inside) poly.push(addVert(cur.x,cur.y,cur.z));
+                    // If edge crosses boundary, add interpolated point
+                    if(cur.inside!==nxt.inside){
+                        const p=interpEdge(cur.x,cur.y,cur.z, nxt.x,nxt.y,nxt.z);
+                        poly.push(addVert(p.x,p.y,p.z));
                     }
                 }
+                // Fan-triangulate the polygon
+                for(let k=1;k<poly.length-1;k++){
+                    idxs.push(poly[0],poly[k],poly[k+1]);
+                }
             }
-            
-            if (indices.length === 0) return;
-            
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            geometry.setIndex(indices);
-            geometry.computeVertexNormals();
-            
-            const baseColor = affordable ? 0x319795 : 0xe53e3e;
-            const material = new THREE.MeshPhongMaterial({
-                color: baseColor,
-                specular: 0x444444,
-                shininess: 80,
-                transparent: true,
-                opacity: 0.7,
-                side: THREE.DoubleSide,
-                depthWrite: false,
-                flatShading: false
-            });
-            
-            indifferenceSurface = new THREE.Mesh(geometry, material);
-            scene.add(indifferenceSurface);
-            
-            // Add wireframe overlay for additional depth cues
-            const wireGeometry = new THREE.WireframeGeometry(geometry);
-            const wireMaterial = new THREE.LineBasicMaterial({ 
-                color: baseColor, 
-                transparent: true, 
-                opacity: 0.15 
-            });
-            const wireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
-            indifferenceSurface.add(wireframe);
         }
-        
-        function createUserPoint(x, y, z, affordable, nearOptimal) {
-            if (userPoint) {
-                scene.remove(userPoint);
-                userPoint.geometry.dispose();
-                userPoint.material.dispose();
-            }
-            
-            const geometry = new THREE.SphereGeometry(1.5, 32, 32);
-            let color = affordable ? (nearOptimal ? 0xd69e2e : 0x319795) : 0xe53e3e;
-            const material = new THREE.MeshPhongMaterial({ 
-                color: color,
-                emissive: color,
-                emissiveIntensity: 0.3
-            });
-            
-            userPoint = new THREE.Mesh(geometry, material);
-            userPoint.position.set(x, z, y); // Swapped y and z
-            scene.add(userPoint);
-            
-            // Glow effect
-            const glowGeom = new THREE.SphereGeometry(2.5, 32, 32);
-            const glowMat = new THREE.MeshBasicMaterial({
-                color: color,
-                transparent: true,
-                opacity: 0.3
-            });
-            const glow = new THREE.Mesh(glowGeom, glowMat);
-            userPoint.add(glow);
-        }
-        
-        function createOptimalPoint(x, y, z) {
-            if (optimalPoint) {
-                scene.remove(optimalPoint);
-                optimalPoint.geometry.dispose();
-                optimalPoint.material.dispose();
-            }
-            
-            if (!showOptimal) return;
-            
-            const geometry = new THREE.SphereGeometry(1.2, 32, 32);
-            const material = new THREE.MeshPhongMaterial({
-                color: 0xd69e2e,
-                emissive: 0xd69e2e,
-                emissiveIntensity: 0.5
-            });
-            
-            optimalPoint = new THREE.Mesh(geometry, material);
-            optimalPoint.position.set(x, z, y); // Swapped y and z
-            scene.add(optimalPoint);
-            
-            // Ring around optimal
-            const ringGeom = new THREE.TorusGeometry(2.5, 0.15, 16, 32);
-            const ringMat = new THREE.MeshBasicMaterial({ color: 0xd69e2e });
-            const ring = new THREE.Mesh(ringGeom, ringMat);
-            ring.rotation.x = Math.PI / 2;
-            optimalPoint.add(ring);
-        }
-        
-        function updateVisualization() {
-            const M = parseFloat(incomeSlider.value);
-            const Px = parseFloat(pxSlider.value);
-            const Py = parseFloat(pySlider.value);
-            const Pz = parseFloat(pzSlider.value);
-            const alpha = parseFloat(alphaSlider.value);
-            const beta = parseFloat(betaSlider.value);
-            const userX = parseFloat(userXSlider.value);
-            const userY = parseFloat(userYSlider.value);
-            const userZ = parseFloat(userZSlider.value);
-            
-            // Update display values
-            document.getElementById('income-value').textContent = M;
-            document.getElementById('px-value').textContent = Px;
-            document.getElementById('py-value').textContent = Py;
-            document.getElementById('pz-value').textContent = Pz;
-            document.getElementById('alpha-value').textContent = alpha.toFixed(2);
-            document.getElementById('beta-value').textContent = beta.toFixed(2);
-            document.getElementById('user-x-value').textContent = userX.toFixed(1);
-            document.getElementById('user-y-value').textContent = userY.toFixed(1);
-            document.getElementById('user-z-value').textContent = userZ.toFixed(1);
-            
-            const { xStar, yStar, zStar, utility: optimalUtility } = calculateOptimal(M, Px, Py, Pz, alpha, beta);
-            const userUtility = calculateUtility(userX, userY, userZ, alpha, beta);
-            const spending = Px * userX + Py * userY + Pz * userZ;
-            const affordable = spending <= M * 1.001;
-            const nearOptimal = affordable && optimalUtility > 0 && Math.abs(userUtility - optimalUtility) / optimalUtility < 0.03;
-            
-            // Update budget bar
-            const budgetPct = Math.min((spending / M) * 100, 150);
-            document.getElementById('budget-fill').style.width = `${Math.min(budgetPct, 100)}%`;
-            document.getElementById('budget-fill').className = 'budget-fill' + (!affordable ? ' over' : '');
-            document.getElementById('budget-status').innerHTML = affordable
-                ? `$${spending.toFixed(0)} / $${M}`
-                : `<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
-            
-            // Update scores
-            document.getElementById('score-value').textContent = affordable ? userUtility.toFixed(1) : '—';
-            document.getElementById('optimal-utility').textContent = optimalUtility.toFixed(1);
-            
-            const proximity = affordable && optimalUtility > 0 ? Math.min(100, (userUtility / optimalUtility) * 100) : 0;
-            document.getElementById('proximity-pct').textContent = `${proximity.toFixed(0)}%`;
-            document.getElementById('proximity-fill').style.width = `${proximity}%`;
-            
-            // Big utility display
-            const bigUtility = document.getElementById('big-utility');
-            bigUtility.textContent = affordable ? userUtility.toFixed(1) : '—';
-            bigUtility.className = 'utility-value' + (!affordable ? ' infeasible' : (nearOptimal ? ' optimal' : ''));
-            
-            // Banners
-            const errorBanner = document.getElementById('error-banner');
-            const successBanner = document.getElementById('success-banner');
-            
-            if (!affordable && wasAffordable) {
-                errorBanner.classList.remove('visible');
-                void errorBanner.offsetWidth;
-                errorBanner.classList.add('visible');
-            } else if (!affordable) {
-                errorBanner.classList.add('visible');
-            } else {
-                errorBanner.classList.remove('visible');
-            }
-            wasAffordable = affordable;
-            
-            successBanner.className = 'success-banner' + (nearOptimal ? ' visible' : '');
-            
-            // Update 3D visualization
-            createBudgetPlane(M, Px, Py, Pz);
-            createIndifferenceSurface(userUtility, alpha, beta, affordable);
-            createUserPoint(userX, userY, userZ, affordable, nearOptimal);
-            createOptimalPoint(xStar, yStar, zStar);
-        }
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-        
-        function resetGame() {
-            incomeSlider.value = 60 + Math.random() * 100;
-            pxSlider.value = 1 + Math.random() * 5;
-            pySlider.value = 1 + Math.random() * 5;
-            pzSlider.value = 1 + Math.random() * 5;
-            alphaSlider.value = 0.2 + Math.random() * 0.3;
-            betaSlider.value = 0.2 + Math.random() * 0.3;
-            
-            userXSlider.value = 5 + Math.random() * 15;
-            userYSlider.value = 5 + Math.random() * 15;
-            userZSlider.value = 5 + Math.random() * 15;
-            
-            showOptimal = false;
-            updateVisualization();
-        }
-        
-        function toggleHint() {
-            showOptimal = !showOptimal;
-            updateVisualization();
-        }
-        
-        // Event listeners
-        [userXSlider, userYSlider, userZSlider].forEach(slider => {
-            slider.addEventListener('input', updateVisualization);
-        });
-        
-        [incomeSlider, pxSlider, pySlider, pzSlider, alphaSlider, betaSlider].forEach(slider => {
-            slider.addEventListener('input', () => {
-                showOptimal = false;
-                updateVisualization();
-            });
-        });
-        
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
-        
-        // Initialize
-        init();
-    </script>
+    }
+
+    if(!idxs.length)return;
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+    g.setIndex(idxs);g.computeVertexNormals();
+    const col=affordable?0x319795:0xe53e3e;
+    indifferenceSurface=new THREE.Mesh(g,new THREE.MeshPhongMaterial({color:col,specular:0x444444,shininess:80,transparent:true,opacity:0.7,side:THREE.DoubleSide,depthWrite:false,flatShading:false}));
+    scene.add(indifferenceSurface);
+    const wg=new THREE.WireframeGeometry(g);
+    indifferenceSurface.add(new THREE.LineSegments(wg,new THREE.LineBasicMaterial({color:col,transparent:true,opacity:0.15})));
+}
+
+function createUserPoint(x,y,z,affordable,nearOptimal) {
+    if(userPoint){scene.remove(userPoint);userPoint.geometry.dispose();userPoint.material.dispose();}
+    const col=affordable?(nearOptimal?0xd69e2e:0x319795):0xe53e3e;
+    userPoint=new THREE.Mesh(new THREE.SphereGeometry(1.5,32,32),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.3}));
+    userPoint.position.set(x,z,y);scene.add(userPoint);
+    const glow=new THREE.Mesh(new THREE.SphereGeometry(2.5,32,32),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.3}));
+    userPoint.add(glow);
+}
+
+function createOptimalPoint(x,y,z) {
+    if(optimalPoint){scene.remove(optimalPoint);optimalPoint.geometry.dispose();optimalPoint.material.dispose();}
+    if(!showOptimal)return;
+    optimalPoint=new THREE.Mesh(new THREE.SphereGeometry(1.2,32,32),new THREE.MeshPhongMaterial({color:0xd69e2e,emissive:0xd69e2e,emissiveIntensity:0.5}));
+    optimalPoint.position.set(x,z,y);scene.add(optimalPoint);
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(2.5,0.15,16,32),new THREE.MeshBasicMaterial({color:0xd69e2e}));
+    ring.rotation.x=Math.PI/2;optimalPoint.add(ring);
+}
+
+function updateVisualization() {
+    const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),Pz=parseFloat(pzSlider.value);
+    const alpha=parseFloat(alphaSlider.value),beta=parseFloat(betaSlider.value);
+    const uX=parseFloat(userXSlider.value),uY=parseFloat(userYSlider.value),uZ=parseFloat(userZSlider.value);
+    document.getElementById('income-value').textContent=M;document.getElementById('px-value').textContent=Px;
+    document.getElementById('py-value').textContent=Py;document.getElementById('pz-value').textContent=Pz;
+    document.getElementById('alpha-value').textContent=alpha.toFixed(2);document.getElementById('beta-value').textContent=beta.toFixed(2);
+    document.getElementById('user-x-value').textContent=uX.toFixed(1);document.getElementById('user-y-value').textContent=uY.toFixed(1);document.getElementById('user-z-value').textContent=uZ.toFixed(1);
+
+    const{xStar,yStar,zStar,utility:optU}=calculateOptimal(M,Px,Py,Pz,alpha,beta);
+    const userU=calculateUtility(uX,uY,uZ,alpha,beta),spending=Px*uX+Py*uY+Pz*uZ,affordable=spending<=M*1.001;
+    const nearOptimal=affordable&&optU>0&&Math.abs(userU-optU)/optU<0.03;
+
+    const pct=Math.min((spending/M)*100,150);
+    document.getElementById('budget-fill').style.width=`${Math.min(pct,100)}%`;
+    document.getElementById('budget-fill').className='budget-fill'+(!affordable?' over':'');
+    document.getElementById('budget-status').innerHTML=affordable?`$${spending.toFixed(0)} / $${M}`:`<span class="over">$${spending.toFixed(0)} / $${M}</span>`;
+    document.getElementById('score-value').textContent=affordable?userU.toFixed(1):'—';
+    document.getElementById('optimal-utility').textContent=optU.toFixed(1);
+    const prox=affordable&&optU>0?Math.min(100,(userU/optU)*100):0;
+    document.getElementById('proximity-pct').textContent=`${prox.toFixed(0)}%`;document.getElementById('proximity-fill').style.width=`${prox}%`;
+    const bigU=document.getElementById('big-utility');
+    bigU.textContent=affordable?userU.toFixed(1):'—';
+    bigU.className='utility-value'+(!affordable?' infeasible':(nearOptimal?' optimal':''));
+    const eb=document.getElementById('error-banner'),sb=document.getElementById('success-banner');
+    if(!affordable&&wasAffordable){eb.classList.remove('visible');void eb.offsetWidth;eb.classList.add('visible');}
+    else if(!affordable)eb.classList.add('visible'); else eb.classList.remove('visible');
+    wasAffordable=affordable;
+    sb.className='success-banner'+(nearOptimal?' visible':'');
+
+    createBudgetPlane(M,Px,Py,Pz);
+    createIndifferenceSurface(userU,alpha,beta,affordable);
+    createUserPoint(uX,uY,uZ,affordable,nearOptimal);
+    createOptimalPoint(xStar,yStar,zStar);
+}
+
+function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+
+function resetGame() {
+    incomeSlider.value=60+Math.random()*100;pxSlider.value=1+Math.random()*5;pySlider.value=1+Math.random()*5;pzSlider.value=1+Math.random()*5;
+    alphaSlider.value=0.2+Math.random()*0.3;betaSlider.value=0.2+Math.random()*0.3;
+    userXSlider.value=5+Math.random()*15;userYSlider.value=5+Math.random()*15;userZSlider.value=5+Math.random()*15;
+    showOptimal=false;updateVisualization();
+}
+function toggleHint() { showOptimal=!showOptimal; updateVisualization(); }
+
+[userXSlider,userYSlider,userZSlider].forEach(s=>s.addEventListener('input',updateVisualization));
+[incomeSlider,pxSlider,pySlider,pzSlider,alphaSlider,betaSlider].forEach(s=>s.addEventListener('input',()=>{showOptimal=false;updateVisualization();}));
+
+document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
+
+window.addEventListener('resize',()=>{if(!threeContainer.clientWidth)return;camera.aspect=threeContainer.clientWidth/threeContainer.clientHeight;camera.updateProjectionMatrix();renderer.setSize(threeContainer.clientWidth,threeContainer.clientHeight);});
+
+// ═══════════════════════════════════════════════════════
+// URL STATE ENCODING / DECODING
+// ═══════════════════════════════════════════════════════
+
+const DEFAULTS = {
+    M:100,Px:2,Py:2,Pz:2,alpha:0.33,beta:0.33,userX:10,userY:10,userZ:10,
+    'label-title':'🎮 3D Utility Maximization',
+    'label-subtitle':'Adjust X, Y, and Z to maximize utility within your budget plane!',
+    'label-graph':'3D Visualization','label-explanation':'Explanation',
+    'label-choices':'🎯 Your Choices','label-score':'Your Score',
+    'label-budget':'Budget Constraint','label-preferences':'Preferences (Cobb-Douglas)',
+    'sec-graph':true,'sec-explanation':true,'sec-choices':true,'sec-score':true,'sec-budget':true,'sec-preferences':true,
+    'closed-title':false,'closed-subtitle':false,'closed-graph':false,'closed-explanation':false,
+    'closed-choices':false,'closed-score':false,'closed-budget':false,'closed-preferences':false,
+    'disp-open':false,
+};
+
+const LABEL_IDS = ['label-title','label-subtitle','label-graph','label-explanation','label-choices','label-score','label-budget','label-preferences'];
+const ALL_SECTIONS = ['graph','explanation','choices','score','budget','preferences'];
+
+function buildStateObject() {
+    const s={};
+    const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),Pz=parseFloat(pzSlider.value);
+    const alpha=parseFloat(alphaSlider.value),beta=parseFloat(betaSlider.value);
+    const uX=parseFloat(userXSlider.value),uY=parseFloat(userYSlider.value),uZ=parseFloat(userZSlider.value);
+    if(M!==DEFAULTS.M)s.M=M; if(Px!==DEFAULTS.Px)s.Px=Px; if(Py!==DEFAULTS.Py)s.Py=Py; if(Pz!==DEFAULTS.Pz)s.Pz=Pz;
+    if(Math.abs(alpha-DEFAULTS.alpha)>0.005)s.a=alpha; if(Math.abs(beta-DEFAULTS.beta)>0.005)s.b=beta;
+    if(Math.abs(uX-DEFAULTS.userX)>0.3)s.userX=uX.toFixed(1); if(Math.abs(uY-DEFAULTS.userY)>0.3)s.userY=uY.toFixed(1); if(Math.abs(uZ-DEFAULTS.userZ)>0.3)s.userZ=uZ.toFixed(1);
+    for(const id of LABEL_IDS){const el=document.getElementById(id);if(el&&el.value!==DEFAULTS[id])s[id]=el.value;}
+    for(const sec of ALL_SECTIONS){const body=document.getElementById('body-'+sec);const isOpen=!body.classList.contains('collapsed');if(isOpen!==DEFAULTS['sec-'+sec])s['sec-'+sec]=isOpen?1:0;}
+    const dispOpen=document.getElementById('display-panel').classList.contains('open');if(dispOpen!==DEFAULTS['disp-open'])s['disp-open']=dispOpen?1:0;
+    for(const name of Object.keys(PANEL_NAMES)){const el=document.getElementById('section-'+name);const isClosed=el&&el.classList.contains('panel-closed');if(isClosed!==DEFAULTS['closed-'+name])s['closed-'+name]=isClosed?1:0;}
+    return s;
+}
+
+function stateToHash(state){const p=new URLSearchParams();for(const[k,v]of Object.entries(state))p.set(k,v);return p.toString();}
+
+function loadStateFromHash() {
+    const hash=window.location.hash.slice(1);if(!hash)return;
+    const p=new URLSearchParams(hash);
+    if(p.has('M'))incomeSlider.value=p.get('M'); if(p.has('Px'))pxSlider.value=p.get('Px'); if(p.has('Py'))pySlider.value=p.get('Py'); if(p.has('Pz'))pzSlider.value=p.get('Pz');
+    if(p.has('a'))alphaSlider.value=p.get('a'); if(p.has('b'))betaSlider.value=p.get('b');
+    if(p.has('userX'))userXSlider.value=p.get('userX'); if(p.has('userY'))userYSlider.value=p.get('userY'); if(p.has('userZ'))userZSlider.value=p.get('userZ');
+    for(const id of LABEL_IDS){if(p.has(id)){const el=document.getElementById(id);if(el)el.value=p.get(id);}}
+    for(const sec of ALL_SECTIONS){const key='sec-'+sec;if(p.has(key)){const open=p.get(key)==='1';const body=document.getElementById('body-'+sec);const toggle=document.getElementById('toggle-'+sec);if(open){body.classList.remove('collapsed');if(toggle)toggle.textContent='▼';}else{body.classList.add('collapsed');if(toggle)toggle.textContent='▶';}}}
+    if(p.has('disp-open')){const open=p.get('disp-open')==='1';const panel=document.getElementById('display-panel');const arrow=document.getElementById('display-arrow');if(open){panel.classList.add('open');arrow.classList.add('open');}else{panel.classList.remove('open');arrow.classList.remove('open');}}
+    for(const name of Object.keys(PANEL_NAMES)){const key='closed-'+name;if(p.has(key)){const el=document.getElementById('section-'+name);if(el){if(p.get(key)==='1')el.classList.add('panel-closed');else el.classList.remove('panel-closed');}}}
+}
+
+document.getElementById('copy-url-btn').addEventListener('click',async()=>{
+    const btn=document.getElementById('copy-url-btn');const state=buildStateObject();const hash=stateToHash(state);
+    const url=window.location.origin+window.location.pathname+(hash?'#'+hash:'');
+    try{await navigator.clipboard.writeText(url);btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='📋 Copy link with current state';btn.classList.remove('copied');},2000);}
+    catch{prompt('Copy this URL:',url);}
+});
+
+document.getElementById('reset-url-btn').addEventListener('click',()=>{
+    incomeSlider.value=DEFAULTS.M;pxSlider.value=DEFAULTS.Px;pySlider.value=DEFAULTS.Py;pzSlider.value=DEFAULTS.Pz;
+    alphaSlider.value=DEFAULTS.alpha;betaSlider.value=DEFAULTS.beta;
+    userXSlider.value=DEFAULTS.userX;userYSlider.value=DEFAULTS.userY;userZSlider.value=DEFAULTS.userZ;
+    for(const id of LABEL_IDS){const el=document.getElementById(id);if(el)el.value=DEFAULTS[id];}
+    syncLabels();
+    ALL_SECTIONS.forEach(sec=>{const body=document.getElementById('body-'+sec);const toggle=document.getElementById('toggle-'+sec);if(body)body.classList.remove('collapsed');if(toggle)toggle.textContent='▼';});
+    document.getElementById('display-panel').classList.remove('open');document.getElementById('display-arrow').classList.remove('open');
+    Object.keys(PANEL_NAMES).forEach(name=>{const el=document.getElementById('section-'+name);if(el)el.classList.remove('panel-closed');});
+    showOptimal=false;updateRestoreBar();updateLayout();
+    history.replaceState(null,'',window.location.pathname);updateVisualization();
+});
+
+// ─── Initialize ───
+loadStateFromHash();
+syncLabels();
+updateRestoreBar();
+updateLayout();
+init();
+</script>
 </body>
 </html>

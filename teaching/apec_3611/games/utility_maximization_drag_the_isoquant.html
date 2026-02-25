@@ -15,20 +15,87 @@
         .subtitle { text-align: center; color: #718096; margin-bottom: 20px; font-size: 0.95rem; }
         .main-content { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
         @media (max-width: 1000px) { .main-content { grid-template-columns: 1fr; } }
-
+        .main-content.left-empty { grid-template-columns: 0 1fr; }
+        .main-content.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty .left-column { display: none; }
+        .main-content.right-empty .controls { display: none; }
         .left-column { display: flex; flex-direction: column; gap: 0; }
-        .graph-container { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; }
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
         canvas { display: block; width: 100%; height: auto; cursor: grab; }
         canvas:active { cursor: grabbing; }
+        canvas.dragging-label { cursor: grabbing; }
+        canvas.hovering-label { cursor: grab; }
 
         /* Plot action buttons */
-        .plot-actions { position: absolute; top: 8px; right: 8px; z-index: 10; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
-        .graph-container:hover .plot-actions { opacity: 1; }
-        .plot-action-btn { background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border: 1px solid rgba(226,232,240,0.7); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; color: #a0aec0; cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1; }
+        .plot-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
+        }
+        .graph-container:hover .plot-actions, .graph-body:hover .plot-actions { opacity: 1; }
+        .plot-action-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
         .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
         .plot-action-btn:active { background: #edf2f7; }
         .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
         .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+        /* Universal panel close button */
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1; flex-shrink: 0;
+        }
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
+        }
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-closed { display: none !important; }
+
+        /* Hover to reveal actions */
+        .left-section { position: relative; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .control-panel { position: relative; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+
+        /* Restore closed panels bar */
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+        }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
 
         /* Overlays */
         .utility-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; pointer-events: none; }
@@ -44,13 +111,13 @@
         .success-banner { background: linear-gradient(135deg,#d69e2e,#c05621); box-shadow: 0 4px 20px rgba(214,158,46,0.4); }
         .success-banner.visible { opacity: 1; }
 
-        /* Explanation section */
-        .explanation { margin-top: 20px; background: #fff; border-radius: 12px; padding: 24px 28px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-        .explanation p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
-        .explanation p:last-child { margin-bottom: 0; }
-
         .controls { display: flex; flex-direction: column; gap: 16px; }
-        .control-panel { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .control-panel { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 20px 20px 20px; }
+        .control-panel-body.collapsed { display: none; }
         .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
         .slider-group { margin-bottom: 16px; }
         .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
@@ -84,6 +151,16 @@
         .hint-btn { width: 100%; padding: 10px; background: transparent; border: 2px solid #d69e2e; border-radius: 8px; color: #d69e2e; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
         .hint-btn:hover { background: rgba(214,158,46,0.1); }
 
+        /* Collapsible left-column sections */
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+
         /* Display options */
         .display-options-wrapper { margin-top: 24px; }
         .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
@@ -96,85 +173,209 @@
         .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
         .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
         .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
-        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 100px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 110px; font-family: 'Segoe UI', system-ui, sans-serif; }
         .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
         .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
         .opt-section-label:first-child { margin-top: 0; }
-        .nudge-group { display: inline-flex; align-items: center; gap: 1px; margin-left: auto; flex-shrink: 0; }
-        .nudge-btn { width: 18px; height: 18px; padding: 0; border: 1px solid #e2e8f0; background: #f7fafc; color: #a0aec0; font-size: 9px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; transition: background 0.1s, color 0.1s; }
-        .nudge-btn:hover { background: #edf2f7; color: #4a5568; }
-        .nudge-btn:active { background: #e2e8f0; }
+        .drag-hint { font-size: 0.65rem; color: #a0aec0; margin-left: auto; font-style: italic; white-space: nowrap; }
 
+        /* Embed mode fullscreen button */
+        .embed-open-btn {
+            display: none;
+            position: absolute; top: 8px; left: 8px; z-index: 10;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.15s; line-height: 1;
+            text-decoration: none;
+        }
+        .embed-open-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .embed-mode .embed-open-btn { display: flex; align-items: center; gap: 4px; }
+
+        /* Embed mode */
+        body.embed-mode { padding: 8px; background: transparent; min-height: auto; }
+        .embed-mode h1,
+        .embed-mode .subtitle,
+        .embed-mode .left-section,
+        .embed-mode .display-options-wrapper,
+        .embed-mode .url-state-bar { display: none !important; }
+        .embed-mode .container { max-width: none; }
+        .embed-mode .graph-container { border: none; box-shadow: none; padding: 10px; }
+        .embed-mode .control-panel { padding: 14px; }
+
+        /* Granular hide support */
+        body.embed-hide-controls .controls { display: none !important; }
+        body.embed-hide-controls .main-content { grid-template-columns: 1fr; }
+        body.embed-hide-explanation #section-explanation { display: none !important; }
+
+        /* KaTeX sizing */
         .katex { font-size: 1em; }
         .info-row .katex { font-size: 0.95em; }
         .slider-label .katex { font-size: 0.95em; }
         .equation-box .katex { font-size: 1.1em; }
         .legend-item .katex { font-size: 0.9em; }
+
+        /* URL state bar */
+        .url-state-bar {
+            margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .url-state-bar button {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Utility Maximization — Drag the Isoquant</h1>
-    <p class="subtitle">Drag on the graph to find the bundle that maximizes your utility!</p>
+    <div id="section-title" class="title-wrapper" style="position:relative">
+        <h1>Utility Maximization — Drag the Isoquant</h1>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle" style="margin-bottom:20px">Drag on the graph to find the bundle that maximizes your utility!</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
 
     <div class="main-content">
         <div class="left-column">
-            <div class="graph-container">
-                <div class="plot-actions">
-                    <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="copy-label">Copy</span></button>
-                    <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="save-label">Save</span></button>
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')">
+                    <div class="panel-title" style="margin-bottom:0">Interactive Graph</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
                 </div>
-                <div class="utility-display"><div class="utility-label">Total Utility</div><div class="utility-value" id="big-utility">0.0</div></div>
-                <div class="overlay-banner error-banner" id="error-banner"><span>⚠️</span> UNAFFORDABLE! Over Budget!</div>
-                <div class="overlay-banner success-banner" id="success-banner"><span>🎉</span> OPTIMAL! Maximum Utility!</div>
-                <canvas id="graph" width="1500" height="1300"></canvas>
+                <div class="graph-body" id="body-graph">
+                    <a class="embed-open-btn" id="embed-open-btn" title="Open full interactive version" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        Open full version
+                    </a>
+                    <div class="plot-actions">
+                        <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            <span id="copy-label">Copy</span>
+                        </button>
+                        <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span id="save-label">Save</span>
+                        </button>
+                    </div>
+                    <div class="utility-display"><div class="utility-label">Total Utility</div><div class="utility-value" id="big-utility">0.0</div></div>
+                    <div class="overlay-banner error-banner" id="error-banner"><span>⚠️</span> UNAFFORDABLE! Over Budget!</div>
+                    <div class="overlay-banner success-banner" id="success-banner"><span>🎉</span> OPTIMAL! Maximum Utility!</div>
+                    <canvas id="graph" width="1500" height="1300"></canvas>
+                </div>
             </div>
 
-            <div class="explanation">
-                <div class="panel-title">Explanation</div>
-                <p>This interactive exercise builds intuition for the consumer's optimization problem. By dragging your consumption bundle across the graph, you can feel how utility changes as you move along or away from the budget constraint. The key insight is that the highest achievable indifference curve is the one that just touches (is tangent to) the budget line — any curve above it is unaffordable, and any curve below it leaves money on the table.</p>
-                <p>Notice what happens when you land exactly on the budget line: your spending equals your income, and small movements along the line trade \(X\) for \(Y\) at the market rate \(P_x/P_y\). At the optimum, this market trade-off exactly matches your personal willingness to substitute, the \(\mathrm{MRS}\). If your indifference curve were steeper than the budget line at your chosen point, you could increase utility by buying more \(X\) and less \(Y\); if flatter, the reverse. Only at the tangency point are both forces balanced.</p>
-                <p>Try changing the sliders to see how the optimal bundle shifts. A higher \(\alpha\) tilts spending toward \(X\); a higher \(P_x\) pivots the budget line inward along the \(X\)-axis, forcing you to buy less of it. The "Show Optimal" button reveals the answer so you can check your intuition and see how close you got.</p>
+            <!-- Explanation (collapsible) -->
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">Explanation</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-explanation">
+                    <p>This interactive exercise builds intuition for the consumer's optimization problem. By dragging your consumption bundle across the graph, you can feel how utility changes as you move along or away from the budget constraint. The key insight is that the highest achievable indifference curve is the one that just touches (is tangent to) the budget line — any curve above it is unaffordable, and any curve below it leaves money on the table.</p>
+                    <p>Notice what happens when you land exactly on the budget line: your spending equals your income, and small movements along the line trade \(X\) for \(Y\) at the market rate \(P_x/P_y\). At the optimum, this market trade-off exactly matches your personal willingness to substitute, the \(\mathrm{MRS}\). If your indifference curve were steeper than the budget line at your chosen point, you could increase utility by buying more \(X\) and less \(Y\); if flatter, the reverse. Only at the tangency point are both forces balanced.</p>
+                    <p>Try changing the sliders to see how the optimal bundle shifts. A higher \(\alpha\) tilts spending toward \(X\); a higher \(P_x\) pivots the budget line inward along the \(X\)-axis, forcing you to buy less of it. The "Show Optimal" button reveals the answer so you can check your intuition and see how close you got.</p>
+                </div>
             </div>
         </div>
 
         <div class="controls">
-            <div class="control-panel"><div class="instructions"><h3>🎯 How to Play</h3><p>Click and drag anywhere on the graph to choose your consumption bundle \((X, Y)\). Try to find the point that gives you the <strong>highest utility</strong> while staying <strong>within your budget</strong>!</p></div></div>
-
-            <div class="control-panel">
-                <div class="panel-title">Your Score</div>
-                <div class="score-panel"><div class="score-label">Current Utility</div><div class="score-value" id="score-value">0.0</div><div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div></div>
-                <div class="proximity-meter"><div class="proximity-label"><span>Proximity to Optimal</span><span id="proximity-pct">0%</span></div><div class="proximity-bar"><div class="proximity-fill" id="proximity-fill" style="width:0%"></div></div></div>
-                <button class="reset-btn" onclick="resetGame()">🔄 New Challenge</button>
-                <button class="hint-btn" onclick="showHintToggle()">💡 Show Optimal</button>
-            </div>
-
-            <div class="control-panel">
-                <div class="panel-title">Budget Constraint</div>
-                <div class="slider-group"><div class="slider-label"><span>Income \(M\)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
-                <div class="slider-group"><div class="slider-label"><span>Price of \(X\) &ensp;\((P_x)\)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="10" value="2" step="0.5"></div>
-                <div class="slider-group"><div class="slider-label"><span>Price of \(Y\) &ensp;\((P_y)\)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="10" value="2" step="0.5"></div>
-                <div class="equation-box">\( P_x \cdot X + P_y \cdot Y \leq M \)</div>
-            </div>
-
-            <div class="control-panel">
-                <div class="panel-title">Preferences</div>
-                <div class="slider-group"><div class="slider-label"><span>Preference \(\alpha\)</span><span class="slider-value" id="alpha-value">0.50</span></div><input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01"></div>
-                <div class="equation-box">\( U(X,Y) = X^{\alpha} \cdot Y^{1-\alpha} \)</div>
-            </div>
-
-            <div class="control-panel">
-                <div class="panel-title">Current Bundle</div>
-                <div class="info-box">
-                    <div class="info-row"><span class="info-label">\(X\)</span><span class="info-value highlight" id="current-x">0.0</span></div>
-                    <div class="info-row"><span class="info-label">\(Y\)</span><span class="info-value highlight" id="current-y">0.0</span></div>
-                    <div class="info-row"><span class="info-label">Spending</span><span class="info-value" id="current-spending">$0.0</span></div>
-                    <div class="info-row"><span class="info-label">Budget</span><span class="info-value" id="current-budget">$100</span></div>
+            <div class="control-panel" id="section-instructions">
+                <div class="control-panel-header" onclick="togglePanel('instructions')">
+                    <div class="panel-title" style="margin-bottom:0">🎯 How to Play</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-instructions" onclick="event.stopPropagation();togglePanel('instructions')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('instructions')" title="Close">✕</button>
+                    </div>
                 </div>
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-line" style="background:#e53e3e;"></div><span>Budget Constraint</span></div>
-                    <div class="legend-item"><div class="legend-line" style="background:#319795;"></div><span>Your Indifference Curve</span></div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#d69e2e;"></div><span>Your Choice</span></div>
+                <div class="control-panel-body" id="body-instructions">
+                    <div class="instructions"><p>Click and drag anywhere on the graph to choose your consumption bundle \((X, Y)\). Try to find the point that gives you the <strong>highest utility</strong> while staying <strong>within your budget</strong>!</p></div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-score">
+                <div class="control-panel-header" onclick="togglePanel('score')">
+                    <div class="panel-title" style="margin-bottom:0">Your Score</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-score" onclick="event.stopPropagation();togglePanel('score')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('score')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-score">
+                    <div class="score-panel"><div class="score-label">Current Utility</div><div class="score-value" id="score-value">0.0</div><div class="score-optimal">Optimal: <span id="optimal-utility">??.?</span></div></div>
+                    <div class="proximity-meter"><div class="proximity-label"><span>Proximity to Optimal</span><span id="proximity-pct">0%</span></div><div class="proximity-bar"><div class="proximity-fill" id="proximity-fill" style="width:0%"></div></div></div>
+                    <button class="reset-btn" onclick="resetGame()">🔄 New Challenge</button>
+                    <button class="hint-btn" onclick="showHintToggle()">💡 Show Optimal</button>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-budget">
+                <div class="control-panel-header" onclick="togglePanel('budget')">
+                    <div class="panel-title" style="margin-bottom:0">Budget Constraint</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-budget" onclick="event.stopPropagation();togglePanel('budget')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('budget')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-budget">
+                    <div class="slider-group"><div class="slider-label"><span>Income \(M\)</span><span class="slider-value" id="income-value">100</span></div><input type="range" id="income" min="40" max="200" value="100"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Price of \(X\) &ensp;\((P_x)\)</span><span class="slider-value" id="px-value">2</span></div><input type="range" id="px" min="1" max="10" value="2" step="0.5"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Price of \(Y\) &ensp;\((P_y)\)</span><span class="slider-value" id="py-value">2</span></div><input type="range" id="py" min="1" max="10" value="2" step="0.5"></div>
+                    <div class="equation-box">\( P_x \cdot X + P_y \cdot Y \leq M \)</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-preferences">
+                <div class="control-panel-header" onclick="togglePanel('preferences')">
+                    <div class="panel-title" style="margin-bottom:0">Preferences</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-preferences" onclick="event.stopPropagation();togglePanel('preferences')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('preferences')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-preferences">
+                    <div class="slider-group"><div class="slider-label"><span>Preference \(\alpha\)</span><span class="slider-value" id="alpha-value">0.50</span></div><input type="range" id="alpha" min="0.1" max="0.9" value="0.5" step="0.01"></div>
+                    <div class="equation-box">\( U(X,Y) = X^{\alpha} \cdot Y^{1-\alpha} \)</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-bundle">
+                <div class="control-panel-header" onclick="togglePanel('bundle')">
+                    <div class="panel-title" style="margin-bottom:0">Current Bundle</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-bundle" onclick="event.stopPropagation();togglePanel('bundle')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('bundle')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-bundle">
+                    <div class="info-box">
+                        <div class="info-row"><span class="info-label">\(X\)</span><span class="info-value highlight" id="current-x">0.0</span></div>
+                        <div class="info-row"><span class="info-label">\(Y\)</span><span class="info-value highlight" id="current-y">0.0</span></div>
+                        <div class="info-row"><span class="info-label">Spending</span><span class="info-value" id="current-spending">$0.0</span></div>
+                        <div class="info-row"><span class="info-label">Budget</span><span class="info-value" id="current-budget">$100</span></div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-line" style="background:#e53e3e;"></div><span>Budget Constraint</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#319795;"></div><span>Your Indifference Curve</span></div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#d69e2e;"></div><span>Your Choice</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,71 +385,239 @@
     <div class="display-options-wrapper">
         <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
         <div class="display-options-panel" id="display-panel">
-            <div class="panel-title">Plot Element Visibility, Labels &amp; Position</div>
-            <div class="opt-section-label">Axes</div>
-            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"><div class="nudge-group" data-target="xaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
-            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"><div class="nudge-group" data-target="yaxis-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="panel-title">Display Options <span style="font-weight:400;font-size:0.65rem;color:#a0aec0;text-transform:none;letter-spacing:0"> — drag labels directly on the graph to reposition</span></div>
+
+            <div class="opt-section-label">Page Elements</div>
+            <div class="opt-row"><label>Title</label><input type="text" id="label-title" value="Utility Maximization — Drag the Isoquant" style="width:180px"></div>
+            <div class="opt-row"><label>Subtitle</label><input type="text" id="label-subtitle" value="Drag on the graph to find the bundle that maximizes your utility!" style="width:180px"></div>
+
+            <div class="opt-section-label">Panel Titles</div>
+            <div class="opt-row"><label>Figure</label><input type="text" id="label-graph" value="Interactive Graph" style="width:180px"></div>
+            <div class="opt-row"><label>Explanation</label><input type="text" id="label-explanation" value="Explanation" style="width:180px"></div>
+            <div class="opt-row"><label>Instructions</label><input type="text" id="label-instructions" value="🎯 How to Play" style="width:180px"></div>
+            <div class="opt-row"><label>Score</label><input type="text" id="label-score" value="Your Score" style="width:180px"></div>
+            <div class="opt-row"><label>Budget panel</label><input type="text" id="label-budget" value="Budget Constraint" style="width:180px"></div>
+            <div class="opt-row"><label>Preferences</label><input type="text" id="label-preferences" value="Preferences" style="width:180px"></div>
+            <div class="opt-row"><label>Bundle panel</label><input type="text" id="label-bundle" value="Current Bundle" style="width:180px"></div>
+
+            <div class="opt-section-label">Plot — Axes</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Good X"></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value="Good Y"></div>
             <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
             <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
             <div class="opt-section-label">Budget Constraint</div>
             <div class="opt-row"><input type="checkbox" id="show-bc" checked><label for="show-bc">Budget constraint line</label></div>
             <div class="opt-row"><input type="checkbox" id="show-feasible" checked><label for="show-feasible">Feasible region shading</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label><div class="nudge-group" data-target="bc-intercept-x"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">x:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div><div class="nudge-group" data-target="bc-intercept-y"><span style="font-size:0.65rem;color:#a0aec0;margin-right:2px">y:</span><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-bc-intercepts" checked><label for="show-bc-intercepts">Intercept labels</label></div>
             <div class="opt-section-label">Indifference Curve</div>
             <div class="opt-row"><input type="checkbox" id="show-user-ic" checked><label for="show-user-ic">Your indifference curve</label></div>
             <div class="opt-row"><input type="checkbox" id="show-user-point" checked><label for="show-user-point">Your chosen point</label></div>
             <div class="opt-section-label">Optimal (when shown)</div>
             <div class="opt-row"><input type="checkbox" id="show-opt-ic" checked><label for="show-opt-ic">Optimal indifference curve</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal point &amp; label</label><div class="nudge-group" data-target="opt-label"><button class="nudge-btn" data-dir="left">◀</button><button class="nudge-btn" data-dir="right">▶</button><button class="nudge-btn" data-dir="up">▲</button><button class="nudge-btn" data-dir="down">▼</button></div></div>
+            <div class="opt-row"><input type="checkbox" id="show-opt-point" checked><label for="show-opt-point">Optimal point &amp; label</label></div>
+
+            <!-- Restore closed panels -->
+            <div class="restore-bar" id="restore-bar"></div>
+
+            <!-- URL State -->
+            <div class="url-state-bar">
+                <button id="copy-url-btn" title="Copy a URL that encodes the current slider values and display options">📋 Copy link with current state</button>
+                <button id="reset-url-btn" title="Reset all parameters and display options to defaults">↺ Reset to defaults</button>
+                <span class="url-hint">Link encodes sliders, display options, labels, and label positions</span>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-function renderAllMath(){if(typeof renderMathInElement!=='undefined')renderMathInElement(document.body,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});}
-document.addEventListener("DOMContentLoaded",renderAllMath);window.addEventListener('load',renderAllMath);
+// ─── Embed mode detection ───
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('embed')) {
+        document.body.classList.add('embed-mode');
+        const hide = params.get('hide');
+        if (hide) {
+            hide.split(',').forEach(s => {
+                document.body.classList.add('embed-hide-' + s.trim());
+            });
+        }
+        const openBtn = document.getElementById('embed-open-btn');
+        if (openBtn) {
+            openBtn.href = window.location.pathname + window.location.hash;
+        }
+    }
+})();
 
-// Nudge
-const nudgeOffsets={};const NUDGE_PX=4;const DPR=2;
-document.querySelectorAll('.nudge-btn').forEach(btn=>{btn.addEventListener('click',()=>{const t=btn.closest('.nudge-group').dataset.target;if(!nudgeOffsets[t])nudgeOffsets[t]={dx:0,dy:0};const d=btn.dataset.dir;if(d==='left')nudgeOffsets[t].dx-=NUDGE_PX;if(d==='right')nudgeOffsets[t].dx+=NUDGE_PX;if(d==='up')nudgeOffsets[t].dy-=NUDGE_PX;if(d==='down')nudgeOffsets[t].dy+=NUDGE_PX;drawGraph();});});
-function getNudge(t){const o=nudgeOffsets[t];return o?{dx:o.dx*DPR,dy:o.dy*DPR}:{dx:0,dy:0};}
+function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [{left: "\\[", right: "\\]", display: true},{left: "\\(", right: "\\)", display: false}],
+            throwOnError: false
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", renderAllMath);
+window.addEventListener('load', renderAllMath);
 
-const canvas=document.getElementById('graph'),ctx=canvas.getContext('2d');
-const incomeSlider=document.getElementById('income'),pxSlider=document.getElementById('px'),pySlider=document.getElementById('py'),alphaSlider=document.getElementById('alpha');
-const errorBanner=document.getElementById('error-banner'),successBanner=document.getElementById('success-banner'),bigUtility=document.getElementById('big-utility');
+// ─── Collapse/expand ───
+function toggleSection(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
+function togglePanel(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
 
-const margin={top:200,right:80,bottom:120,left:140};
-const maxX=80,maxY=80;
-let userX=25,userY=25,isDragging=false,showOptimal=false;
+// ─── Close / Restore panels ───
+const PANEL_NAMES = {
+    title: 'Title',
+    subtitle: 'Subtitle',
+    graph: 'Interactive Graph',
+    explanation: 'Explanation',
+    instructions: 'How to Play',
+    score: 'Your Score',
+    budget: 'Budget Constraint',
+    preferences: 'Preferences',
+    bundle: 'Current Bundle'
+};
 
-function getGD(){return{width:canvas.width-margin.left-margin.right,height:canvas.height-margin.top-margin.bottom};}
-function tCX(x){return margin.left+(x/maxX)*getGD().width;}
-function tCY(y){return margin.top+getGD().height-(y/maxY)*getGD().height;}
-function fromCX(cx){return((cx-margin.left)/getGD().width)*maxX;}
-function fromCY(cy){return((margin.top+getGD().height-cy)/getGD().height)*maxY;}
+const LEFT_PANELS = ['graph', 'explanation'];
+const RIGHT_PANELS = ['instructions', 'score', 'budget', 'preferences', 'bundle'];
 
-function calcOpt(M,Px,Py,a){const x=(a*M)/Px,y=((1-a)*M)/Py;return{xStar:x,yStar:y,utility:Math.pow(x,a)*Math.pow(y,1-a)};}
-function calcU(x,y,a){return(x<=0||y<=0)?0:Math.pow(x,a)*Math.pow(y,1-a);}
-function getICY(x,u,a){return x<=0?null:Math.pow(u/Math.pow(x,a),1/(1-a));}
-function isAffordable(x,y,M,Px,Py){return(Px*x+Py*y)<=M*1.001;}
-function isVis(id){const e=document.getElementById(id);return e?e.checked:true;}
-function getLabel(id,fb){const e=document.getElementById(id);return e&&e.value.trim()?e.value.trim():fb;}
+function closePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.add('panel-closed');
+    updateRestoreBar();
+    updateLayout();
+}
+function restorePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.remove('panel-closed');
+    updateRestoreBar();
+    updateLayout();
+}
+function updateLayout() {
+    const mc = document.querySelector('.main-content');
+    const leftAllClosed = LEFT_PANELS.every(n => document.getElementById('section-' + n)?.classList.contains('panel-closed'));
+    const rightAllClosed = RIGHT_PANELS.every(n => document.getElementById('section-' + n)?.classList.contains('panel-closed'));
+    mc.classList.toggle('left-empty', leftAllClosed);
+    mc.classList.toggle('right-empty', rightAllClosed);
+}
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n => document.getElementById('section-' + n)?.classList.contains('panel-closed'));
+    if (closed.length === 0) { bar.innerHTML = ''; return; }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' +
+        closed.map(n => `<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');
+}
 
-// Cohen-Sutherland clipping
-function clipLine(x0,y0,x1,y1){
+// ─── Sync editable labels to DOM ───
+const PANEL_LABEL_MAP = {
+    'label-title': () => document.querySelector('#section-title h1'),
+    'label-subtitle': () => document.querySelector('#section-subtitle .subtitle'),
+    'label-graph': () => document.querySelector('#section-graph .graph-header .panel-title'),
+    'label-explanation': () => document.querySelector('#section-explanation .left-section-header .panel-title'),
+    'label-instructions': () => document.querySelector('#section-instructions .control-panel-header .panel-title'),
+    'label-score': () => document.querySelector('#section-score .control-panel-header .panel-title'),
+    'label-budget': () => document.querySelector('#section-budget .control-panel-header .panel-title'),
+    'label-preferences': () => document.querySelector('#section-preferences .control-panel-header .panel-title'),
+    'label-bundle': () => document.querySelector('#section-bundle .control-panel-header .panel-title'),
+};
+function syncLabels() {
+    for (const [inputId, getEl] of Object.entries(PANEL_LABEL_MAP)) {
+        const input = document.getElementById(inputId);
+        const el = getEl();
+        if (input && el && input.value.trim()) el.textContent = input.value.trim();
+    }
+}
+Object.keys(PANEL_LABEL_MAP).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', syncLabels);
+});
+
+// ─── Label offset system (draggable canvas labels) ───
+const nudgeOffsets = {};
+const DPR = 2;
+function getNudge(t) {
+    const o = nudgeOffsets[t];
+    return o ? { dx: o.dx * DPR, dy: o.dy * DPR } : { dx: 0, dy: 0 };
+}
+
+// ─── Draggable label hit-testing ───
+let labelHitBoxes = [];
+function registerLabelLTWH(key, lx, ty, w, h) {
+    labelHitBoxes.push({ key, x: lx, y: ty, w, h });
+}
+function mouseToCanvas(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height)
+    };
+}
+function hitTestLabels(cx, cy) {
+    for (let i = labelHitBoxes.length - 1; i >= 0; i--) {
+        const b = labelHitBoxes[i];
+        if (cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h) return b.key;
+    }
+    return null;
+}
+
+// ─── Canvas setup ───
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+const incomeSlider = document.getElementById('income');
+const pxSlider = document.getElementById('px');
+const pySlider = document.getElementById('py');
+const alphaSlider = document.getElementById('alpha');
+const errorBanner = document.getElementById('error-banner');
+const successBanner = document.getElementById('success-banner');
+const bigUtility = document.getElementById('big-utility');
+
+const margin = { top: 200, right: 80, bottom: 120, left: 140 };
+const maxX = 80, maxY = 80;
+let userX = 25, userY = 25, isDraggingBundle = false, showOptimal = false;
+
+// Label drag state
+let labelDragTarget = null;
+let labelDragStartX = 0, labelDragStartY = 0;
+let labelDragStartOffsetX = 0, labelDragStartOffsetY = 0;
+
+function getGD() { return { width: canvas.width-margin.left-margin.right, height: canvas.height-margin.top-margin.bottom }; }
+function tCX(x) { return margin.left + (x/maxX)*getGD().width; }
+function tCY(y) { return margin.top + getGD().height - (y/maxY)*getGD().height; }
+function fromCX(cx) { return ((cx-margin.left)/getGD().width)*maxX; }
+function fromCY(cy) { return ((margin.top+getGD().height-cy)/getGD().height)*maxY; }
+
+function calcOpt(M,Px,Py,a) { const x=(a*M)/Px, y=((1-a)*M)/Py; return { xStar:x, yStar:y, utility:Math.pow(x,a)*Math.pow(y,1-a) }; }
+function calcU(x,y,a) { return (x<=0||y<=0)?0:Math.pow(x,a)*Math.pow(y,1-a); }
+function getICY(x,u,a) { return x<=0?null:Math.pow(u/Math.pow(x,a),1/(1-a)); }
+function isAffordable(x,y,M,Px,Py) { return (Px*x+Py*y)<=M*1.001; }
+function isVis(id) { const e=document.getElementById(id); return e?e.checked:true; }
+function getLabel(id,fb) { const e=document.getElementById(id); return e&&e.value.trim()?e.value.trim():fb; }
+
+function clipLine(x0,y0,x1,y1) {
     function code(x,y){let c=0;if(x<0)c|=1;else if(x>maxX)c|=2;if(y<0)c|=4;else if(y>maxY)c|=8;return c;}
     let c0=code(x0,y0),c1=code(x1,y1);
     for(let i=0;i<20;i++){if(!(c0|c1))return{x0,y0,x1,y1};if(c0&c1)return null;let c=c0||c1,x,y;if(c&8){y=maxY;x=x0+(x1-x0)*(maxY-y0)/(y1-y0);}else if(c&4){y=0;x=x0+(x1-x0)*(0-y0)/(y1-y0);}else if(c&2){x=maxX;y=y0+(y1-y0)*(maxX-x0)/(x1-x0);}else{x=0;y=y0+(y1-y0)*(0-x0)/(x1-x0);}if(c===c0){x0=x;y0=y;c0=code(x0,y0);}else{x1=x;y1=y;c1=code(x1,y1);}}return null;
 }
 
-function drawSubText(bx,by,main,sub,tail,align){
+function drawSubText(bx,by,main,sub,tail,align) {
     const S=DPR,mF=`italic ${12*S}px Georgia,serif`,sF=`italic ${9*S}px Georgia,serif`;
     ctx.font=mF;const mW=ctx.measureText(main);ctx.font=sF;const sW=ctx.measureText(sub);ctx.font=mF;const tW=ctx.measureText(tail);
     const tot=mW.width+sW.width+tW.width;let sx=bx;if(align==='center')sx=bx-tot/2;
     ctx.font=mF;ctx.textAlign='left';ctx.fillText(main,sx,by);ctx.font=sF;ctx.fillText(sub,sx+mW.width,by+3*S);ctx.font=mF;ctx.fillText(tail,sx+mW.width+sW.width,by);
 }
 
-function drawGraph(){
+// ─── Draw graph ───
+function drawGraph() {
+    labelHitBoxes = [];
+
     const M=parseFloat(incomeSlider.value),Px=parseFloat(pxSlider.value),Py=parseFloat(pySlider.value),alpha=parseFloat(alphaSlider.value);
     document.getElementById('income-value').textContent=M;document.getElementById('px-value').textContent=Px;
     document.getElementById('py-value').textContent=Py;document.getElementById('alpha-value').textContent=alpha.toFixed(2);
@@ -274,15 +643,15 @@ function drawGraph(){
     // Grid
     if(isVis('show-gridlines')){ctx.strokeStyle='#edf2f7';ctx.lineWidth=S;for(let i=0;i<=8;i++){const gx=margin.left+(i/8)*width,gy=margin.top+(i/8)*height;ctx.beginPath();ctx.moveTo(gx,margin.top);ctx.lineTo(gx,margin.top+height);ctx.stroke();ctx.beginPath();ctx.moveTo(margin.left,gy);ctx.lineTo(margin.left+width,gy);ctx.stroke();}}
 
-    // Feasible region shading (use clipped BC)
+    // Feasible region
     const xInt=M/Px,yInt=M/Py;
     if(isVis('show-feasible')){
         ctx.fillStyle='rgba(49,151,149,0.08)';ctx.beginPath();ctx.moveTo(tCX(0),tCY(0));
         ctx.lineTo(tCX(0),tCY(Math.min(yInt,maxY)));
         if(yInt<=maxY&&xInt<=maxX){ctx.lineTo(tCX(xInt),tCY(0));}
-        else if(yInt>maxY&&xInt<=maxX){const xAtMY=(M-Py*maxY)/Px;ctx.lineTo(tCX(Math.max(0,xAtMY)),tCY(maxY));ctx.lineTo(tCX(xInt),tCY(0));}
-        else if(yInt<=maxY&&xInt>maxX){const yAtMX=(M-Px*maxX)/Py;ctx.lineTo(tCX(maxX),tCY(Math.max(0,yAtMX)));ctx.lineTo(tCX(maxX),tCY(0));}
-        else{const xAtMY=(M-Py*maxY)/Px;const yAtMX=(M-Px*maxX)/Py;if(xAtMY>=0&&xAtMY<=maxX)ctx.lineTo(tCX(xAtMY),tCY(maxY));if(yAtMX>=0&&yAtMX<=maxY)ctx.lineTo(tCX(maxX),tCY(yAtMX));ctx.lineTo(tCX(maxX),tCY(0));}
+        else if(yInt>maxY&&xInt<=maxX){const xA=(M-Py*maxY)/Px;ctx.lineTo(tCX(Math.max(0,xA)),tCY(maxY));ctx.lineTo(tCX(xInt),tCY(0));}
+        else if(yInt<=maxY&&xInt>maxX){const yA=(M-Px*maxX)/Py;ctx.lineTo(tCX(maxX),tCY(Math.max(0,yA)));ctx.lineTo(tCX(maxX),tCY(0));}
+        else{const xA=(M-Py*maxY)/Px,yA=(M-Px*maxX)/Py;if(xA>=0&&xA<=maxX)ctx.lineTo(tCX(xA),tCY(maxY));if(yA>=0&&yA<=maxY)ctx.lineTo(tCX(maxX),tCY(yA));ctx.lineTo(tCX(maxX),tCY(0));}
         ctx.closePath();ctx.fill();
     }
 
@@ -292,11 +661,28 @@ function drawGraph(){
     // Tick labels
     if(isVis('show-axis-numbers')){ctx.fillStyle='#718096';ctx.font=`${14*S}px Segoe UI`;ctx.textAlign='center';for(let i=0;i<=8;i++){const v=(i/8)*maxX;ctx.fillText(v.toFixed(0),tCX(v),margin.top+height+25*S);}ctx.textAlign='right';for(let i=0;i<=8;i++){const v=(i/8)*maxY;ctx.fillText(v.toFixed(0),margin.left-10*S,tCY(v)+5*S);}}
 
-    // Axis titles
-    if(isVis('show-xaxis-label')){const n=getNudge('xaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.fillText(getLabel('label-xaxis','Good X'),margin.left+width/2+n.dx,canvas.height-10*S+n.dy);}
-    if(isVis('show-yaxis-label')){const n=getNudge('yaxis-label');ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';ctx.save();ctx.translate(20*S+n.dx,margin.top+height/2+n.dy);ctx.rotate(-Math.PI/2);ctx.fillText(getLabel('label-yaxis','Good Y'),0,0);ctx.restore();}
+    // Axis titles (draggable)
+    if(isVis('show-xaxis-label')){
+        const n=getNudge('xaxis-label');
+        const lbl=getLabel('label-xaxis','Good X');
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';
+        const bx=margin.left+width/2+n.dx, by=canvas.height-10*S+n.dy;
+        ctx.fillText(lbl,bx,by);
+        const tw=ctx.measureText(lbl).width;
+        registerLabelLTWH('xaxis-label', bx-tw/2-4*S, by-18*S, tw+8*S, 24*S);
+    }
+    if(isVis('show-yaxis-label')){
+        const n=getNudge('yaxis-label');
+        const lbl=getLabel('label-yaxis','Good Y');
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${16*S}px Georgia,serif`;ctx.textAlign='center';
+        ctx.save();
+        const bx=20*S+n.dx, by=margin.top+height/2+n.dy;
+        ctx.translate(bx,by);ctx.rotate(-Math.PI/2);ctx.fillText(lbl,0,0);ctx.restore();
+        const tw=ctx.measureText(lbl).width;
+        registerLabelLTWH('yaxis-label', bx-14*S, by-tw/2-4*S, 28*S, tw+8*S);
+    }
 
-    // Budget constraint — properly clipped
+    // Budget constraint — clipped
     if(isVis('show-bc')){
         const cl=clipLine(0,yInt,xInt,0);
         if(cl){ctx.strokeStyle='#e53e3e';ctx.lineWidth=4*S;ctx.beginPath();ctx.moveTo(tCX(cl.x0),tCY(cl.y0));ctx.lineTo(tCX(cl.x1),tCY(cl.y1));ctx.stroke();}
@@ -317,8 +703,12 @@ function drawGraph(){
         if(isVis('show-opt-point')&&xStar<=maxX&&yStar<=maxY){
             const n=getNudge('opt-label');
             ctx.strokeStyle='#d69e2e';ctx.lineWidth=2*S;ctx.beginPath();ctx.arc(tCX(xStar),tCY(yStar),12*S,0,Math.PI*2);ctx.stroke();
+            const optTxt=`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`;
             ctx.fillStyle='#718096';ctx.font=`${12*S}px Segoe UI`;ctx.textAlign='left';
-            ctx.fillText(`Optimal (${xStar.toFixed(1)}, ${yStar.toFixed(1)})`,tCX(xStar)+18*S+n.dx,tCY(yStar)+4*S+n.dy);
+            const olx=tCX(xStar)+18*S+n.dx, oly=tCY(yStar)+4*S+n.dy;
+            ctx.fillText(optTxt,olx,oly);
+            const otw=ctx.measureText(optTxt).width;
+            registerLabelLTWH('opt-label', olx-2*S, oly-14*S, otw+4*S, 20*S);
         }
     }
 
@@ -332,40 +722,363 @@ function drawGraph(){
         ctx.strokeStyle='#fff';ctx.lineWidth=3*S;ctx.stroke();
     }
 
-    // Intercept labels
+    // Intercept labels (draggable)
     if(isVis('show-bc-intercepts')){
         ctx.fillStyle='#e53e3e';
-        if(xInt<=maxX){const n=getNudge('bc-intercept-x');drawSubText(tCX(xInt)+n.dx,tCY(0)+40*S+n.dy,'M/P','x',` = ${xInt.toFixed(1)}`,'center');}
-        if(yInt<=maxY){const n=getNudge('bc-intercept-y');drawSubText(tCX(0)+10*S+n.dx,tCY(yInt)-10*S+n.dy,'M/P','y',` = ${yInt.toFixed(1)}`,'left');}
+        if(xInt<=maxX){
+            const n=getNudge('bc-intercept-x');
+            const bx=tCX(xInt)+n.dx, by=tCY(0)+40*S+n.dy;
+            drawSubText(bx,by,'M/P','x',` = ${xInt.toFixed(1)}`,'center');
+            registerLabelLTWH('bc-intercept-x', bx-50*S, by-16*S, 100*S, 24*S);
+        }
+        if(yInt<=maxY){
+            const n=getNudge('bc-intercept-y');
+            const bx=tCX(0)+10*S+n.dx, by=tCY(yInt)-10*S+n.dy;
+            drawSubText(bx,by,'M/P','y',` = ${yInt.toFixed(1)}`,'left');
+            registerLabelLTWH('bc-intercept-y', bx-4*S, by-16*S, 100*S, 24*S);
+        }
     }
 }
 
-// Mouse/touch
-function handleStart(e){e.preventDefault();isDragging=true;updatePos(e);}
-function handleMove(e){if(!isDragging)return;e.preventDefault();updatePos(e);}
-function handleEnd(){isDragging=false;}
-function updatePos(e){
-    const rect=canvas.getBoundingClientRect(),sx=canvas.width/rect.width,sy=canvas.height/rect.height;
-    let cx,cy;if(e.touches){cx=e.touches[0].clientX;cy=e.touches[0].clientY;}else{cx=e.clientX;cy=e.clientY;}
-    const canX=(cx-rect.left)*sx,canY=(cy-rect.top)*sy;
-    userX=Math.max(0.5,Math.min(maxX,fromCX(canX)));userY=Math.max(0.5,Math.min(maxY,fromCY(canY)));drawGraph();
+// ─── Mouse/touch: label drags take priority over bundle positioning ───
+function getCanvasPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+    let cx, cy;
+    if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+    else { cx = e.clientX; cy = e.clientY; }
+    return { x: (cx - rect.left) * sx, y: (cy - rect.top) * sy };
 }
-canvas.addEventListener('mousedown',handleStart);canvas.addEventListener('mousemove',handleMove);canvas.addEventListener('mouseup',handleEnd);canvas.addEventListener('mouseleave',handleEnd);
-canvas.addEventListener('touchstart',handleStart,{passive:false});canvas.addEventListener('touchmove',handleMove,{passive:false});canvas.addEventListener('touchend',handleEnd);
 
+canvas.addEventListener('mousedown', (e) => {
+    const pos = getCanvasPos(e);
+    // Check label hit first
+    const hit = hitTestLabels(pos.x, pos.y);
+    if (hit) {
+        labelDragTarget = hit;
+        labelDragStartX = pos.x;
+        labelDragStartY = pos.y;
+        if (!nudgeOffsets[hit]) nudgeOffsets[hit] = { dx: 0, dy: 0 };
+        labelDragStartOffsetX = nudgeOffsets[hit].dx;
+        labelDragStartOffsetY = nudgeOffsets[hit].dy;
+        canvas.classList.add('dragging-label');
+        e.preventDefault();
+        return;
+    }
+    // Otherwise: bundle drag
+    isDraggingBundle = true;
+    userX = Math.max(0.5, Math.min(maxX, fromCX(pos.x)));
+    userY = Math.max(0.5, Math.min(maxY, fromCY(pos.y)));
+    drawGraph();
+    e.preventDefault();
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    const pos = getCanvasPos(e);
+    if (labelDragTarget) {
+        const ddx = (pos.x - labelDragStartX) / DPR;
+        const ddy = (pos.y - labelDragStartY) / DPR;
+        nudgeOffsets[labelDragTarget].dx = labelDragStartOffsetX + ddx;
+        nudgeOffsets[labelDragTarget].dy = labelDragStartOffsetY + ddy;
+        drawGraph();
+    } else if (isDraggingBundle) {
+        userX = Math.max(0.5, Math.min(maxX, fromCX(pos.x)));
+        userY = Math.max(0.5, Math.min(maxY, fromCY(pos.y)));
+        drawGraph();
+    } else {
+        // Hover cursor
+        const hit = hitTestLabels(pos.x, pos.y);
+        if (hit) {
+            canvas.classList.add('hovering-label');
+            canvas.classList.remove('dragging-label');
+        } else {
+            canvas.classList.remove('hovering-label');
+        }
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    labelDragTarget = null;
+    isDraggingBundle = false;
+    canvas.classList.remove('dragging-label');
+});
+canvas.addEventListener('mouseleave', () => {
+    labelDragTarget = null;
+    isDraggingBundle = false;
+    canvas.classList.remove('dragging-label');
+    canvas.classList.remove('hovering-label');
+});
+
+// Touch support
+canvas.addEventListener('touchstart', (e) => {
+    const pos = getCanvasPos(e);
+    const hit = hitTestLabels(pos.x, pos.y);
+    if (hit) {
+        labelDragTarget = hit;
+        labelDragStartX = pos.x;
+        labelDragStartY = pos.y;
+        if (!nudgeOffsets[hit]) nudgeOffsets[hit] = { dx: 0, dy: 0 };
+        labelDragStartOffsetX = nudgeOffsets[hit].dx;
+        labelDragStartOffsetY = nudgeOffsets[hit].dy;
+        e.preventDefault();
+        return;
+    }
+    isDraggingBundle = true;
+    userX = Math.max(0.5, Math.min(maxX, fromCX(pos.x)));
+    userY = Math.max(0.5, Math.min(maxY, fromCY(pos.y)));
+    drawGraph();
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    if (labelDragTarget) {
+        const pos = getCanvasPos(e);
+        const ddx = (pos.x - labelDragStartX) / DPR;
+        const ddy = (pos.y - labelDragStartY) / DPR;
+        nudgeOffsets[labelDragTarget].dx = labelDragStartOffsetX + ddx;
+        nudgeOffsets[labelDragTarget].dy = labelDragStartOffsetY + ddy;
+        drawGraph();
+        e.preventDefault();
+    } else if (isDraggingBundle) {
+        const pos = getCanvasPos(e);
+        userX = Math.max(0.5, Math.min(maxX, fromCX(pos.x)));
+        userY = Math.max(0.5, Math.min(maxY, fromCY(pos.y)));
+        drawGraph();
+        e.preventDefault();
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { labelDragTarget = null; isDraggingBundle = false; });
+
+// ─── Event listeners ───
 [incomeSlider,pxSlider,pySlider,alphaSlider].forEach(s=>s.addEventListener('input',()=>{showOptimal=false;drawGraph();}));
 
 function resetGame(){incomeSlider.value=60+Math.random()*100;pxSlider.value=(1+Math.random()*6).toFixed(1);pySlider.value=(1+Math.random()*6).toFixed(1);alphaSlider.value=(0.2+Math.random()*0.6).toFixed(2);userX=15+Math.random()*20;userY=15+Math.random()*20;showOptimal=false;drawGraph();}
 function showHintToggle(){showOptimal=!showOptimal;drawGraph();}
 
-// Display options toggle
 document.getElementById('display-toggle-btn').addEventListener('click',()=>{const p=document.getElementById('display-panel'),a=document.getElementById('display-arrow');const o=p.classList.toggle('open');a.classList.toggle('open',o);});
 document.querySelectorAll('.display-options-panel input').forEach(i=>{i.addEventListener('input',drawGraph);i.addEventListener('change',drawGraph);});
 
-// Copy / Save
-document.getElementById('copy-plot-btn').addEventListener('click',async()=>{const btn=document.getElementById('copy-plot-btn'),lbl=document.getElementById('copy-label');try{const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.classList.add('copied');lbl.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Copy';},1500);}catch(e){lbl.textContent='Failed';setTimeout(()=>{lbl.textContent='Copy';},1500);}});
-document.getElementById('save-plot-btn').addEventListener('click',()=>{const btn=document.getElementById('save-plot-btn'),lbl=document.getElementById('save-label');const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='utility_maximization_drag_the_isoquant.png';a.click();btn.classList.add('copied');lbl.textContent='Saved!';setTimeout(()=>{btn.classList.remove('copied');lbl.textContent='Save';},1500);});
+// Copy plot to clipboard
+document.getElementById('copy-plot-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-plot-btn');
+    const label = document.getElementById('copy-label');
+    try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        btn.classList.add('copied'); label.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Copy'; }, 1500);
+    } catch (err) {
+        label.textContent = 'Failed';
+        setTimeout(() => { label.textContent = 'Copy'; }, 1500);
+    }
+});
 
+// Save plot as PNG
+document.getElementById('save-plot-btn').addEventListener('click', () => {
+    const btn = document.getElementById('save-plot-btn');
+    const label = document.getElementById('save-label');
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png'); a.download = 'utility_maximization_drag_the_isoquant.png'; a.click();
+    btn.classList.add('copied'); label.textContent = 'Saved!';
+    setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Save'; }, 1500);
+});
+
+// ═══════════════════════════════════════════════════════
+// URL STATE ENCODING / DECODING
+// ═══════════════════════════════════════════════════════
+
+const DEFAULTS = {
+    M: 100, Px: 2, Py: 2, alpha: 0.5, userX: 25, userY: 25,
+    'show-xaxis-label': true, 'show-yaxis-label': true, 'show-axis-numbers': true,
+    'show-gridlines': true, 'show-bc': true, 'show-feasible': true,
+    'show-bc-intercepts': true, 'show-user-ic': true, 'show-user-point': true,
+    'show-opt-ic': true, 'show-opt-point': true,
+    'label-xaxis': 'Good X', 'label-yaxis': 'Good Y',
+    'label-title': 'Utility Maximization — Drag the Isoquant',
+    'label-subtitle': 'Drag on the graph to find the bundle that maximizes your utility!',
+    'label-graph': 'Interactive Graph',
+    'label-explanation': 'Explanation',
+    'label-instructions': '🎯 How to Play',
+    'label-score': 'Your Score',
+    'label-budget': 'Budget Constraint',
+    'label-preferences': 'Preferences',
+    'label-bundle': 'Current Bundle',
+    'sec-graph': true, 'sec-explanation': true,
+    'sec-instructions': true, 'sec-score': true, 'sec-budget': true,
+    'sec-preferences': true, 'sec-bundle': true,
+    'closed-title': false, 'closed-subtitle': false,
+    'closed-graph': false, 'closed-explanation': false,
+    'closed-instructions': false, 'closed-score': false, 'closed-budget': false,
+    'closed-preferences': false, 'closed-bundle': false,
+    'disp-open': false,
+};
+
+const CHECKBOX_IDS = [
+    'show-xaxis-label','show-yaxis-label','show-axis-numbers','show-gridlines',
+    'show-bc','show-feasible','show-bc-intercepts',
+    'show-user-ic','show-user-point','show-opt-ic','show-opt-point'
+];
+
+const LABEL_IDS = [
+    'label-xaxis','label-yaxis',
+    'label-title','label-subtitle','label-graph',
+    'label-explanation','label-instructions','label-score',
+    'label-budget','label-preferences','label-bundle'
+];
+
+const NUDGE_KEYS = [
+    'xaxis-label','yaxis-label','bc-intercept-x','bc-intercept-y','opt-label'
+];
+
+const ALL_SECTIONS = ['graph','explanation','instructions','score','budget','preferences','bundle'];
+
+function buildStateObject() {
+    const s = {};
+    const M = parseFloat(incomeSlider.value);
+    const Px = parseFloat(pxSlider.value);
+    const Py = parseFloat(pySlider.value);
+    const alpha = parseFloat(alphaSlider.value);
+    if (M !== DEFAULTS.M) s.M = M;
+    if (Px !== DEFAULTS.Px) s.Px = Px;
+    if (Py !== DEFAULTS.Py) s.Py = Py;
+    if (alpha !== DEFAULTS.alpha) s.a = alpha;
+    if (Math.abs(userX - DEFAULTS.userX) > 0.3) s.userX = userX.toFixed(1);
+    if (Math.abs(userY - DEFAULTS.userY) > 0.3) s.userY = userY.toFixed(1);
+
+    for (const id of CHECKBOX_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.checked !== DEFAULTS[id]) s[id] = el.checked ? 1 : 0;
+    }
+    for (const id of LABEL_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.value !== DEFAULTS[id]) s[id] = el.value;
+    }
+    for (const k of NUDGE_KEYS) {
+        const o = nudgeOffsets[k];
+        if (o && (Math.abs(o.dx) > 0.5 || Math.abs(o.dy) > 0.5)) s['n_' + k] = Math.round(o.dx) + ',' + Math.round(o.dy);
+    }
+    for (const sec of ALL_SECTIONS) {
+        const body = document.getElementById('body-' + sec);
+        const isOpen = !body.classList.contains('collapsed');
+        if (isOpen !== DEFAULTS['sec-' + sec]) s['sec-' + sec] = isOpen ? 1 : 0;
+    }
+    const dispOpen = document.getElementById('display-panel').classList.contains('open');
+    if (dispOpen !== DEFAULTS['disp-open']) s['disp-open'] = dispOpen ? 1 : 0;
+    for (const name of Object.keys(PANEL_NAMES)) {
+        const el = document.getElementById('section-' + name);
+        const isClosed = el && el.classList.contains('panel-closed');
+        if (isClosed !== DEFAULTS['closed-' + name]) s['closed-' + name] = isClosed ? 1 : 0;
+    }
+    return s;
+}
+
+function stateToHash(state) {
+    const params = new URLSearchParams();
+    for (const [k, v] of Object.entries(state)) params.set(k, v);
+    return params.toString();
+}
+
+function loadStateFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+
+    if (params.has('M')) incomeSlider.value = params.get('M');
+    if (params.has('Px')) pxSlider.value = params.get('Px');
+    if (params.has('Py')) pySlider.value = params.get('Py');
+    if (params.has('a')) alphaSlider.value = params.get('a');
+    if (params.has('userX')) userX = parseFloat(params.get('userX'));
+    if (params.has('userY')) userY = parseFloat(params.get('userY'));
+
+    for (const id of CHECKBOX_IDS) {
+        if (params.has(id)) { const el = document.getElementById(id); if (el) el.checked = params.get(id) === '1'; }
+    }
+    for (const id of LABEL_IDS) {
+        if (params.has(id)) { const el = document.getElementById(id); if (el) el.value = params.get(id); }
+    }
+    for (const k of NUDGE_KEYS) {
+        const key = 'n_' + k;
+        if (params.has(key)) {
+            const parts = params.get(key).split(',');
+            if (parts.length === 2) nudgeOffsets[k] = { dx: parseFloat(parts[0]), dy: parseFloat(parts[1]) };
+        }
+    }
+    for (const sec of ALL_SECTIONS) {
+        const key = 'sec-' + sec;
+        if (params.has(key)) {
+            const shouldBeOpen = params.get(key) === '1';
+            const body = document.getElementById('body-' + sec);
+            const toggle = document.getElementById('toggle-' + sec);
+            if (shouldBeOpen) { body.classList.remove('collapsed'); if (toggle) toggle.textContent = '▼'; }
+            else { body.classList.add('collapsed'); if (toggle) toggle.textContent = '▶'; }
+        }
+    }
+    if (params.has('disp-open')) {
+        const shouldBeOpen = params.get('disp-open') === '1';
+        const panel = document.getElementById('display-panel');
+        const arrow = document.getElementById('display-arrow');
+        if (shouldBeOpen) { panel.classList.add('open'); arrow.classList.add('open'); }
+        else { panel.classList.remove('open'); arrow.classList.remove('open'); }
+    }
+    for (const name of Object.keys(PANEL_NAMES)) {
+        const key = 'closed-' + name;
+        if (params.has(key)) {
+            const el = document.getElementById('section-' + name);
+            if (el) { if (params.get(key) === '1') el.classList.add('panel-closed'); else el.classList.remove('panel-closed'); }
+        }
+    }
+}
+
+// Copy URL button
+document.getElementById('copy-url-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-url-btn');
+    const state = buildStateObject();
+    const hash = stateToHash(state);
+    const url = window.location.origin + window.location.pathname + (hash ? '#' + hash : '');
+    try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 Copy link with current state'; btn.classList.remove('copied'); }, 2000);
+    } catch { prompt('Copy this URL:', url); }
+});
+
+// Reset button
+document.getElementById('reset-url-btn').addEventListener('click', () => {
+    incomeSlider.value = DEFAULTS.M;
+    pxSlider.value = DEFAULTS.Px;
+    pySlider.value = DEFAULTS.Py;
+    alphaSlider.value = DEFAULTS.alpha;
+    userX = DEFAULTS.userX;
+    userY = DEFAULTS.userY;
+    for (const id of CHECKBOX_IDS) { const el = document.getElementById(id); if (el) el.checked = DEFAULTS[id]; }
+    for (const id of LABEL_IDS) { const el = document.getElementById(id); if (el) el.value = DEFAULTS[id]; }
+    syncLabels();
+    for (const k of NUDGE_KEYS) { delete nudgeOffsets[k]; }
+    ALL_SECTIONS.forEach(sec => {
+        const body = document.getElementById('body-' + sec);
+        const toggle = document.getElementById('toggle-' + sec);
+        if (body) body.classList.remove('collapsed');
+        if (toggle) toggle.textContent = '▼';
+    });
+    document.getElementById('display-panel').classList.remove('open');
+    document.getElementById('display-arrow').classList.remove('open');
+    Object.keys(PANEL_NAMES).forEach(name => {
+        const el = document.getElementById('section-' + name);
+        if (el) el.classList.remove('panel-closed');
+    });
+    showOptimal = false;
+    updateRestoreBar();
+    updateLayout();
+    history.replaceState(null, '', window.location.pathname);
+    drawGraph();
+});
+
+// ─── Initialize ───
+loadStateFromHash();
+syncLabels();
+updateRestoreBar();
+updateLayout();
 drawGraph();
 </script>
 </body>

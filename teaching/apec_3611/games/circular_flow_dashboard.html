@@ -217,8 +217,8 @@ function resizeCanvas(){
   const pw=C.parentElement.clientWidth-16;
   CW=pw;
   CH=Math.min(pw*.72,innerHeight-180);
-  // Higher resolution: use device pixel ratio with minimum of 2
-  const d=Math.max(2,devicePixelRatio||2);
+  // Higher resolution: use 3x or device pixel ratio, whichever is greater
+  const d=Math.max(3,devicePixelRatio||2);
   C.width=CW*d;C.height=CH*d;
   C.style.width=CW+'px';C.style.height=CH+'px';
   X.setTransform(d,0,0,d,0,0);

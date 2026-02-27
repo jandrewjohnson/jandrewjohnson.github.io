@@ -213,7 +213,7 @@
                     </div>
                 </div>
                 <div class="left-section-body" id="body-explanation">
-                    <p>In each period, the total capital stock \( K_t \) (composed of produced capital \( K_p \), human capital \( K_h \), and natural capital \( K_n \)) generates output \( W_t = A \cdot K_t^\alpha \) via the production function. This output is then split into <strong>consumption</strong> \( C_t \) and <strong>savings</strong> \( S_t = W_t - C_t \).</p>
+                    <p>In each period, the total capital stock \( IW_t = v_p K_p + v_h K_h + v_n K_n \) (where \( v_p, v_h, v_n \) are shadow prices) generates output \( W_t = A \cdot K_t^\alpha \) via the production function. This output is then split into <strong>consumption</strong> \( C_t \) and <strong>savings</strong> \( S_t = W_t - C_t \).</p>
                     <p>The <strong>savings arrow</strong> flows back into the capital stock for the next period. If savings are large enough to offset depreciation, capital grows and future output expands. If consumption is too high, savings are insufficient, capital shrinks, and the economy contracts over time.</p>
                     <p>Notice how capital <strong>composition</strong> changes: with typical investment patterns, produced (blue) and human (purple) capital tend to grow while natural (orange) capital declines — reflecting the substitutability question central to sustainability economics.</p>
                 </div>
@@ -254,11 +254,11 @@
                 </div>
                 <div class="control-panel-body" id="body-scenarios">
                     <div class="scenario-btns">
-                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Sustainable</button>
+                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Strong Sustainability</button>
                         <button class="scenario-btn" id="btn-unsustainable" onclick="setScenario('unsustainable')">⚠ Unsustainable</button>
                     </div>
                     <div class="scenario-btns">
-                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Only</button>
+                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Sustainability</button>
                         <button class="scenario-btn" id="btn-custom" onclick="setScenario('custom')">Custom</button>
                     </div>
                 </div>
@@ -290,10 +290,10 @@
                     </div>
                 </div>
                 <div class="control-panel-body" id="body-capital">
-                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
-                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
-                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
-                    <div class="equation-box">\( K_t = K_p + K_h + K_n \)</div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( v_p K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( v_h K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( v_n K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
+                    <div class="equation-box">\( IW_t = v_p K_p + v_h K_h + v_n K_n \)</div>
                 </div>
             </div>
 
@@ -308,9 +308,9 @@
                 <div class="control-panel-body" id="body-results">
                     <div class="info-box" id="results-box"></div>
                     <div class="legend" style="margin-top:14px;">
-                        <div class="legend-item"><div class="legend-rect" style="background:#4299e1;"></div><span>Produced \( K_p \)</span></div>
-                        <div class="legend-item"><div class="legend-rect" style="background:#805ad5;"></div><span>Human \( K_h \)</span></div>
-                        <div class="legend-item"><div class="legend-rect" style="background:#dd6b20;"></div><span>Natural \( K_n \)</span></div>
+                        <div class="legend-item"><div class="legend-rect" style="background:#4299e1;"></div><span>Produced \( v_p K_p \)</span></div>
+                        <div class="legend-item"><div class="legend-rect" style="background:#805ad5;"></div><span>Human \( v_h K_h \)</span></div>
+                        <div class="legend-item"><div class="legend-rect" style="background:#dd6b20;"></div><span>Natural \( v_n K_n \)</span></div>
                         <div class="legend-item"><div class="legend-line" style="background:#38a169; height:8px; border-radius:2px;"></div><span>Savings \( S_t \) → reinvested</span></div>
                         <div class="legend-item"><div class="legend-line" style="background:#e53e3e; height:8px; border-radius:2px;"></div><span>Consumption \( C_t \)</span></div>
                         <div class="legend-item"><div style="width:24px;height:3px;border-top:2px dashed #a0aec0;flex-shrink:0;"></div><span>Depreciation \( D \cdot K_t \)</span></div>
@@ -454,7 +454,7 @@ function drawFlowDiagram(data) {
     ctx.fillRect(0, 0, W, H);
 
     const nPeriods = data.length; // 4
-    const padL = 80*S, padR = 40*S, padT = 50*S, padB = 60*S;
+    const padL = 80*S, padR = 50*S, padT = 80*S, padB = 65*S;
     const totalW = W - padL - padR;
     const colW = totalW / nPeriods;
 
@@ -462,16 +462,16 @@ function drawFlowDiagram(data) {
     let maxK = 0, maxW = 0;
     for (const d of data) { maxK = Math.max(maxK, d.K); maxW = Math.max(maxW, d.W); }
 
-    // Layout: per column
-    // Bottom: capital bar stack (Kp, Kh, Kn)
-    // Middle: production arrow up to Wt
-    // Top: Wt splits into Ct (left arrow) and St (right arrow going back down)
-
-    const barMaxH = 200 * S;  // max capital bar height
-    const arrowZone = 160 * S; // zone for production arrow
-    const wtY = padT + 30*S;   // Y for Wt label row
-    const barBaseY = H - padB; // bottom of bars
-    const barTopY = barBaseY - barMaxH; // top if at max
+    // Layout zones (top to bottom):
+    //   padT → consumption labels
+    //   splitY → W label + split zone
+    //   prodTopY → top of production arrow
+    //   barTop → top of capital bar
+    //   barBaseY → bottom of capital bar
+    const barMaxH = 180 * S;
+    const barBaseY = H - padB;
+    const prodZoneH = 100 * S; // space for production arrow
+    const splitZoneH = 60 * S; // space for W label and branching
 
     // Grid lines
     if (isVis('show-gridlines')) {
@@ -488,7 +488,7 @@ function drawFlowDiagram(data) {
 
     for (let i = 0; i < nPeriods; i++) {
         const d = data[i];
-        const cx = padL + i * colW + colW / 2; // center x of column
+        const cx = padL + i * colW + colW / 2;
 
         // ── Capital bar (stacked: Kn bottom, Kh middle, Kp top) ──
         const barW = 60 * S;
@@ -496,7 +496,6 @@ function drawFlowDiagram(data) {
         const knH = (d.Kn / d.K) * totalBarH;
         const khH = (d.Kh / d.K) * totalBarH;
         const kpH = (d.Kp / d.K) * totalBarH;
-
         const barX = cx - barW/2;
         const barTop = barBaseY - totalBarH;
 
@@ -522,73 +521,82 @@ function drawFlowDiagram(data) {
         ctx.roundRect(barX, barTop, barW, totalBarH, 4*S);
         ctx.stroke();
 
-        // Kt label below bar
+        // IW label below bar (with v notation)
         ctx.fillStyle = '#4a5568'; ctx.font = `bold ${12*S}px Segoe UI`; ctx.textAlign = 'center';
-        ctx.fillText(`K${subscript(i)} = ${d.K.toFixed(0)}`, cx, barBaseY + 20*S);
+        ctx.fillText(`IW${subscript(i)} = ${d.K.toFixed(0)}`, cx, barBaseY + 20*S);
 
         // Period label
         ctx.fillStyle = '#a0aec0'; ctx.font = `${11*S}px Segoe UI`;
         ctx.fillText(`t = ${i}`, cx, barBaseY + 38*S);
 
-        // ── Production arrow: bar top → Wt zone ──
-        const arrowTopY = barTop - 20*S; // start above bar
-        const wtLabelY = barTop - 90*S;
+        // ── Production arrow: from bar top upward to W label ──
+        // Width adapts to both capital stock AND TFP
+        const prodArrowW = Math.max(8*S, (d.W / maxW) * 36 * S);
+        const prodBottom = barTop - 6*S; // small gap above bar
+        const wtLabelY = barTop - prodZoneH;
+        const prodTop = wtLabelY + 22*S;
 
-        // Upward arrow (production flow)
-        const arrowW = Math.max(8*S, (d.W / maxW) * 30 * S); // width proportional to output
-        drawArrow(ctx, cx, arrowTopY, cx, wtLabelY + 20*S, arrowW, '#718096', 0.6);
+        // Draw production arrow as a filled shape (shaft + arrowhead)
+        drawProductionArrow(ctx, cx, prodBottom, prodTop, prodArrowW, '#9ca3af', 0.5, S);
+
+        // "Production" label on first column
+        if (i === 0) {
+            ctx.fillStyle = '#a0aec0'; ctx.font = `italic ${10*S}px Segoe UI`; ctx.textAlign = 'left';
+            ctx.fillText('F(K)', cx + prodArrowW/2 + 6*S, (prodBottom + prodTop)/2 + 4*S);
+        }
 
         // Wt label
         ctx.fillStyle = '#1a202c'; ctx.font = `bold ${13*S}px Segoe UI`; ctx.textAlign = 'center';
         ctx.fillText(`W${subscript(i)} = ${d.W.toFixed(1)}`, cx, wtLabelY);
 
-        // "Production" label on first column only
-        if (i === 0) {
-            ctx.fillStyle = '#a0aec0'; ctx.font = `italic ${10*S}px Segoe UI`;
-            ctx.fillText('Production', cx - 50*S, (arrowTopY + wtLabelY + 20*S)/2 + 4*S);
-        }
+        // ── Split point: C goes left-upward, S arcs to next bar ──
+        const splitY = wtLabelY - 14*S;
 
-        // ── Split: Ct goes left, St goes right ──
-        const splitY = wtLabelY - 20*S;
-
-        // Consumption arrow (left) — RED
+        // Consumption arrow (left-upward) — RED
         const consArrowW = Math.max(5*S, (d.C / maxW) * 28 * S);
-        const consEndX = cx - colW * 0.32;
-        drawArrow(ctx, cx - 10*S, splitY, consEndX, splitY - 30*S, consArrowW, '#e53e3e', 0.7);
+        const consEndX = cx - colW * 0.30;
+        const consEndY = splitY - 40*S;
+        drawFatArrow(ctx, cx - 8*S, splitY, consEndX, consEndY, consArrowW, '#e53e3e', 0.65, S);
 
         // Ct label
         ctx.fillStyle = '#e53e3e'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
-        if (showVals) ctx.fillText(`C${subscript(i)}=${d.C.toFixed(1)}`, consEndX, splitY - 38*S);
-        else ctx.fillText(`C${subscript(i)}`, consEndX, splitY - 38*S);
+        if (showVals) ctx.fillText(`C${subscript(i)}=${d.C.toFixed(1)}`, consEndX - 6*S, consEndY - 10*S);
+        else ctx.fillText(`C${subscript(i)}`, consEndX - 6*S, consEndY - 10*S);
 
-        // Savings arrow (right, curving back down) — GREEN
+        // ── Savings arrow (right, arcing to next period's bar top) — GREEN ──
         const savArrowW = Math.max(4*S, (d.S / maxW) * 28 * S);
 
         if (i < nPeriods - 1) {
-            // Savings arrow curves from split point to the next period's bar top
             const nextCx = padL + (i+1) * colW + colW/2;
             const nextD = data[i+1];
             const nextBarH = (nextD.K / maxK) * barMaxH;
             const nextBarTop = barBaseY - nextBarH;
 
-            // Draw as a curved path
-            drawSavingsArrow(ctx, cx + 10*S, splitY, nextCx, nextBarTop - 20*S, savArrowW, '#38a169', 0.7);
+            // Savings arrow: starts right of the W label, arcs up and over, lands on top of next bar
+            // Key fix: the arrow starts from the split point to the RIGHT, not down into the production arrow
+            const savStartX = cx + 8*S;
+            const savStartY = splitY;
+            const savEndX = nextCx;
+            const savEndY = nextBarTop - 6*S;
 
-            // St label near the curve
-            const midX = (cx + 10*S + nextCx) / 2;
-            const midY = splitY - 50*S;
+            drawSavingsArc(ctx, savStartX, savStartY, savEndX, savEndY, savArrowW, '#38a169', 0.65, S);
+
+            // St label near the peak of the arc
+            const midX = (savStartX + savEndX) / 2;
+            const peakY = Math.min(savStartY, savEndY) - 52*S;
             ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
-            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, midX, midY);
-            else ctx.fillText(`S${subscript(i)}`, midX, midY);
+            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, midX, peakY - 4*S);
+            else ctx.fillText(`S${subscript(i)}`, midX, peakY - 4*S);
         } else {
-            // Last period: savings arrow goes right with "..."
-            const endX = cx + colW * 0.3;
-            drawArrow(ctx, cx + 10*S, splitY, endX, splitY - 30*S, savArrowW, '#38a169', 0.7);
+            // Last period: savings goes right with "..."
+            const endX = cx + colW * 0.28;
+            const endY = splitY - 40*S;
+            drawFatArrow(ctx, cx + 8*S, splitY, endX, endY, savArrowW, '#38a169', 0.65, S);
             ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
-            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, endX, splitY - 38*S);
-            else ctx.fillText(`S₃`, endX, splitY - 38*S);
+            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, endX + 6*S, endY - 10*S);
+            else ctx.fillText(`S₃`, endX + 6*S, endY - 10*S);
             ctx.fillStyle = '#a0aec0'; ctx.font = `${14*S}px Segoe UI`;
-            ctx.fillText('···', endX + 30*S, splitY - 26*S);
+            ctx.fillText('···', endX + 36*S, endY - 2*S);
         }
 
         // ── Depreciation indicator ──
@@ -614,10 +622,42 @@ function subscript(i) {
     return ['₀','₁','₂','₃'][i] || i;
 }
 
-// Draw a thick arrow between two points
-function drawArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
-    const S = DPR;
-    const headLen = 12 * S;
+// Draw a vertical production arrow (upward) — filled shape with arrowhead on top
+function drawProductionArrow(ctx, cx, bottomY, topY, width, color, alpha, S) {
+    const headH = 14 * S;
+    const headW = width * 1.6;
+    const hw = width / 2;
+    const shaftTopY = topY + headH;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+    // Start bottom-left of shaft
+    ctx.moveTo(cx - hw, bottomY);
+    // Up left side of shaft
+    ctx.lineTo(cx - hw, shaftTopY);
+    // Left wing of arrowhead
+    ctx.lineTo(cx - headW/2, shaftTopY);
+    // Tip
+    ctx.lineTo(cx, topY);
+    // Right wing of arrowhead
+    ctx.lineTo(cx + headW/2, shaftTopY);
+    // Right side of shaft
+    ctx.lineTo(cx + hw, shaftTopY);
+    // Down right side
+    ctx.lineTo(cx + hw, bottomY);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+// Draw a straight fat arrow between two points — filled shape with arrowhead
+function drawFatArrow(ctx, x0, y0, x1, y1, thickness, color, alpha, S) {
+    const headLen = Math.min(14 * S, Math.hypot(x1-x0, y1-y0) * 0.35);
+    const headW = thickness * 1.5;
     const angle = Math.atan2(y1 - y0, x1 - x0);
     const len = Math.hypot(x1-x0, y1-y0);
 
@@ -625,7 +665,6 @@ function drawArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
     ctx.globalAlpha = alpha;
     ctx.fillStyle = color;
 
-    // Shaft
     ctx.translate(x0, y0);
     ctx.rotate(angle);
 
@@ -633,13 +672,11 @@ function drawArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
     const hw = thickness / 2;
 
     ctx.beginPath();
-    // Shaft rectangle
     ctx.moveTo(0, -hw);
     ctx.lineTo(shaftLen, -hw);
-    // Arrowhead
-    ctx.lineTo(shaftLen, -thickness * 0.8);
+    ctx.lineTo(shaftLen, -headW/2);
     ctx.lineTo(len, 0);
-    ctx.lineTo(shaftLen, thickness * 0.8);
+    ctx.lineTo(shaftLen, headW/2);
     ctx.lineTo(shaftLen, hw);
     ctx.lineTo(0, hw);
     ctx.closePath();
@@ -648,38 +685,39 @@ function drawArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
     ctx.restore();
 }
 
-// Draw a curved savings arrow
-function drawSavingsArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
-    const S = DPR;
+// Draw a curved savings arrow that arcs above both endpoints
+function drawSavingsArc(ctx, x0, y0, x1, y1, thickness, color, alpha, S) {
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    // Control points for a nice arc
+    // Control point for the arc — well above both endpoints
     const midX = (x0 + x1) / 2;
-    const cpY = Math.min(y0, y1) - 60*S; // arc above
+    const cpY = Math.min(y0, y1) - 55*S;
 
-    // Draw thick bezier using stroke
+    // Draw the thick curved path
     ctx.strokeStyle = color;
     ctx.lineWidth = thickness;
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.beginPath();
     ctx.moveTo(x0, y0);
     ctx.quadraticCurveTo(midX, cpY, x1, y1);
     ctx.stroke();
 
-    // Arrowhead at end
-    // Get tangent at endpoint
-    const t = 0.98;
-    const tx = 2*(1-t)*(midX-x0) + 2*t*(x1-midX);
-    const ty = 2*(1-t)*(cpY-y0) + 2*t*(y1-cpY);
+    // Arrowhead at the end — compute tangent direction at t≈0.97
+    const t = 0.97;
+    // Derivative of quadratic bezier: B'(t) = 2(1-t)(P1-P0) + 2t(P2-P1)
+    const tx = 2*(1-t)*(midX - x0) + 2*t*(x1 - midX);
+    const ty = 2*(1-t)*(cpY - y0)  + 2*t*(y1 - cpY);
     const ang = Math.atan2(ty, tx);
-    const headLen = 14*S;
+    const headLen = Math.max(12*S, thickness * 2.2);
 
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
-    ctx.lineTo(x1 - headLen*Math.cos(ang - 0.4), y1 - headLen*Math.sin(ang - 0.4));
-    ctx.lineTo(x1 - headLen*Math.cos(ang + 0.4), y1 - headLen*Math.sin(ang + 0.4));
+    ctx.lineTo(x1 - headLen*Math.cos(ang - 0.35), y1 - headLen*Math.sin(ang - 0.35));
+    ctx.lineTo(x1 - headLen*0.5*Math.cos(ang), y1 - headLen*0.5*Math.sin(ang));
+    ctx.lineTo(x1 - headLen*Math.cos(ang + 0.35), y1 - headLen*Math.sin(ang + 0.35));
     ctx.closePath();
     ctx.fill();
 
@@ -695,18 +733,31 @@ function drawUtilityChart(data) {
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, W, H);
 
-    const padL = 80*S, padR = 40*S, padT = 40*S, padB = 60*S;
+    const padL = 80*S, padR = 120*S, padT = 50*S, padB = 60*S;
     const gw = W - padL - padR, gh = H - padT - padB;
 
-    let maxU = 0;
-    for (const d of data) maxU = Math.max(maxU, d.u);
-    maxU *= 1.15;
+    // FIXED Y-axis scale based on the theoretical range of utility
+    // u = ln(C+1) where C = consRate * A * K^alpha
+    // For our parameter ranges, utility typically falls between 0 and ~6
+    // Use a fixed scale of 0 to 6 so differences are always visible
+    const fixedMaxU = 6.0;
+
+    // But also check if any values exceed this
+    let actualMaxU = 0;
+    for (const d of data) actualMaxU = Math.max(actualMaxU, d.u);
+    const maxU = Math.max(fixedMaxU, actualMaxU * 1.1);
+
+    // Also compute the change range for the annotation
+    const u0 = data[0].u;
+    const uLast = data[data.length-1].u;
+    const uChange = uLast - u0;
+    const uChangePct = (uChange / u0) * 100;
 
     // Grid
     if (isVis('show-gridlines')) {
         ctx.strokeStyle = '#f0f4f8'; ctx.lineWidth = S;
-        for (let i = 1; i <= 4; i++) {
-            const y = padT + (i/5)*gh;
+        for (let i = 1; i <= 5; i++) {
+            const y = padT + (i/6)*gh;
             ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+gw, y); ctx.stroke();
         }
     }
@@ -718,13 +769,17 @@ function drawUtilityChart(data) {
     // Axis label
     ctx.fillStyle = '#4a5568'; ctx.font = `italic ${13*S}px Georgia, serif`; ctx.textAlign = 'center';
     ctx.fillText('Period', padL + gw/2, H - 10*S);
-    ctx.save(); ctx.translate(18*S, padT+gh/2); ctx.rotate(-Math.PI/2); ctx.fillText('Wellbeing', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(18*S, padT+gh/2); ctx.rotate(-Math.PI/2); ctx.fillText('u(Cₜ) = ln(Cₜ + 1)', 0, 0); ctx.restore();
 
-    // Tick labels Y
+    // Tick labels Y — fixed scale
     ctx.fillStyle = '#718096'; ctx.font = `${11*S}px Segoe UI`; ctx.textAlign = 'right';
-    for (let i = 0; i <= 4; i++) {
-        const v = maxU * (4-i)/4;
-        ctx.fillText(v.toFixed(1), padL - 8*S, padT + (i/4)*gh + 4*S);
+    for (let i = 0; i <= 6; i++) {
+        const v = maxU * (6-i)/6;
+        const y = padT + (i/6)*gh;
+        ctx.fillText(v.toFixed(1), padL - 8*S, y + 4*S);
+        // Light tick mark
+        ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = S;
+        ctx.beginPath(); ctx.moveTo(padL - 4*S, y); ctx.lineTo(padL, y); ctx.stroke();
     }
 
     const nPeriods = data.length;
@@ -756,7 +811,7 @@ function drawUtilityChart(data) {
 
             // Value on top
             ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
-            ctx.fillText(d.u.toFixed(2), cx, by - 8*S);
+            ctx.fillText(d.u.toFixed(3), cx, by - 8*S);
         }
 
         // Discounted utility overlay
@@ -774,26 +829,48 @@ function drawUtilityChart(data) {
         // Period label
         ctx.fillStyle = '#718096'; ctx.font = `${12*S}px Segoe UI`; ctx.textAlign = 'center';
         ctx.fillText(`t = ${i}`, cx, padT + gh + 22*S);
+
+        // Draw change arrow between bars (except for last)
+        if (i < nPeriods - 1) {
+            const nextD = data[i+1];
+            const diff = nextD.u - d.u;
+            const diffPct = (diff / d.u) * 100;
+            const midBarX = cx + barGroupW/2;
+            const barMidY = padT + gh - (d.u / maxU) * gh * 0.5;
+
+            // Small delta annotation between bars
+            ctx.font = `${9*S}px Segoe UI`; ctx.textAlign = 'center';
+            ctx.fillStyle = diff >= 0 ? '#38a169' : '#e53e3e';
+            const sign = diff >= 0 ? '▲' : '▼';
+            ctx.fillText(`${sign} ${Math.abs(diffPct).toFixed(1)}%`, midBarX, padT + gh + 40*S);
+        }
     }
 
     // Reference line at u₀
     if (data.length > 0) {
-        const u0 = data[0].u;
         const refY = padT + gh - (u0 / maxU) * gh;
         ctx.strokeStyle = 'rgba(56,161,105,0.3)'; ctx.lineWidth = 1.5*S;
         ctx.setLineDash([5*S, 3*S]);
         ctx.beginPath(); ctx.moveTo(padL, refY); ctx.lineTo(padL+gw, refY); ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = 'rgba(56,161,105,0.5)'; ctx.font = `${10*S}px Segoe UI`; ctx.textAlign = 'left';
-        ctx.fillText(`u₀ = ${u0.toFixed(2)}`, padL + gw + 6*S, refY + 4*S);
+        ctx.fillText(`u₀ = ${u0.toFixed(3)}`, padL + gw + 6*S, refY + 4*S);
     }
 
-    // Label: sustainable vs unsustainable
-    const uFirst = data[0].u, uLast = data[data.length-1].u;
-    const growing = uLast >= uFirst - 0.01;
+    // Summary annotation on the right side
+    const summaryX = padL + gw + 16*S;
+    const summaryY = padT + 30*S;
+    ctx.font = `bold ${12*S}px Segoe UI`; ctx.textAlign = 'left';
+    ctx.fillStyle = uChange >= -0.001 ? '#38a169' : '#e53e3e';
+    const statusIcon = uChange >= -0.001 ? '✓' : '✗';
+    ctx.fillText(`${statusIcon} Δu = ${uChange >= 0 ? '+' : ''}${uChange.toFixed(3)}`, summaryX, summaryY);
+    ctx.font = `${11*S}px Segoe UI`;
+    ctx.fillText(`(${uChangePct >= 0 ? '+' : ''}${uChangePct.toFixed(1)}%)`, summaryX, summaryY + 18*S);
+
+    // Sustainability label
     ctx.font = `bold ${13*S}px Segoe UI`; ctx.textAlign = 'center';
-    ctx.fillStyle = growing ? '#38a169' : '#e53e3e';
-    const statusText = growing ? '✓ Utility non-declining → Sustainable path' : '✗ Utility declining → Unsustainable path';
+    ctx.fillStyle = uChange >= -0.001 ? '#38a169' : '#e53e3e';
+    const statusText = uChange >= -0.001 ? '✓ Utility non-declining → Sustainable path' : '✗ Utility declining → Unsustainable path';
     ctx.fillText(statusText, padL + gw/2, padT - 10*S);
 }
 

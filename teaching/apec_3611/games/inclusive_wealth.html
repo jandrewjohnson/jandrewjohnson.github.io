@@ -247,7 +247,7 @@
             <!-- Graph A: Capital and Welfare Over Time -->
             <div class="graph-container" id="section-graph">
                 <div class="graph-header" onclick="toggleSection('graph')">
-                    <div class="panel-title" style="margin-bottom:0">A. Capital Stocks and Welfare Over Time</div>
+                    <div class="panel-title" style="margin-bottom:0">A. Capital Stocks Over Time</div>
                     <div class="panel-header-actions">
                         <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
                         <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
@@ -272,7 +272,7 @@
             <!-- Graph B: Welfare / IW Components -->
             <div class="graph-container" id="section-graph2" style="margin-top:20px;">
                 <div class="graph-header" onclick="toggleSection('graph2')">
-                    <div class="panel-title" style="margin-bottom:0">B. Utility and Inclusive Wealth Over Time</div>
+                    <div class="panel-title" style="margin-bottom:0">B. Inclusive Wealth Composition Over Time</div>
                     <div class="panel-header-actions">
                         <button class="panel-collapse-btn" id="toggle-graph2" onclick="event.stopPropagation();toggleSection('graph2')" title="Collapse">▼</button>
                         <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph2')" title="Close">✕</button>
@@ -295,7 +295,7 @@
                 <div class="left-section-body" id="body-explanation">
                     <p><strong>Inclusive Wealth</strong> measures the sum of all capital stocks — produced capital \( K_p \), human capital \( K_h \), and natural capital \( K_n \). Society's present value of wellbeing is \( V_t = \sum_{s=t}^{\infty} \beta^s u(c_s) \), where \( \beta \) is the discount factor and \( u(c_s) \) is per-period utility from consumption.</p>
                     <p><strong>Production</strong> follows \( K_{t+1} = F(K_t) - C_t - DK_t \), where \( F(K_t) \) is output, \( C_t \) is consumption, and \( D \) is the depreciation rate. If you consume too much, savings won't replace lost capital — your welfare will fall over time.</p>
-                    <p><strong>Sustainability</strong> requires \( \frac{dV}{dt} \geq 0 \): non-declining human wellbeing. Under <em>weak sustainability</em>, the total inclusive wealth \( IW = K_p + K_h + K_n \) must be non-declining, allowing substitution between capital types. Under <em>strong sustainability</em>, natural capital itself must be non-declining: \( \frac{dK_n}{dt} \geq 0 \).</p>
+                    <p><strong>Sustainability</strong> requires \( \frac{dV}{dt} \geq 0 \): non-declining human wellbeing. Under <em>weak sustainability</em>, the total inclusive wealth \( IW = v_p K_p + v_h K_h + v_n K_n \) must be non-declining, allowing substitution between capital types (where \( v_p, v_h, v_n \) are the shadow prices of each capital). Under <em>strong sustainability</em>, natural capital itself must be non-declining: \( \frac{dK_n}{dt} \geq 0 \).</p>
                     <p>Use the sliders to explore how consumption choices, depreciation, and capital composition affect sustainability outcomes.</p>
                 </div>
             </div>
@@ -317,7 +317,7 @@
                     </div>
                     <div class="formal-solution-label">Weak Sustainability</div>
                     <div class="formal-solution">
-                        \( \frac{d}{dt}(K_p + K_h + K_n) \geq 0 \quad \Longleftrightarrow \quad \frac{dIW}{dt} \geq 0 \)
+                        \( \frac{d}{dt}(v_p K_p + v_h K_h + v_n K_n) \geq 0 \quad \Longleftrightarrow \quad \frac{dIW}{dt} \geq 0 \)
                     </div>
                     <div style="height:12px"></div>
                     <div class="formal-solution-label">Strong Sustainability</div>
@@ -340,7 +340,7 @@
                     <p>A key question is whether different types of capital can substitute for one another. As an economy develops, capital composition changes — produced (manufactured) capital tends to grow while natural capital may decline.</p>
                     <div class="sub-highlight weak">
                         <div class="tangency-title">Weak Sustainability</div>
-                        <div class="tangency-eq">\( \frac{dIW}{dt} \geq 0 \)</div>
+                        <div class="tangency-eq">\( \frac{d}{dt}(v_p K_p + v_h K_h + v_n K_n) \geq 0 \)</div>
                         <div class="tangency-eq-sub">Total wealth can grow even if natural capital declines, as long as other capital compensates.</div>
                     </div>
                     <div class="sub-highlight strong" style="margin-top:10px;">
@@ -365,11 +365,11 @@
                 </div>
                 <div class="control-panel-body" id="body-scenarios">
                     <div class="scenario-btns">
-                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Sustainable</button>
+                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Strong Sustainability</button>
                         <button class="scenario-btn" id="btn-unsustainable" onclick="setScenario('unsustainable')">⚠ Unsustainable</button>
                     </div>
                     <div class="scenario-btns">
-                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Only</button>
+                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Sustainability</button>
                         <button class="scenario-btn" id="btn-custom" onclick="setScenario('custom')">Custom</button>
                     </div>
                 </div>
@@ -402,10 +402,10 @@
                     </div>
                 </div>
                 <div class="control-panel-body" id="body-capital">
-                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
-                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
-                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
-                    <div class="equation-box">\( IW = K_p + K_h + K_n \)</div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( v_p K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( v_h K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( v_n K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
+                    <div class="equation-box">\( IW = v_p K_p + v_h K_h + v_n K_n \)</div>
                 </div>
             </div>
 
@@ -445,12 +445,10 @@
                         <div class="info-row"><span class="info-label">Strong sust.?</span><span class="info-value" id="strong-sus">—</span></div>
                     </div>
                     <div class="legend">
-                        <div class="legend-item"><div class="legend-line" style="background:#4299e1;"></div><span>Produced capital \( K_p \)</span></div>
-                        <div class="legend-item"><div class="legend-line" style="background:#805ad5;"></div><span>Human capital \( K_h \)</span></div>
-                        <div class="legend-item"><div class="legend-line" style="background:#dd6b20;"></div><span>Natural capital \( K_n \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#4299e1;"></div><span>Produced capital \( v_p K_p \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#805ad5;"></div><span>Human capital \( v_h K_h \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#dd6b20;"></div><span>Natural capital \( v_n K_n \)</span></div>
                         <div class="legend-item"><div class="legend-line" style="background:#2d3748; height:2px;"></div><span>Inclusive Wealth \( IW \)</span></div>
-                        <div class="legend-item"><div class="legend-line" style="background:#38a169;"></div><span>Per-period utility \( u(c_t) \)</span></div>
-                        <div class="legend-item"><div class="legend-line" style="background:rgba(56,161,105,0.3);"></div><span>Discounted utility \( \beta^t u(c_t) \)</span></div>
                     </div>
                 </div>
             </div>
@@ -464,16 +462,16 @@
             <div class="panel-title">Display Options</div>
 
             <div class="opt-section-label">Graph A — Capital</div>
-            <div class="opt-row"><input type="checkbox" id="show-kp" checked><label for="show-kp">Produced capital \( K_p \)</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-kh" checked><label for="show-kh">Human capital \( K_h \)</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-kn" checked><label for="show-kn">Natural capital \( K_n \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-kp" checked><label for="show-kp">Produced capital \( v_p K_p \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-kh" checked><label for="show-kh">Human capital \( v_h K_h \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-kn" checked><label for="show-kn">Natural capital \( v_n K_n \)</label></div>
             <div class="opt-row"><input type="checkbox" id="show-iw" checked><label for="show-iw">Inclusive Wealth \( IW \)</label></div>
             <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
 
-            <div class="opt-section-label">Graph B — Welfare</div>
-            <div class="opt-row"><input type="checkbox" id="show-utility" checked><label for="show-utility">Per-period utility</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-discounted" checked><label for="show-discounted">Discounted utility</label></div>
-            <div class="opt-row"><input type="checkbox" id="show-consumption" checked><label for="show-consumption">Consumption path</label></div>
+            <div class="opt-section-label">Graph B — IW Composition</div>
+            <div class="opt-row"><input type="checkbox" id="show-utility" checked><label for="show-utility">IW composition areas</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-discounted" checked><label for="show-discounted">IW reference line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-consumption" checked><label for="show-consumption">Layer labels</label></div>
 
             <div class="restore-bar" id="restore-bar"></div>
 
@@ -741,6 +739,11 @@ function drawCapitalGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
         }
         ctx.stroke();
         ctx.setLineDash([]);
+
+        // IW end label
+        const lastD = data[data.length - 1];
+        ctx.fillStyle = '#2d3748'; ctx.font = `bold ${11 * S}px Segoe UI`; ctx.textAlign = 'left';
+        ctx.fillText(`IW=${lastD.IW.toFixed(1)}`, tX(T) + 10 * S, tY(lastD.IW) + 4 * S);
     }
 
     // Initial IW reference line
@@ -773,23 +776,23 @@ function drawCapitalGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
 
     // End labels
     ctx.font = `bold ${11 * S}px Segoe UI`; ctx.textAlign = 'left';
-    if (isVis('show-kp')) { ctx.fillStyle = '#4299e1'; ctx.fillText(`Kp=${last.Kp.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kp) + 4 * S); }
-    if (isVis('show-kh')) { ctx.fillStyle = '#805ad5'; ctx.fillText(`Kh=${last.Kh.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kh) + 4 * S); }
-    if (isVis('show-kn')) { ctx.fillStyle = '#dd6b20'; ctx.fillText(`Kn=${last.Kn.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kn) + 4 * S); }
+    if (isVis('show-kp')) { ctx.fillStyle = '#4299e1'; ctx.fillText(`v_p·Kp=${last.Kp.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kp) + 4 * S); }
+    if (isVis('show-kh')) { ctx.fillStyle = '#805ad5'; ctx.fillText(`v_h·Kh=${last.Kh.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kh) + 4 * S); }
+    if (isVis('show-kn')) { ctx.fillStyle = '#dd6b20'; ctx.fillText(`v_n·Kn=${last.Kn.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kn) + 4 * S); }
 }
 
 function drawWelfareGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
     const T = data.length - 1;
 
-    let maxVal = 0;
+    // Find max IW for scaling
+    let maxIW = 0;
     for (const d of data) {
-        maxVal = Math.max(maxVal, d.u, d.C);
+        maxIW = Math.max(maxIW, d.IW);
     }
-    maxVal = Math.ceil(maxVal * 1.1);
-    if (maxVal <= 0) maxVal = 1;
+    maxIW = Math.ceil(maxIW / 20) * 20 + 20;
 
     function tX(t) { return ml + (t / T) * gw; }
-    function tY(v) { return mt + gh - (v / maxVal) * gh; }
+    function tY(v) { return mt + gh - (v / maxIW) * gh; }
 
     // Grid
     if (isVis('show-gridlines')) {
@@ -797,6 +800,12 @@ function drawWelfareGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
         for (let i = 0; i <= 5; i++) {
             const y = mt + (i / 5) * gh;
             ctx.beginPath(); ctx.moveTo(ml, y); ctx.lineTo(ml + gw, y); ctx.stroke();
+        }
+        for (let t = 0; t <= T; t++) {
+            if (t % Math.max(1, Math.round(T / 10)) === 0) {
+                const x = tX(t);
+                ctx.beginPath(); ctx.moveTo(x, mt); ctx.lineTo(x, mt + gh); ctx.stroke();
+            }
         }
     }
 
@@ -813,8 +822,8 @@ function drawWelfareGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
     }
     ctx.textAlign = 'right';
     for (let i = 0; i <= 5; i++) {
-        const v = (maxVal * (5 - i) / 5);
-        ctx.fillText(v.toFixed(1), ml - 10 * S, mt + (i / 5) * gh + 5 * S);
+        const v = (maxIW * (5 - i) / 5);
+        ctx.fillText(v.toFixed(0), ml - 10 * S, mt + (i / 5) * gh + 5 * S);
     }
 
     // Axis labels
@@ -823,72 +832,114 @@ function drawWelfareGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
     ctx.save();
     ctx.translate(18 * S, mt + gh / 2);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Value', 0, 0);
+    ctx.fillText('Inclusive Wealth (IW)', 0, 0);
     ctx.restore();
 
-    // Discounted utility as filled area
-    if (isVis('show-discounted')) {
-        ctx.fillStyle = 'rgba(56,161,105,0.15)';
-        ctx.beginPath();
-        ctx.moveTo(tX(0), tY(0));
-        for (const d of data) ctx.lineTo(tX(d.t), tY(d.discU));
-        ctx.lineTo(tX(T), tY(0));
-        ctx.closePath();
-        ctx.fill();
+    // Stacked area chart: Kn (bottom), Kh (middle), Kp (top)
+    // This shows how IW is composed and how each capital contributes
 
-        ctx.strokeStyle = 'rgba(56,161,105,0.4)'; ctx.lineWidth = 2 * S;
-        ctx.beginPath();
-        let started = false;
-        for (const d of data) {
-            const x = tX(d.t), y = tY(d.discU);
-            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
+    // Layer 1: Natural capital (bottom) — orange
+    ctx.fillStyle = 'rgba(221,107,32,0.35)';
+    ctx.beginPath();
+    ctx.moveTo(tX(0), tY(0));
+    for (const d of data) ctx.lineTo(tX(d.t), tY(d.Kn));
+    ctx.lineTo(tX(T), tY(0));
+    ctx.closePath();
+    ctx.fill();
+
+    // Layer 2: Human capital (middle) — purple
+    ctx.fillStyle = 'rgba(128,90,213,0.35)';
+    ctx.beginPath();
+    ctx.moveTo(tX(0), tY(data[0].Kn));
+    for (const d of data) ctx.lineTo(tX(d.t), tY(d.Kn + d.Kh));
+    ctx.lineTo(tX(T), tY(data[T].Kn));
+    for (let i = T; i >= 0; i--) ctx.lineTo(tX(data[i].t), tY(data[i].Kn));
+    ctx.closePath();
+    ctx.fill();
+
+    // Layer 3: Produced capital (top) — blue
+    ctx.fillStyle = 'rgba(66,153,225,0.35)';
+    ctx.beginPath();
+    ctx.moveTo(tX(0), tY(data[0].Kn + data[0].Kh));
+    for (const d of data) ctx.lineTo(tX(d.t), tY(d.Kn + d.Kh + d.Kp));
+    ctx.lineTo(tX(T), tY(data[T].Kn + data[T].Kh));
+    for (let i = T; i >= 0; i--) ctx.lineTo(tX(data[i].t), tY(data[i].Kn + data[i].Kh));
+    ctx.closePath();
+    ctx.fill();
+
+    // Border lines for each layer
+    // Kn top edge
+    ctx.strokeStyle = '#dd6b20'; ctx.lineWidth = 2 * S;
+    ctx.beginPath();
+    let started = false;
+    for (const d of data) {
+        const x = tX(d.t), y = tY(d.Kn);
+        if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
     }
+    ctx.stroke();
 
-    // Per-period utility
-    if (isVis('show-utility')) {
-        ctx.strokeStyle = '#38a169'; ctx.lineWidth = 3 * S;
-        ctx.beginPath();
-        let started = false;
-        for (const d of data) {
-            const x = tX(d.t), y = tY(d.u);
-            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
+    // Kn + Kh top edge
+    ctx.strokeStyle = '#805ad5'; ctx.lineWidth = 2 * S;
+    ctx.beginPath();
+    started = false;
+    for (const d of data) {
+        const x = tX(d.t), y = tY(d.Kn + d.Kh);
+        if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
     }
+    ctx.stroke();
 
-    // Consumption path
-    if (isVis('show-consumption')) {
-        ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 2 * S;
-        ctx.setLineDash([6 * S, 3 * S]);
-        ctx.beginPath();
-        let started = false;
-        for (const d of data) {
-            const x = tX(d.t), y = tY(d.C);
-            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
+    // IW top edge (= Kn + Kh + Kp)
+    ctx.strokeStyle = '#4299e1'; ctx.lineWidth = 2 * S;
+    ctx.beginPath();
+    started = false;
+    for (const d of data) {
+        const x = tX(d.t), y = tY(d.IW);
+        if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
     }
+    ctx.stroke();
 
-    // Labels at end
-    const last = data[data.length - 1];
+    // IW dashed total line on top
+    ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2.5 * S;
+    ctx.setLineDash([6 * S, 3 * S]);
+    ctx.beginPath();
+    started = false;
+    for (const d of data) {
+        const x = tX(d.t), y = tY(d.IW);
+        if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Initial IW reference line
+    const iw0 = data[0].IW;
+    ctx.strokeStyle = 'rgba(45,55,72,0.25)'; ctx.lineWidth = 1.5 * S;
+    ctx.setLineDash([4 * S, 4 * S]);
+    ctx.beginPath(); ctx.moveTo(ml, tY(iw0)); ctx.lineTo(ml + gw, tY(iw0)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(45,55,72,0.4)'; ctx.font = `${11 * S}px Segoe UI`;
+    ctx.textAlign = 'left';
+    ctx.fillText(`IW₀ = ${iw0.toFixed(0)}`, ml + gw + 6 * S, tY(iw0) + 4 * S);
+
+    // End labels inside stacked areas
+    const last = data[T];
     ctx.font = `bold ${11 * S}px Segoe UI`; ctx.textAlign = 'left';
-    if (isVis('show-utility')) { ctx.fillStyle = '#38a169'; ctx.fillText(`u=${last.u.toFixed(2)}`, tX(T) + 10 * S, tY(last.u) + 4 * S); }
-    if (isVis('show-consumption')) { ctx.fillStyle = '#e53e3e'; ctx.fillText(`C=${last.C.toFixed(1)}`, tX(T) + 10 * S, tY(last.C) + 4 * S); }
+    const endX = tX(T) + 10 * S;
 
-    // Reference line at initial utility
-    if (isVis('show-utility')) {
-        const u0 = data[0].u;
-        ctx.strokeStyle = 'rgba(56,161,105,0.25)'; ctx.lineWidth = 1.5 * S;
-        ctx.setLineDash([4 * S, 4 * S]);
-        ctx.beginPath(); ctx.moveTo(ml, tY(u0)); ctx.lineTo(ml + gw, tY(u0)); ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = 'rgba(56,161,105,0.5)'; ctx.font = `${11 * S}px Segoe UI`;
-        ctx.textAlign = 'left';
-        ctx.fillText(`u₀ = ${u0.toFixed(2)}`, ml + gw + 6 * S, tY(u0) + 4 * S);
-    }
+    // Label for each layer at the right edge
+    const knMid = (0 + last.Kn) / 2;
+    const khMid = last.Kn + last.Kh / 2;
+    const kpMid = last.Kn + last.Kh + last.Kp / 2;
+
+    ctx.fillStyle = '#dd6b20';
+    ctx.fillText(`v_n·Kn = ${last.Kn.toFixed(1)}`, endX, tY(knMid) + 4 * S);
+    ctx.fillStyle = '#805ad5';
+    ctx.fillText(`v_h·Kh = ${last.Kh.toFixed(1)}`, endX, tY(khMid) + 4 * S);
+    ctx.fillStyle = '#4299e1';
+    ctx.fillText(`v_p·Kp = ${last.Kp.toFixed(1)}`, endX, tY(kpMid) + 4 * S);
+
+    // IW total label
+    ctx.fillStyle = '#2d3748';
+    ctx.fillText(`IW = ${last.IW.toFixed(1)}`, endX, tY(last.IW) - 8 * S);
 }
 
 // ─── Update function ───

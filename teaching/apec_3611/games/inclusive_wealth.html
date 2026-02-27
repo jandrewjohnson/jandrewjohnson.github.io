@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusive Wealth</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 24px; font-size: 0.95rem; }
+        .main-content { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
+        canvas { display: block; width: 100%; height: auto; cursor: default; }
+        .plot-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
+        }
+        .graph-container:hover .plot-actions, .graph-body:hover .plot-actions { opacity: 1; }
+        .plot-action-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
+        .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .plot-action-btn:active { background: #edf2f7; }
+        .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
+        .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1; flex-shrink: 0;
+        }
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
+        }
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+            line-height: 1;
+        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-closed { display: none !important; }
+        .left-section { position: relative; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .control-panel { position: relative; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s;
+        }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
+
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        .control-panel { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 20px 20px 20px; }
+        .control-panel-body.collapsed { display: none; }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 4px 10px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.85rem; color: #2b6cb0; font-weight: 500; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .info-box { background: #f7fafc; border-radius: 8px; padding: 16px; border-left: 3px solid #4299e1; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.9rem; }
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco','Consolas',monospace; color: #1a202c; }
+        .info-value.highlight { color: #2b6cb0; font-weight: 600; }
+        .info-value.sustainable { color: #38a169; font-weight: 600; }
+        .info-value.unsustainable { color: #e53e3e; font-weight: 600; }
+        .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #4a5568; }
+        .legend-line { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; font-size: 1.05rem; }
+        .tangency-condition { margin-top: 16px; padding: 14px; background: rgba(66,153,225,0.08); border-radius: 8px; border: 1px solid rgba(66,153,225,0.2); }
+        .tangency-title { font-size: 0.8rem; color: #2b6cb0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tangency-eq { text-align: center; font-size: 1.05rem; color: #1a202c; margin-bottom: 4px; }
+        .tangency-eq-sub { text-align: center; font-size: 0.9rem; color: #718096; margin-top: 6px; }
+
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+
+        .formal-math { margin: 8px 0 18px 0; text-align: center; font-size: 1.15rem; line-height: 2.2; }
+        .formal-solution { padding: 12px 16px; background: #f7fafc; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; font-size: 1rem; line-height: 2; }
+        .formal-solution-label { color: #718096; font-size: 0.85rem; margin-bottom: 4px; }
+
+        .worked-step { padding: 4px 0; font-size: 0.95rem; line-height: 1.9; color: #4a5568; }
+        .worked-step .step-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; font-weight: 600; margin-top: 10px; margin-bottom: 2px; }
+        .worked-step .step-math { padding: 2px 0 2px 12px; border-left: 2px solid #e2e8f0; }
+        .worked-step .step-math.highlight-result { border-left-color: #4299e1; background: rgba(66,153,225,0.04); padding: 6px 12px; border-radius: 0 6px 6px 0; margin: 4px 0; }
+
+        /* Sustainability badge */
+        .sustainability-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-top: 8px;
+        }
+        .sustainability-badge.sustainable { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
+        .sustainability-badge.unsustainable { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+
+        /* House visualization */
+        .house-viz { display: flex; gap: 16px; align-items: flex-end; justify-content: center; margin: 16px 0; padding: 16px; background: #f7fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .house-period { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .house-period-label { font-size: 0.75rem; color: #718096; font-weight: 600; }
+
+        /* Capital bar chart styling */
+        .capital-bars { display: flex; gap: 6px; align-items: flex-end; }
+        .capital-bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .capital-bar { width: 20px; border-radius: 3px 3px 0 0; transition: height 0.3s; min-height: 2px; }
+        .capital-bar.kp { background: #4299e1; }
+        .capital-bar.kh { background: #805ad5; }
+        .capital-bar.kn { background: #dd6b20; }
+        .bar-label { font-size: 0.6rem; color: #a0aec0; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+        .opt-section-label:first-child { margin-top: 0; }
+
+        /* Embed mode fullscreen button */
+        .embed-open-btn {
+            display: none; position: absolute; top: 8px; left: 8px; z-index: 10;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.15s; line-height: 1; text-decoration: none;
+        }
+        .embed-open-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .embed-mode .embed-open-btn { display: flex; align-items: center; gap: 4px; }
+        body.embed-mode { padding: 8px; background: transparent; min-height: auto; }
+        .embed-mode h1, .embed-mode .subtitle, .embed-mode .left-section, .embed-mode .display-options-wrapper { display: none !important; }
+        .embed-mode .container { max-width: none; }
+        .embed-mode .graph-container { border: none; box-shadow: none; padding: 10px; }
+        .embed-mode .control-panel { padding: 14px; }
+
+        .url-state-bar {
+            margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .url-state-bar button {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; white-space: nowrap;
+        }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
+
+        .katex { font-size: 1em; }
+        .info-row .katex { font-size: 0.95em; }
+        .slider-label .katex { font-size: 0.95em; }
+        .equation-box .katex { font-size: 1.1em; }
+        .tangency-eq .katex { font-size: 1.1em; }
+        .tangency-eq-sub .katex { font-size: 0.95em; }
+        .formal-math .katex-display { margin: 0.4em 0; }
+        .formal-solution .katex { font-size: 1.05em; }
+        .legend-item .katex { font-size: 0.9em; }
+        .worked-step .katex { font-size: 1em; }
+
+        /* Scenario toggle */
+        .scenario-btns { display: flex; gap: 6px; margin-bottom: 16px; }
+        .scenario-btn {
+            flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;
+            background: #fff; cursor: pointer; text-align: center;
+            font-size: 0.82rem; color: #718096; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.2s;
+        }
+        .scenario-btn:hover { border-color: #cbd5e0; background: #f7fafc; }
+        .scenario-btn.active { background: #ebf8ff; border-color: #90cdf4; color: #2b6cb0; font-weight: 600; }
+        .scenario-btn.active-unsustainable { background: #fff5f5; border-color: #feb2b2; color: #c53030; font-weight: 600; }
+
+        /* Substitutability highlight */
+        .sub-highlight { padding: 12px; border-radius: 8px; margin-top: 10px; }
+        .sub-highlight.weak { background: rgba(66,153,225,0.08); border: 1px solid rgba(66,153,225,0.2); }
+        .sub-highlight.strong { background: rgba(221,107,32,0.08); border: 1px solid rgba(221,107,32,0.2); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="section-title" class="title-wrapper" style="position:relative">
+        <h1>Inclusive Wealth</h1>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle" style="margin-bottom:24px">Sustainability is non-declining wellbeing: \( \frac{dV}{dt} > 0 \) where \( V_t = \sum_{s=t}^{\infty} \beta^s u(c_s) \)</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-column">
+            <!-- Graph A: Capital and Welfare Over Time -->
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')">
+                    <div class="panel-title" style="margin-bottom:0">A. Capital Stocks and Welfare Over Time</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="graph-body" id="body-graph">
+                    <div class="plot-actions">
+                        <a id="embed-open-btn" class="embed-open-btn" target="_blank">↗ Open</a>
+                        <button class="plot-action-btn" id="copy-plot-btn" title="Copy plot to clipboard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            <span id="copy-label">Copy</span>
+                        </button>
+                        <button class="plot-action-btn" id="save-plot-btn" title="Save plot as PNG">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span id="save-label">Save</span>
+                        </button>
+                    </div>
+                    <canvas id="graph-capital" width="1200" height="600"></canvas>
+                </div>
+            </div>
+
+            <!-- Graph B: Welfare / IW Components -->
+            <div class="graph-container" id="section-graph2" style="margin-top:20px;">
+                <div class="graph-header" onclick="toggleSection('graph2')">
+                    <div class="panel-title" style="margin-bottom:0">B. Utility and Inclusive Wealth Over Time</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph2" onclick="event.stopPropagation();toggleSection('graph2')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph2')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="graph-body" id="body-graph2">
+                    <canvas id="graph-welfare" width="1200" height="600"></canvas>
+                </div>
+            </div>
+
+            <!-- Explanation Section -->
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">Explanation</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-explanation">
+                    <p><strong>Inclusive Wealth</strong> measures the sum of all capital stocks — produced capital \( K_p \), human capital \( K_h \), and natural capital \( K_n \). Society's present value of wellbeing is \( V_t = \sum_{s=t}^{\infty} \beta^s u(c_s) \), where \( \beta \) is the discount factor and \( u(c_s) \) is per-period utility from consumption.</p>
+                    <p><strong>Production</strong> follows \( K_{t+1} = F(K_t) - C_t - DK_t \), where \( F(K_t) \) is output, \( C_t \) is consumption, and \( D \) is the depreciation rate. If you consume too much, savings won't replace lost capital — your welfare will fall over time.</p>
+                    <p><strong>Sustainability</strong> requires \( \frac{dV}{dt} \geq 0 \): non-declining human wellbeing. Under <em>weak sustainability</em>, the total inclusive wealth \( IW = K_p + K_h + K_n \) must be non-declining, allowing substitution between capital types. Under <em>strong sustainability</em>, natural capital itself must be non-declining: \( \frac{dK_n}{dt} \geq 0 \).</p>
+                    <p>Use the sliders to explore how consumption choices, depreciation, and capital composition affect sustainability outcomes.</p>
+                </div>
+            </div>
+
+            <!-- Formal Problem -->
+            <div class="left-section" id="section-formal">
+                <div class="left-section-header" onclick="toggleSection('formal')">
+                    <div class="panel-title" style="margin-bottom:0">The Sustainability Problem</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-formal" onclick="event.stopPropagation();toggleSection('formal')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('formal')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-formal">
+                    <div class="formal-math">
+                        \[ V_t = \sum_{s=t}^{\infty} \beta^s \, u(c_s) \]
+                        \[ K_{t+1} = F(K_t) - C_t - D \cdot K_t \]
+                        \[ \text{Sustainability:} \quad \frac{dV}{dt} \geq 0 \]
+                    </div>
+                    <div class="formal-solution-label">Weak Sustainability</div>
+                    <div class="formal-solution">
+                        \( \frac{d}{dt}(K_p + K_h + K_n) \geq 0 \quad \Longleftrightarrow \quad \frac{dIW}{dt} \geq 0 \)
+                    </div>
+                    <div style="height:12px"></div>
+                    <div class="formal-solution-label">Strong Sustainability</div>
+                    <div class="formal-solution">
+                        \( \frac{dK_n}{dt} \geq 0 \qquad \text{(natural capital must be maintained directly)} \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Substitutability section -->
+            <div class="left-section" id="section-substitutability">
+                <div class="left-section-header" onclick="toggleSection('substitutability')">
+                    <div class="panel-title" style="margin-bottom:0">Substitutability</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-substitutability" onclick="event.stopPropagation();toggleSection('substitutability')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('substitutability')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-substitutability">
+                    <p>A key question is whether different types of capital can substitute for one another. As an economy develops, capital composition changes — produced (manufactured) capital tends to grow while natural capital may decline.</p>
+                    <div class="sub-highlight weak">
+                        <div class="tangency-title">Weak Sustainability</div>
+                        <div class="tangency-eq">\( \frac{dIW}{dt} \geq 0 \)</div>
+                        <div class="tangency-eq-sub">Total wealth can grow even if natural capital declines, as long as other capital compensates.</div>
+                    </div>
+                    <div class="sub-highlight strong" style="margin-top:10px;">
+                        <div class="tangency-title" style="color:#dd6b20;">Strong Sustainability</div>
+                        <div class="tangency-eq">\( \frac{dK_n^{critical}}{dt} \geq 0 \)</div>
+                        <div class="tangency-eq-sub">Critical natural capital must be maintained directly — no substitution allowed for essentials like clean air, water, and biodiversity.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column: Controls -->
+        <div class="controls">
+            <!-- Scenario presets -->
+            <div class="control-panel" id="section-scenarios">
+                <div class="control-panel-header" onclick="togglePanel('scenarios')">
+                    <div class="panel-title" style="margin-bottom:0">Scenarios</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-scenarios" onclick="event.stopPropagation();togglePanel('scenarios')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('scenarios')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-scenarios">
+                    <div class="scenario-btns">
+                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Sustainable</button>
+                        <button class="scenario-btn" id="btn-unsustainable" onclick="setScenario('unsustainable')">⚠ Unsustainable</button>
+                    </div>
+                    <div class="scenario-btns">
+                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Only</button>
+                        <button class="scenario-btn" id="btn-custom" onclick="setScenario('custom')">Custom</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Parameters -->
+            <div class="control-panel" id="section-production">
+                <div class="control-panel-header" onclick="togglePanel('production')">
+                    <div class="panel-title" style="margin-bottom:0">Production & Consumption</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-production" onclick="event.stopPropagation();togglePanel('production')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('production')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-production">
+                    <div class="slider-group"><div class="slider-label"><span>Consumption rate \( C/Y \)</span><span class="slider-value" id="cons-value">0.70</span></div><input type="range" id="consumption-rate" min="0" max="0.99" value="0.70" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Depreciation \( D \)</span><span class="slider-value" id="dep-value">0.05</span></div><input type="range" id="depreciation" min="0.01" max="0.20" value="0.05" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>TFP \( A \)</span><span class="slider-value" id="tfp-value">1.50</span></div><input type="range" id="tfp" min="0.5" max="3.0" value="1.5" step="0.1"></div>
+                    <div class="equation-box">\( K_{t+1} = F(K_t) - C_t - D \cdot K_t \)</div>
+                </div>
+            </div>
+
+            <!-- Capital Stocks -->
+            <div class="control-panel" id="section-capital">
+                <div class="control-panel-header" onclick="togglePanel('capital')">
+                    <div class="panel-title" style="margin-bottom:0">Initial Capital Stocks</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-capital" onclick="event.stopPropagation();togglePanel('capital')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('capital')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-capital">
+                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
+                    <div class="equation-box">\( IW = K_p + K_h + K_n \)</div>
+                </div>
+            </div>
+
+            <!-- Discount & Welfare -->
+            <div class="control-panel" id="section-welfare">
+                <div class="control-panel-header" onclick="togglePanel('welfare')">
+                    <div class="panel-title" style="margin-bottom:0">Welfare & Discount</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-welfare" onclick="event.stopPropagation();togglePanel('welfare')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('welfare')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-welfare">
+                    <div class="slider-group"><div class="slider-label"><span>Discount factor \( \beta \)</span><span class="slider-value" id="beta-value">0.95</span></div><input type="range" id="beta" min="0.80" max="0.99" value="0.95" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Output elasticity \( \alpha \)</span><span class="slider-value" id="alpha-value">0.35</span></div><input type="range" id="alpha" min="0.1" max="0.6" value="0.35" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Periods \( T \)</span><span class="slider-value" id="periods-value">20</span></div><input type="range" id="periods" min="5" max="40" value="20" step="1"></div>
+                    <div class="equation-box">\( V_t = \sum_{s=t}^{\infty} \beta^s \, u(c_s) \)</div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="control-panel" id="section-results">
+                <div class="control-panel-header" onclick="togglePanel('results')">
+                    <div class="panel-title" style="margin-bottom:0">Sustainability Assessment</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-results" onclick="event.stopPropagation();togglePanel('results')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('results')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-results">
+                    <div class="info-box">
+                        <div class="info-row"><span class="info-label">Initial \( IW_0 \)</span><span class="info-value highlight" id="iw0">100.0</span></div>
+                        <div class="info-row"><span class="info-label">Final \( IW_T \)</span><span class="info-value highlight" id="iwT">100.0</span></div>
+                        <div class="info-row"><span class="info-label">\( \Delta IW \)</span><span class="info-value" id="diw">0.0</span></div>
+                        <div class="info-row"><span class="info-label">\( \Delta K_n \)</span><span class="info-value" id="dkn">0.0</span></div>
+                        <div class="info-row"><span class="info-label">Weak sust.?</span><span class="info-value" id="weak-sus">—</span></div>
+                        <div class="info-row"><span class="info-label">Strong sust.?</span><span class="info-value" id="strong-sus">—</span></div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-line" style="background:#4299e1;"></div><span>Produced capital \( K_p \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#805ad5;"></div><span>Human capital \( K_h \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#dd6b20;"></div><span>Natural capital \( K_n \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#2d3748; height:2px;"></div><span>Inclusive Wealth \( IW \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#38a169;"></div><span>Per-period utility \( u(c_t) \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:rgba(56,161,105,0.3);"></div><span>Discounted utility \( \beta^t u(c_t) \)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Display Options</div>
+
+            <div class="opt-section-label">Graph A — Capital</div>
+            <div class="opt-row"><input type="checkbox" id="show-kp" checked><label for="show-kp">Produced capital \( K_p \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-kh" checked><label for="show-kh">Human capital \( K_h \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-kn" checked><label for="show-kn">Natural capital \( K_n \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-iw" checked><label for="show-iw">Inclusive Wealth \( IW \)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+
+            <div class="opt-section-label">Graph B — Welfare</div>
+            <div class="opt-row"><input type="checkbox" id="show-utility" checked><label for="show-utility">Per-period utility</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-discounted" checked><label for="show-discounted">Discounted utility</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-consumption" checked><label for="show-consumption">Consumption path</label></div>
+
+            <div class="restore-bar" id="restore-bar"></div>
+
+            <div class="url-state-bar">
+                <button id="copy-url-btn" title="Copy a URL with current state">📋 Copy link</button>
+                <button id="reset-url-btn" title="Reset to defaults">↺ Reset</button>
+                <span class="url-hint">Link encodes all slider values and display options</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ─── Embed mode ───
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('embed')) {
+        document.body.classList.add('embed-mode');
+        const hide = params.get('hide');
+        if (hide) hide.split(',').forEach(s => document.body.classList.add('embed-hide-' + s.trim()));
+    }
+})();
+
+function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [{left: "\\[", right: "\\]", display: true},{left: "\\(", right: "\\)", display: false}],
+            throwOnError: false
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", renderAllMath);
+window.addEventListener('load', renderAllMath);
+
+// ─── Panel management ───
+function toggleSection(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    if (!body) return;
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
+function togglePanel(name) { toggleSection(name); }
+
+const PANEL_NAMES = {
+    title: 'Title', subtitle: 'Subtitle',
+    graph: 'Capital Stocks', graph2: 'Welfare',
+    explanation: 'Explanation', formal: 'Sustainability Problem',
+    substitutability: 'Substitutability',
+    scenarios: 'Scenarios', production: 'Production',
+    capital: 'Capital Stocks', welfare: 'Welfare & Discount', results: 'Assessment'
+};
+const LEFT_PANELS = ['graph', 'graph2', 'explanation', 'formal', 'substitutability'];
+const RIGHT_PANELS = ['scenarios', 'production', 'capital', 'welfare', 'results'];
+
+function closePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.add('panel-closed');
+    updateRestoreBar();
+}
+function restorePanel(name) {
+    const el = document.getElementById('section-' + name);
+    if (el) el.classList.remove('panel-closed');
+    updateRestoreBar();
+}
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n =>
+        document.getElementById('section-' + n)?.classList.contains('panel-closed')
+    );
+    if (closed.length === 0) { bar.innerHTML = ''; return; }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' +
+        closed.map(n => `<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');
+}
+
+// ─── Canvas setup ───
+const canvasA = document.getElementById('graph-capital');
+const ctxA = canvasA.getContext('2d');
+const canvasB = document.getElementById('graph-welfare');
+const ctxB = canvasB.getContext('2d');
+const DPR = 2;
+
+// Sliders
+const consSlider = document.getElementById('consumption-rate');
+const depSlider = document.getElementById('depreciation');
+const tfpSlider = document.getElementById('tfp');
+const kpSlider = document.getElementById('kp');
+const khSlider = document.getElementById('kh');
+const knSlider = document.getElementById('kn');
+const betaSlider = document.getElementById('beta');
+const alphaSlider = document.getElementById('alpha');
+const periodsSlider = document.getElementById('periods');
+
+const allSliders = [consSlider, depSlider, tfpSlider, kpSlider, khSlider, knSlider, betaSlider, alphaSlider, periodsSlider];
+
+function isVis(id) { const e = document.getElementById(id); return e ? e.checked : true; }
+
+// ─── Scenarios ───
+function setScenario(name) {
+    document.querySelectorAll('.scenario-btn').forEach(b => { b.classList.remove('active', 'active-unsustainable'); });
+    const btn = document.getElementById('btn-' + name);
+    if (name === 'unsustainable') {
+        btn.classList.add('active-unsustainable');
+    } else {
+        btn.classList.add('active');
+    }
+    if (name === 'sustainable') {
+        // Low consumption, low depreciation, high TFP => all capitals grow (strong sustainability)
+        consSlider.value = 0.45; depSlider.value = 0.02; tfpSlider.value = 2.5;
+        kpSlider.value = 30; khSlider.value = 30; knSlider.value = 40;
+        betaSlider.value = 0.95; alphaSlider.value = 0.35; periodsSlider.value = 20;
+    } else if (name === 'unsustainable') {
+        // High consumption, high depreciation => everything declines
+        consSlider.value = 0.90; depSlider.value = 0.08; tfpSlider.value = 1.2;
+        kpSlider.value = 25; khSlider.value = 25; knSlider.value = 50;
+        betaSlider.value = 0.95; alphaSlider.value = 0.35; periodsSlider.value = 20;
+    } else if (name === 'weak') {
+        // IW grows overall but Kn declines — weak sustainable, not strong
+        consSlider.value = 0.55; depSlider.value = 0.04; tfpSlider.value = 2.0;
+        kpSlider.value = 40; khSlider.value = 35; knSlider.value = 25;
+        betaSlider.value = 0.95; alphaSlider.value = 0.35; periodsSlider.value = 20;
+    } else if (name === 'custom') {
+        // Keep current values
+    }
+    update();
+}
+
+// ─── Simulation ───
+function simulate() {
+    const consRate = parseFloat(consSlider.value);
+    const dep = parseFloat(depSlider.value);
+    const A = parseFloat(tfpSlider.value);
+    let Kp = parseFloat(kpSlider.value);
+    let Kh = parseFloat(khSlider.value);
+    let Kn = parseFloat(knSlider.value);
+    const beta = parseFloat(betaSlider.value);
+    const alpha = parseFloat(alphaSlider.value);
+    const T = parseInt(periodsSlider.value);
+
+    const data = [];
+
+    for (let t = 0; t <= T; t++) {
+        const K = Kp + Kh + Kn; // Total capital for production
+        // Production function: Y = A * K^alpha
+        const Y = A * Math.pow(K, alpha);
+        const C = consRate * Y;
+        const S = Y - C; // Savings = investment
+        const u = Math.log(Math.max(C, 0.01) + 1); // Utility from consumption (log utility)
+        const discU = Math.pow(beta, t) * u;
+
+        data.push({ t, Kp, Kh, Kn, IW: Kp + Kh + Kn, Y, C, S, u, discU });
+
+        if (t < T) {
+            // Investment allocation: savings split across capital types
+            // Societies tend to invest more in produced/human capital, less in natural
+            const investP = S * 0.50;
+            const investH = S * 0.30;
+            const investN = S * 0.20;
+
+            // Each capital type: K_{t+1} = K_t + Investment_t - Depreciation_t
+            // Natural capital depreciates slightly faster, human slightly slower
+            Kp = Math.max(0.1, Kp + investP - dep * Kp);
+            Kh = Math.max(0.1, Kh + investH - dep * 0.7 * Kh);
+            Kn = Math.max(0.1, Kn + investN - dep * 1.2 * Kn);
+        }
+    }
+    return data;
+}
+
+// ─── Drawing helpers ───
+function drawGraphOnCanvas(canvas, ctx, data, drawFn) {
+    const S = DPR;
+    const W = canvas.width, H = canvas.height;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+
+    const margin = { top: 60 * S / DPR, right: 60 * S / DPR, bottom: 80 * S / DPR, left: 100 * S / DPR };
+    // Scale margins by DPR
+    const ml = margin.left * DPR, mt = margin.top * DPR, mr = margin.right * DPR, mb = margin.bottom * DPR;
+    const gw = W - ml - mr, gh = H - mt - mb;
+
+    drawFn(ctx, data, ml, mt, gw, gh, W, H, S);
+}
+
+function drawCapitalGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
+    const T = data.length - 1;
+
+    // Find max Y value
+    let maxVal = 0;
+    for (const d of data) {
+        maxVal = Math.max(maxVal, d.IW, d.Kp, d.Kh, d.Kn);
+    }
+    maxVal = Math.ceil(maxVal / 20) * 20 + 20;
+
+    function tX(t) { return ml + (t / T) * gw; }
+    function tY(v) { return mt + gh - (v / maxVal) * gh; }
+
+    // Grid
+    if (isVis('show-gridlines')) {
+        ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = S;
+        for (let i = 0; i <= 5; i++) {
+            const y = mt + (i / 5) * gh;
+            ctx.beginPath(); ctx.moveTo(ml, y); ctx.lineTo(ml + gw, y); ctx.stroke();
+        }
+        for (let t = 0; t <= T; t++) {
+            if (t % Math.max(1, Math.round(T / 10)) === 0) {
+                const x = tX(t);
+                ctx.beginPath(); ctx.moveTo(x, mt); ctx.lineTo(x, mt + gh); ctx.stroke();
+            }
+        }
+    }
+
+    // Axes
+    ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 2 * S;
+    ctx.beginPath(); ctx.moveTo(ml, mt); ctx.lineTo(ml, mt + gh); ctx.lineTo(ml + gw, mt + gh); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = '#718096'; ctx.font = `${12 * S}px Segoe UI`; ctx.textAlign = 'center';
+    for (let t = 0; t <= T; t++) {
+        if (t % Math.max(1, Math.round(T / 10)) === 0) {
+            ctx.fillText(`t=${t}`, tX(t), mt + gh + 24 * S);
+        }
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) {
+        const v = (maxVal * (5 - i) / 5);
+        ctx.fillText(v.toFixed(0), ml - 10 * S, mt + (i / 5) * gh + 5 * S);
+    }
+
+    // Axis labels
+    ctx.fillStyle = '#4a5568'; ctx.font = `italic ${14 * S}px Georgia, serif`; ctx.textAlign = 'center';
+    ctx.fillText('Period (t)', ml + gw / 2, H - 12 * S);
+    ctx.save();
+    ctx.translate(18 * S, mt + gh / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Capital Stock', 0, 0);
+    ctx.restore();
+
+    // Draw lines
+    function drawLine(key, color, visible) {
+        if (!visible) return;
+        ctx.strokeStyle = color; ctx.lineWidth = 3 * S;
+        ctx.beginPath();
+        let started = false;
+        for (const d of data) {
+            const x = tX(d.t), y = tY(d[key]);
+            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    drawLine('Kp', '#4299e1', isVis('show-kp'));
+    drawLine('Kh', '#805ad5', isVis('show-kh'));
+    drawLine('Kn', '#dd6b20', isVis('show-kn'));
+
+    // IW as thicker dashed line
+    if (isVis('show-iw')) {
+        ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3 * S;
+        ctx.setLineDash([8 * S, 4 * S]);
+        ctx.beginPath();
+        let started = false;
+        for (const d of data) {
+            const x = tX(d.t), y = tY(d.IW);
+            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Initial IW reference line
+    if (isVis('show-iw')) {
+        const iw0 = data[0].IW;
+        ctx.strokeStyle = 'rgba(45,55,72,0.2)'; ctx.lineWidth = 1.5 * S;
+        ctx.setLineDash([4 * S, 4 * S]);
+        ctx.beginPath(); ctx.moveTo(ml, tY(iw0)); ctx.lineTo(ml + gw, tY(iw0)); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(45,55,72,0.4)'; ctx.font = `${11 * S}px Segoe UI`;
+        ctx.textAlign = 'left';
+        ctx.fillText(`IW₀ = ${iw0.toFixed(0)}`, ml + gw + 6 * S, tY(iw0) + 4 * S);
+    }
+
+    // Dots at endpoints
+    function drawDot(t, val, color, visible) {
+        if (!visible) return;
+        const x = tX(t), y = tY(val);
+        ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 5 * S, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * S; ctx.stroke();
+    }
+
+    const last = data[data.length - 1];
+    drawDot(T, last.Kp, '#4299e1', isVis('show-kp'));
+    drawDot(T, last.Kh, '#805ad5', isVis('show-kh'));
+    drawDot(T, last.Kn, '#dd6b20', isVis('show-kn'));
+    drawDot(0, data[0].Kp, '#4299e1', isVis('show-kp'));
+    drawDot(0, data[0].Kh, '#805ad5', isVis('show-kh'));
+    drawDot(0, data[0].Kn, '#dd6b20', isVis('show-kn'));
+
+    // End labels
+    ctx.font = `bold ${11 * S}px Segoe UI`; ctx.textAlign = 'left';
+    if (isVis('show-kp')) { ctx.fillStyle = '#4299e1'; ctx.fillText(`Kp=${last.Kp.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kp) + 4 * S); }
+    if (isVis('show-kh')) { ctx.fillStyle = '#805ad5'; ctx.fillText(`Kh=${last.Kh.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kh) + 4 * S); }
+    if (isVis('show-kn')) { ctx.fillStyle = '#dd6b20'; ctx.fillText(`Kn=${last.Kn.toFixed(1)}`, tX(T) + 10 * S, tY(last.Kn) + 4 * S); }
+}
+
+function drawWelfareGraph(ctx, data, ml, mt, gw, gh, W, H, S) {
+    const T = data.length - 1;
+
+    let maxVal = 0;
+    for (const d of data) {
+        maxVal = Math.max(maxVal, d.u, d.C);
+    }
+    maxVal = Math.ceil(maxVal * 1.1);
+    if (maxVal <= 0) maxVal = 1;
+
+    function tX(t) { return ml + (t / T) * gw; }
+    function tY(v) { return mt + gh - (v / maxVal) * gh; }
+
+    // Grid
+    if (isVis('show-gridlines')) {
+        ctx.strokeStyle = '#edf2f7'; ctx.lineWidth = S;
+        for (let i = 0; i <= 5; i++) {
+            const y = mt + (i / 5) * gh;
+            ctx.beginPath(); ctx.moveTo(ml, y); ctx.lineTo(ml + gw, y); ctx.stroke();
+        }
+    }
+
+    // Axes
+    ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 2 * S;
+    ctx.beginPath(); ctx.moveTo(ml, mt); ctx.lineTo(ml, mt + gh); ctx.lineTo(ml + gw, mt + gh); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = '#718096'; ctx.font = `${12 * S}px Segoe UI`; ctx.textAlign = 'center';
+    for (let t = 0; t <= T; t++) {
+        if (t % Math.max(1, Math.round(T / 10)) === 0) {
+            ctx.fillText(`t=${t}`, tX(t), mt + gh + 24 * S);
+        }
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) {
+        const v = (maxVal * (5 - i) / 5);
+        ctx.fillText(v.toFixed(1), ml - 10 * S, mt + (i / 5) * gh + 5 * S);
+    }
+
+    // Axis labels
+    ctx.fillStyle = '#4a5568'; ctx.font = `italic ${14 * S}px Georgia, serif`; ctx.textAlign = 'center';
+    ctx.fillText('Period (t)', ml + gw / 2, H - 12 * S);
+    ctx.save();
+    ctx.translate(18 * S, mt + gh / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Value', 0, 0);
+    ctx.restore();
+
+    // Discounted utility as filled area
+    if (isVis('show-discounted')) {
+        ctx.fillStyle = 'rgba(56,161,105,0.15)';
+        ctx.beginPath();
+        ctx.moveTo(tX(0), tY(0));
+        for (const d of data) ctx.lineTo(tX(d.t), tY(d.discU));
+        ctx.lineTo(tX(T), tY(0));
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(56,161,105,0.4)'; ctx.lineWidth = 2 * S;
+        ctx.beginPath();
+        let started = false;
+        for (const d of data) {
+            const x = tX(d.t), y = tY(d.discU);
+            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Per-period utility
+    if (isVis('show-utility')) {
+        ctx.strokeStyle = '#38a169'; ctx.lineWidth = 3 * S;
+        ctx.beginPath();
+        let started = false;
+        for (const d of data) {
+            const x = tX(d.t), y = tY(d.u);
+            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Consumption path
+    if (isVis('show-consumption')) {
+        ctx.strokeStyle = '#e53e3e'; ctx.lineWidth = 2 * S;
+        ctx.setLineDash([6 * S, 3 * S]);
+        ctx.beginPath();
+        let started = false;
+        for (const d of data) {
+            const x = tX(d.t), y = tY(d.C);
+            if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Labels at end
+    const last = data[data.length - 1];
+    ctx.font = `bold ${11 * S}px Segoe UI`; ctx.textAlign = 'left';
+    if (isVis('show-utility')) { ctx.fillStyle = '#38a169'; ctx.fillText(`u=${last.u.toFixed(2)}`, tX(T) + 10 * S, tY(last.u) + 4 * S); }
+    if (isVis('show-consumption')) { ctx.fillStyle = '#e53e3e'; ctx.fillText(`C=${last.C.toFixed(1)}`, tX(T) + 10 * S, tY(last.C) + 4 * S); }
+
+    // Reference line at initial utility
+    if (isVis('show-utility')) {
+        const u0 = data[0].u;
+        ctx.strokeStyle = 'rgba(56,161,105,0.25)'; ctx.lineWidth = 1.5 * S;
+        ctx.setLineDash([4 * S, 4 * S]);
+        ctx.beginPath(); ctx.moveTo(ml, tY(u0)); ctx.lineTo(ml + gw, tY(u0)); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(56,161,105,0.5)'; ctx.font = `${11 * S}px Segoe UI`;
+        ctx.textAlign = 'left';
+        ctx.fillText(`u₀ = ${u0.toFixed(2)}`, ml + gw + 6 * S, tY(u0) + 4 * S);
+    }
+}
+
+// ─── Update function ───
+function update() {
+    // Update display values
+    document.getElementById('cons-value').textContent = parseFloat(consSlider.value).toFixed(2);
+    document.getElementById('dep-value').textContent = parseFloat(depSlider.value).toFixed(2);
+    document.getElementById('tfp-value').textContent = parseFloat(tfpSlider.value).toFixed(1);
+    document.getElementById('kp-value').textContent = parseInt(kpSlider.value);
+    document.getElementById('kh-value').textContent = parseInt(khSlider.value);
+    document.getElementById('kn-value').textContent = parseInt(knSlider.value);
+    document.getElementById('beta-value').textContent = parseFloat(betaSlider.value).toFixed(2);
+    document.getElementById('alpha-value').textContent = parseFloat(alphaSlider.value).toFixed(2);
+    document.getElementById('periods-value').textContent = parseInt(periodsSlider.value);
+
+    const data = simulate();
+
+    // Update results
+    const first = data[0], last = data[data.length - 1];
+    const dIW = last.IW - first.IW;
+    const dKn = last.Kn - first.Kn;
+    const weakSus = dIW >= -0.5;
+    const strongSus = dKn >= -0.5;
+
+    document.getElementById('iw0').textContent = first.IW.toFixed(1);
+    document.getElementById('iwT').textContent = last.IW.toFixed(1);
+
+    const diwEl = document.getElementById('diw');
+    diwEl.textContent = (dIW >= 0 ? '+' : '') + dIW.toFixed(1);
+    diwEl.className = 'info-value ' + (dIW >= -0.5 ? 'sustainable' : 'unsustainable');
+
+    const dknEl = document.getElementById('dkn');
+    dknEl.textContent = (dKn >= 0 ? '+' : '') + dKn.toFixed(1);
+    dknEl.className = 'info-value ' + (dKn >= -0.5 ? 'sustainable' : 'unsustainable');
+
+    const weakEl = document.getElementById('weak-sus');
+    weakEl.textContent = weakSus ? '✓ Yes' : '✗ No';
+    weakEl.className = 'info-value ' + (weakSus ? 'sustainable' : 'unsustainable');
+
+    const strongEl = document.getElementById('strong-sus');
+    strongEl.textContent = strongSus ? '✓ Yes' : '✗ No';
+    strongEl.className = 'info-value ' + (strongSus ? 'sustainable' : 'unsustainable');
+
+    // Draw graphs
+    drawGraphOnCanvas(canvasA, ctxA, data, drawCapitalGraph);
+    drawGraphOnCanvas(canvasB, ctxB, data, drawWelfareGraph);
+}
+
+// Wire up sliders
+allSliders.forEach(s => s.addEventListener('input', () => {
+    // Deactivate scenario buttons on manual change
+    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active', 'active-unsustainable'));
+    document.getElementById('btn-custom').classList.add('active');
+    update();
+}));
+
+// Display options
+document.querySelectorAll('.display-options-panel input').forEach(i => {
+    i.addEventListener('input', update);
+    i.addEventListener('change', update);
+});
+
+document.getElementById('display-toggle-btn').addEventListener('click', () => {
+    const p = document.getElementById('display-panel'), a = document.getElementById('display-arrow');
+    const o = p.classList.toggle('open'); a.classList.toggle('open', o);
+});
+
+// Copy plot
+document.getElementById('copy-plot-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-plot-btn');
+    const label = document.getElementById('copy-label');
+    try {
+        const blob = await new Promise(resolve => canvasA.toBlob(resolve, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        btn.classList.add('copied'); label.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Copy'; }, 1500);
+    } catch (err) {
+        label.textContent = 'Failed';
+        setTimeout(() => { label.textContent = 'Copy'; }, 1500);
+    }
+});
+
+document.getElementById('save-plot-btn').addEventListener('click', () => {
+    const btn = document.getElementById('save-plot-btn');
+    const label = document.getElementById('save-label');
+    const url = canvasA.toDataURL('image/png');
+    const a = document.createElement('a'); a.href = url; a.download = 'inclusive_wealth.png'; a.click();
+    btn.classList.add('copied'); label.textContent = 'Saved!';
+    setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Save'; }, 1500);
+});
+
+// URL state
+document.getElementById('copy-url-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-url-btn');
+    const params = new URLSearchParams();
+    params.set('c', consSlider.value); params.set('d', depSlider.value); params.set('a', tfpSlider.value);
+    params.set('kp', kpSlider.value); params.set('kh', khSlider.value); params.set('kn', knSlider.value);
+    params.set('b', betaSlider.value); params.set('al', alphaSlider.value); params.set('t', periodsSlider.value);
+    const url = window.location.origin + window.location.pathname + '#' + params.toString();
+    try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 Copy link'; btn.classList.remove('copied'); }, 2000);
+    } catch { prompt('Copy:', url); }
+});
+
+document.getElementById('reset-url-btn').addEventListener('click', () => {
+    setScenario('sustainable');
+    history.replaceState(null, '', window.location.pathname);
+});
+
+// Load from hash
+function loadFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const p = new URLSearchParams(hash);
+    if (p.has('c')) consSlider.value = p.get('c');
+    if (p.has('d')) depSlider.value = p.get('d');
+    if (p.has('a')) tfpSlider.value = p.get('a');
+    if (p.has('kp')) kpSlider.value = p.get('kp');
+    if (p.has('kh')) khSlider.value = p.get('kh');
+    if (p.has('kn')) knSlider.value = p.get('kn');
+    if (p.has('b')) betaSlider.value = p.get('b');
+    if (p.has('al')) alphaSlider.value = p.get('al');
+    if (p.has('t')) periodsSlider.value = p.get('t');
+}
+
+// Initialize
+loadFromHash();
+update();
+</script>
+</body>
+</html>

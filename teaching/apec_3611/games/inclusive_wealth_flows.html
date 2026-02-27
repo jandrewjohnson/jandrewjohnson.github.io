@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Flow &amp; Capital Dynamics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1260px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 24px; font-size: 0.95rem; }
+        .main-content { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+        @media (max-width: 960px) { .main-content { grid-template-columns: 1fr; } }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
+        canvas { display: block; width: 100%; height: auto; cursor: default; }
+        .plot-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
+        }
+        .graph-container:hover .plot-actions, .graph-body:hover .plot-actions { opacity: 1; }
+        .plot-action-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1;
+        }
+        .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
+        .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1;
+        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1; flex-shrink: 0;
+        }
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
+        }
+        .left-section { position: relative; margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+        .control-panel { position: relative; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 20px 20px 20px; }
+        .control-panel-body.collapsed { display: none; }
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 4px 10px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.85rem; color: #2b6cb0; font-weight: 500; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .info-box { background: #f7fafc; border-radius: 8px; padding: 16px; border-left: 3px solid #4299e1; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.9rem; }
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco','Consolas',monospace; color: #1a202c; }
+        .info-value.highlight { color: #2b6cb0; font-weight: 600; }
+        .info-value.pos { color: #38a169; font-weight: 600; }
+        .info-value.neg { color: #e53e3e; font-weight: 600; }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; font-size: 1.05rem; }
+        .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #4a5568; }
+        .legend-line { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .legend-rect { width: 16px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+        .formal-math { margin: 8px 0 18px 0; text-align: center; font-size: 1.15rem; line-height: 2.2; }
+        .formal-solution { padding: 12px 16px; background: #f7fafc; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; font-size: 1rem; line-height: 2; }
+        .formal-solution-label { color: #718096; font-size: 0.85rem; margin-bottom: 4px; }
+        .scenario-btns { display: flex; gap: 6px; margin-bottom: 16px; }
+        .scenario-btn {
+            flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;
+            background: #fff; cursor: pointer; text-align: center;
+            font-size: 0.82rem; color: #718096; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.2s;
+        }
+        .scenario-btn:hover { border-color: #cbd5e0; background: #f7fafc; }
+        .scenario-btn.active { background: #ebf8ff; border-color: #90cdf4; color: #2b6cb0; font-weight: 600; }
+        .scenario-btn.active-bad { background: #fff5f5; border-color: #feb2b2; color: #c53030; font-weight: 600; }
+
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+        .panel-closed { display: none !important; }
+
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
+
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+
+        .url-state-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .url-state-bar button { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; white-space: nowrap; }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
+
+        .katex { font-size: 1em; }
+        .info-row .katex { font-size: 0.95em; }
+        .slider-label .katex { font-size: 0.95em; }
+        .equation-box .katex { font-size: 1.1em; }
+        .formal-math .katex-display { margin: 0.4em 0; }
+        .formal-solution .katex { font-size: 1.05em; }
+        .legend-item .katex { font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="section-title" class="title-wrapper" style="position:relative">
+        <h1>Production Flow &amp; Capital Dynamics</h1>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle" style="margin-bottom:24px">How the allocation between consumption \( C_t \) and savings \( S_t \) determines whether capital stocks grow or shrink</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-column">
+            <!-- Main flow diagram -->
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')">
+                    <div class="panel-title" style="margin-bottom:0">A. Production Allocation and Capital Stocks Over 4 Periods</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="graph-body" id="body-graph">
+                    <div class="plot-actions">
+                        <button class="plot-action-btn" id="copy-plot-btn" title="Copy plot to clipboard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            <span id="copy-label">Copy</span>
+                        </button>
+                        <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span id="save-label">Save</span>
+                        </button>
+                    </div>
+                    <canvas id="canvas-flow" width="1800" height="900"></canvas>
+                </div>
+            </div>
+
+            <!-- Utility and welfare bar chart -->
+            <div class="graph-container" id="section-graph2" style="margin-top:20px;">
+                <div class="graph-header" onclick="toggleSection('graph2')">
+                    <div class="panel-title" style="margin-bottom:0">B. Utility in Each Period</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph2" onclick="event.stopPropagation();toggleSection('graph2')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph2')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="graph-body" id="body-graph2">
+                    <canvas id="canvas-utility" width="1800" height="500"></canvas>
+                </div>
+            </div>
+
+            <!-- Explanation -->
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">Explanation</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-explanation">
+                    <p>In each period, the total capital stock \( K_t \) (composed of produced capital \( K_p \), human capital \( K_h \), and natural capital \( K_n \)) generates output \( W_t = A \cdot K_t^\alpha \) via the production function. This output is then split into <strong>consumption</strong> \( C_t \) and <strong>savings</strong> \( S_t = W_t - C_t \).</p>
+                    <p>The <strong>savings arrow</strong> flows back into the capital stock for the next period. If savings are large enough to offset depreciation, capital grows and future output expands. If consumption is too high, savings are insufficient, capital shrinks, and the economy contracts over time.</p>
+                    <p>Notice how capital <strong>composition</strong> changes: with typical investment patterns, produced (blue) and human (purple) capital tend to grow while natural (orange) capital declines — reflecting the substitutability question central to sustainability economics.</p>
+                </div>
+            </div>
+
+            <!-- Formal -->
+            <div class="left-section" id="section-formal">
+                <div class="left-section-header" onclick="toggleSection('formal')">
+                    <div class="panel-title" style="margin-bottom:0">The Production–Accumulation System</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-formal" onclick="event.stopPropagation();toggleSection('formal')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('formal')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-formal">
+                    <div class="formal-math">
+                        \[ W_t = A \cdot K_t^\alpha \]
+                        \[ C_t = \frac{C}{Y} \cdot W_t, \qquad S_t = W_t - C_t \]
+                        \[ K_{t+1} = K_t + S_t - D \cdot K_t = F(K_t) - C_t - D \cdot K_t \]
+                    </div>
+                    <div class="formal-solution-label">Sustainability Condition</div>
+                    <div class="formal-solution">
+                        \( \text{If } S_t > D \cdot K_t \text{ then } K_{t+1} > K_t \text{ — capital grows} \)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column: controls -->
+        <div class="controls">
+            <div class="control-panel" id="section-scenarios">
+                <div class="control-panel-header" onclick="togglePanel('scenarios')">
+                    <div class="panel-title" style="margin-bottom:0">Scenarios</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-scenarios" onclick="event.stopPropagation();togglePanel('scenarios')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('scenarios')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-scenarios">
+                    <div class="scenario-btns">
+                        <button class="scenario-btn active" id="btn-sustainable" onclick="setScenario('sustainable')">🌿 Sustainable</button>
+                        <button class="scenario-btn" id="btn-unsustainable" onclick="setScenario('unsustainable')">⚠ Unsustainable</button>
+                    </div>
+                    <div class="scenario-btns">
+                        <button class="scenario-btn" id="btn-weak" onclick="setScenario('weak')">Weak Only</button>
+                        <button class="scenario-btn" id="btn-custom" onclick="setScenario('custom')">Custom</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-production">
+                <div class="control-panel-header" onclick="togglePanel('production')">
+                    <div class="panel-title" style="margin-bottom:0">Production &amp; Consumption</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-production" onclick="event.stopPropagation();togglePanel('production')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('production')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-production">
+                    <div class="slider-group"><div class="slider-label"><span>Consumption rate \( C/Y \)</span><span class="slider-value" id="cons-value">0.45</span></div><input type="range" id="consumption-rate" min="0" max="0.99" value="0.45" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Depreciation \( D \)</span><span class="slider-value" id="dep-value">0.02</span></div><input type="range" id="depreciation" min="0" max="0.20" value="0.02" step="0.01"></div>
+                    <div class="slider-group"><div class="slider-label"><span>TFP \( A \)</span><span class="slider-value" id="tfp-value">2.5</span></div><input type="range" id="tfp" min="0.5" max="4.0" value="2.5" step="0.1"></div>
+                    <div class="slider-group"><div class="slider-label"><span>Output elasticity \( \alpha \)</span><span class="slider-value" id="alpha-value">0.35</span></div><input type="range" id="alpha" min="0.10" max="0.60" value="0.35" step="0.01"></div>
+                    <div class="equation-box">\( W_t = A \cdot K_t^\alpha \)</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-capital">
+                <div class="control-panel-header" onclick="togglePanel('capital')">
+                    <div class="panel-title" style="margin-bottom:0">Initial Capital Stocks</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-capital" onclick="event.stopPropagation();togglePanel('capital')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('capital')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-capital">
+                    <div class="slider-group"><div class="slider-label"><span style="color:#4299e1">Produced \( K_p \)</span><span class="slider-value" id="kp-value">30</span></div><input type="range" id="kp" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#805ad5">Human \( K_h \)</span><span class="slider-value" id="kh-value">30</span></div><input type="range" id="kh" min="5" max="80" value="30" step="1"></div>
+                    <div class="slider-group"><div class="slider-label"><span style="color:#dd6b20">Natural \( K_n \)</span><span class="slider-value" id="kn-value">40</span></div><input type="range" id="kn" min="5" max="80" value="40" step="1"></div>
+                    <div class="equation-box">\( K_t = K_p + K_h + K_n \)</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-results">
+                <div class="control-panel-header" onclick="togglePanel('results')">
+                    <div class="panel-title" style="margin-bottom:0">Period Summary</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-results" onclick="event.stopPropagation();togglePanel('results')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('results')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-results">
+                    <div class="info-box" id="results-box"></div>
+                    <div class="legend" style="margin-top:14px;">
+                        <div class="legend-item"><div class="legend-rect" style="background:#4299e1;"></div><span>Produced \( K_p \)</span></div>
+                        <div class="legend-item"><div class="legend-rect" style="background:#805ad5;"></div><span>Human \( K_h \)</span></div>
+                        <div class="legend-item"><div class="legend-rect" style="background:#dd6b20;"></div><span>Natural \( K_n \)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#38a169; height:8px; border-radius:2px;"></div><span>Savings \( S_t \) → reinvested</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#e53e3e; height:8px; border-radius:2px;"></div><span>Consumption \( C_t \)</span></div>
+                        <div class="legend-item"><div style="width:24px;height:3px;border-top:2px dashed #a0aec0;flex-shrink:0;"></div><span>Depreciation \( D \cdot K_t \)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Display Options</div>
+            <div class="opt-section-label">Flow Diagram</div>
+            <div class="opt-row"><input type="checkbox" id="show-values" checked><label for="show-values">Numeric labels on arrows</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-dep-line" checked><label for="show-dep-line">Depreciation indicator</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Background grid</label></div>
+            <div class="opt-section-label">Utility Chart</div>
+            <div class="opt-row"><input type="checkbox" id="show-undiscounted" checked><label for="show-undiscounted">Undiscounted utility bars</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-discounted" checked><label for="show-discounted">Discounted utility overlay</label></div>
+            <div class="restore-bar" id="restore-bar"></div>
+            <div class="url-state-bar">
+                <button id="copy-url-btn">📋 Copy link</button>
+                <button id="reset-url-btn">↺ Reset</button>
+                <span class="url-hint">Link encodes sliders and display options</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [{left: "\\[", right: "\\]", display: true},{left: "\\(", right: "\\)", display: false}],
+            throwOnError: false
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", renderAllMath);
+window.addEventListener('load', renderAllMath);
+
+// ─── Panel management ───
+function toggleSection(name) {
+    const body = document.getElementById('body-' + name);
+    const toggle = document.getElementById('toggle-' + name);
+    if (!body) return;
+    const collapsed = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = collapsed ? '▶' : '▼';
+}
+function togglePanel(name) { toggleSection(name); }
+
+const PANEL_NAMES = {
+    title:'Title', subtitle:'Subtitle', graph:'Flow Diagram', graph2:'Utility',
+    explanation:'Explanation', formal:'Formal',
+    scenarios:'Scenarios', production:'Production', capital:'Capital', results:'Summary'
+};
+function closePanel(name) { const el = document.getElementById('section-'+name); if(el) el.classList.add('panel-closed'); updateRestoreBar(); }
+function restorePanel(name) { const el = document.getElementById('section-'+name); if(el) el.classList.remove('panel-closed'); updateRestoreBar(); }
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n => document.getElementById('section-'+n)?.classList.contains('panel-closed'));
+    if (!closed.length) { bar.innerHTML=''; return; }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' + closed.map(n=>`<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');
+}
+
+// ─── Sliders ───
+const consSlider = document.getElementById('consumption-rate');
+const depSlider  = document.getElementById('depreciation');
+const tfpSlider  = document.getElementById('tfp');
+const alphaSlider= document.getElementById('alpha');
+const kpSlider   = document.getElementById('kp');
+const khSlider   = document.getElementById('kh');
+const knSlider   = document.getElementById('kn');
+const allSliders = [consSlider,depSlider,tfpSlider,alphaSlider,kpSlider,khSlider,knSlider];
+
+function isVis(id) { const e=document.getElementById(id); return e?e.checked:true; }
+const DPR = 2;
+
+// ─── Scenarios ───
+function setScenario(name) {
+    document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active','active-bad'));
+    const btn = document.getElementById('btn-'+name);
+    btn.classList.add(name==='unsustainable'?'active-bad':'active');
+    if (name==='sustainable') {
+        consSlider.value=0.45; depSlider.value=0.02; tfpSlider.value=2.5;
+        kpSlider.value=30; khSlider.value=30; knSlider.value=40;
+        alphaSlider.value=0.35;
+    } else if (name==='unsustainable') {
+        consSlider.value=0.90; depSlider.value=0.08; tfpSlider.value=1.2;
+        kpSlider.value=25; khSlider.value=25; knSlider.value=50;
+        alphaSlider.value=0.35;
+    } else if (name==='weak') {
+        consSlider.value=0.55; depSlider.value=0.04; tfpSlider.value=2.0;
+        kpSlider.value=40; khSlider.value=35; knSlider.value=25;
+        alphaSlider.value=0.35;
+    }
+    update();
+}
+
+// ─── Simulate 4 periods ───
+function simulate() {
+    const consRate = parseFloat(consSlider.value);
+    const dep = parseFloat(depSlider.value);
+    const A = parseFloat(tfpSlider.value);
+    const alpha = parseFloat(alphaSlider.value);
+    let Kp = parseFloat(kpSlider.value);
+    let Kh = parseFloat(khSlider.value);
+    let Kn = parseFloat(knSlider.value);
+
+    const periods = [];
+    for (let t = 0; t <= 3; t++) {
+        const K = Kp + Kh + Kn;
+        const W = A * Math.pow(K, alpha);
+        const C = consRate * W;
+        const S = W - C;
+        const D = dep * K;
+        const u = Math.log(Math.max(C, 0.01) + 1);
+
+        periods.push({ t, Kp, Kh, Kn, K, W, C, S, D, u, discU: Math.pow(0.95, t) * u });
+
+        if (t < 3) {
+            const investP = S * 0.50;
+            const investH = S * 0.30;
+            const investN = S * 0.20;
+            Kp = Math.max(0.1, Kp + investP - dep * Kp);
+            Kh = Math.max(0.1, Kh + investH - dep * 0.7 * Kh);
+            Kn = Math.max(0.1, Kn + investN - dep * 1.2 * Kn);
+        }
+    }
+    return periods;
+}
+
+// ─── Draw flow diagram ───
+function drawFlowDiagram(data) {
+    const canvas = document.getElementById('canvas-flow');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height, S = DPR;
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+
+    const nPeriods = data.length; // 4
+    const padL = 80*S, padR = 40*S, padT = 50*S, padB = 60*S;
+    const totalW = W - padL - padR;
+    const colW = totalW / nPeriods;
+
+    // Find max values for scaling
+    let maxK = 0, maxW = 0;
+    for (const d of data) { maxK = Math.max(maxK, d.K); maxW = Math.max(maxW, d.W); }
+
+    // Layout: per column
+    // Bottom: capital bar stack (Kp, Kh, Kn)
+    // Middle: production arrow up to Wt
+    // Top: Wt splits into Ct (left arrow) and St (right arrow going back down)
+
+    const barMaxH = 200 * S;  // max capital bar height
+    const arrowZone = 160 * S; // zone for production arrow
+    const wtY = padT + 30*S;   // Y for Wt label row
+    const barBaseY = H - padB; // bottom of bars
+    const barTopY = barBaseY - barMaxH; // top if at max
+
+    // Grid lines
+    if (isVis('show-gridlines')) {
+        ctx.strokeStyle = '#f0f4f8'; ctx.lineWidth = S;
+        for (let i = 0; i < nPeriods; i++) {
+            const x = padL + (i+1) * colW;
+            if (i < nPeriods-1) {
+                ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, H-padB+20*S); ctx.stroke();
+            }
+        }
+    }
+
+    const showVals = isVis('show-values');
+
+    for (let i = 0; i < nPeriods; i++) {
+        const d = data[i];
+        const cx = padL + i * colW + colW / 2; // center x of column
+
+        // ── Capital bar (stacked: Kn bottom, Kh middle, Kp top) ──
+        const barW = 60 * S;
+        const totalBarH = (d.K / maxK) * barMaxH;
+        const knH = (d.Kn / d.K) * totalBarH;
+        const khH = (d.Kh / d.K) * totalBarH;
+        const kpH = (d.Kp / d.K) * totalBarH;
+
+        const barX = cx - barW/2;
+        const barTop = barBaseY - totalBarH;
+
+        // Kn (orange) — bottom
+        ctx.fillStyle = '#dd6b20';
+        ctx.beginPath();
+        ctx.roundRect(barX, barBaseY - knH, barW, knH, [0,0,4*S,4*S]);
+        ctx.fill();
+
+        // Kh (purple) — middle
+        ctx.fillStyle = '#805ad5';
+        ctx.fillRect(barX, barBaseY - knH - khH, barW, khH);
+
+        // Kp (blue) — top
+        ctx.fillStyle = '#4299e1';
+        ctx.beginPath();
+        ctx.roundRect(barX, barBaseY - knH - khH - kpH, barW, kpH, [4*S,4*S,0,0]);
+        ctx.fill();
+
+        // Border
+        ctx.strokeStyle = '#cbd5e0'; ctx.lineWidth = 1.5*S;
+        ctx.beginPath();
+        ctx.roundRect(barX, barTop, barW, totalBarH, 4*S);
+        ctx.stroke();
+
+        // Kt label below bar
+        ctx.fillStyle = '#4a5568'; ctx.font = `bold ${12*S}px Segoe UI`; ctx.textAlign = 'center';
+        ctx.fillText(`K${subscript(i)} = ${d.K.toFixed(0)}`, cx, barBaseY + 20*S);
+
+        // Period label
+        ctx.fillStyle = '#a0aec0'; ctx.font = `${11*S}px Segoe UI`;
+        ctx.fillText(`t = ${i}`, cx, barBaseY + 38*S);
+
+        // ── Production arrow: bar top → Wt zone ──
+        const arrowTopY = barTop - 20*S; // start above bar
+        const wtLabelY = barTop - 90*S;
+
+        // Upward arrow (production flow)
+        const arrowW = Math.max(8*S, (d.W / maxW) * 30 * S); // width proportional to output
+        drawArrow(ctx, cx, arrowTopY, cx, wtLabelY + 20*S, arrowW, '#718096', 0.6);
+
+        // Wt label
+        ctx.fillStyle = '#1a202c'; ctx.font = `bold ${13*S}px Segoe UI`; ctx.textAlign = 'center';
+        ctx.fillText(`W${subscript(i)} = ${d.W.toFixed(1)}`, cx, wtLabelY);
+
+        // "Production" label on first column only
+        if (i === 0) {
+            ctx.fillStyle = '#a0aec0'; ctx.font = `italic ${10*S}px Segoe UI`;
+            ctx.fillText('Production', cx - 50*S, (arrowTopY + wtLabelY + 20*S)/2 + 4*S);
+        }
+
+        // ── Split: Ct goes left, St goes right ──
+        const splitY = wtLabelY - 20*S;
+
+        // Consumption arrow (left) — RED
+        const consArrowW = Math.max(5*S, (d.C / maxW) * 28 * S);
+        const consEndX = cx - colW * 0.32;
+        drawArrow(ctx, cx - 10*S, splitY, consEndX, splitY - 30*S, consArrowW, '#e53e3e', 0.7);
+
+        // Ct label
+        ctx.fillStyle = '#e53e3e'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
+        if (showVals) ctx.fillText(`C${subscript(i)}=${d.C.toFixed(1)}`, consEndX, splitY - 38*S);
+        else ctx.fillText(`C${subscript(i)}`, consEndX, splitY - 38*S);
+
+        // Savings arrow (right, curving back down) — GREEN
+        const savArrowW = Math.max(4*S, (d.S / maxW) * 28 * S);
+
+        if (i < nPeriods - 1) {
+            // Savings arrow curves from split point to the next period's bar top
+            const nextCx = padL + (i+1) * colW + colW/2;
+            const nextD = data[i+1];
+            const nextBarH = (nextD.K / maxK) * barMaxH;
+            const nextBarTop = barBaseY - nextBarH;
+
+            // Draw as a curved path
+            drawSavingsArrow(ctx, cx + 10*S, splitY, nextCx, nextBarTop - 20*S, savArrowW, '#38a169', 0.7);
+
+            // St label near the curve
+            const midX = (cx + 10*S + nextCx) / 2;
+            const midY = splitY - 50*S;
+            ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
+            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, midX, midY);
+            else ctx.fillText(`S${subscript(i)}`, midX, midY);
+        } else {
+            // Last period: savings arrow goes right with "..."
+            const endX = cx + colW * 0.3;
+            drawArrow(ctx, cx + 10*S, splitY, endX, splitY - 30*S, savArrowW, '#38a169', 0.7);
+            ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
+            if (showVals) ctx.fillText(`S${subscript(i)}=${d.S.toFixed(1)}`, endX, splitY - 38*S);
+            else ctx.fillText(`S₃`, endX, splitY - 38*S);
+            ctx.fillStyle = '#a0aec0'; ctx.font = `${14*S}px Segoe UI`;
+            ctx.fillText('···', endX + 30*S, splitY - 26*S);
+        }
+
+        // ── Depreciation indicator ──
+        if (isVis('show-dep-line') && d.D > 0.5) {
+            const depH = (d.D / maxK) * barMaxH;
+            const depY = barBaseY - depH;
+            ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.5*S;
+            ctx.setLineDash([4*S, 3*S]);
+            ctx.beginPath();
+            ctx.moveTo(barX - 8*S, depY);
+            ctx.lineTo(barX + barW + 8*S, depY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            if (showVals && i === 0) {
+                ctx.fillStyle = '#a0aec0'; ctx.font = `${9*S}px Segoe UI`; ctx.textAlign = 'right';
+                ctx.fillText(`D·K=${d.D.toFixed(1)}`, barX - 12*S, depY + 4*S);
+            }
+        }
+    }
+}
+
+function subscript(i) {
+    return ['₀','₁','₂','₃'][i] || i;
+}
+
+// Draw a thick arrow between two points
+function drawArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
+    const S = DPR;
+    const headLen = 12 * S;
+    const angle = Math.atan2(y1 - y0, x1 - x0);
+    const len = Math.hypot(x1-x0, y1-y0);
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+
+    // Shaft
+    ctx.translate(x0, y0);
+    ctx.rotate(angle);
+
+    const shaftLen = len - headLen;
+    const hw = thickness / 2;
+
+    ctx.beginPath();
+    // Shaft rectangle
+    ctx.moveTo(0, -hw);
+    ctx.lineTo(shaftLen, -hw);
+    // Arrowhead
+    ctx.lineTo(shaftLen, -thickness * 0.8);
+    ctx.lineTo(len, 0);
+    ctx.lineTo(shaftLen, thickness * 0.8);
+    ctx.lineTo(shaftLen, hw);
+    ctx.lineTo(0, hw);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+// Draw a curved savings arrow
+function drawSavingsArrow(ctx, x0, y0, x1, y1, thickness, color, alpha) {
+    const S = DPR;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Control points for a nice arc
+    const midX = (x0 + x1) / 2;
+    const cpY = Math.min(y0, y1) - 60*S; // arc above
+
+    // Draw thick bezier using stroke
+    ctx.strokeStyle = color;
+    ctx.lineWidth = thickness;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.quadraticCurveTo(midX, cpY, x1, y1);
+    ctx.stroke();
+
+    // Arrowhead at end
+    // Get tangent at endpoint
+    const t = 0.98;
+    const tx = 2*(1-t)*(midX-x0) + 2*t*(x1-midX);
+    const ty = 2*(1-t)*(cpY-y0) + 2*t*(y1-cpY);
+    const ang = Math.atan2(ty, tx);
+    const headLen = 14*S;
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - headLen*Math.cos(ang - 0.4), y1 - headLen*Math.sin(ang - 0.4));
+    ctx.lineTo(x1 - headLen*Math.cos(ang + 0.4), y1 - headLen*Math.sin(ang + 0.4));
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+// ─── Draw utility bar chart ───
+function drawUtilityChart(data) {
+    const canvas = document.getElementById('canvas-utility');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height, S = DPR;
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+
+    const padL = 80*S, padR = 40*S, padT = 40*S, padB = 60*S;
+    const gw = W - padL - padR, gh = H - padT - padB;
+
+    let maxU = 0;
+    for (const d of data) maxU = Math.max(maxU, d.u);
+    maxU *= 1.15;
+
+    // Grid
+    if (isVis('show-gridlines')) {
+        ctx.strokeStyle = '#f0f4f8'; ctx.lineWidth = S;
+        for (let i = 1; i <= 4; i++) {
+            const y = padT + (i/5)*gh;
+            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+gw, y); ctx.stroke();
+        }
+    }
+
+    // Axes
+    ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 2*S;
+    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+gh); ctx.lineTo(padL+gw, padT+gh); ctx.stroke();
+
+    // Axis label
+    ctx.fillStyle = '#4a5568'; ctx.font = `italic ${13*S}px Georgia, serif`; ctx.textAlign = 'center';
+    ctx.fillText('Period', padL + gw/2, H - 10*S);
+    ctx.save(); ctx.translate(18*S, padT+gh/2); ctx.rotate(-Math.PI/2); ctx.fillText('Wellbeing', 0, 0); ctx.restore();
+
+    // Tick labels Y
+    ctx.fillStyle = '#718096'; ctx.font = `${11*S}px Segoe UI`; ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+        const v = maxU * (4-i)/4;
+        ctx.fillText(v.toFixed(1), padL - 8*S, padT + (i/4)*gh + 4*S);
+    }
+
+    const nPeriods = data.length;
+    const barGroupW = gw / nPeriods;
+    const barW = 50 * S;
+
+    for (let i = 0; i < nPeriods; i++) {
+        const d = data[i];
+        const cx = padL + i * barGroupW + barGroupW/2;
+
+        // Undiscounted utility bar
+        if (isVis('show-undiscounted')) {
+            const bh = (d.u / maxU) * gh;
+            const by = padT + gh - bh;
+
+            // Gradient fill
+            const grad = ctx.createLinearGradient(0, by, 0, padT+gh);
+            grad.addColorStop(0, 'rgba(56,161,105,0.7)');
+            grad.addColorStop(1, 'rgba(56,161,105,0.35)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(cx - barW/2, by, barW, bh, [4*S,4*S,0,0]);
+            ctx.fill();
+
+            ctx.strokeStyle = '#38a169'; ctx.lineWidth = 1.5*S;
+            ctx.beginPath();
+            ctx.roundRect(cx - barW/2, by, barW, bh, [4*S,4*S,0,0]);
+            ctx.stroke();
+
+            // Value on top
+            ctx.fillStyle = '#276749'; ctx.font = `bold ${11*S}px Segoe UI`; ctx.textAlign = 'center';
+            ctx.fillText(d.u.toFixed(2), cx, by - 8*S);
+        }
+
+        // Discounted utility overlay
+        if (isVis('show-discounted')) {
+            const dbh = (d.discU / maxU) * gh;
+            const dby = padT + gh - dbh;
+            ctx.fillStyle = 'rgba(56,161,105,0.18)';
+            ctx.fillRect(cx - barW/2 + 2*S, dby, barW - 4*S, dbh);
+            ctx.strokeStyle = 'rgba(56,161,105,0.5)'; ctx.lineWidth = S;
+            ctx.setLineDash([3*S, 2*S]);
+            ctx.strokeRect(cx - barW/2 + 2*S, dby, barW - 4*S, dbh);
+            ctx.setLineDash([]);
+        }
+
+        // Period label
+        ctx.fillStyle = '#718096'; ctx.font = `${12*S}px Segoe UI`; ctx.textAlign = 'center';
+        ctx.fillText(`t = ${i}`, cx, padT + gh + 22*S);
+    }
+
+    // Reference line at u₀
+    if (data.length > 0) {
+        const u0 = data[0].u;
+        const refY = padT + gh - (u0 / maxU) * gh;
+        ctx.strokeStyle = 'rgba(56,161,105,0.3)'; ctx.lineWidth = 1.5*S;
+        ctx.setLineDash([5*S, 3*S]);
+        ctx.beginPath(); ctx.moveTo(padL, refY); ctx.lineTo(padL+gw, refY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(56,161,105,0.5)'; ctx.font = `${10*S}px Segoe UI`; ctx.textAlign = 'left';
+        ctx.fillText(`u₀ = ${u0.toFixed(2)}`, padL + gw + 6*S, refY + 4*S);
+    }
+
+    // Label: sustainable vs unsustainable
+    const uFirst = data[0].u, uLast = data[data.length-1].u;
+    const growing = uLast >= uFirst - 0.01;
+    ctx.font = `bold ${13*S}px Segoe UI`; ctx.textAlign = 'center';
+    ctx.fillStyle = growing ? '#38a169' : '#e53e3e';
+    const statusText = growing ? '✓ Utility non-declining → Sustainable path' : '✗ Utility declining → Unsustainable path';
+    ctx.fillText(statusText, padL + gw/2, padT - 10*S);
+}
+
+// ─── Update ───
+function update() {
+    document.getElementById('cons-value').textContent = parseFloat(consSlider.value).toFixed(2);
+    document.getElementById('dep-value').textContent  = parseFloat(depSlider.value).toFixed(2);
+    document.getElementById('tfp-value').textContent   = parseFloat(tfpSlider.value).toFixed(1);
+    document.getElementById('alpha-value').textContent = parseFloat(alphaSlider.value).toFixed(2);
+    document.getElementById('kp-value').textContent    = parseInt(kpSlider.value);
+    document.getElementById('kh-value').textContent    = parseInt(khSlider.value);
+    document.getElementById('kn-value').textContent    = parseInt(knSlider.value);
+
+    const data = simulate();
+    drawFlowDiagram(data);
+    drawUtilityChart(data);
+
+    // Results summary
+    const box = document.getElementById('results-box');
+    let html = '';
+    for (const d of data) {
+        const deltaK = d.S - d.D;
+        const sign = deltaK >= 0 ? '+' : '';
+        const cls = deltaK >= -0.1 ? 'pos' : 'neg';
+        html += `<div class="info-row"><span class="info-label">t=${d.t}: W=${d.W.toFixed(1)}</span><span class="info-value ${cls}">S−D = ${sign}${deltaK.toFixed(1)}</span></div>`;
+    }
+    // IW change
+    const dIW = data[3].K - data[0].K;
+    const dKn = data[3].Kn - data[0].Kn;
+    html += `<div style="border-top:1px solid #e2e8f0;margin-top:8px;padding-top:8px;">`;
+    html += `<div class="info-row"><span class="info-label">ΔIW (t=0→3)</span><span class="info-value ${dIW>=-0.1?'pos':'neg'}">${dIW>=0?'+':''}${dIW.toFixed(1)}</span></div>`;
+    html += `<div class="info-row"><span class="info-label">ΔKn (t=0→3)</span><span class="info-value ${dKn>=-0.1?'pos':'neg'}">${dKn>=0?'+':''}${dKn.toFixed(1)}</span></div>`;
+    html += `</div>`;
+    box.innerHTML = html;
+}
+
+// ─── Wire up ───
+allSliders.forEach(s => s.addEventListener('input', () => {
+    document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active','active-bad'));
+    document.getElementById('btn-custom').classList.add('active');
+    update();
+}));
+
+document.querySelectorAll('.display-options-panel input').forEach(i => {
+    i.addEventListener('input', update);
+    i.addEventListener('change', update);
+});
+
+document.getElementById('display-toggle-btn').addEventListener('click', () => {
+    const p=document.getElementById('display-panel'), a=document.getElementById('display-arrow');
+    p.classList.toggle('open'); a.classList.toggle('open');
+});
+
+// Copy/Save
+document.getElementById('copy-plot-btn').addEventListener('click', async () => {
+    const btn=document.getElementById('copy-plot-btn'), label=document.getElementById('copy-label');
+    try {
+        const blob = await new Promise(r=>document.getElementById('canvas-flow').toBlob(r,'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+        btn.classList.add('copied'); label.textContent='Copied!';
+        setTimeout(()=>{btn.classList.remove('copied');label.textContent='Copy';},1500);
+    } catch { label.textContent='Failed'; setTimeout(()=>{label.textContent='Copy';},1500); }
+});
+document.getElementById('save-plot-btn').addEventListener('click', () => {
+    const btn=document.getElementById('save-plot-btn'), label=document.getElementById('save-label');
+    const url=document.getElementById('canvas-flow').toDataURL('image/png');
+    const a=document.createElement('a'); a.href=url; a.download='production_flow.png'; a.click();
+    btn.classList.add('copied'); label.textContent='Saved!';
+    setTimeout(()=>{btn.classList.remove('copied');label.textContent='Save';},1500);
+});
+
+// URL state
+document.getElementById('copy-url-btn').addEventListener('click', async () => {
+    const btn=document.getElementById('copy-url-btn');
+    const p=new URLSearchParams();
+    p.set('c',consSlider.value); p.set('d',depSlider.value); p.set('a',tfpSlider.value);
+    p.set('al',alphaSlider.value); p.set('kp',kpSlider.value); p.set('kh',khSlider.value); p.set('kn',knSlider.value);
+    const url=window.location.origin+window.location.pathname+'#'+p.toString();
+    try { await navigator.clipboard.writeText(url); btn.textContent='✓ Copied!'; btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='📋 Copy link';btn.classList.remove('copied');},2000);
+    } catch { prompt('Copy:',url); }
+});
+document.getElementById('reset-url-btn').addEventListener('click',()=>{ setScenario('sustainable'); history.replaceState(null,'',window.location.pathname); });
+
+function loadFromHash() {
+    const hash=window.location.hash.slice(1); if(!hash) return;
+    const p=new URLSearchParams(hash);
+    if(p.has('c')) consSlider.value=p.get('c');
+    if(p.has('d')) depSlider.value=p.get('d');
+    if(p.has('a')) tfpSlider.value=p.get('a');
+    if(p.has('al')) alphaSlider.value=p.get('al');
+    if(p.has('kp')) kpSlider.value=p.get('kp');
+    if(p.has('kh')) khSlider.value=p.get('kh');
+    if(p.has('kn')) knSlider.value=p.get('kn');
+}
+
+loadFromHash();
+update();
+</script>
+</body>
+</html>

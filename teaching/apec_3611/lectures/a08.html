@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>APEC 3611w: Environmental and Natural Resource Economics - Final Exam: 8:00-10:00 AM</title>
+<title>APEC 3611w: Environmental and Natural Resource Economics - Appendix G: Calculating Ecosystem Services with InVEST</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -4656,7 +4656,7 @@ vertical-align: -.125em;
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/final-exam.html">Final Exam</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/a01.html">Appendices</a></li><li class="breadcrumb-item"><a href="../lectures/a08.html">Appendix 08</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -4741,7 +4741,7 @@ vertical-align: -.125em;
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lectures/final-exam.html" class="sidebar-item-text sidebar-link active">
+  <a href="../lectures/final-exam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Final Exam</span></a>
   </div>
 </li>
@@ -5120,13 +5120,13 @@ vertical-align: -.125em;
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lectures/a01.html" class="sidebar-item-text sidebar-link">
@@ -5171,7 +5171,7 @@ vertical-align: -.125em;
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lectures/a08.html" class="sidebar-item-text sidebar-link">
+  <a href="../lectures/a08.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Appendix 08</span></a>
   </div>
 </li>
@@ -5211,16 +5211,24 @@ vertical-align: -.125em;
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#content" id="toc-content" class="nav-link active" data-scroll-target="#content">Content</a></li>
+  <li><a href="#purpose-of-this-appendix" id="toc-purpose-of-this-appendix" class="nav-link active" data-scroll-target="#purpose-of-this-appendix"><span class="header-section-number">1</span> Purpose of this appendix</a></li>
+  <li><a href="#what-invest-is-and-is-not" id="toc-what-invest-is-and-is-not" class="nav-link" data-scroll-target="#what-invest-is-and-is-not"><span class="header-section-number">2</span> What InVEST is (and is not)</a></li>
+  <li><a href="#the-basic-pattern" id="toc-the-basic-pattern" class="nav-link" data-scroll-target="#the-basic-pattern"><span class="header-section-number">3</span> The basic pattern</a></li>
+  <li><a href="#a-concrete-example-water-yield" id="toc-a-concrete-example-water-yield" class="nav-link" data-scroll-target="#a-concrete-example-water-yield"><span class="header-section-number">4</span> A concrete example: Water yield</a></li>
+  <li><a href="#another-example-pollination" id="toc-another-example-pollination" class="nav-link" data-scroll-target="#another-example-pollination"><span class="header-section-number">5</span> Another example: Pollination</a></li>
+  <li><a href="#carbon-storage-and-sequestration" id="toc-carbon-storage-and-sequestration" class="nav-link" data-scroll-target="#carbon-storage-and-sequestration"><span class="header-section-number">6</span> Carbon storage and sequestration</a></li>
+  <li><a href="#why-this-matters-for-eartheconomy-models" id="toc-why-this-matters-for-eartheconomy-models" class="nav-link" data-scroll-target="#why-this-matters-for-eartheconomy-models"><span class="header-section-number">7</span> Why this matters for Earth–economy models</a></li>
+  <li><a href="#strengths-and-limits" id="toc-strengths-and-limits" class="nav-link" data-scroll-target="#strengths-and-limits"><span class="header-section-number">8</span> Strengths and limits</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">9</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content column-body" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../lectures/a01.html">Appendices</a></li><li class="breadcrumb-item"><a href="../lectures/a08.html">Appendix 08</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Final Exam: 8:00-10:00 AM</h1>
+<h1 class="title">Appendix G: Calculating Ecosystem Services with InVEST</h1>
 </div>
 
 
@@ -5237,9 +5245,263 @@ vertical-align: -.125em;
 </header>
 
 
-<section id="content" class="level2">
-<h2 class="anchored" data-anchor-id="content">Content</h2>
-<p><em>TBD.</em></p>
+<section id="purpose-of-this-appendix" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose-of-this-appendix"><span class="header-section-number">1</span> Purpose of this appendix</h2>
+<p>Throughout this book, ecosystem services have appeared as:</p>
+<ul>
+<li>productive assets,</li>
+<li>risk buffers,</li>
+<li>and pathways through which nature enters the economy.</li>
+</ul>
+<p>This appendix shows how those services are <em>actually calculated</em> in practice using<br>
+<strong>InVEST (Integrated Valuation of Ecosystem Services and Tradeoffs)</strong>—<br>
+the open-source modeling suite developed by the Natural Capital Project.</p>
+<p>InVEST is one of the most widely used tools in the world for translating:</p>
+<blockquote class="blockquote">
+<p>land cover → biophysical processes → ecosystem services → human outcomes</p>
+</blockquote>
+<p>It is the ecological half of many Earth–economy systems.</p>
+<hr>
+</section>
+<section id="what-invest-is-and-is-not" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="what-invest-is-and-is-not"><span class="header-section-number">2</span> What InVEST is (and is not)</h2>
+<p>InVEST is:</p>
+<ul>
+<li>a modular suite of ecosystem service models,</li>
+<li>spatially explicit,</li>
+<li>process-based,</li>
+<li>open-source,</li>
+<li>designed for decision support.</li>
+</ul>
+<p>It is <em>not</em>:</p>
+<ul>
+<li>a single monolithic model,</li>
+<li>a general equilibrium system,</li>
+<li>or a forecasting oracle.</li>
+</ul>
+<p>Each InVEST model answers a focused question such as:</p>
+<ul>
+<li>How does land cover affect annual water yield?</li>
+<li>How does habitat fragmentation affect pollination?</li>
+<li>How do wetlands reduce flood risk?</li>
+<li>How much carbon is stored in this landscape?</li>
+</ul>
+<p>Earth–economy models use InVEST outputs as <strong>inputs</strong>.</p>
+<hr>
+</section>
+<section id="the-basic-pattern" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="the-basic-pattern"><span class="header-section-number">3</span> The basic pattern</h2>
+<p>Every InVEST model follows the same conceptual pipeline:</p>
+<ol type="1">
+<li><strong>Inputs</strong>
+<ul>
+<li>Land-use / land-cover map</li>
+<li>Biophysical parameter tables</li>
+<li>Climate or hydrology data</li>
+<li>Optional socio-economic layers</li>
+</ul></li>
+<li><strong>Process</strong>
+<ul>
+<li>Apply ecological relationships</li>
+<li>Move water, sediment, nutrients, carbon, or species</li>
+<li>Aggregate effects across space</li>
+</ul></li>
+<li><strong>Outputs</strong>
+<ul>
+<li>Raster maps of service supply</li>
+<li>Tabular summaries by region or watershed</li>
+<li>Optional valuation layers (where appropriate)</li>
+</ul></li>
+</ol>
+<p>This is Earth–economy modeling at the <em>landscape interface</em>.</p>
+<hr>
+</section>
+<section id="a-concrete-example-water-yield" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="a-concrete-example-water-yield"><span class="header-section-number">4</span> A concrete example: Water yield</h2>
+<p>The InVEST Water Yield model estimates:</p>
+<blockquote class="blockquote">
+<p>How much water is produced by each pixel of land each year.</p>
+</blockquote>
+<p>Inputs:</p>
+<ul>
+<li>annual precipitation,</li>
+<li>potential evapotranspiration,</li>
+<li>land cover,</li>
+<li>soil depth,</li>
+<li>plant available water content.</li>
+</ul>
+<p>Core idea (conceptual):</p>
+<p>WaterYield = Precipitation − Evapotranspiration</p>
+<p>But evapotranspiration depends on:</p>
+<ul>
+<li>vegetation type,</li>
+<li>rooting depth,</li>
+<li>soil properties.</li>
+</ul>
+<p>Thus a forested pixel and a cropland pixel receiving the same rainfall<br>
+produce very different water yields.</p>
+<p>Outputs:</p>
+<ul>
+<li>a raster of annual water yield,</li>
+<li>watershed-level totals,</li>
+<li>optional downstream flow accumulation.</li>
+</ul>
+<p>Earth–economy use:</p>
+<ul>
+<li>feed water availability into agriculture,</li>
+<li>assess impacts of land-use change,</li>
+<li>evaluate tradeoffs between forest and crop expansion.</li>
+</ul>
+<hr>
+</section>
+<section id="another-example-pollination" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="another-example-pollination"><span class="header-section-number">5</span> Another example: Pollination</h2>
+<p>The InVEST Pollination model estimates:</p>
+<ul>
+<li>habitat suitability for pollinators,</li>
+<li>distance-weighted pollination supply,</li>
+<li>crop yield enhancement.</li>
+</ul>
+<p>Inputs:</p>
+<ul>
+<li>land cover,</li>
+<li>nesting suitability by land type,</li>
+<li>floral resources,</li>
+<li>crop locations,</li>
+<li>foraging distances.</li>
+</ul>
+<p>Core idea:</p>
+<blockquote class="blockquote">
+<p>Crops closer to high-quality habitat receive more pollination.</p>
+</blockquote>
+<p>Outputs:</p>
+<ul>
+<li>maps of pollinator abundance,</li>
+<li>maps of pollination-dependent yield,</li>
+<li>farm-level production changes.</li>
+</ul>
+<p>Earth–economy use:</p>
+<ul>
+<li>link habitat loss to agricultural productivity,</li>
+<li>evaluate restoration benefits,</li>
+<li>internalize biodiversity into production systems.</li>
+</ul>
+<hr>
+</section>
+<section id="carbon-storage-and-sequestration" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="carbon-storage-and-sequestration"><span class="header-section-number">6</span> Carbon storage and sequestration</h2>
+<p>The InVEST Carbon model:</p>
+<ul>
+<li>assigns carbon pools to each land-cover type:
+<ul>
+<li>aboveground biomass,</li>
+<li>belowground biomass,</li>
+<li>soil,</li>
+<li>dead matter.</li>
+</ul></li>
+</ul>
+<p>For each pixel:</p>
+<p>TotalCarbon = C_above + C_below + C_soil + C_dead</p>
+<p>Land-use change between two maps:</p>
+<p>Sequestration = Carbon_future − Carbon_current</p>
+<p>Outputs:</p>
+<ul>
+<li>carbon stock maps,</li>
+<li>sequestration maps,</li>
+<li>total change summaries.</li>
+</ul>
+<p>Earth–economy use:</p>
+<ul>
+<li>link land policy to emissions,</li>
+<li>evaluate mitigation pathways,</li>
+<li>embed carbon stocks in inclusive wealth.</li>
+</ul>
+<hr>
+</section>
+<section id="why-this-matters-for-eartheconomy-models" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="why-this-matters-for-eartheconomy-models"><span class="header-section-number">7</span> Why this matters for Earth–economy models</h2>
+<p>InVEST provides:</p>
+<ul>
+<li>spatially explicit,</li>
+<li>biophysically grounded,</li>
+<li>policy-sensitive</li>
+</ul>
+<p>estimates of ecosystem services.</p>
+<p>Earth–economy models provide:</p>
+<ul>
+<li>price formation,</li>
+<li>income effects,</li>
+<li>trade responses,</li>
+<li>intertemporal dynamics.</li>
+</ul>
+<p>Together, they form:</p>
+<blockquote class="blockquote">
+<p>A coupled system where land decisions alter services,<br>
+services alter productivity and risk,<br>
+and economic responses reshape land.</p>
+</blockquote>
+<p>This is the core of Earth–economy modeling.</p>
+<hr>
+</section>
+<section id="strengths-and-limits" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="strengths-and-limits"><span class="header-section-number">8</span> Strengths and limits</h2>
+<p>Strengths:</p>
+<ul>
+<li>Transparent assumptions</li>
+<li>Modular structure</li>
+<li>Global applicability</li>
+<li>Open-source</li>
+<li>Decision-focused</li>
+</ul>
+<p>Limits:</p>
+<ul>
+<li>Not a general equilibrium model</li>
+<li>Requires good spatial data</li>
+<li>Simplifies ecological complexity</li>
+<li>Does not model institutions or behavior</li>
+</ul>
+<p>InVEST answers:</p>
+<blockquote class="blockquote">
+<p>“What does this landscape provide?”</p>
+</blockquote>
+<p>Earth–economy models answer:</p>
+<blockquote class="blockquote">
+<p>“What happens when societies respond?”</p>
+</blockquote>
+<p>Neither is sufficient alone.</p>
+<hr>
+</section>
+<section id="exercises" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">9</span> Exercises</h2>
+<ol type="1">
+<li><strong>Service mapping.</strong><br>
+Choose one ecosystem service (water, carbon, pollination, flood mitigation).<br>
+List:
+<ul>
+<li>the land features that affect it,</li>
+<li>the human activity that depends on it,</li>
+<li>one policy that could change it.</li>
+</ul></li>
+<li><strong>Pipeline thinking.</strong><br>
+Draw the chain:</li>
+</ol>
+<p>Land-use policy → Land cover → InVEST output → Economic outcome</p>
+<p>Fill in each step for a real example.</p>
+<ol start="3" type="1">
+<li><strong>Model design.</strong><br>
+Suppose you are building an Earth–economy model for a river basin.<br>
+Which two InVEST services would you most want to include? Why?</li>
+</ol>
+<hr>
+<p>InVEST is where the Earth meets the economy in pixels.</p>
+<p>It turns:</p>
+<ul>
+<li>forests into flood buffers,</li>
+<li>habitat into yield,</li>
+<li>wetlands into risk reduction,</li>
+<li>and land into capital.</li>
+</ul>
+<p>Earth–economy modeling is what happens next.</p>
 
 
 </section>

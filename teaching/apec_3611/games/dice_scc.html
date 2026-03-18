@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Social Cost of Carbon</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f7fa; color: #2d3748; margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        h1 { text-align: center; font-weight: 400; font-size: 1.8rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 24px; font-size: 0.95rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .main-content { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+        @media (max-width: 960px) { .main-content { grid-template-columns: 1fr; } }
+        .main-content.left-empty { grid-template-columns: 0 1fr; }
+        .main-content.right-empty { grid-template-columns: 1fr; }
+        .main-content.left-empty .left-column { display: none; }
+        .main-content.right-empty .controls { display: none; }
+        .left-column { display: flex; flex-direction: column; gap: 0; }
+
+        .graph-container { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; overflow: visible; }
+        .graph-header { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; user-select: none; }
+        .graph-header:hover { background: #f7fafc; border-radius: 12px 12px 0 0; }
+        .graph-header .panel-title { margin-bottom: 0; }
+        .graph-body { padding: 0 20px 20px 20px; position: relative; }
+        .graph-body.collapsed { display: none; }
+        canvas { display: block; width: 100%; height: auto; cursor: default; }
+        canvas.dragging { cursor: grabbing; }
+        canvas.hovering-label { cursor: grab; }
+        .plot-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s;
+        }
+        .graph-container:hover .plot-actions, .graph-body:hover .plot-actions { opacity: 1; }
+        .plot-action-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1;
+        }
+        .plot-action-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .plot-action-btn:active { background: #edf2f7; }
+        .plot-action-btn.copied { color: #38a169; border-color: #c6f6d5; background: rgba(240,255,244,0.9); }
+        .plot-action-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+        .panel-close-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1; flex-shrink: 0;
+        }
+        .panel-close-btn:hover { background: #fff; color: #e53e3e; border-color: #feb2b2; }
+        .panel-header-actions {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0;
+        }
+        .panel-collapse-btn {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.65rem; color: #a0aec0;
+            cursor: pointer; display: flex; align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; line-height: 1;
+        }
+        .panel-collapse-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .panel-closed { display: none !important; }
+        .left-section { position: relative; }
+        .left-section:hover .panel-header-actions { opacity: 1; }
+        .control-panel { position: relative; }
+        .control-panel:hover .panel-header-actions { opacity: 1; }
+        .graph-container:hover > .graph-header .panel-header-actions { opacity: 1; }
+        .title-wrapper:hover .panel-header-actions { opacity: 1; }
+        .subtitle-wrapper:hover .panel-header-actions { opacity: 1; }
+
+        .restore-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .restore-bar:empty { display: none; margin: 0; padding: 0; border: none; }
+        .restore-btn { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; color: #718096; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; }
+        .restore-btn:hover { background: #f7fafc; border-color: #cbd5e0; color: #4a5568; }
+        .restore-label { font-size: 0.7rem; color: #a0aec0; }
+
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        .control-panel { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .control-panel-header { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+        .control-panel-header:hover { background: #f7fafc; border-radius: 12px; }
+        .control-panel-header .panel-title { margin-bottom: 0; }
+        .control-panel-body { padding: 0 20px 20px 20px; }
+        .control-panel-body.collapsed { display: none; }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 16px; font-weight: 600; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; color: #4a5568; }
+        .slider-value { background: #edf2f7; padding: 4px 10px; border-radius: 4px; font-family: 'Monaco','Consolas',monospace; font-size: 0.85rem; color: #2b6cb0; font-weight: 500; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #4299e1; cursor: pointer; box-shadow: 0 2px 6px rgba(66,153,225,0.3); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        .slider-hint { font-size: 0.72rem; color: #a0aec0; margin-top: -10px; margin-bottom: 14px; padding-left: 2px; }
+
+        .info-box { background: #f7fafc; border-radius: 8px; padding: 16px; border-left: 3px solid #4299e1; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.9rem; }
+        .info-label { color: #718096; }
+        .info-value { font-family: 'Monaco','Consolas',monospace; color: #1a202c; }
+        .info-value.highlight { color: #2b6cb0; font-weight: 600; }
+        .legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #4a5568; }
+        .legend-line { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .equation-box { background: #f7fafc; border-radius: 8px; padding: 14px 16px; text-align: center; margin-top: 8px; border: 1px solid #e2e8f0; font-size: 1.05rem; }
+        .tangency-condition { margin-top: 16px; padding: 14px; background: rgba(66,153,225,0.08); border-radius: 8px; border: 1px solid rgba(66,153,225,0.2); }
+        .tangency-title { font-size: 0.8rem; color: #2b6cb0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tangency-eq-sub { text-align: center; font-size: 0.9rem; color: #718096; margin-top: 6px; }
+
+        .left-section { margin-top: 20px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: visible; }
+        .left-section-header { display: flex; align-items: center; padding: 16px 24px; cursor: pointer; user-select: none; }
+        .left-section-header:hover { background: #f7fafc; border-radius: 12px; }
+        .left-section-header .panel-title { margin-bottom: 0; }
+        .left-section-body { padding: 0 24px 20px 24px; }
+        .left-section-body.collapsed { display: none; }
+        .left-section-body p { margin: 0 0 14px 0; line-height: 1.7; font-size: 0.95rem; color: #4a5568; }
+        .left-section-body p:last-child { margin-bottom: 0; }
+
+        .worked-step { padding: 4px 0; font-size: 0.95rem; line-height: 1.9; color: #4a5568; }
+        .worked-step .step-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; font-weight: 600; margin-top: 10px; margin-bottom: 2px; }
+        .worked-step .step-math { padding: 2px 0 2px 12px; border-left: 2px solid #e2e8f0; }
+        .worked-step .step-math.highlight-result { border-left-color: #c53030; background: rgba(197,48,48,0.04); padding: 6px 12px; border-radius: 0 6px 6px 0; margin: 4px 0; }
+
+        .formal-math { margin: 8px 0 18px 0; text-align: center; font-size: 1.15rem; line-height: 2.2; }
+        .formal-solution { padding: 12px 16px; background: #f7fafc; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; font-size: 1rem; line-height: 2; }
+        .formal-solution-label { color: #718096; font-size: 0.85rem; margin-bottom: 4px; }
+
+        .tab-bar { display: flex; gap: 2px; padding: 0 20px; margin-bottom: 4px; }
+        .tab-btn {
+            padding: 6px 14px; font-size: 0.78rem; border: 1px solid #e2e8f0; border-radius: 6px 6px 0 0;
+            background: #f7fafc; color: #718096; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.15s; border-bottom: none; position: relative; top: 1px;
+        }
+        .tab-btn:hover { background: #fff; color: #4a5568; }
+        .tab-btn.active { background: #fff; color: #2b6cb0; font-weight: 600; border-color: #e2e8f0; z-index: 1; }
+
+        .katex { font-size: 1em; }
+        .info-row .katex { font-size: 0.95em; }
+        .slider-label .katex { font-size: 0.95em; }
+        .equation-box .katex { font-size: 1.1em; }
+        .formal-math .katex-display { margin: 0.4em 0; }
+        .formal-solution .katex { font-size: 1.05em; }
+        .worked-step .katex { font-size: 1em; }
+
+        .scc-callout {
+            padding: 14px; background: rgba(197,48,48,0.06);
+            border-radius: 8px; border: 1px solid rgba(197,48,48,0.2);
+        }
+        .scc-callout-title { font-size: 0.8rem; color: #c53030; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .scc-callout-value { text-align: center; font-size: 1.4rem; color: #c53030; font-weight: 700; font-family: 'Monaco','Consolas',monospace; }
+        .scc-callout-sub { text-align: center; font-size: 0.78rem; color: #718096; margin-top: 4px; }
+
+        /* Display options */
+        .display-options-wrapper { margin-top: 24px; }
+        .display-options-toggle { background: none; border: none; color: #a0aec0; font-size: 0.78rem; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
+        .display-options-toggle:hover { color: #718096; }
+        .display-options-toggle .arrow { font-size: 0.6rem; transition: transform 0.2s; }
+        .display-options-toggle .arrow.open { transform: rotate(90deg); }
+        .display-options-panel { display: none; margin-top: 8px; background: #fff; border-radius: 12px; padding: 16px 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .display-options-panel.open { display: block; }
+        .display-options-panel .panel-title { font-size: 0.75rem; margin-bottom: 12px; }
+        .opt-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .opt-row label { font-size: 0.8rem; color: #4a5568; cursor: pointer; white-space: nowrap; }
+        .opt-row input[type="checkbox"] { accent-color: #4299e1; cursor: pointer; margin: 0; width: 14px; height: 14px; }
+        .opt-row input[type="text"] { font-size: 0.78rem; padding: 2px 6px; border: 1px solid #e2e8f0; border-radius: 4px; color: #4a5568; width: 140px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .opt-row input[type="text"]:focus { outline: none; border-color: #4299e1; }
+        .opt-section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0; margin: 10px 0 4px; font-weight: 600; }
+        .opt-section-label:first-child { margin-top: 0; }
+
+        /* URL state bar */
+        .url-state-bar {
+            margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .url-state-bar button {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+            padding: 6px 12px; font-size: 0.78rem; color: #4a5568; cursor: pointer;
+            font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.15s; white-space: nowrap;
+        }
+        .url-state-bar button:hover { background: #f7fafc; border-color: #cbd5e0; }
+        .url-state-bar button.copied { color: #38a169; border-color: #c6f6d5; background: #f0fff4; }
+        .url-state-bar .url-hint { font-size: 0.7rem; color: #a0aec0; }
+
+        /* Embed mode */
+        .embed-open-btn {
+            display: none; position: absolute; top: 8px; left: 8px; z-index: 10;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(226,232,240,0.7); border-radius: 6px;
+            padding: 4px 8px; font-size: 0.7rem; color: #a0aec0;
+            cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.15s; line-height: 1; text-decoration: none;
+        }
+        .embed-open-btn:hover { background: #fff; color: #4a5568; border-color: #cbd5e0; }
+        .embed-mode .embed-open-btn { display: flex; align-items: center; gap: 4px; }
+        body.embed-mode { padding: 8px; background: transparent; min-height: auto; }
+        .embed-mode h1, .embed-mode .subtitle-wrapper, .embed-mode .left-section,
+        .embed-mode .display-options-wrapper, .embed-mode .url-state-bar { display: none !important; }
+        .embed-mode .container { max-width: none; }
+        .embed-mode .graph-container { border: none; box-shadow: none; padding: 10px; }
+        .embed-mode .control-panel { padding: 14px; }
+        body.embed-hide-controls .controls { display: none !important; }
+        body.embed-hide-controls .main-content { grid-template-columns: 1fr; }
+        body.embed-hide-explanation #section-explanation { display: none !important; }
+        body.embed-hide-worked #section-worked { display: none !important; }
+        body.embed-hide-formal #section-formal { display: none !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="section-title" class="title-wrapper" style="position:relative">
+        <h1>The Social Cost of Carbon</h1>
+        <div class="panel-header-actions" style="top:50%;transform:translateY(-50%)">
+            <button class="panel-close-btn" onclick="closePanel('title')" title="Close title">✕</button>
+        </div>
+    </div>
+    <div id="section-subtitle" class="subtitle-wrapper" style="position:relative">
+        <p class="subtitle">How much economic damage does one extra ton of CO₂ cause? The DICE model answers this by maximizing social welfare subject to climate damages.</p>
+        <div class="panel-header-actions" style="top:4px">
+            <button class="panel-close-btn" onclick="closePanel('subtitle')" title="Close subtitle">✕</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-column">
+            <div class="graph-container" id="section-graph">
+                <div class="graph-header" onclick="toggleSection('graph')">
+                    <div class="panel-title" style="margin-bottom:0">A. Model Output</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-graph" onclick="event.stopPropagation();toggleSection('graph')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('graph')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="graph-body" id="body-graph">
+                    <a class="embed-open-btn" id="embed-open-btn" title="Open full interactive version" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                        Open full version
+                    </a>
+                    <div class="tab-bar">
+                        <button class="tab-btn active" id="tab-main" onclick="switchTab('main')">GDP & Damages</button>
+                        <button class="tab-btn" id="tab-temp" onclick="switchTab('temp')">Temperature</button>
+                        <button class="tab-btn" id="tab-scc" onclick="switchTab('scc')">SCC Over Time</button>
+                        <button class="tab-btn" id="tab-policy" onclick="switchTab('policy')">Optimal Policy</button>
+                    </div>
+                    <div class="plot-actions">
+                        <button class="plot-action-btn" id="copy-plot-btn" title="Copy to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            <span id="copy-label">Copy</span>
+                        </button>
+                        <button class="plot-action-btn" id="save-plot-btn" title="Save as PNG">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span id="save-label">Save</span>
+                        </button>
+                    </div>
+                    <canvas id="graph" width="1400" height="1000"></canvas>
+                </div>
+            </div>
+
+            <div class="left-section" id="section-explanation">
+                <div class="left-section-header" onclick="toggleSection('explanation')">
+                    <div class="panel-title" style="margin-bottom:0">What Is the Social Cost of Carbon?</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-explanation" onclick="event.stopPropagation();toggleSection('explanation')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('explanation')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-explanation">
+                    <p>Imagine a social planner who wants to make society as well-off as possible over the next two centuries. She controls how much the economy consumes today versus invests for the future—but there's a catch: production generates CO₂, which warms the planet, which damages the economy. More output today means more emissions, more warming, and less output tomorrow.</p>
+                    <p>The <strong>Social Cost of Carbon (SCC)</strong> answers a simple question: if we emit one extra ton of CO₂ right now, how much total economic damage does that cause (in today's dollars)? It's the price tag on a ton of pollution. If a carbon tax were set equal to the SCC, it would give the economy exactly the right incentive to pollute less—it's the optimal Pigouvian tax.</p>
+                    <p>Three things matter most for the SCC:</p>
+                    <p><strong>1. The discount rate \(\rho\)</strong> — How much do we value future generations' welfare compared to our own? A low discount rate says "future people matter almost as much as us," which makes distant climate damages count heavily and drives the SCC up. This is the single most important parameter and the source of the biggest disagreements (Stern vs. Nordhaus).</p>
+                    <p><strong>2. The damage function \(D(T) = \pi_1 T + \pi_2 T^2\)</strong> — How badly does each degree of warming hurt the economy? The linear term \(\pi_1 T\) captures damages proportional to warming; the quadratic term \(\pi_2 T^2\) captures damages that <em>accelerate</em> as it gets hotter. Bigger coefficients mean more damage per degree, raising the SCC.</p>
+                    <p><strong>3. Climate sensitivity \(\eta\)</strong> — How much does temperature rise when CO₂ doubles? Higher sensitivity means each ton of CO₂ causes more warming, which again raises the SCC.</p>
+                    <p>Play with the sliders to see how these assumptions change the answer. Try setting \(\rho\) very low (Stern's argument) or \(\pi_1 > 0\) to see how even small linear damages at low temperatures can matter.</p>
+                </div>
+            </div>
+
+            <div class="left-section" id="section-worked">
+                <div class="left-section-header" onclick="toggleSection('worked')">
+                    <div class="panel-title" style="margin-bottom:0">Step-by-Step: How the SCC Is Calculated</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-worked" onclick="event.stopPropagation();toggleSection('worked')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('worked')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-worked">
+                    <div id="worked-content"></div>
+                </div>
+            </div>
+
+            <div class="left-section" id="section-formal">
+                <div class="left-section-header" onclick="toggleSection('formal')">
+                    <div class="panel-title" style="margin-bottom:0">The Optimization Problem</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-formal" onclick="event.stopPropagation();toggleSection('formal')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('formal')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="left-section-body" id="body-formal">
+                    <p>The social planner maximizes the sum of discounted utility from per-capita consumption \(c_t = C_t / L_t\):</p>
+                    <div class="formal-math">\[ \max \; W = \sum_{t=0}^{T} \left(\frac{1}{1+\rho}\right)^{t} L_t \;\ln(c_t) \]</div>
+                    <p>Output \(Q_t\) is produced from capital and labor. A fraction \(D(T_t)\) is destroyed by climate damages, so net output is:</p>
+                    <div class="formal-math">\[ Y_t = \bigl[1 - D(T_t)\bigr] \cdot Q_t \qquad \text{where } D(T) = \pi_1 T + \pi_2 T^2 \]</div>
+                    <p>Temperature rises as emissions accumulate in the atmosphere. The SCC is the shadow price on emissions — it answers "how much would welfare improve if we could magically remove one ton of CO₂?"</p>
+                    <div class="formal-solution-label">Social Cost of Carbon</div>
+                    <div class="formal-solution">\( \displaystyle \text{SCC}_t \;=\; \sum_{s \geq t} \left(\frac{1}{1+\rho}\right)^{\!s-t} \!\frac{c_t}{c_s} \cdot (\pi_1 + 2\pi_2 T_s)\, Q_s \cdot \frac{\partial T_s}{\partial E_t} \)</div>
+                    <p style="margin-top: 14px;">Reading right to left: \(\partial T_s / \partial E_t\) is how much today's extra ton warms the planet at future time \(s\). Multiplied by \((\pi_1 + 2\pi_2 T_s) Q_s\), that gives the dollar damage. The ratio \(c_t / c_s\) adjusts for the fact that future people are richer. The discount factor weighs near-term damages more. Sum over all future periods and you get the SCC.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-panel" id="section-discounting">
+                <div class="control-panel-header" onclick="togglePanel('discounting')">
+                    <div class="panel-title" style="margin-bottom:0">Discounting</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-discounting" onclick="event.stopPropagation();togglePanel('discounting')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('discounting')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-discounting">
+                    <div class="slider-group"><div class="slider-label"><span>Discount rate \(\rho\)</span><span class="slider-value" id="rho-value">1.5%</span></div>
+                    <input type="range" id="rho" min="0.1" max="5" value="1.5" step="0.1"></div>
+                    <div class="slider-hint">Low = care more about the future → higher SCC</div>
+                    <div class="equation-box">\( \text{Discount factor at year } t = \left(\dfrac{1}{1+\rho}\right)^t \)</div>
+                    <div class="tangency-condition"><div class="tangency-title">Intuition</div>
+                    <div class="tangency-eq-sub">$1 of damage 50 years from now is worth <strong id="disc-50yr">$0.47</strong> today.</div></div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-damages">
+                <div class="control-panel-header" onclick="togglePanel('damages')">
+                    <div class="panel-title" style="margin-bottom:0">Damage Function</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-damages" onclick="event.stopPropagation();togglePanel('damages')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('damages')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-damages">
+                    <div class="slider-group"><div class="slider-label"><span>Linear coeff. \(\pi_1\)</span><span class="slider-value" id="pi1-value">0.000</span></div>
+                    <input type="range" id="pi1" min="0" max="0.02" value="0.0" step="0.001"></div>
+                    <div class="slider-hint">Damage proportional to temperature</div>
+                    <div class="slider-group"><div class="slider-label"><span>Quadratic coeff. \(\pi_2\)</span><span class="slider-value" id="pi2-value">0.00236</span></div>
+                    <input type="range" id="pi2" min="0.0005" max="0.01" value="0.00236" step="0.0001"></div>
+                    <div class="slider-hint">Damage that accelerates with temperature</div>
+                    <div class="equation-box">\( D(T) = \pi_1 \, T + \pi_2 \, T^2 \)</div>
+                    <div class="tangency-condition"><div class="tangency-title">At 3°C warming</div>
+                    <div class="tangency-eq-sub"><strong id="dam-at-3">2.1%</strong> of GDP lost to damages</div></div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-climate">
+                <div class="control-panel-header" onclick="togglePanel('climate')">
+                    <div class="panel-title" style="margin-bottom:0">Climate Sensitivity</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-climate" onclick="event.stopPropagation();togglePanel('climate')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('climate')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-climate">
+                    <div class="slider-group"><div class="slider-label"><span>Climate sensitivity \(\eta\)</span><span class="slider-value" id="cs-value">3.0°C</span></div>
+                    <input type="range" id="cs" min="1.5" max="5" value="3.0" step="0.1"></div>
+                    <div class="slider-hint">Warming when CO₂ doubles. IPCC range: 2.5–4.0°C</div>
+                    <div class="equation-box">\( \text{CO}_2 \times 2 \;\Longrightarrow\; \Delta T = \eta \)</div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="section-results">
+                <div class="control-panel-header" onclick="togglePanel('results')">
+                    <div class="panel-title" style="margin-bottom:0">Results</div>
+                    <div class="panel-header-actions">
+                        <button class="panel-collapse-btn" id="toggle-results" onclick="event.stopPropagation();togglePanel('results')" title="Collapse">▼</button>
+                        <button class="panel-close-btn" onclick="event.stopPropagation();closePanel('results')" title="Close">✕</button>
+                    </div>
+                </div>
+                <div class="control-panel-body" id="body-results">
+                    <div class="scc-callout"><div class="scc-callout-title">Social Cost of Carbon (2025)</div>
+                    <div class="scc-callout-value" id="scc-main">$51/tCO₂</div>
+                    <div class="scc-callout-sub">= the optimal carbon tax today</div></div>
+                    <div class="info-box" style="margin-top:12px">
+                        <div class="info-row"><span class="info-label">SCC in 2050</span><span class="info-value highlight" id="scc-2050">$85</span></div>
+                        <div class="info-row"><span class="info-label">SCC in 2100</span><span class="info-value highlight" id="scc-2100">$206</span></div>
+                        <div class="info-row"><span class="info-label">Peak warming</span><span class="info-value" id="peak-temp">3.2°C</span></div>
+                        <div class="info-row"><span class="info-label">Peak damage (% GDP lost)</span><span class="info-value" id="peak-damage">2.4%</span></div>
+                    </div>
+                    <div class="legend" style="margin-top:14px">
+                        <div class="legend-item"><div class="legend-line" style="background:#2b6cb0;"></div><span>GDP without damages</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#c53030;"></div><span>GDP after damages (no policy)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#38a169;"></div><span>GDP with optimal carbon tax</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:rgba(197,48,48,0.2);height:14px;border-radius:2px;"></div><span>Lost GDP (damage wedge)</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#d69e2e;"></div><span>Temperature pathway</span></div>
+                        <div class="legend-item"><div class="legend-line" style="background:#38a169;height:3px;"></div><span>SCC trajectory</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Options -->
+    <div class="display-options-wrapper">
+        <button class="display-options-toggle" id="display-toggle-btn"><span class="arrow" id="display-arrow">▶</span> Display options</button>
+        <div class="display-options-panel" id="display-panel">
+            <div class="panel-title">Plot Element Visibility &amp; Labels <span style="font-weight:400;font-size:0.65rem;color:#a0aec0;text-transform:none;letter-spacing:0"> — drag labels directly on the graph to reposition</span></div>
+
+            <div class="opt-section-label">Axes</div>
+            <div class="opt-row"><input type="checkbox" id="show-xaxis-label" checked><label for="show-xaxis-label">X-axis label</label><input type="text" id="label-xaxis" value="Year"></div>
+            <div class="opt-row"><input type="checkbox" id="show-yaxis-label" checked><label for="show-yaxis-label">Y-axis label</label><input type="text" id="label-yaxis" value=""></div>
+            <div class="opt-row"><input type="checkbox" id="show-axis-numbers" checked><label for="show-axis-numbers">Axis tick numbers</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-gridlines" checked><label for="show-gridlines">Gridlines</label></div>
+
+            <div class="opt-section-label">GDP & Damages Tab</div>
+            <div class="opt-row"><input type="checkbox" id="show-gross-line" checked><label for="show-gross-line">GDP without damages line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-net-line" checked><label for="show-net-line">GDP after damages line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-damage-fill" checked><label for="show-damage-fill">Damage wedge shading</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-damage-label" checked><label for="show-damage-label">Damage wedge label</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-line-labels" checked><label for="show-line-labels">Line endpoint labels</label></div>
+
+            <div class="opt-section-label">Temperature Tab</div>
+            <div class="opt-row"><input type="checkbox" id="show-temp-line" checked><label for="show-temp-line">Temperature line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-targets" checked><label for="show-targets">1.5°C and 2°C target lines</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-damage-overlay" checked><label for="show-damage-overlay">Damage % overlay (right axis)</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-temp-labels" checked><label for="show-temp-labels">Line endpoint labels</label></div>
+
+            <div class="opt-section-label">SCC Tab</div>
+            <div class="opt-row"><input type="checkbox" id="show-scc-line" checked><label for="show-scc-line">SCC line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-scc-dot" checked><label for="show-scc-dot">Current SCC dot &amp; label</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-scc-annotation" checked><label for="show-scc-annotation">Annotation text</label></div>
+
+            <div class="opt-section-label">Optimal Policy Tab</div>
+            <div class="opt-row"><input type="checkbox" id="show-policy-gross" checked><label for="show-policy-gross">GDP without damages line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-policy-bau" checked><label for="show-policy-bau">GDP no policy (BAU) line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-policy-opt" checked><label for="show-policy-opt">GDP with optimal policy line</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-policy-fills" checked><label for="show-policy-fills">Shaded regions</label></div>
+            <div class="opt-row"><input type="checkbox" id="show-policy-labels" checked><label for="show-policy-labels">Line labels</label></div>
+
+            <!-- Restore closed panels -->
+            <div class="restore-bar" id="restore-bar"></div>
+
+            <!-- URL State -->
+            <div class="url-state-bar">
+                <button id="copy-url-btn" title="Copy a URL that encodes the current slider values and display options">📋 Copy link with current state</button>
+                <button id="reset-url-btn" title="Reset all parameters and display options to defaults">↺ Reset to defaults</button>
+                <span class="url-hint">Link encodes sliders, display options, labels, and label positions</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ─── Embed mode ───
+(function(){
+    const p = new URLSearchParams(window.location.search);
+    if (p.has('embed')) {
+        document.body.classList.add('embed-mode');
+        const hide = p.get('hide');
+        if (hide) hide.split(',').forEach(s => document.body.classList.add('embed-hide-'+s.trim()));
+        const btn = document.getElementById('embed-open-btn');
+        if (btn) btn.href = window.location.pathname + window.location.hash;
+    }
+})();
+
+function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],
+            throwOnError: false
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", renderAllMath);
+window.addEventListener('load', renderAllMath);
+
+// ─── Toggle ───
+function toggleSection(name) {
+    const body = document.getElementById('body-'+name), toggle = document.getElementById('toggle-'+name);
+    if (!body) return;
+    const c = body.classList.toggle('collapsed');
+    if (toggle) toggle.textContent = c ? '▶' : '▼';
+}
+function togglePanel(name) { toggleSection(name); }
+
+// ─── Close / Restore ───
+const PANEL_NAMES = {
+    title:'Title', subtitle:'Subtitle', graph:'Graph', explanation:'Explanation',
+    worked:'Step-by-Step', formal:'Optimization Problem',
+    discounting:'Discounting', damages:'Damage Function',
+    climate:'Climate Sensitivity', results:'Results'
+};
+const LEFT_PANELS = ['graph','explanation','worked','formal'];
+const RIGHT_PANELS = ['discounting','damages','climate','results'];
+
+function closePanel(name) {
+    const el = document.getElementById('section-'+name);
+    if (el) el.classList.add('panel-closed');
+    updateRestoreBar(); updateLayout();
+}
+function restorePanel(name) {
+    const el = document.getElementById('section-'+name);
+    if (el) el.classList.remove('panel-closed');
+    updateRestoreBar(); updateLayout();
+}
+function updateLayout() {
+    const mc = document.querySelector('.main-content');
+    mc.classList.toggle('left-empty', LEFT_PANELS.every(n => document.getElementById('section-'+n)?.classList.contains('panel-closed')));
+    mc.classList.toggle('right-empty', RIGHT_PANELS.every(n => document.getElementById('section-'+n)?.classList.contains('panel-closed')));
+}
+function updateRestoreBar() {
+    const bar = document.getElementById('restore-bar');
+    const closed = Object.keys(PANEL_NAMES).filter(n => document.getElementById('section-'+n)?.classList.contains('panel-closed'));
+    if (!closed.length) { bar.innerHTML = ''; return; }
+    bar.innerHTML = '<span class="restore-label">Restore:</span>' +
+        closed.map(n => `<button class="restore-btn" onclick="restorePanel('${n}')">${PANEL_NAMES[n]}</button>`).join('');
+}
+
+// ─── Display options toggle ───
+document.getElementById('display-toggle-btn').addEventListener('click', () => {
+    const p = document.getElementById('display-panel'), a = document.getElementById('display-arrow');
+    p.classList.toggle('open'); a.classList.toggle('open');
+});
+document.querySelectorAll('.display-options-panel input').forEach(i => {
+    i.addEventListener('input', drawGraph); i.addEventListener('change', drawGraph);
+});
+
+// ─── Helpers ───
+function isVis(id) { const e = document.getElementById(id); return e ? e.checked : true; }
+function getLabel(id, fb) { const e = document.getElementById(id); return e && e.value.trim() ? e.value.trim() : fb; }
+
+// ─── Tab switching ───
+let activeTab = 'main';
+function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+    drawGraph();
+}
+
+// ─── Canvas & draggable labels ───
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+const DPR = 2, S = DPR;
+let labelHitBoxes = [];
+const nudgeOffsets = {};
+
+function getNudge(t) { const o = nudgeOffsets[t]; return o ? {dx:o.dx*DPR,dy:o.dy*DPR} : {dx:0,dy:0}; }
+function registerLabel(key, lx, ty, w, h) { labelHitBoxes.push({key,x:lx,y:ty,w,h}); }
+
+function mouseToCanvas(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: (e.clientX-r.left)*canvas.width/r.width, y: (e.clientY-r.top)*canvas.height/r.height };
+}
+function hitTest(cx,cy) {
+    for (let i = labelHitBoxes.length-1; i >= 0; i--) {
+        const b = labelHitBoxes[i];
+        if (cx>=b.x && cx<=b.x+b.w && cy>=b.y && cy<=b.y+b.h) return b.key;
+    }
+    return null;
+}
+
+let dragTarget=null, dragStartX=0, dragStartY=0, dragStartOX=0, dragStartOY=0;
+canvas.addEventListener('mousedown', e => {
+    const pos = mouseToCanvas(e), hit = hitTest(pos.x, pos.y);
+    if (hit) {
+        dragTarget=hit; dragStartX=pos.x; dragStartY=pos.y;
+        if (!nudgeOffsets[hit]) nudgeOffsets[hit]={dx:0,dy:0};
+        dragStartOX=nudgeOffsets[hit].dx; dragStartOY=nudgeOffsets[hit].dy;
+        canvas.classList.add('dragging'); e.preventDefault();
+    }
+});
+canvas.addEventListener('mousemove', e => {
+    const pos = mouseToCanvas(e);
+    if (dragTarget) {
+        nudgeOffsets[dragTarget].dx = dragStartOX + (pos.x-dragStartX)/DPR;
+        nudgeOffsets[dragTarget].dy = dragStartOY + (pos.y-dragStartY)/DPR;
+        drawGraph();
+    } else {
+        canvas.classList.toggle('hovering-label', !!hitTest(pos.x, pos.y));
+    }
+});
+canvas.addEventListener('mouseup', () => { if (dragTarget) { dragTarget=null; canvas.classList.remove('dragging'); } });
+canvas.addEventListener('mouseleave', () => { if (dragTarget) { dragTarget=null; canvas.classList.remove('dragging'); } canvas.classList.remove('hovering-label'); });
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+    const t = e.touches[0], r = canvas.getBoundingClientRect();
+    const pos = {x:(t.clientX-r.left)*canvas.width/r.width, y:(t.clientY-r.top)*canvas.height/r.height};
+    const hit = hitTest(pos.x,pos.y);
+    if (hit) { dragTarget=hit; dragStartX=pos.x; dragStartY=pos.y;
+        if(!nudgeOffsets[hit]) nudgeOffsets[hit]={dx:0,dy:0};
+        dragStartOX=nudgeOffsets[hit].dx; dragStartOY=nudgeOffsets[hit].dy; e.preventDefault(); }
+}, {passive:false});
+canvas.addEventListener('touchmove', e => {
+    if (dragTarget) { const t=e.touches[0], r=canvas.getBoundingClientRect();
+        const pos={x:(t.clientX-r.left)*canvas.width/r.width,y:(t.clientY-r.top)*canvas.height/r.height};
+        nudgeOffsets[dragTarget].dx=dragStartOX+(pos.x-dragStartX)/DPR;
+        nudgeOffsets[dragTarget].dy=dragStartOY+(pos.y-dragStartY)/DPR;
+        drawGraph(); e.preventDefault(); }
+}, {passive:false});
+canvas.addEventListener('touchend', () => { dragTarget=null; });
+
+// ─── Sliders ───
+const rhoSlider = document.getElementById('rho');
+const pi1Slider = document.getElementById('pi1');
+const pi2Slider = document.getElementById('pi2');
+const csSlider = document.getElementById('cs');
+
+// ═══════════════════════════════════════════════
+// SIMPLIFIED DICE MODEL
+// ═══════════════════════════════════════════════
+const T_START=2020, T_END=2200, DT=10, STEPS=(T_END-T_START)/DT;
+
+function runModel() {
+    const rho=parseFloat(rhoSlider.value)/100, pi1=parseFloat(pi1Slider.value),
+          pi2=parseFloat(pi2Slider.value), climSens=parseFloat(csSlider.value);
+    const years=[], pop=[], tfp=[], sigma=[];
+    for (let i=0;i<=STEPS;i++) {
+        const t=T_START+i*DT; years.push(t);
+        pop.push(7.75*11.5/(7.75+(11.5-7.75)*Math.exp(-0.015*(t-2020))));
+        tfp.push(5.1*Math.exp(0.0076*(t-2020)*Math.exp(-0.005*(t-2020))));
+        sigma.push(1.01*Math.exp(-0.015*(t-2020))); // GtC emitted per T$ GDP per decade
+    }
+    const K=[223], grossY=[], netY=[], C_gross=[], C_net=[];
+    const emissions=[], cumE=[580], temp=[1.1], CO2=[410], damages_pct=[], scc_vals=[];
+    const savR=0.25, dep=0.1, gam=0.3, f2x=3.7, preCO2=280, xi=0.098, lambda_fb=f2x/climSens;
+
+    for (let i=0;i<=STEPS;i++) {
+        const L=pop[i], A=tfp[i], Kt=K[i]||K[K.length-1];
+        const Q=A*Math.pow(Kt,gam)*Math.pow(L,1-gam); grossY.push(Q);
+        const T_atm=Math.max(temp[i],0);
+        const D=pi1*T_atm+pi2*T_atm*T_atm;
+        const omega=Math.max(1-D,0.01); damages_pct.push(D*100);
+        const Y=omega*Q; netY.push(Y);
+        C_gross.push((1-savR)*Q); C_net.push((1-savR)*Y);
+        const E=sigma[i]*Q; // GtC per decade
+        if (i<STEPS) {
+            const newCumE=cumE[i]+E*0.47; cumE.push(newCumE);
+            const newCO2=preCO2+(newCumE-280)*0.45; CO2.push(Math.max(newCO2,preCO2+1));
+            const exF=0.5+0.25*Math.min((years[i]-2020)/100,1);
+            const F=f2x*Math.log2(CO2[i+1]/preCO2)+exF;
+            temp.push(temp[i]+xi*(F-lambda_fb*temp[i])*(DT/10));
+            K.push(Math.pow(1-dep,DT)*Kt+DT*savR*Y);
+        }
+    }
+    for (let i=0;i<=STEPS;i++) {
+        let scc=0; const c_t=C_net[i]/pop[i];
+        for (let s=i;s<=STEPS;s++) {
+            const dtYrs=(s-i)*DT, disc=Math.pow(1/(1+rho),dtYrs);
+            const c_s=C_net[s]/pop[s], muRatio=c_t/c_s;
+            const T_s=Math.max(temp[s],0), dD_dT=pi1+2*pi2*T_s, dY_dT=dD_dT*grossY[s];
+            const co2_s=CO2[Math.min(s,CO2.length-1)];
+            const dCO2_dE=0.47*0.45; // ppm per GtC emitted (airborne fraction × conversion)
+            const dF_dCO2=f2x/(Math.log(2)*Math.max(co2_s,preCO2+1));
+            const dT_dE=dCO2_dE*dF_dCO2*(1-Math.exp(-0.03*Math.max(dtYrs,1)))/lambda_fb;
+            scc+=disc*muRatio*dY_dT*dT_dE*(1-savR)*pop[s];
+        }
+        // scc is in T$/GtC. Convert: 1 T$/GtC × 1e12$/T$ / (1e9 t/Gt × 3.667 tCO2/tC) = 272.5 $/tCO2
+        scc_vals.push(Math.max(scc*272.5,0));
+    }
+
+    // ═══════════════════════════════════════════════
+    // OPTIMAL POLICY SCENARIO
+    // A carbon tax = SCC induces abatement. Marginal abatement cost (MAC) is convex:
+    //   MAC(μ) = backstop(t) × μ^(θ₂-1)    ($/tCO₂)
+    // where backstop(t) is the cost of full decarbonization, declining as clean tech improves.
+    // Setting MAC = SCC gives optimal abatement rate: μ* = (SCC/backstop)^(1/(θ₂-1))
+    // Total abatement cost as fraction of GDP:
+    //   Λ(μ) = (backstop/θ₂) × μ^θ₂ × σ × 3.667 / 1000
+    // Policy GDP = [1 - D(T_policy) - Λ(μ)] × Q
+    // ═══════════════════════════════════════════════
+    const pK=[223], pNetY=[], pCumE=[580], pTemp=[1.1], pCO2=[410], pDamages=[], pMu=[];
+    const theta2 = 2.6;
+
+    for (let i=0;i<=STEPS;i++) {
+        const L=pop[i], A=tfp[i], pKt=pK[i]||pK[pK.length-1];
+        const Q=A*Math.pow(pKt,gam)*Math.pow(L,1-gam);
+        const t = years[i];
+        const backstop = 250 * Math.exp(-0.01 * (t - 2020));
+        const scc_t = scc_vals[i];
+        let mu = Math.pow(Math.min(scc_t / backstop, 1), 1 / (theta2 - 1));
+        mu = Math.max(0, Math.min(mu, 1));
+        pMu.push(mu);
+        const sig_i = sigma[i];
+        const abateFrac = backstop / theta2 * Math.pow(mu, theta2) * sig_i * 3.667 / 1000;
+        const T_atm = Math.max(pTemp[i], 0);
+        const D = pi1 * T_atm + pi2 * T_atm * T_atm;
+        pDamages.push(D * 100);
+        const Y = Math.max(1 - D - abateFrac, 0.01) * Q;
+        pNetY.push(Y);
+        if (i < STEPS) {
+            const E_policy = sig_i * Q * (1 - mu);
+            const newCumE = pCumE[i] + E_policy * 0.47;
+            pCumE.push(newCumE);
+            const newCO2 = preCO2 + (newCumE - 280) * 0.45;
+            pCO2.push(Math.max(newCO2, preCO2 + 1));
+            const exF = 0.5 + 0.25 * Math.min((years[i] - 2020) / 100, 1);
+            const F = f2x * Math.log2(pCO2[i + 1] / preCO2) + exF;
+            pTemp.push(pTemp[i] + xi * (F - lambda_fb * pTemp[i]) * (DT / 10));
+            pK.push(Math.pow(1 - dep, DT) * pKt + DT * savR * Y);
+        }
+    }
+
+    return {years,pop,grossY,netY,C_gross,C_net,cumE,CO2,temp,damages_pct,scc_vals,
+            pNetY,pTemp,pDamages,pMu,
+            peakTemp:Math.max(...temp),peakDamage:Math.max(...damages_pct)};
+}
+
+// ═══════════════════════════════════════════════
+// DRAWING
+// ═══════════════════════════════════════════════
+const margin={top:60,right:60,bottom:80,left:100};
+function gd(){return{w:canvas.width-margin.left-margin.right,h:canvas.height-margin.top-margin.bottom};}
+function makeTicks(min,max,n){const range=max-min,rough=range/n,mag=Math.pow(10,Math.floor(Math.log10(rough)));
+    let step=mag;if(rough/mag>5)step=mag*5;else if(rough/mag>2)step=mag*2;
+    const t=[];for(let v=Math.ceil(min/step)*step;v<=max*1.001;v+=step)t.push(+(v.toFixed(6)));return t;}
+function niceMax(v){const m=Math.pow(10,Math.floor(Math.log10(Math.max(v,1))));return Math.ceil(v/m)*m;}
+
+function drawAxes(minX,maxX,minY,maxY,xLbl,yLbl,xT,yT,yFmt){
+    const {w,h}=gd();
+    if(isVis('show-gridlines')){ctx.strokeStyle='#edf2f7';ctx.lineWidth=S;
+        for(const y of yT){const py=margin.top+h-((y-minY)/(maxY-minY))*h;ctx.beginPath();ctx.moveTo(margin.left,py);ctx.lineTo(margin.left+w,py);ctx.stroke();}
+        for(const x of xT){const px=margin.left+((x-minX)/(maxX-minX))*w;ctx.beginPath();ctx.moveTo(px,margin.top);ctx.lineTo(px,margin.top+h);ctx.stroke();}
+    }
+    ctx.strokeStyle='#a0aec0';ctx.lineWidth=2*S;
+    ctx.beginPath();ctx.moveTo(margin.left,margin.top);ctx.lineTo(margin.left,margin.top+h);ctx.lineTo(margin.left+w,margin.top+h);ctx.stroke();
+    if(isVis('show-axis-numbers')){ctx.fillStyle='#718096';ctx.font=`${13*S}px Segoe UI`;ctx.textAlign='center';
+        for(const x of xT){const px=margin.left+((x-minX)/(maxX-minX))*w;ctx.fillText(x.toString(),px,margin.top+h+22*S);}
+        ctx.textAlign='right';
+        for(const y of yT){const py=margin.top+h-((y-minY)/(maxY-minY))*h;ctx.fillText(yFmt?yFmt(y):y.toString(),margin.left-10*S,py+5*S);}
+    }
+    if(isVis('show-xaxis-label')){
+        const n=getNudge('xaxis-label'), lbl=getLabel('label-xaxis',xLbl);
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${15*S}px Georgia,serif`;ctx.textAlign='center';
+        const bx=margin.left+w/2+n.dx, by=canvas.height-10*S+n.dy;
+        ctx.fillText(lbl,bx,by);
+        const tw=ctx.measureText(lbl).width;
+        registerLabel('xaxis-label',bx-tw/2-4*S,by-18*S,tw+8*S,24*S);
+    }
+    if(isVis('show-yaxis-label')){
+        const n=getNudge('yaxis-label'), lbl=getLabel('label-yaxis',yLbl);
+        ctx.fillStyle='#4a5568';ctx.font=`italic ${15*S}px Georgia,serif`;ctx.textAlign='center';
+        ctx.save();const bx=22*S+n.dx, by=margin.top+h/2+n.dy;
+        ctx.translate(bx,by);ctx.rotate(-Math.PI/2);ctx.fillText(lbl,0,0);ctx.restore();
+        const tw=ctx.measureText(lbl).width;
+        registerLabel('yaxis-label',bx-14*S,by-tw/2-4*S,28*S,tw+8*S);
+    }
+}
+
+function plotLine(data,years,mnX,mxX,mnY,mxY,col,lw,dash){
+    const {w,h}=gd();ctx.strokeStyle=col;ctx.lineWidth=lw*S;if(dash)ctx.setLineDash([6*S,4*S]);
+    ctx.beginPath();for(let i=0;i<data.length;i++){const px=margin.left+((years[i]-mnX)/(mxX-mnX))*w;
+    const py=margin.top+h-((data[i]-mnY)/(mxY-mnY))*h;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+    ctx.stroke();if(dash)ctx.setLineDash([]);
+}
+function fillBetween(up,lo,years,mnX,mxX,mnY,mxY,col){
+    const {w,h}=gd();ctx.fillStyle=col;ctx.beginPath();
+    for(let i=0;i<up.length;i++){const px=margin.left+((years[i]-mnX)/(mxX-mnX))*w;const py=margin.top+h-((up[i]-mnY)/(mxY-mnY))*h;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+    for(let i=lo.length-1;i>=0;i--){const px=margin.left+((years[i]-mnX)/(mxX-mnX))*w;const py=margin.top+h-((lo[i]-mnY)/(mxY-mnY))*h;ctx.lineTo(px,py);}
+    ctx.closePath();ctx.fill();
+}
+
+function drawGraph() {
+    labelHitBoxes = [];
+    const r = runModel();
+    const rhoVal=parseFloat(rhoSlider.value), p1=parseFloat(pi1Slider.value), p2=parseFloat(pi2Slider.value);
+
+    document.getElementById('rho-value').textContent = rhoVal.toFixed(1)+'%';
+    document.getElementById('pi1-value').textContent = p1.toFixed(3);
+    document.getElementById('pi2-value').textContent = p2.toFixed(5);
+    document.getElementById('cs-value').textContent = parseFloat(csSlider.value).toFixed(1)+'°C';
+    document.getElementById('disc-50yr').textContent = '$'+Math.pow(1/(1+rhoVal/100),50).toFixed(2);
+    document.getElementById('dam-at-3').textContent = ((p1*3+p2*9)*100).toFixed(1)+'%';
+
+    const scc0=r.scc_vals[0], i50=Math.min(Math.round((2050-T_START)/DT),STEPS),
+          i100=Math.min(Math.round((2100-T_START)/DT),STEPS);
+    const scc50=r.scc_vals[i50], scc100=r.scc_vals[i100];
+    document.getElementById('scc-main').textContent='$'+Math.round(scc0)+'/tCO₂';
+    document.getElementById('scc-2050').textContent='$'+Math.round(scc50);
+    document.getElementById('scc-2100').textContent='$'+Math.round(scc100);
+    document.getElementById('peak-temp').textContent=r.peakTemp.toFixed(1)+'°C';
+    document.getElementById('peak-damage').textContent=r.peakDamage.toFixed(1)+'%';
+    updateWorked(r,scc0,scc50,scc100);
+
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    const {years}=r, xT=[2020,2040,2060,2080,2100,2120,2140,2160,2180,2200];
+
+    if (activeTab==='main') {
+        const mx=niceMax(Math.max(...r.grossY)*1.1);
+        // Dynamic y-label from text field or default
+        const yL = getLabel('label-yaxis','') || 'Global GDP ($T / decade)';
+        drawAxes(T_START,T_END,0,mx,'Year',yL,xT,makeTicks(0,mx,6),v=>v>=1000?(v/1000).toFixed(0)+'k':v.toString());
+        if(isVis('show-damage-fill')) fillBetween(r.grossY,r.netY,years,T_START,T_END,0,mx,'rgba(197,48,48,0.12)');
+        if(isVis('show-gross-line')) plotLine(r.grossY,years,T_START,T_END,0,mx,'#2b6cb0',2.5,false);
+        if(isVis('show-net-line')) plotLine(r.netY,years,T_START,T_END,0,mx,'#c53030',2.5,false);
+        const {w,h}=gd();
+        if(isVis('show-damage-label')){
+            const mi=Math.round(STEPS*0.6), n=getNudge('damage-label');
+            const lx=margin.left+((years[mi]-T_START)/(T_END-T_START))*w+n.dx;
+            const lyg=margin.top+h-(r.grossY[mi]/mx)*h, lyn=margin.top+h-(r.netY[mi]/mx)*h;
+            const ly=(lyg+lyn)/2+n.dy;
+            ctx.fillStyle='#c53030';ctx.font=`italic ${12*S}px Georgia,serif`;ctx.textAlign='center';
+            ctx.fillText('Climate damages',lx,ly-2*S);
+            const tw=ctx.measureText('Climate damages').width;
+            registerLabel('damage-label',lx-tw/2-4*S,ly-20*S,tw+8*S,28*S);
+        }
+        if(isVis('show-line-labels')){
+            const n1=getNudge('gross-label'), n2=getNudge('net-label');
+            ctx.font=`${11*S}px Segoe UI`;ctx.textAlign='right';
+            const gx=margin.left+w-4*S, gy=margin.top+h-(r.grossY[STEPS]/mx)*h;
+            ctx.fillStyle='#2b6cb0'; ctx.fillText('Without damages',gx+n1.dx,gy-10*S+n1.dy);
+            const tw1=ctx.measureText('Without damages').width;
+            registerLabel('gross-label',gx-tw1-4*S,gy-24*S,tw1+8*S,20*S);
+            ctx.fillStyle='#c53030';
+            const ny=margin.top+h-(r.netY[STEPS]/mx)*h;
+            ctx.fillText('After damages',gx+n2.dx,ny+18*S+n2.dy);
+            const tw2=ctx.measureText('After damages').width;
+            registerLabel('net-label',gx-tw2-4*S,ny+4*S,tw2+8*S,20*S);
+        }
+    } else if (activeTab==='temp') {
+        const mxT=Math.max(niceMax(Math.max(...r.temp)*1.2),3);
+        const yL = getLabel('label-yaxis','') || 'Warming (°C above pre-industrial)';
+        drawAxes(T_START,T_END,0,mxT,'Year',yL,xT,makeTicks(0,mxT,6),v=>v.toFixed(1));
+        if(isVis('show-temp-line')) plotLine(r.temp,years,T_START,T_END,0,mxT,'#d69e2e',3,false);
+        const {w,h}=gd();
+        if(isVis('show-targets')){
+            [1.5,2.0].forEach(ref=>{if(ref<mxT){
+                const py=margin.top+h-(ref/mxT)*h;
+                ctx.strokeStyle=ref===2?'rgba(229,62,62,0.4)':'rgba(49,130,206,0.3)';ctx.lineWidth=1.5*S;ctx.setLineDash([6*S,4*S]);
+                ctx.beginPath();ctx.moveTo(margin.left,py);ctx.lineTo(margin.left+w,py);ctx.stroke();ctx.setLineDash([]);
+                ctx.fillStyle=ref===2?'#e53e3e':'#3182ce';ctx.font=`${11*S}px Segoe UI`;ctx.textAlign='left';
+                ctx.fillText(ref+'°C target',margin.left+8*S,py-6*S);
+            }});
+        }
+        if(isVis('show-damage-overlay')){
+            const mxD=Math.max(...r.damages_pct)*1.3||1;
+            plotLine(r.damages_pct.map(d=>d*(mxT/mxD)),years,T_START,T_END,0,mxT,'rgba(197,48,48,0.5)',2,true);
+            ctx.fillStyle='rgba(197,48,48,0.6)';ctx.font=`${11*S}px Segoe UI`;ctx.textAlign='left';
+            for(const d of makeTicks(0,mxD,4)){const py=margin.top+h-(d/mxD)*h;ctx.fillText(d.toFixed(1)+'%',margin.left+w+6*S,py+4*S);}
+            ctx.save();ctx.translate(canvas.width-10*S,margin.top+h/2);ctx.rotate(-Math.PI/2);
+            ctx.fillStyle='rgba(197,48,48,0.5)';ctx.font=`italic ${13*S}px Georgia,serif`;ctx.textAlign='center';ctx.fillText('Damage (% GDP)',0,0);ctx.restore();
+        }
+        // Labels for temperature line and damage overlay
+        if(isVis('show-temp-labels')){
+            // Temperature line label at ~70% of timeline
+            const li=Math.round(STEPS*0.7);
+            const n1=getNudge('temp-line-label');
+            const tx=margin.left+((years[li]-T_START)/(T_END-T_START))*w+n1.dx;
+            const ty=margin.top+h-(r.temp[li]/mxT)*h+n1.dy;
+            ctx.fillStyle='#b7791f';ctx.font=`bold ${11*S}px Segoe UI`;ctx.textAlign='left';
+            ctx.fillText('Temperature (°C)',tx+8*S,ty-8*S);
+            ctx.fillText(r.temp[li].toFixed(1)+'°C',tx+8*S,ty+8*S);
+            const tw1=ctx.measureText('Temperature (°C)').width;
+            registerLabel('temp-line-label',tx,ty-20*S,tw1+16*S,36*S);
+
+            if(isVis('show-damage-overlay')){
+                const mxD=Math.max(...r.damages_pct)*1.3||1;
+                const n2=getNudge('damage-line-label');
+                const dScaled=r.damages_pct[li]*(mxT/mxD);
+                const dx=margin.left+((years[li]-T_START)/(T_END-T_START))*w+n2.dx;
+                const dy=margin.top+h-(dScaled/mxT)*h+n2.dy;
+                ctx.fillStyle='rgba(197,48,48,0.7)';ctx.font=`bold ${11*S}px Segoe UI`;ctx.textAlign='left';
+                ctx.fillText('Damage (% GDP)',dx+8*S,dy-8*S);
+                ctx.fillText(r.damages_pct[li].toFixed(1)+'%',dx+8*S,dy+8*S);
+                const tw2=ctx.measureText('Damage (% GDP)').width;
+                registerLabel('damage-line-label',dx,dy-20*S,tw2+16*S,36*S);
+            }
+        }
+    } else if (activeTab==='scc') {
+        const mxS=niceMax(Math.max(...r.scc_vals)*1.1)||100;
+        const yL = getLabel('label-yaxis','') || 'Social Cost of Carbon ($/tCO₂)';
+        drawAxes(T_START,T_END,0,mxS,'Year',yL,xT,makeTicks(0,mxS,6),v=>'$'+Math.round(v));
+        if(isVis('show-scc-line')) plotLine(r.scc_vals,years,T_START,T_END,0,mxS,'#38a169',3,false);
+        const {w,h}=gd();
+        if(isVis('show-scc-dot')){
+            const n=getNudge('scc-dot');
+            const px0=margin.left+n.dx, py0=margin.top+h-(r.scc_vals[0]/mxS)*h+n.dy;
+            ctx.fillStyle='#38a169';ctx.beginPath();ctx.arc(px0,py0,7*S,0,Math.PI*2);ctx.fill();
+            ctx.strokeStyle='#fff';ctx.lineWidth=2*S;ctx.stroke();
+            ctx.fillStyle='#38a169';ctx.font=`bold ${12*S}px Segoe UI`;ctx.textAlign='left';
+            ctx.fillText('$'+Math.round(r.scc_vals[0])+'/tCO₂',px0+12*S,py0-8*S);
+            ctx.font=`${10*S}px Segoe UI`;ctx.fillStyle='#718096';ctx.fillText('today',px0+12*S,py0+8*S);
+            registerLabel('scc-dot',px0-10*S,py0-20*S,160*S,36*S);
+        }
+        if(isVis('show-scc-annotation')){
+            const n=getNudge('scc-annotation');
+            const ax=margin.left+w/2+n.dx, ay=margin.top+28*S+n.dy;
+            ctx.fillStyle='#718096';ctx.font=`italic ${11*S}px Georgia,serif`;ctx.textAlign='center';
+            ctx.fillText('The SCC rises over time because the economy grows,',ax,ay);
+            ctx.fillText('so each marginal ton of CO₂ destroys more output.',ax,ay+16*S);
+            registerLabel('scc-annotation',ax-200*S,ay-14*S,400*S,38*S);
+        }
+    } else if (activeTab==='policy') {
+        // Optimal Policy tab: gross GDP, BAU net GDP, and optimal-policy net GDP
+        const mx=niceMax(Math.max(...r.grossY)*1.1);
+        const yL = getLabel('label-yaxis','') || 'Global GDP ($T / decade)';
+        drawAxes(T_START,T_END,0,mx,'Year',yL,xT,makeTicks(0,mx,6),v=>v>=1000?(v/1000).toFixed(0)+'k':v.toString());
+        const {w,h}=gd();
+        // Shading: residual damage under policy (between gross and policy)
+        if(isVis('show-policy-fills')){
+            fillBetween(r.grossY,r.pNetY,years,T_START,T_END,0,mx,'rgba(56,161,105,0.08)');
+            // Shading: avoided damage (between policy and BAU)
+            fillBetween(r.pNetY,r.netY,years,T_START,T_END,0,mx,'rgba(56,161,105,0.15)');
+            // Shading: BAU damages below net
+            fillBetween(r.grossY,r.netY,years,T_START,T_END,0,mx,'rgba(197,48,48,0.06)');
+        }
+        if(isVis('show-policy-gross')) plotLine(r.grossY,years,T_START,T_END,0,mx,'#2b6cb0',2,false);
+        if(isVis('show-policy-bau')) plotLine(r.netY,years,T_START,T_END,0,mx,'#c53030',2,true);
+        if(isVis('show-policy-opt')) plotLine(r.pNetY,years,T_START,T_END,0,mx,'#38a169',3,false);
+
+        if(isVis('show-policy-labels')){
+            const ei=STEPS; // endpoint index
+            const gx=margin.left+w-4*S;
+
+            // Gross GDP label
+            const n1=getNudge('pol-gross-label');
+            const gy=margin.top+h-(r.grossY[ei]/mx)*h;
+            ctx.fillStyle='#2b6cb0';ctx.font=`${11*S}px Segoe UI`;ctx.textAlign='right';
+            ctx.fillText('No damages (gross GDP)',gx+n1.dx,gy-10*S+n1.dy);
+            const tw1=ctx.measureText('No damages (gross GDP)').width;
+            registerLabel('pol-gross-label',gx-tw1-4*S+n1.dx,gy-24*S+n1.dy,tw1+8*S,20*S);
+
+            // Optimal policy label
+            const n2=getNudge('pol-opt-label');
+            const oy=margin.top+h-(r.pNetY[ei]/mx)*h;
+            ctx.fillStyle='#38a169';ctx.font=`bold ${11*S}px Segoe UI`;ctx.textAlign='right';
+            ctx.fillText('With optimal carbon tax',gx+n2.dx,oy+5*S+n2.dy);
+            const tw2=ctx.measureText('With optimal carbon tax').width;
+            registerLabel('pol-opt-label',gx-tw2-4*S+n2.dx,oy-8*S+n2.dy,tw2+8*S,20*S);
+
+            // BAU label
+            const n3=getNudge('pol-bau-label');
+            const by=margin.top+h-(r.netY[ei]/mx)*h;
+            ctx.fillStyle='#c53030';ctx.font=`${11*S}px Segoe UI`;ctx.textAlign='right';
+            ctx.fillText('No policy (BAU damages)',gx+n3.dx,by+18*S+n3.dy);
+            const tw3=ctx.measureText('No policy (BAU damages)').width;
+            registerLabel('pol-bau-label',gx-tw3-4*S+n3.dx,by+4*S+n3.dy,tw3+8*S,20*S);
+
+            // Avoided damage annotation in the middle
+            const mi=Math.round(STEPS*0.55);
+            const n4=getNudge('pol-avoided-label');
+            const ax=margin.left+((years[mi]-T_START)/(T_END-T_START))*w+n4.dx;
+            const aOy=margin.top+h-(r.pNetY[mi]/mx)*h;
+            const aNy=margin.top+h-(r.netY[mi]/mx)*h;
+            const ay=(aOy+aNy)/2+n4.dy;
+            ctx.fillStyle='#38a169';ctx.font=`italic ${11*S}px Georgia,serif`;ctx.textAlign='center';
+            ctx.fillText('Avoided damage',ax,ay-2*S);
+            const tw4=ctx.measureText('Avoided damage').width;
+            registerLabel('pol-avoided-label',ax-tw4/2-4*S,ay-18*S,tw4+8*S,24*S);
+
+            // Residual damage annotation
+            const n5=getNudge('pol-residual-label');
+            const rGy=margin.top+h-(r.grossY[mi]/mx)*h;
+            const rOy=margin.top+h-(r.pNetY[mi]/mx)*h;
+            const ry=(rGy+rOy)/2+n5.dy;
+            ctx.fillStyle='#718096';ctx.font=`italic ${11*S}px Georgia,serif`;ctx.textAlign='center';
+            ctx.fillText('Residual damage',ax+n5.dx,ry-8*S);
+            ctx.fillText('+ abatement cost',ax+n5.dx,ry+8*S);
+            const tw5=ctx.measureText('+ abatement cost').width;
+            registerLabel('pol-residual-label',ax-tw5/2-4*S+n5.dx,ry-22*S,tw5+8*S,38*S);
+        }
+    }
+}
+
+function updateWorked(r,scc0,scc50,scc100){
+    const rho=parseFloat(rhoSlider.value),pi1=parseFloat(pi1Slider.value),pi2=parseFloat(pi2Slider.value),
+          cs=parseFloat(csSlider.value),T0=r.temp[0],dD=pi1+2*pi2*T0;
+    document.getElementById('worked-content').innerHTML=`
+        <div class="worked-step"><div class="step-label">Current Parameters</div>
+        <div class="step-math">\\( \\rho = ${rho.toFixed(1)}\\%, \\quad \\pi_1 = ${pi1.toFixed(3)}, \\quad \\pi_2 = ${pi2.toFixed(5)}, \\quad \\eta = ${cs.toFixed(1)}°\\text{C} \\)</div></div>
+        <div class="worked-step"><div class="step-label">Step 1 — How much does warming hurt? (Damage function)</div>
+        <div class="step-math">\\( D(T) = \\pi_1 T + \\pi_2 T^2 \\)<br>
+        At current warming \\( T = ${T0.toFixed(1)} \\)°C: \\( D = ${pi1.toFixed(3)} \\times ${T0.toFixed(1)} + ${pi2.toFixed(5)} \\times ${T0.toFixed(1)}^2 = ${(r.damages_pct[0]).toFixed(2)}\\% \\) of GDP lost.<br>
+        The marginal damage of one more degree: \\( D'(T) = \\pi_1 + 2\\pi_2 T = ${pi1.toFixed(3)} + 2(${pi2.toFixed(5)})(${T0.toFixed(1)}) = ${dD.toFixed(4)} \\).<br>
+        <em>Notice the quadratic term makes marginal damages grow with temperature—this is why the SCC rises over time.</em></div></div>
+        <div class="worked-step"><div class="step-label">Step 2 — How much warming does one extra ton cause?</div>
+        <div class="step-math">One ton of CO₂ adds ~0.00000047 ppm to the atmosphere (after about half is absorbed by oceans). This tiny increase in CO₂ traps a bit more heat, which — given climate sensitivity \\( \\eta = ${cs.toFixed(1)} \\)°C — gradually raises temperature over the coming decades.</div></div>
+        <div class="worked-step"><div class="step-label">Step 3 — Convert future damages to today's dollars</div>
+        <div class="step-math">Damages happening in the future are worth less today for two reasons:<br>
+        (a) <strong>Time preference</strong>: at \\( \\rho = ${rho.toFixed(1)}\\% \\), $1 of damage in 50 years is worth only \\( (1/${(1+rho/100).toFixed(3)})^{50} = $${Math.pow(1/(1+rho/100),50).toFixed(2)} \\) today.<br>
+        (b) <strong>Growth</strong>: future people are richer, so a dollar matters less to them. With log utility, $1 lost when consumption is twice as high only costs half as much in welfare terms.</div></div>
+        <div class="worked-step"><div class="step-label">Step 4 — Add up all future damages</div>
+        <div class="step-math">For every future decade from 2020 to 2200, compute:<br>
+        \\( \\text{Marginal damage}_s = \\underbrace{\\left(\\frac{1}{1+\\rho}\\right)^{s-t}}_{\\text{discount}} \\times \\underbrace{\\frac{c_t}{c_s}}_{\\text{welfare weight}} \\times \\underbrace{(\\pi_1 + 2\\pi_2 T_s)\\,Q_s}_{\\text{\\$ damage per °C}} \\times \\underbrace{\\frac{\\partial T_s}{\\partial E_t}}_{\\text{warming per ton}} \\)<br>
+        Sum these up across all future periods.</div></div>
+        <div class="worked-step"><div class="step-label">Result — Social Cost of Carbon</div>
+        <div class="step-math highlight-result">\\( \\text{SCC}_{2020} = \\$${Math.round(scc0)}/\\text{tCO}_2 \\qquad \\text{SCC}_{2050} = \\$${Math.round(scc50)}/\\text{tCO}_2 \\qquad \\text{SCC}_{2100} = \\$${Math.round(scc100)}/\\text{tCO}_2 \\)</div></div>
+        <div class="worked-step"><div class="step-label">What does this mean?</div>
+        <div class="step-math">Emitting one ton of CO₂ today causes <strong>$${Math.round(scc0)}</strong> of total damage to the world economy (in present value). A carbon tax of $${Math.round(scc0)}/ton would make polluters internalize this externality, leading to the socially optimal level of emissions.</div></div>`;
+    if(typeof renderMathInElement!=='undefined')renderMathInElement(document.getElementById('section-worked'),{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],throwOnError:false});
+}
+
+// ─── Copy / Save ───
+document.getElementById('copy-plot-btn').addEventListener('click',async()=>{const l=document.getElementById('copy-label');try{const b=await new Promise(r=>canvas.toBlob(r,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);document.getElementById('copy-plot-btn').classList.add('copied');l.textContent='Copied!';setTimeout(()=>{document.getElementById('copy-plot-btn').classList.remove('copied');l.textContent='Copy';},1500);}catch{l.textContent='Failed';setTimeout(()=>{l.textContent='Copy';},1500);}});
+document.getElementById('save-plot-btn').addEventListener('click',()=>{const l=document.getElementById('save-label');const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='dice_scc.png';a.click();document.getElementById('save-plot-btn').classList.add('copied');l.textContent='Saved!';setTimeout(()=>{document.getElementById('save-plot-btn').classList.remove('copied');l.textContent='Save';},1500);});
+
+// ─── Slider listeners ───
+[rhoSlider,pi1Slider,pi2Slider,csSlider].forEach(s=>s.addEventListener('input',drawGraph));
+
+// ═══════════════════════════════════════════════════════
+// URL STATE ENCODING / DECODING
+// ═══════════════════════════════════════════════════════
+const DEFAULTS = {
+    rho:1.5, pi1:0, pi2:0.00236, cs:3.0, tab:'main',
+    'show-xaxis-label':true,'show-yaxis-label':true,'show-axis-numbers':true,'show-gridlines':true,
+    'show-gross-line':true,'show-net-line':true,'show-damage-fill':true,'show-damage-label':true,'show-line-labels':true,
+    'show-temp-line':true,'show-targets':true,'show-damage-overlay':true,'show-temp-labels':true,
+    'show-scc-line':true,'show-scc-dot':true,'show-scc-annotation':true,
+    'show-policy-gross':true,'show-policy-bau':true,'show-policy-opt':true,'show-policy-fills':true,'show-policy-labels':true,
+    'label-xaxis':'Year','label-yaxis':'',
+    'disp-open':false,
+};
+
+const CHECKBOX_IDS = [
+    'show-xaxis-label','show-yaxis-label','show-axis-numbers','show-gridlines',
+    'show-gross-line','show-net-line','show-damage-fill','show-damage-label','show-line-labels',
+    'show-temp-line','show-targets','show-damage-overlay','show-temp-labels',
+    'show-scc-line','show-scc-dot','show-scc-annotation',
+    'show-policy-gross','show-policy-bau','show-policy-opt','show-policy-fills','show-policy-labels'
+];
+const LABEL_IDS = ['label-xaxis','label-yaxis'];
+const NUDGE_KEYS = ['xaxis-label','yaxis-label','damage-label','gross-label','net-label','scc-dot','scc-annotation',
+    'temp-line-label','damage-line-label',
+    'pol-gross-label','pol-opt-label','pol-bau-label','pol-avoided-label','pol-residual-label'];
+const ALL_SECTIONS = ['graph','explanation','worked','formal','discounting','damages','climate','results'];
+
+function buildStateObject() {
+    const s = {};
+    const rho=parseFloat(rhoSlider.value),pi1=parseFloat(pi1Slider.value),pi2=parseFloat(pi2Slider.value),cs=parseFloat(csSlider.value);
+    if(rho!==DEFAULTS.rho)s.rho=rho; if(pi1!==DEFAULTS.pi1)s.pi1=pi1; if(pi2!==DEFAULTS.pi2)s.pi2=pi2; if(cs!==DEFAULTS.cs)s.cs=cs;
+    if(activeTab!==DEFAULTS.tab)s.tab=activeTab;
+    for(const id of CHECKBOX_IDS){const el=document.getElementById(id);if(el&&el.checked!==DEFAULTS[id])s[id]=el.checked?1:0;}
+    for(const id of LABEL_IDS){const el=document.getElementById(id);if(el&&el.value!==DEFAULTS[id])s[id]=el.value;}
+    for(const k of NUDGE_KEYS){const o=nudgeOffsets[k];if(o&&(Math.abs(o.dx)>0.5||Math.abs(o.dy)>0.5))s['n_'+k]=Math.round(o.dx)+','+Math.round(o.dy);}
+    for(const sec of ALL_SECTIONS){const body=document.getElementById('body-'+sec);if(body){const isOpen=!body.classList.contains('collapsed');if(!isOpen)s['sec-'+sec]=0;}}
+    const dispOpen=document.getElementById('display-panel').classList.contains('open');
+    if(dispOpen!==DEFAULTS['disp-open'])s['disp-open']=dispOpen?1:0;
+    const panelNames=Object.keys(PANEL_NAMES);
+    for(const name of panelNames){const el=document.getElementById('section-'+name);if(el&&el.classList.contains('panel-closed'))s['closed-'+name]=1;}
+    return s;
+}
+
+function stateToHash(state){const p=new URLSearchParams();for(const[k,v]of Object.entries(state))p.set(k,v);return p.toString();}
+
+function loadStateFromHash(){
+    const hash=window.location.hash.slice(1);if(!hash)return;
+    const p=new URLSearchParams(hash);
+    if(p.has('rho'))rhoSlider.value=p.get('rho');if(p.has('pi1'))pi1Slider.value=p.get('pi1');
+    if(p.has('pi2'))pi2Slider.value=p.get('pi2');if(p.has('cs'))csSlider.value=p.get('cs');
+    if(p.has('tab')){activeTab=p.get('tab');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const tb=document.getElementById('tab-'+activeTab);if(tb)tb.classList.add('active');}
+    for(const id of CHECKBOX_IDS){if(p.has(id)){const el=document.getElementById(id);if(el)el.checked=p.get(id)==='1';}}
+    for(const id of LABEL_IDS){if(p.has(id)){const el=document.getElementById(id);if(el)el.value=p.get(id);}}
+    for(const k of NUDGE_KEYS){const key='n_'+k;if(p.has(key)){const parts=p.get(key).split(',');if(parts.length===2)nudgeOffsets[k]={dx:parseFloat(parts[0]),dy:parseFloat(parts[1])};}}
+    for(const sec of ALL_SECTIONS){const key='sec-'+sec;if(p.has(key)){const shouldBeOpen=p.get(key)==='1';const body=document.getElementById('body-'+sec),toggle=document.getElementById('toggle-'+sec);
+        if(shouldBeOpen){body?.classList.remove('collapsed');if(toggle)toggle.textContent='▼';}else{body?.classList.add('collapsed');if(toggle)toggle.textContent='▶';}}}
+    if(p.has('disp-open')){const shouldBeOpen=p.get('disp-open')==='1';const panel=document.getElementById('display-panel'),arrow=document.getElementById('display-arrow');
+        if(shouldBeOpen){panel.classList.add('open');arrow.classList.add('open');}else{panel.classList.remove('open');arrow.classList.remove('open');}}
+    for(const name of Object.keys(PANEL_NAMES)){const key='closed-'+name;if(p.has(key)){const el=document.getElementById('section-'+name);if(el){if(p.get(key)==='1')el.classList.add('panel-closed');else el.classList.remove('panel-closed');}}}
+}
+
+// Copy URL
+document.getElementById('copy-url-btn').addEventListener('click',async()=>{
+    const btn=document.getElementById('copy-url-btn');
+    const state=buildStateObject(),hash=stateToHash(state);
+    const url=window.location.origin+window.location.pathname+(hash?'#'+hash:'');
+    try{await navigator.clipboard.writeText(url);btn.textContent='✓ Copied!';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='📋 Copy link with current state';btn.classList.remove('copied');},2000);
+    }catch{prompt('Copy this URL:',url);}
+});
+
+// Reset
+document.getElementById('reset-url-btn').addEventListener('click',()=>{
+    rhoSlider.value=DEFAULTS.rho;pi1Slider.value=DEFAULTS.pi1;pi2Slider.value=DEFAULTS.pi2;csSlider.value=DEFAULTS.cs;
+    activeTab='main';document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-main').classList.add('active');
+    for(const id of CHECKBOX_IDS){const el=document.getElementById(id);if(el)el.checked=DEFAULTS[id];}
+    for(const id of LABEL_IDS){const el=document.getElementById(id);if(el)el.value=DEFAULTS[id];}
+    for(const k of NUDGE_KEYS)delete nudgeOffsets[k];
+    ALL_SECTIONS.forEach(sec=>{const body=document.getElementById('body-'+sec),toggle=document.getElementById('toggle-'+sec);
+        if(body)body.classList.remove('collapsed');if(toggle)toggle.textContent='▼';});
+    document.getElementById('display-panel').classList.remove('open');document.getElementById('display-arrow').classList.remove('open');
+    Object.keys(PANEL_NAMES).forEach(name=>{const el=document.getElementById('section-'+name);if(el)el.classList.remove('panel-closed');});
+    updateRestoreBar();updateLayout();history.replaceState(null,'',window.location.pathname);drawGraph();
+});
+
+// ─── Initialize ───
+loadStateFromHash();
+updateRestoreBar();
+updateLayout();
+drawGraph();
+</script>
+</body>
+</html>

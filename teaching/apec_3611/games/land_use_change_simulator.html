@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land-Use Change Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f7fa;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#2d3748;padding:16px;}
+h1{text-align:center;color:#1a202c;font-size:1.7rem;font-weight:700;margin-bottom:4px;}
+.subtitle{text-align:center;color:#718096;font-size:0.92rem;margin-bottom:18px;max-width:700px;margin-left:auto;margin-right:auto;}
+
+.app-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:260px auto 1fr;grid-template-rows:auto;gap:14px;}
+.controls-panel{grid-row:1/2;grid-column:1;}
+.grid-panel{position:relative;grid-column:2;}
+.metrics-panel{grid-column:3;}
+
+.panel{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.panel-title{font-size:0.76rem;text-transform:uppercase;letter-spacing:1.1px;color:#718096;font-weight:600;margin-bottom:10px;}
+.section-divider{border:none;border-top:1px solid #edf2f7;margin:14px 0;}
+
+/* Land Palette */
+.land-palette{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.land-btn{width:60px;height:54px;border-radius:8px;border:2px solid #e2e8f0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.62rem;font-weight:600;transition:all 0.15s;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.3);}
+.land-btn.active{box-shadow:0 0 0 3px rgba(66,153,225,0.4);transform:scale(1.05);}
+.land-btn .icon{font-size:1.1rem;margin-bottom:2px;}
+
+/* Sliders */
+.slider-group{margin-bottom:10px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.78rem;color:#4a5568;}
+.slider-value{background:#edf2f7;padding:1px 7px;border-radius:4px;font-family:'Consolas','Monaco',monospace;font-size:0.74rem;font-weight:600;color:#2d3748;}
+input[type="range"]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#e2e8f0;outline:none;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#4299e1;cursor:pointer;box-shadow:0 1px 3px rgba(66,153,225,0.4);}
+input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#4299e1;cursor:pointer;border:none;}
+
+/* Toggle Switches */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:0.78rem;color:#4a5568;}
+.toggle-switch{position:relative;width:38px;height:20px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e0;border-radius:20px;transition:0.2s;}
+.toggle-slider:before{content:"";position:absolute;height:16px;width:16px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:0.2s;}
+.toggle-switch input:checked+.toggle-slider{background:#4299e1;}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(18px);}
+.policy-detail{display:none;padding-left:4px;margin-bottom:8px;}
+.policy-detail.show{display:block;}
+
+/* Buttons */
+.action-btn{width:100%;padding:10px;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.15s;margin-bottom:6px;}
+.action-btn.primary{background:#4299e1;color:#fff;}
+.action-btn.primary:hover{background:#3182ce;}
+.action-btn.secondary{background:#edf2f7;color:#4a5568;}
+.action-btn.secondary:hover{background:#e2e8f0;}
+.preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.preset-btn{padding:4px 10px;border-radius:6px;border:1px solid #e2e8f0;font-size:0.68rem;cursor:pointer;background:#fff;color:#4a5568;transition:all 0.15s;font-weight:500;}
+.preset-btn:hover{background:#edf2f7;border-color:#a0aec0;}
+.preset-btn.active{background:#4299e1;color:#fff;border-color:#4299e1;}
+
+/* Grid Canvas */
+#gridCanvas{width:480px;height:480px;display:block;cursor:pointer;border-radius:8px;background:#edf2f7;}
+.cell-tooltip{position:absolute;background:rgba(26,32,44,0.92);color:#fff;border-radius:6px;padding:8px 12px;font-size:0.72rem;pointer-events:none;z-index:10;display:none;line-height:1.5;white-space:nowrap;}
+
+/* Summary Bar */
+.summary-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.stat-item{flex:1;min-width:80px;text-align:center;}
+.stat-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;font-weight:600;}
+.stat-value{font-family:'Consolas','Monaco',monospace;font-size:1.0rem;font-weight:700;color:#2d3748;}
+
+/* Charts Grid */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.chart-box{background:#f7fafc;border:1px solid #edf2f7;border-radius:8px;padding:8px;}
+.chart-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.72rem;color:#718096;font-weight:600;}
+.chart-val{font-family:'Consolas','Monaco',monospace;font-weight:700;font-size:0.78rem;}
+.chart-box canvas{width:100%;height:60px;display:block;border-radius:4px;}
+
+/* Welfare Bar */
+.welfare-bar{background:#f7fafc;border:1px solid #edf2f7;border-left:3px solid #4299e1;border-radius:8px;padding:12px;display:flex;align-items:center;gap:14px;}
+.welfare-score{font-family:'Consolas','Monaco',monospace;font-size:1.5rem;font-weight:800;min-width:50px;text-align:center;}
+.welfare-breakdown{font-size:0.7rem;color:#718096;line-height:1.6;}
+.welfare-breakdown span{font-family:'Consolas','Monaco',monospace;font-weight:600;}
+
+/* Info box */
+.info-box{background:#f7fafc;border:1px solid #e2e8f0;border-left:3px solid #4299e1;border-radius:8px;padding:10px;font-size:0.74rem;color:#4a5568;line-height:1.5;}
+
+/* Event Banner */
+.event-banner{position:absolute;top:8px;left:8px;right:8px;background:#fffff0;border:1px solid #d69e2e;border-radius:8px;padding:10px 14px;font-size:0.78rem;z-index:5;display:none;animation:fadeIn 0.3s;}
+.event-banner .event-icon{font-size:1.1rem;margin-right:6px;}
+.event-banner .event-text{color:#744210;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* Land composition bar */
+.composition-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;margin-bottom:10px;background:#edf2f7;}
+.composition-bar div{transition:width 0.4s ease;}
+.comp-legend{display:flex;flex-wrap:wrap;gap:8px;font-size:0.65rem;color:#718096;margin-bottom:6px;}
+.comp-legend span{display:flex;align-items:center;gap:3px;}
+.comp-swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+/* Auto-play row */
+.autoplay-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.speed-label{font-size:0.68rem;color:#a0aec0;}
+
+@media(max-width:1100px){
+  .app-grid{grid-template-columns:260px 1fr;grid-template-rows:auto auto;}
+  .controls-panel{grid-row:1/3;grid-column:1;}
+  .grid-panel{grid-column:2;grid-row:1;}
+  .metrics-panel{grid-column:2;grid-row:2;}
+  #gridCanvas{width:100%;max-width:480px;height:auto;aspect-ratio:1;}
+}
+@media(max-width:700px){
+  .app-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto;}
+  .controls-panel{grid-row:auto;grid-column:auto;}
+  .grid-panel{grid-column:auto;}
+  .metrics-panel{grid-column:auto;}
+  #gridCanvas{width:100%;max-width:400px;height:auto;aspect-ratio:1;margin:0 auto;}
+}
+</style>
+</head>
+<body>
+
+<h1>Land-Use Change Simulator</h1>
+<p class="subtitle">Landowners autonomously convert parcels based on market incentives. Set policies and market conditions to shape how the landscape evolves. You can also directly override cells.</p>
+
+<div class="app-grid">
+
+<!-- LEFT: Controls -->
+<div class="controls-panel panel">
+  <div class="panel-title">Land Type Tool</div>
+  <div class="land-palette">
+    <div class="land-btn active" data-type="0" style="background:#38a169;border-color:#38a169;"><span class="icon">🌲</span>Forest</div>
+    <div class="land-btn" data-type="1" style="background:#d69e2e;border-color:#d69e2e;"><span class="icon">🌾</span>Farm</div>
+    <div class="land-btn" data-type="2" style="background:#718096;border-color:#718096;"><span class="icon">🏢</span>Urban</div>
+    <div class="land-btn" data-type="3" style="background:#276749;border-color:#276749;"><span class="icon">🛡️</span>Protect</div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="panel-title">Policy Instruments</div>
+
+  <div class="toggle-row"><span>Carbon Tax</span><label class="toggle-switch"><input type="checkbox" id="tCarbonTax"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dCarbonTax">
+    <div class="slider-group"><div class="slider-label"><span>Tax rate</span><span class="slider-value" id="vCarbonTax">$25/ton</span></div>
+    <input type="range" id="sCarbonTax" min="0" max="100" value="25" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Conservation Subsidy</span><label class="toggle-switch"><input type="checkbox" id="tSubsidy"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dSubsidy">
+    <div class="slider-group"><div class="slider-label"><span>Payment</span><span class="slider-value" id="vSubsidy">$15/cell</span></div>
+    <input type="range" id="sSubsidy" min="0" max="50" value="15" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Zoning (Min Forest %)</span><label class="toggle-switch"><input type="checkbox" id="tZoning"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dZoning">
+    <div class="slider-group"><div class="slider-label"><span>Min forest</span><span class="slider-value" id="vZoning">30%</span></div>
+    <input type="range" id="sZoning" min="0" max="80" value="30" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Development Tax</span><label class="toggle-switch"><input type="checkbox" id="tDevTax"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dDevTax">
+    <div class="slider-group"><div class="slider-label"><span>Tax</span><span class="slider-value" id="vDevTax">$50/conv</span></div>
+    <input type="range" id="sDevTax" min="0" max="100" value="50" step="5"></div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="panel-title">Market Parameters</div>
+
+  <div class="slider-group"><div class="slider-label"><span>Food Price</span><span class="slider-value" id="vFoodPrice">$40</span></div>
+  <input type="range" id="sFoodPrice" min="10" max="150" value="40" step="5"></div>
+
+  <div class="slider-group"><div class="slider-label"><span>Carbon Credit Price</span><span class="slider-value" id="vCarbonCredit">$10</span></div>
+  <input type="range" id="sCarbonCredit" min="0" max="50" value="10" step="1"></div>
+
+  <div class="slider-group"><div class="slider-label"><span>Urban Dev Value</span><span class="slider-value" id="vUrbanVal">$100</span></div>
+  <input type="range" id="sUrbanVal" min="50" max="200" value="100" step="10"></div>
+
+  <div class="slider-group"><div class="slider-label"><span>Pop Growth Rate</span><span class="slider-value" id="vPopGrowth">2%</span></div>
+  <input type="range" id="sPopGrowth" min="0" max="5" value="2" step="0.5"></div>
+
+  <hr class="section-divider">
+  <div class="panel-title">Time Controls</div>
+
+  <button class="action-btn primary" id="btnAdvance">Next Period ▶</button>
+  <div class="autoplay-row">
+    <button class="action-btn secondary" id="btnAuto" style="width:auto;padding:6px 14px;font-size:0.76rem;">Auto ▶▶</button>
+    <input type="range" id="sSpeed" min="200" max="2000" value="800" step="100" style="flex:1;">
+    <span class="speed-label" id="vSpeed">0.8s</span>
+  </div>
+  <button class="action-btn secondary" id="btnReset">Reset</button>
+
+  <hr class="section-divider">
+  <div class="panel-title">Presets</div>
+  <div class="preset-row">
+    <button class="preset-btn active" data-preset="balanced">Balanced</button>
+    <button class="preset-btn" data-preset="deforestation">Deforestation</button>
+    <button class="preset-btn" data-preset="green">Green Deal</button>
+    <button class="preset-btn" data-preset="laissez">Laissez-Faire</button>
+  </div>
+
+  <div class="info-box">Each period, landowners convert parcels based on profitability. Urban sprawls near cities, farms expand when food prices rise, and forest regenerates when unprofitable. Use policies to shift incentives. Click cells to override.</div>
+</div>
+
+<!-- RIGHT TOP: Grid -->
+<div class="grid-panel panel">
+  <div class="panel-title">Land Grid <span style="float:right;font-family:Consolas,monospace;color:#2d3748;" id="periodLabel">Period 0</span></div>
+  <div class="comp-legend">
+    <span><span class="comp-swatch" style="background:#38a169;"></span> Forest</span>
+    <span><span class="comp-swatch" style="background:#d69e2e;"></span> Agriculture</span>
+    <span><span class="comp-swatch" style="background:#718096;"></span> Urban</span>
+    <span><span class="comp-swatch" style="background:#276749;"></span> Conservation</span>
+  </div>
+  <div class="composition-bar" id="compBar"></div>
+  <canvas id="gridCanvas"></canvas>
+  <div class="cell-tooltip" id="cellTooltip"></div>
+  <div class="event-banner" id="eventBanner"><span class="event-icon"></span><span class="event-text"></span></div>
+</div>
+
+<!-- RIGHT BOTTOM: Metrics -->
+<div class="metrics-panel panel">
+  <div class="panel-title">Dashboard</div>
+  <div class="summary-bar">
+    <div class="stat-item"><div class="stat-label">Period</div><div class="stat-value" id="svPeriod">0</div></div>
+    <div class="stat-item"><div class="stat-label">Treasury</div><div class="stat-value" id="svTreasury">$0</div></div>
+    <div class="stat-item"><div class="stat-label">Population</div><div class="stat-value" id="svPop">100</div></div>
+    <div class="stat-item"><div class="stat-label">Food Price</div><div class="stat-value" id="svFoodPrice">$40</div></div>
+    <div class="stat-item"><div class="stat-label">Changes</div><div class="stat-value" id="svChanges" style="color:#805ad5;">0</div></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-box">
+      <div class="chart-title"><span>Revenue</span><span class="chart-val" id="cvRevenue" style="color:#4299e1;">$0</span></div>
+      <canvas id="chartRevenue"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Carbon Stock</span><span class="chart-val" id="cvCarbon" style="color:#38a169;">0t</span></div>
+      <canvas id="chartCarbon"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Biodiversity</span><span class="chart-val" id="cvBio" style="color:#276749;">0</span></div>
+      <canvas id="chartBio"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Food Security</span><span class="chart-val" id="cvFood" style="color:#d69e2e;">0%</span></div>
+      <canvas id="chartFood"></canvas>
+    </div>
+  </div>
+
+  <div class="welfare-bar">
+    <div class="welfare-score" id="welfareScore">0</div>
+    <div class="welfare-breakdown">
+      Social Welfare (equal-weighted composite)<br>
+      Revenue: <span id="wbRev">0</span> | Carbon: <span id="wbCarb">0</span> | Biodiversity: <span id="wbBio">0</span> | Food: <span id="wbFood">0</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app-grid -->
+
+<script>
+// ============================================================
+// CONSTANTS
+// ============================================================
+const GS = 20; // grid size
+const TOTAL_CELLS = GS * GS;
+const TYPES = { FOREST: 0, AGRICULTURE: 1, URBAN: 2, CONSERVATION: 3 };
+const COLORS = { 0: '#38a169', 1: '#d69e2e', 2: '#718096', 3: '#276749' };
+const LABELS = { 0: 'Forest', 1: 'Agriculture', 2: 'Urban', 3: 'Conservation' };
+
+const BASE = {
+    0: { revenue: 5,   carbon: 10, bio: 1.0, food: 0 },
+    1: { revenue: 40,  carbon: 2,  bio: 0.3, food: 1.0 },
+    2: { revenue: 100, carbon: 0,  bio: 0.1, food: 0 },
+    3: { revenue: 0,   carbon: 12, bio: 1.5, food: 0 },
+};
+
+// cost[from][to]
+const CONV_COST = [
+    [0, 30, 50, 10],
+    [20, 0, 25, 15],
+    [40, 35, 0, 45],
+    [5, 25, 55, 0]
+];
+
+// carbon released when converting FROM this type
+const CARBON_RELEASE = [8, 1, 0, 10];
+
+// Endogenous change parameters
+const CHANGE_SENSITIVITY = 0.025; // probability scaling per $ profit differential
+const MAX_CHANGES_PER_PERIOD = 12; // cap to prevent chaos
+const AMORTIZE_YEARS = 3; // years over which conversion costs are amortized (lower = more friction)
+
+// ============================================================
+// STATE
+// ============================================================
+let S = {};
+
+function freshState() {
+    return {
+        grid: [],
+        cellAge: [],
+        period: 0,
+        selectedTool: 0,
+        isPainting: false,
+        hoverCell: null,
+        treasury: 0,
+        population: 100,
+        foodPrice: 40,
+        urbanValue: 100,
+        carbonPrice: 10,
+        conversions: [],
+        autoPlay: false,
+        autoTimer: null,
+        history: { revenue: [], carbon: [], bio: [], food: [], welfare: [] },
+        lastEvent: null,
+        recentChanges: new Set(), // "r,c" strings for cells changed last period
+    };
+}
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const $ = id => document.getElementById(id);
+const gridCanvas = $('gridCanvas');
+const gridCtx = gridCanvas.getContext('2d');
+const tooltip = $('cellTooltip');
+
+const chartEls = {
+    revenue: { canvas: $('chartRevenue'), val: $('cvRevenue') },
+    carbon:  { canvas: $('chartCarbon'),  val: $('cvCarbon') },
+    bio:     { canvas: $('chartBio'),     val: $('cvBio') },
+    food:    { canvas: $('chartFood'),    val: $('cvFood') },
+};
+
+// ============================================================
+// GRID INITIALIZATION
+// ============================================================
+function initGrid(preset) {
+    S = freshState();
+    const g = S.grid;
+    const a = S.cellAge;
+    for (let r = 0; r < GS; r++) {
+        g[r] = [];
+        a[r] = [];
+        for (let c = 0; c < GS; c++) {
+            g[r][c] = TYPES.FOREST;
+            a[r][c] = 5;
+        }
+    }
+
+    if (preset === 'balanced') {
+        // Urban core
+        for (let r = 8; r < 12; r++) for (let c = 8; c < 12; c++) { g[r][c] = TYPES.URBAN; a[r][c] = 0; }
+        // Ag ring around urban
+        for (let r = 6; r < 14; r++) for (let c = 6; c < 14; c++) {
+            if (g[r][c] === TYPES.FOREST) { g[r][c] = TYPES.AGRICULTURE; a[r][c] = 3; }
+        }
+        // Conservation corners
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 0; r < 3; r++) for (let c = 17; c < 20; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 17; r < 20; r++) for (let c = 0; c < 3; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 17; r < 20; r++) for (let c = 17; c < 20; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+    } else if (preset === 'deforestation') {
+        // Mostly forest, small urban, high pressure params
+        for (let r = 9; r < 11; r++) for (let c = 9; c < 11; c++) { g[r][c] = TYPES.URBAN; a[r][c] = 0; }
+        for (let r = 7; r < 13; r++) for (let c = 7; c < 13; c++) {
+            if (g[r][c] === TYPES.FOREST) { g[r][c] = TYPES.AGRICULTURE; a[r][c] = 2; }
+        }
+        setSliders({ foodPrice: 80, carbonCredit: 5, urbanVal: 150, popGrowth: 5 });
+        setPolicies({ carbonTax: false, subsidy: false, zoning: false, devTax: false });
+    } else if (preset === 'green') {
+        // Same as balanced grid
+        initGrid('balanced');
+        setSliders({ foodPrice: 40, carbonCredit: 30, urbanVal: 80, popGrowth: 1 });
+        setPolicies({ carbonTax: true, carbonTaxRate: 50, subsidy: true, subsidyRate: 25, zoning: true, zoningRate: 40, devTax: true, devTaxRate: 75 });
+        return;
+    } else if (preset === 'laissez') {
+        initGrid('balanced');
+        setSliders({ foodPrice: 40, carbonCredit: 5, urbanVal: 150, popGrowth: 3 });
+        setPolicies({ carbonTax: false, subsidy: false, zoning: false, devTax: false });
+        return;
+    }
+}
+
+function setSliders(v) {
+    if (v.foodPrice !== undefined) { $('sFoodPrice').value = v.foodPrice; $('vFoodPrice').textContent = '$' + v.foodPrice; S.foodPrice = v.foodPrice; }
+    if (v.carbonCredit !== undefined) { $('sCarbonCredit').value = v.carbonCredit; $('vCarbonCredit').textContent = '$' + v.carbonCredit; S.carbonPrice = v.carbonCredit; }
+    if (v.urbanVal !== undefined) { $('sUrbanVal').value = v.urbanVal; $('vUrbanVal').textContent = '$' + v.urbanVal; S.urbanValue = v.urbanVal; }
+    if (v.popGrowth !== undefined) { $('sPopGrowth').value = v.popGrowth; $('vPopGrowth').textContent = v.popGrowth + '%'; }
+}
+
+function setPolicies(v) {
+    $('tCarbonTax').checked = !!v.carbonTax;
+    $('dCarbonTax').classList.toggle('show', !!v.carbonTax);
+    if (v.carbonTaxRate !== undefined) { $('sCarbonTax').value = v.carbonTaxRate; $('vCarbonTax').textContent = '$' + v.carbonTaxRate + '/ton'; }
+
+    $('tSubsidy').checked = !!v.subsidy;
+    $('dSubsidy').classList.toggle('show', !!v.subsidy);
+    if (v.subsidyRate !== undefined) { $('sSubsidy').value = v.subsidyRate; $('vSubsidy').textContent = '$' + v.subsidyRate + '/cell'; }
+
+    $('tZoning').checked = !!v.zoning;
+    $('dZoning').classList.toggle('show', !!v.zoning);
+    if (v.zoningRate !== undefined) { $('sZoning').value = v.zoningRate; $('vZoning').textContent = v.zoningRate + '%'; }
+
+    $('tDevTax').checked = !!v.devTax;
+    $('dDevTax').classList.toggle('show', !!v.devTax);
+    if (v.devTaxRate !== undefined) { $('sDevTax').value = v.devTaxRate; $('vDevTax').textContent = '$' + v.devTaxRate + '/conv'; }
+}
+
+// ============================================================
+// CANVAS SETUP
+// ============================================================
+function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// ============================================================
+// GRID DRAWING
+// ============================================================
+function drawGrid() {
+    const { ctx, w, h } = setupCanvas(gridCanvas);
+    const cellSize = Math.min(w, h) / GS;
+
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const type = S.grid[r][c];
+            const x = c * cellSize;
+            const y = r * cellSize;
+
+            // Base fill
+            ctx.fillStyle = COLORS[type];
+            ctx.fillRect(x, y, cellSize, cellSize);
+
+            // Maturity overlay for forest/conservation (older = slightly brighter)
+            if ((type === TYPES.FOREST || type === TYPES.CONSERVATION) && S.cellAge[r][c] > 3) {
+                const alpha = Math.min(0.15, (S.cellAge[r][c] - 3) * 0.02);
+                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+                ctx.fillRect(x, y, cellSize, cellSize);
+            }
+
+            // Adjacency glow for connected natural areas
+            if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+                const neighbors = countNaturalNeighbors(r, c);
+                if (neighbors >= 3) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                    ctx.fillRect(x, y, cellSize, cellSize);
+                }
+            }
+        }
+    }
+
+    // Recently changed cells — pulsing border
+    if (S.recentChanges.size > 0) {
+        ctx.strokeStyle = 'rgba(128,90,213,0.7)';
+        ctx.lineWidth = 2;
+        for (const key of S.recentChanges) {
+            const [rr, cc] = key.split(',').map(Number);
+            ctx.strokeRect(cc * cellSize + 1, rr * cellSize + 1, cellSize - 2, cellSize - 2);
+        }
+    }
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= GS; i++) {
+        const p = i * cellSize;
+        ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, GS * cellSize); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(GS * cellSize, p); ctx.stroke();
+    }
+
+    // Hover highlight
+    if (S.hoverCell) {
+        const { row, col } = S.hoverCell;
+        ctx.strokeStyle = '#1a202c';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(col * cellSize + 1, row * cellSize + 1, cellSize - 2, cellSize - 2);
+    }
+}
+
+function countNaturalNeighbors(r, c) {
+    let n = 0;
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < GS && nc >= 0 && nc < GS) {
+            const t = S.grid[nr][nc];
+            if (t === TYPES.FOREST || t === TYPES.CONSERVATION) n++;
+        }
+    }
+    return n;
+}
+
+// ============================================================
+// COMPOSITION BAR
+// ============================================================
+function updateCompositionBar() {
+    const counts = [0, 0, 0, 0];
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) counts[S.grid[r][c]]++;
+    const bar = $('compBar');
+    bar.innerHTML = '';
+    for (let t = 0; t < 4; t++) {
+        const pct = (counts[t] / TOTAL_CELLS * 100);
+        if (pct > 0) {
+            const d = document.createElement('div');
+            d.style.width = pct + '%';
+            d.style.background = COLORS[t];
+            d.title = LABELS[t] + ': ' + counts[t] + ' cells (' + pct.toFixed(0) + '%)';
+            bar.appendChild(d);
+        }
+    }
+}
+
+// ============================================================
+// ECONOMIC MODEL
+// ============================================================
+function getCounts() {
+    const counts = [0, 0, 0, 0];
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) counts[S.grid[r][c]]++;
+    return counts;
+}
+
+function getMarket() {
+    return {
+        foodPrice: S.foodPrice,
+        carbonCredit: S.carbonPrice,
+        urbanVal: S.urbanValue,
+        popGrowth: parseFloat($('sPopGrowth').value),
+    };
+}
+
+function getPolicies() {
+    return {
+        carbonTax:    { on: $('tCarbonTax').checked, rate: parseFloat($('sCarbonTax').value) },
+        subsidy:      { on: $('tSubsidy').checked,   rate: parseFloat($('sSubsidy').value) },
+        zoning:       { on: $('tZoning').checked,     rate: parseFloat($('sZoning').value) },
+        devTax:       { on: $('tDevTax').checked,     rate: parseFloat($('sDevTax').value) },
+    };
+}
+
+function computeRevenue() {
+    const m = getMarket();
+    const p = getPolicies();
+    const counts = getCounts();
+    let rev = 0;
+
+    // Base revenue per cell type
+    rev += counts[TYPES.FOREST] * BASE[TYPES.FOREST].revenue;
+    rev += counts[TYPES.AGRICULTURE] * m.foodPrice;
+    rev += counts[TYPES.URBAN] * m.urbanVal;
+    rev += counts[TYPES.CONSERVATION] * BASE[TYPES.CONSERVATION].revenue;
+
+    // Carbon credit income
+    const carbonStock = computeCarbonStock();
+    rev += carbonStock * m.carbonCredit / 100;
+
+    // Conservation subsidy
+    if (p.subsidy.on) rev += counts[TYPES.CONSERVATION] * p.subsidy.rate;
+
+    // Conversion costs
+    for (const cv of S.conversions) {
+        rev -= CONV_COST[cv.from][cv.to];
+        // Carbon tax on clearing
+        if (p.carbonTax.on && (cv.from === TYPES.FOREST || cv.from === TYPES.CONSERVATION)) {
+            rev -= CARBON_RELEASE[cv.from] * p.carbonTax.rate;
+        }
+        // Development tax
+        if (p.devTax.on && cv.to === TYPES.URBAN) {
+            rev -= p.devTax.rate;
+        }
+    }
+
+    // Zoning penalty
+    if (p.zoning.on) {
+        const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS * 100;
+        if (forestPct < p.zoning.rate) {
+            const shortfall = p.zoning.rate - forestPct;
+            rev -= shortfall * 20; // penalty per % point below minimum
+        }
+    }
+
+    return Math.round(rev);
+}
+
+function computeCarbonStock() {
+    let c = 0;
+    for (let r = 0; r < GS; r++) {
+        for (let col = 0; col < GS; col++) {
+            const type = S.grid[r][col];
+            c += BASE[type].carbon;
+            // Maturity bonus
+            if ((type === TYPES.FOREST || type === TYPES.CONSERVATION) && S.cellAge[r][col] > 3) {
+                c += Math.min(4, (S.cellAge[r][col] - 3) * 0.5);
+            }
+        }
+    }
+    return Math.round(c);
+}
+
+function computeBiodiversity() {
+    let total = 0;
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const type = S.grid[r][c];
+            let val = BASE[type].bio;
+            if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+                const neighbors = countNaturalNeighbors(r, c);
+                val += neighbors * 0.2 * BASE[type].bio;
+                if (neighbors === 0) val *= 0.5; // isolation penalty
+            }
+            total += val;
+        }
+    }
+    // Normalize to 0-100
+    const maxBio = TOTAL_CELLS * (BASE[TYPES.CONSERVATION].bio + 4 * 0.2 * BASE[TYPES.CONSERVATION].bio);
+    return Math.round(total / maxBio * 100);
+}
+
+function computeFoodSecurity() {
+    const counts = getCounts();
+    const supply = counts[TYPES.AGRICULTURE] * BASE[TYPES.AGRICULTURE].food;
+    const demand = S.population * 0.01;
+    return Math.min(supply / Math.max(demand, 0.01), 1.0) * 100;
+}
+
+function computeWelfare(revenue, carbon, bio, food) {
+    const maxRevenue = TOTAL_CELLS * getMarket().urbanVal;
+    const maxCarbon = TOTAL_CELLS * 12;
+    const rNorm = Math.min(revenue / Math.max(maxRevenue, 1), 1);
+    const cNorm = carbon / maxCarbon;
+    const bNorm = bio / 100;
+    const fNorm = food / 100;
+    return Math.round((rNorm * 0.25 + cNorm * 0.25 + bNorm * 0.25 + fNorm * 0.25) * 100);
+}
+
+// ============================================================
+// RANDOM EVENTS
+// ============================================================
+const EVENTS = [
+    { name: 'Drought', icon: '🏜️', effect: 'Agriculture revenue halved this period', apply: (rev) => { const counts = getCounts(); return rev - counts[TYPES.AGRICULTURE] * getMarket().foodPrice * 0.5; } },
+    { name: 'Commodity Boom', icon: '📈', effect: 'Food prices surge — farm revenue doubled', apply: (rev) => { const counts = getCounts(); return rev + counts[TYPES.AGRICULTURE] * getMarket().foodPrice; } },
+    { name: 'Carbon Market Rally', icon: '💚', effect: 'Carbon credit income tripled', apply: (rev) => { return rev + computeCarbonStock() * getMarket().carbonCredit / 100 * 2; } },
+    { name: 'Urban Sprawl Pressure', icon: '🏗️', effect: '+$20 bonus per urban cell', apply: (rev) => { return rev + getCounts()[TYPES.URBAN] * 20; } },
+    { name: 'Conservation Grant', icon: '🌿', effect: '+$200 if conservation > 25%', apply: (rev) => { const pct = getCounts()[TYPES.CONSERVATION] / TOTAL_CELLS * 100; return pct > 25 ? rev + 200 : rev; } },
+];
+
+function generateEvent() {
+    if (Math.random() < 0.15) {
+        return EVENTS[Math.floor(Math.random() * EVENTS.length)];
+    }
+    return null;
+}
+
+// ============================================================
+// ENDOGENOUS LAND-USE CHANGE
+// ============================================================
+
+// Compute the effective annual profit a landowner earns for a given type at (r,c)
+function cellProfit(type, r, c) {
+    const m = getMarket();
+    const p = getPolicies();
+    let profit = 0;
+
+    // Base revenue by type
+    if (type === TYPES.FOREST) profit = BASE[TYPES.FOREST].revenue;
+    else if (type === TYPES.AGRICULTURE) profit = m.foodPrice;
+    else if (type === TYPES.URBAN) profit = m.urbanVal;
+    else if (type === TYPES.CONSERVATION) profit = 0;
+
+    // Carbon credit income per cell
+    const carbonPerCell = BASE[type].carbon;
+    profit += carbonPerCell * m.carbonCredit / 100;
+
+    // Conservation subsidy
+    if (p.subsidy.on && type === TYPES.CONSERVATION) {
+        profit += p.subsidy.rate;
+    }
+
+    // Ongoing carbon tax penalty for high-emission land uses (agriculture/urban emit more)
+    // This represents the annual carbon liability, not just conversion
+    if (p.carbonTax.on) {
+        // Forest/conservation are carbon sinks (no penalty); ag/urban have low carbon = implicit cost
+        const carbonDeficit = BASE[TYPES.FOREST].carbon - carbonPerCell;
+        profit -= carbonDeficit * p.carbonTax.rate * 0.05; // annual fraction of tax
+    }
+
+    // Development tax reduces ongoing urban profitability (annual regulatory cost)
+    if (p.devTax.on && type === TYPES.URBAN) {
+        profit -= p.devTax.rate * 0.1;
+    }
+
+    // Zoning penalty: if converting away from forest when below minimum, add risk cost
+    if (p.zoning.on && (type === TYPES.AGRICULTURE || type === TYPES.URBAN)) {
+        const counts = getCounts();
+        const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS * 100;
+        if (forestPct < p.zoning.rate) {
+            profit -= (p.zoning.rate - forestPct) * 0.5; // per-cell share of zoning penalty
+        }
+    }
+
+    return profit;
+}
+
+// Count neighbors of a specific type
+function countNeighborsOfType(r, c, type) {
+    let n = 0;
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+    for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < GS && nc >= 0 && nc < GS && S.grid[nr][nc] === type) n++;
+    }
+    return n;
+}
+
+function simulateEndogenousChange() {
+    const m = getMarket();
+    const p = getPolicies();
+    S.recentChanges = new Set();
+
+    // Build list of candidate conversions with their profit differential
+    const candidates = [];
+
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const current = S.grid[r][c];
+
+            // Conservation cells are legally protected — skip unless user overrides
+            if (current === TYPES.CONSERVATION) continue;
+
+            // HYSTERESIS: recently converted cells resist re-conversion (investment lock-in)
+            // Age 0 = just changed, age 1-2 = still locked in, age 3+ = flexible
+            const age = S.cellAge[r][c];
+            if (age < 3) continue; // hard lock-in for 3 periods after conversion
+
+            const currentProfit = cellProfit(current, r, c);
+            // Stickiness bonus: even after lock-in, inertia penalizes switching
+            const stickiness = age < 6 ? (6 - age) * 5 : 0; // decaying bonus $0-15
+
+            // Evaluate each alternative type
+            for (let alt = 0; alt < 4; alt++) {
+                if (alt === current || alt === TYPES.CONSERVATION) continue; // can't autonomously create conservation
+
+                // Urban sprawl constraint: can only urbanize adjacent to existing urban
+                if (alt === TYPES.URBAN && countNeighborsOfType(r, c, TYPES.URBAN) === 0) continue;
+
+                // Agriculture frontier: more likely near existing agriculture
+                const agNeighbors = countNeighborsOfType(r, c, TYPES.AGRICULTURE);
+                const urbanNeighbors = countNeighborsOfType(r, c, TYPES.URBAN);
+
+                let altProfit = cellProfit(alt, r, c);
+
+                // Conversion cost reduces attractiveness (amortized over ~5 years)
+                altProfit -= CONV_COST[current][alt] / AMORTIZE_YEARS;
+
+                // One-time carbon tax cost on conversion, amortized
+                if (p.carbonTax.on && (current === TYPES.FOREST)) {
+                    altProfit -= CARBON_RELEASE[current] * p.carbonTax.rate / AMORTIZE_YEARS;
+                }
+
+                // One-time dev tax on urban conversion, amortized
+                if (p.devTax.on && alt === TYPES.URBAN) {
+                    altProfit -= p.devTax.rate / AMORTIZE_YEARS;
+                }
+
+                // Neighbor attraction bonus (agglomeration — diminishing returns)
+                if (alt === TYPES.URBAN) altProfit += Math.min(urbanNeighbors, 3) * 1.5;
+                if (alt === TYPES.AGRICULTURE) altProfit += Math.min(agNeighbors, 3) * 1.0;
+
+                // Population pressure increases urban + ag demand (mild)
+                const popPressure = Math.max(0, (S.population - 100) / 200);
+                if (alt === TYPES.URBAN) altProfit += popPressure * 4;
+                if (alt === TYPES.AGRICULTURE) altProfit += popPressure * 2;
+
+                // Food scarcity bonus for agriculture
+                const foodDemand = S.population * 0.01;
+                const counts = getCounts();
+                const foodSupply = counts[TYPES.AGRICULTURE];
+                if (alt === TYPES.AGRICULTURE && foodSupply < foodDemand) {
+                    altProfit += (foodDemand - foodSupply) * 2;
+                }
+
+                // Forest regeneration: if agriculture is unprofitable, nature reclaims
+                if (alt === TYPES.FOREST && current === TYPES.AGRICULTURE) {
+                    const naturalNeighbors = countNaturalNeighbors(r, c);
+                    altProfit += naturalNeighbors * 2; // seed source bonus
+                }
+
+                const diff = altProfit - currentProfit - stickiness;
+                if (diff > 0) {
+                    // Probability increases with profit differential
+                    const prob = Math.min(0.8, diff * CHANGE_SENSITIVITY);
+                    candidates.push({ r, c, from: current, to: alt, diff, prob });
+                }
+            }
+        }
+    }
+
+    // Sort by profit differential (highest first) and apply with probability
+    candidates.sort((a, b) => b.diff - a.diff);
+
+    let changes = 0;
+    const changed = new Set(); // prevent double-changing a cell
+
+    for (const cand of candidates) {
+        if (changes >= MAX_CHANGES_PER_PERIOD) break;
+        const key = cand.r + ',' + cand.c;
+        if (changed.has(key)) continue;
+
+        if (Math.random() < cand.prob) {
+            S.conversions.push({ from: cand.from, to: cand.to, row: cand.r, col: cand.c });
+            S.grid[cand.r][cand.c] = cand.to;
+            S.cellAge[cand.r][cand.c] = 0;
+            S.recentChanges.add(key);
+            changed.add(key);
+            changes++;
+        }
+    }
+
+    return changes;
+}
+
+// ============================================================
+// ADVANCE PERIOD
+// ============================================================
+function updateMarketFeedback() {
+    // ===== DYNAMIC MARKET FEEDBACK (with hysteresis) =====
+    // Called BEFORE endogenous change so agents see adjusted prices
+    const counts = getCounts();
+    const userFoodBase = parseFloat($('sFoodPrice').value);
+    const userUrbanBase = parseFloat($('sUrbanVal').value);
+    const userCarbonBase = parseFloat($('sCarbonCredit').value);
+
+    // --- FOOD PRICE: rises with scarcity, drops with oversupply ---
+    const foodSupply = counts[TYPES.AGRICULTURE];
+    const foodDemand = S.population * 0.01;
+    const foodRatio = foodSupply / Math.max(foodDemand, 0.01);
+    // Asymmetric: scarcity drives prices up faster than surplus drives them down
+    let foodMult;
+    if (foodRatio >= 1) {
+        foodMult = Math.max(0.3, 1.0 - (foodRatio - 1) * 0.5);
+    } else {
+        foodMult = Math.min(3.5, 1.0 + (1 - foodRatio) * 3.0);
+    }
+    S.foodPrice = Math.round(Math.max(10, Math.min(150, userFoodBase * foodMult)));
+
+    // --- URBAN VALUE: diminishing returns with density (congestion) ---
+    const urbanPct = counts[TYPES.URBAN] / TOTAL_CELLS;
+    // Steep congestion: value halves by ~15% urban, collapses by 30%
+    // At 4% (start): mult≈0.76. At 15%: mult≈0.40. At 30%: mult≈0.22.
+    const urbanMult = Math.max(0.15, 1.0 / (1 + 8 * Math.pow(urbanPct, 0.9)));
+    S.urbanValue = Math.round(Math.max(15, Math.min(200, userUrbanBase * urbanMult)));
+
+    // --- CARBON CREDIT PRICE: scarcity premium as forest disappears ---
+    const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS;
+    let carbonMult;
+    if (forestPct >= 0.5) {
+        carbonMult = Math.max(0.5, 1.0 - (forestPct - 0.5) * 0.6);
+    } else {
+        carbonMult = Math.min(5.0, 1.0 + Math.pow(0.5 - forestPct, 0.8) * 6.0);
+    }
+    S.carbonPrice = Math.round(Math.max(1, Math.min(50, userCarbonBase * carbonMult)));
+
+    // Update displays
+    $('vFoodPrice').textContent = '$' + S.foodPrice;
+    $('vUrbanVal').textContent = '$' + S.urbanValue;
+    $('vCarbonCredit').textContent = '$' + S.carbonPrice;
+}
+
+function advancePeriod() {
+    S.period++;
+    const event = generateEvent();
+    S.lastEvent = event;
+
+    // 1. Update market prices FIRST — so endogenous agents see feedback-adjusted prices
+    updateMarketFeedback();
+
+    // 2. Endogenous land-use change using current (adjusted) prices
+    const numChanges = simulateEndogenousChange();
+
+    // 3. Update cell ages
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) S.cellAge[r][c]++;
+
+    // 4. Compute metrics on the post-change landscape
+    let revenue = computeRevenue();
+    const carbon = computeCarbonStock();
+    const bio = computeBiodiversity();
+    const food = computeFoodSecurity();
+
+    // Apply event
+    if (event) revenue = Math.round(event.apply(revenue));
+
+    const welfare = computeWelfare(revenue, carbon, bio, food);
+
+    S.treasury += revenue;
+
+    // 5. Population growth
+    const m = getMarket();
+    S.population = Math.round(S.population * (1 + m.popGrowth / 100));
+
+    // Push history
+    S.history.revenue.push(revenue);
+    S.history.carbon.push(carbon);
+    S.history.bio.push(bio);
+    S.history.food.push(Math.round(food));
+    S.history.welfare.push(welfare);
+
+    // Cap history
+    const MAX_HIST = 60;
+    for (const key of Object.keys(S.history)) {
+        if (S.history[key].length > MAX_HIST) S.history[key].shift();
+    }
+
+    // Clear conversions for next period
+    S.conversions = [];
+
+    // Update UI
+    updateAll(revenue, carbon, bio, food, welfare, numChanges);
+    showEvent(event);
+}
+
+// ============================================================
+// MINI CHART DRAWING
+// ============================================================
+function drawMiniChart(canvasEl, data, color) {
+    const { ctx, w, h } = setupCanvas(canvasEl);
+    if (data.length === 0) { ctx.clearRect(0, 0, w, h); return; }
+
+    const pad = { top: 4, right: 4, bottom: 4, left: 4 };
+    const gw = w - pad.left - pad.right;
+    const gh = h - pad.top - pad.bottom;
+
+    let minV = Math.min(...data);
+    let maxV = Math.max(...data);
+    if (maxV === minV) { maxV += 1; minV -= 1; }
+    const range = maxV - minV;
+
+    function px(i) { return pad.left + (data.length === 1 ? gw / 2 : (i / (data.length - 1)) * gw); }
+    function py(v) { return pad.top + gh - ((v - minV) / range) * gh; }
+
+    // Fill
+    ctx.beginPath();
+    ctx.moveTo(px(0), pad.top + gh);
+    for (let i = 0; i < data.length; i++) ctx.lineTo(px(i), py(data[i]));
+    ctx.lineTo(px(data.length - 1), pad.top + gh);
+    ctx.closePath();
+    ctx.fillStyle = color + '20';
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+        i === 0 ? ctx.moveTo(px(i), py(data[i])) : ctx.lineTo(px(i), py(data[i]));
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // End dot
+    if (data.length > 0) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px(data.length - 1), py(data[data.length - 1]), 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// ============================================================
+// UPDATE ALL UI
+// ============================================================
+function updateAll(revenue, carbon, bio, food, welfare, changes) {
+    // Summary bar
+    $('svPeriod').textContent = S.period;
+    $('svChanges').textContent = changes !== undefined ? changes : 0;
+    $('svTreasury').textContent = '$' + S.treasury.toLocaleString();
+    $('svTreasury').style.color = S.treasury >= 0 ? '#38a169' : '#e53e3e';
+    $('svPop').textContent = S.population.toLocaleString();
+    $('svFoodPrice').textContent = '$' + S.foodPrice;
+    // Color food price by deviation from base
+    const baseFP = parseFloat($('sFoodPrice').value);
+    $('svFoodPrice').style.color = S.foodPrice > baseFP * 1.2 ? '#e53e3e' : S.foodPrice < baseFP * 0.8 ? '#38a169' : '#2d3748';
+    $('periodLabel').textContent = 'Period ' + S.period;
+
+    // Chart values
+    chartEls.revenue.val.textContent = '$' + (revenue !== undefined ? revenue : 0);
+    chartEls.carbon.val.textContent = (carbon !== undefined ? carbon : 0) + 't';
+    chartEls.bio.val.textContent = (bio !== undefined ? bio : 0);
+    chartEls.food.val.textContent = (food !== undefined ? Math.round(food) : 0) + '%';
+
+    // Draw charts
+    drawMiniChart(chartEls.revenue.canvas, S.history.revenue, '#4299e1');
+    drawMiniChart(chartEls.carbon.canvas, S.history.carbon, '#38a169');
+    drawMiniChart(chartEls.bio.canvas, S.history.bio, '#276749');
+    drawMiniChart(chartEls.food.canvas, S.history.food, '#d69e2e');
+
+    // Welfare
+    const w = welfare !== undefined ? welfare : 0;
+    $('welfareScore').textContent = w;
+    $('welfareScore').style.color = w > 60 ? '#38a169' : w > 35 ? '#d69e2e' : '#e53e3e';
+
+    const h2 = S.history;
+    const last = (arr) => arr.length ? arr[arr.length - 1] : 0;
+    $('wbRev').textContent = revenue !== undefined ? revenue : last(h2.revenue);
+    $('wbCarb').textContent = carbon !== undefined ? carbon : last(h2.carbon);
+    $('wbBio').textContent = bio !== undefined ? bio : last(h2.bio);
+    $('wbFood').textContent = (food !== undefined ? Math.round(food) : last(h2.food)) + '%';
+
+    // Composition bar + grid
+    updateCompositionBar();
+    drawGrid();
+}
+
+function showEvent(event) {
+    const banner = $('eventBanner');
+    if (!event) { banner.style.display = 'none'; return; }
+    banner.querySelector('.event-icon').textContent = event.icon;
+    banner.querySelector('.event-text').textContent = event.name + ' — ' + event.effect;
+    banner.style.display = 'block';
+    clearTimeout(banner._timer);
+    banner._timer = setTimeout(() => { banner.style.display = 'none'; }, 3500);
+}
+
+// ============================================================
+// CELL INTERACTION
+// ============================================================
+function getCellFromEvent(e) {
+    const rect = gridCanvas.getBoundingClientRect();
+    const scaleX = rect.width / GS;
+    const scaleY = rect.height / GS;
+    let clientX, clientY;
+    if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    const col = Math.floor((clientX - rect.left) / scaleX);
+    const row = Math.floor((clientY - rect.top) / scaleY);
+    if (row >= 0 && row < GS && col >= 0 && col < GS) return { row, col };
+    return null;
+}
+
+function paintCell(cell) {
+    if (!cell) return;
+    const { row, col } = cell;
+    const current = S.grid[row][col];
+    if (current === S.selectedTool) return;
+
+    S.conversions.push({ from: current, to: S.selectedTool, row, col });
+    S.grid[row][col] = S.selectedTool;
+    S.cellAge[row][col] = 0;
+    drawGrid();
+    updateCompositionBar();
+}
+
+function showTooltip(e, cell) {
+    if (!cell) { tooltip.style.display = 'none'; S.hoverCell = null; drawGrid(); return; }
+    S.hoverCell = cell;
+    const { row, col } = cell;
+    const type = S.grid[row][col];
+    const age = S.cellAge[row][col];
+    const neighbors = countNaturalNeighbors(row, col);
+    const b = BASE[type];
+
+    let html = `<strong>${LABELS[type]}</strong> (${row},${col})<br>`;
+    html += `Carbon: ${b.carbon}t | Bio: ${b.bio}`;
+    if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+        html += ` + ${(neighbors * 0.2 * b.bio).toFixed(1)} adj`;
+    }
+    html += `<br>Age: ${age} periods`;
+    if (age > 3 && (type === TYPES.FOREST || type === TYPES.CONSERVATION)) {
+        html += ' (mature)';
+    }
+
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+
+    const rect = gridCanvas.parentElement.getBoundingClientRect();
+    const ex = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const ey = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    tooltip.style.left = Math.min(ex + 12, rect.width - 180) + 'px';
+    tooltip.style.top = (ey + 12) + 'px';
+
+    drawGrid();
+}
+
+// Canvas events
+gridCanvas.addEventListener('mousedown', e => {
+    S.isPainting = true;
+    paintCell(getCellFromEvent(e));
+});
+gridCanvas.addEventListener('mousemove', e => {
+    const cell = getCellFromEvent(e);
+    showTooltip(e, cell);
+    if (S.isPainting) paintCell(cell);
+});
+gridCanvas.addEventListener('mouseup', () => { S.isPainting = false; });
+gridCanvas.addEventListener('mouseleave', () => {
+    S.isPainting = false;
+    tooltip.style.display = 'none';
+    S.hoverCell = null;
+    drawGrid();
+});
+
+// Touch events
+gridCanvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    S.isPainting = true;
+    paintCell(getCellFromEvent(e));
+}, { passive: false });
+gridCanvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const cell = getCellFromEvent(e);
+    showTooltip(e, cell);
+    if (S.isPainting) paintCell(cell);
+}, { passive: false });
+gridCanvas.addEventListener('touchend', () => { S.isPainting = false; });
+
+// ============================================================
+// PALETTE SELECTION
+// ============================================================
+document.querySelectorAll('.land-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.land-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        S.selectedTool = parseInt(btn.dataset.type);
+    });
+});
+
+// ============================================================
+// POLICY TOGGLES
+// ============================================================
+['CarbonTax', 'Subsidy', 'Zoning', 'DevTax'].forEach(name => {
+    $('t' + name).addEventListener('change', function() {
+        $('d' + name).classList.toggle('show', this.checked);
+    });
+});
+
+// ============================================================
+// SLIDER WIRING
+// ============================================================
+function wireSlider(id, displayId, fmt) {
+    $(id).addEventListener('input', function() {
+        $(displayId).textContent = fmt(this.value);
+    });
+}
+wireSlider('sCarbonTax', 'vCarbonTax', v => '$' + v + '/ton');
+wireSlider('sSubsidy', 'vSubsidy', v => '$' + v + '/cell');
+wireSlider('sZoning', 'vZoning', v => v + '%');
+wireSlider('sDevTax', 'vDevTax', v => '$' + v + '/conv');
+wireSlider('sFoodPrice', 'vFoodPrice', v => '$' + v);
+wireSlider('sCarbonCredit', 'vCarbonCredit', v => '$' + v);
+wireSlider('sUrbanVal', 'vUrbanVal', v => '$' + v);
+wireSlider('sPopGrowth', 'vPopGrowth', v => v + '%');
+wireSlider('sSpeed', 'vSpeed', v => (v / 1000).toFixed(1) + 's');
+
+// ============================================================
+// BUTTONS
+// ============================================================
+$('btnAdvance').addEventListener('click', advancePeriod);
+
+$('btnAuto').addEventListener('click', function() {
+    S.autoPlay = !S.autoPlay;
+    this.textContent = S.autoPlay ? 'Pause ⏸' : 'Auto ▶▶';
+    this.style.background = S.autoPlay ? '#4299e1' : '';
+    this.style.color = S.autoPlay ? '#fff' : '';
+    if (S.autoPlay) {
+        S.autoTimer = setInterval(advancePeriod, parseInt($('sSpeed').value));
+    } else {
+        clearInterval(S.autoTimer);
+    }
+});
+
+$('sSpeed').addEventListener('input', function() {
+    if (S.autoPlay) {
+        clearInterval(S.autoTimer);
+        S.autoTimer = setInterval(advancePeriod, parseInt(this.value));
+    }
+});
+
+$('btnReset').addEventListener('click', () => {
+    if (S.autoPlay) {
+        S.autoPlay = false;
+        clearInterval(S.autoTimer);
+        $('btnAuto').textContent = 'Auto ▶▶';
+        $('btnAuto').style.background = '';
+        $('btnAuto').style.color = '';
+    }
+    const active = document.querySelector('.preset-btn.active');
+    const preset = active ? active.dataset.preset : 'balanced';
+    initGrid(preset);
+    const carbon = computeCarbonStock();
+    const bio = computeBiodiversity();
+    const food = computeFoodSecurity();
+    updateAll(0, carbon, bio, food, computeWelfare(0, carbon, bio, food));
+    $('eventBanner').style.display = 'none';
+});
+
+// Preset buttons
+document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        if (S.autoPlay) {
+            S.autoPlay = false;
+            clearInterval(S.autoTimer);
+            $('btnAuto').textContent = 'Auto ▶▶';
+            $('btnAuto').style.background = '';
+            $('btnAuto').style.color = '';
+        }
+        initGrid(this.dataset.preset);
+        const carbon = computeCarbonStock();
+        const bio = computeBiodiversity();
+        const food = computeFoodSecurity();
+        updateAll(0, carbon, bio, food, computeWelfare(0, carbon, bio, food));
+        $('eventBanner').style.display = 'none';
+    });
+});
+
+// ============================================================
+// RESIZE HANDLING
+// ============================================================
+window.addEventListener('resize', () => {
+    drawGrid();
+    drawMiniChart(chartEls.revenue.canvas, S.history.revenue, '#4299e1');
+    drawMiniChart(chartEls.carbon.canvas, S.history.carbon, '#38a169');
+    drawMiniChart(chartEls.bio.canvas, S.history.bio, '#276749');
+    drawMiniChart(chartEls.food.canvas, S.history.food, '#d69e2e');
+});
+
+// ============================================================
+// STARTUP
+// ============================================================
+initGrid('balanced');
+const _c = computeCarbonStock();
+const _b = computeBiodiversity();
+const _f = computeFoodSecurity();
+updateAll(0, _c, _b, _f, computeWelfare(0, _c, _b, _f));
+
+</script>
+</body>
+</html>

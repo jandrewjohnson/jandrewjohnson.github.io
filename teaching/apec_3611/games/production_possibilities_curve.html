@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Possibilities Curve Explorer</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 340px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 800px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+
+        .graph-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .graph-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .control-panel {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .control-panel.highlight {
+            background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%);
+            border-color: #bee3f8;
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .slider-group { margin-bottom: 12px; }
+        .slider-group:last-child { margin-bottom: 0; }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .slider-label span:first-child {
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .slider-value {
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(66,153,225,0.3);
+        }
+
+        .formula {
+            font-size: 0.78rem;
+            color: #a0aec0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            text-align: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #edf2f7;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-item {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 8px 10px;
+            border: 1px solid #edf2f7;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+
+        .insight-box {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 1px solid #e2e8f0;
+        }
+
+        .insight-box strong {
+            color: #319795;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .efficiency-efficient { color: #38a169; font-weight: 600; }
+        .efficiency-inefficient { color: #d69e2e; font-weight: 600; }
+        .efficiency-unattainable { color: #e53e3e; font-weight: 600; }
+
+        .status-display {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+
+        .status-display.efficient {
+            background: rgba(56,161,105,0.1);
+            border: 1px solid rgba(56,161,105,0.3);
+        }
+        .status-display.inefficient {
+            background: rgba(214,158,46,0.1);
+            border: 1px solid rgba(214,158,46,0.3);
+        }
+        .status-display.unattainable {
+            background: rgba(229,62,62,0.1);
+            border: 1px solid rgba(229,62,62,0.3);
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .note {
+            font-size: 0.75rem;
+            color: #718096;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .scenario-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+            color: #4a5568;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .scenario-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .scenario-btn:last-child { margin-bottom: 0; }
+
+        .scenario-btn .scenario-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Production Possibilities Curve Explorer</h1>
+        <p class="subtitle">Visualize trade-offs, opportunity costs, and efficiency with the PPC</p>
+
+        <div class="main-content">
+            <!-- Left: PPC Graph -->
+            <div class="graph-container">
+                <div class="graph-title">Production Possibilities Curve</div>
+                <canvas id="ppc-canvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#2b6cb0"></div> Current PPC</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#9ae6b4; border: 1px dashed #38a169; height:2px; background:none;"></div> Shifted PPC</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e; width:10px; height:10px; border-radius:50%;"></div> Your Choice</div>
+                </div>
+            </div>
+
+            <!-- Center: Opportunity Cost Graph -->
+            <div class="graph-container">
+                <div class="graph-title">Opportunity Cost of Good X</div>
+                <canvas id="oc-canvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#e53e3e"></div> Marginal OC (units of Y per unit of X)</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#4299e1"></div> Current Point</div>
+                </div>
+            </div>
+
+            <!-- Right: Controls -->
+            <div class="controls">
+                <div class="control-panel highlight">
+                    <div class="panel-title">Choose Your Production Point</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Good X (e.g. Food)</span>
+                            <span class="slider-value" id="x-val">50</span>
+                        </div>
+                        <input type="range" id="x-slider" min="0" max="100" value="50" step="1">
+                    </div>
+                    <div id="point-status" class="status-display efficient">
+                        <div class="status-label">Status</div>
+                        <div class="status-value efficiency-efficient">On the PPC (Efficient)</div>
+                    </div>
+                    <div class="formula">
+                        Opportunity Cost = |slope of PPC|<br>
+                        = marginal rate of transformation
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">PPC Shape</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Curvature (concavity)</span>
+                            <span class="slider-value" id="curve-val">2.0</span>
+                        </div>
+                        <input type="range" id="curve-slider" min="0.5" max="4" value="2" step="0.1">
+                        <div class="note">1.0 = linear, &gt;1 = bowed out (increasing OC), &lt;1 = bowed in</div>
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Max Good X</span>
+                            <span class="slider-value" id="max-x-val">100</span>
+                        </div>
+                        <input type="range" id="max-x-slider" min="50" max="200" value="100" step="5">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Max Good Y</span>
+                            <span class="slider-value" id="max-y-val">100</span>
+                        </div>
+                        <input type="range" id="max-y-slider" min="50" max="200" value="100" step="5">
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">Economic Growth / Shift</div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Technology / Resources</span>
+                            <span class="slider-value" id="shift-val">0%</span>
+                        </div>
+                        <input type="range" id="shift-slider" min="-30" max="50" value="0" step="5">
+                        <div class="note">Positive = growth, Negative = destruction/recession</div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">Key Metrics</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Good X</div>
+                            <div class="stat-value" id="stat-x">50</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Good Y</div>
+                            <div class="stat-value" id="stat-y">87</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Opp. Cost (X)</div>
+                            <div class="stat-value" id="stat-oc">1.00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Efficiency</div>
+                            <div class="stat-value" id="stat-eff">100%</div>
+                        </div>
+                    </div>
+                    <div class="insight-box" id="insight">
+                        Move the Good X slider to explore trade-offs along the PPC.
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-title">Try a Scenario</div>
+                    <button class="scenario-btn" onclick="setScenario('linear')">
+                        <span class="scenario-title">Constant Opportunity Cost</span><br>
+                        Linear PPC — resources equally suited to both goods
+                    </button>
+                    <button class="scenario-btn" onclick="setScenario('bowed')">
+                        <span class="scenario-title">Increasing Opportunity Cost</span><br>
+                        Bowed-out PPC — specialized resources (most realistic)
+                    </button>
+                    <button class="scenario-btn" onclick="setScenario('growth')">
+                        <span class="scenario-title">Economic Growth</span><br>
+                        Technology improvement shifts the PPC outward
+                    </button>
+                    <button class="scenario-btn" onclick="setScenario('asymmetric')">
+                        <span class="scenario-title">Asymmetric Endowments</span><br>
+                        Country good at producing Y but not X
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State ---
+        const state = {
+            x: 50,
+            curvature: 2.0,
+            maxX: 100,
+            maxY: 100,
+            shift: 0,
+            onCurve: true
+        };
+
+        // --- DOM ---
+        const xSlider = document.getElementById('x-slider');
+        const curveSlider = document.getElementById('curve-slider');
+        const maxXSlider = document.getElementById('max-x-slider');
+        const maxYSlider = document.getElementById('max-y-slider');
+        const shiftSlider = document.getElementById('shift-slider');
+
+        const ppcCanvas = document.getElementById('ppc-canvas');
+        const ocCanvas = document.getElementById('oc-canvas');
+        const ppcCtx = ppcCanvas.getContext('2d');
+        const ocCtx = ocCanvas.getContext('2d');
+
+        // --- PPC Math ---
+        function ppcY(x, maxX, maxY, curvature) {
+            if (x < 0 || x > maxX) return 0;
+            const t = x / maxX;
+            return maxY * Math.pow(1 - Math.pow(t, curvature), 1 / curvature);
+        }
+
+        function ppcSlope(x, maxX, maxY, curvature) {
+            if (x <= 0.5) return ppcSlope(0.5, maxX, maxY, curvature);
+            if (x >= maxX - 0.5) return ppcSlope(maxX - 0.5, maxX, maxY, curvature);
+            const dx = 0.5;
+            const y1 = ppcY(x - dx, maxX, maxY, curvature);
+            const y2 = ppcY(x + dx, maxX, maxY, curvature);
+            return (y2 - y1) / (2 * dx);
+        }
+
+        function getEffective(shift) {
+            const factor = 1 + shift / 100;
+            return {
+                maxX: state.maxX * factor,
+                maxY: state.maxY * factor
+            };
+        }
+
+        // --- Drawing Helpers ---
+        function setupCanvas(canvas, ctx) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.width * dpr; // square
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return rect.width;
+        }
+
+        function drawAxes(ctx, size, labelX, labelY, maxValX, maxValY) {
+            const pad = 55;
+            const plotW = size - pad - 20;
+            const plotH = size - pad - 30;
+
+            ctx.strokeStyle = '#cbd5e0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(pad, 15);
+            ctx.lineTo(pad, size - pad + 5);
+            ctx.lineTo(size - 10, size - pad + 5);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#4a5568';
+            ctx.font = '13px Segoe UI, system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(labelX, pad + plotW / 2, size - 8);
+
+            ctx.save();
+            ctx.translate(14, 15 + plotH / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(labelY, 0, 0);
+            ctx.restore();
+
+            // Tick marks
+            ctx.fillStyle = '#a0aec0';
+            ctx.font = '11px Monaco, Consolas, monospace';
+            const xTicks = 5;
+            const yTicks = 5;
+            for (let i = 0; i <= xTicks; i++) {
+                const val = (maxValX * i / xTicks);
+                const px = pad + (i / xTicks) * plotW;
+                ctx.textAlign = 'center';
+                ctx.fillText(Math.round(val), px, size - pad + 20);
+                ctx.strokeStyle = '#edf2f7';
+                if (i > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(px, 15);
+                    ctx.lineTo(px, size - pad + 5);
+                    ctx.stroke();
+                }
+            }
+            for (let i = 0; i <= yTicks; i++) {
+                const val = (maxValY * i / yTicks);
+                const py = size - pad - (i / yTicks) * plotH;
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round(val), pad - 8, py + 4);
+                ctx.strokeStyle = '#edf2f7';
+                if (i > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(pad, py);
+                    ctx.lineTo(size - 10, py);
+                    ctx.stroke();
+                }
+            }
+
+            return { pad, plotW, plotH };
+        }
+
+        // --- PPC Drawing ---
+        function drawPPC() {
+            const size = setupCanvas(ppcCanvas, ppcCtx);
+            ppcCtx.clearRect(0, 0, size, size);
+
+            const eff = getEffective(state.shift);
+            const drawMaxX = Math.max(state.maxX, eff.maxX) * 1.15;
+            const drawMaxY = Math.max(state.maxY, eff.maxY) * 1.15;
+
+            const { pad, plotW, plotH } = drawAxes(ppcCtx, size, 'Good X (Food)', 'Good Y (Clothing)', drawMaxX, drawMaxY);
+
+            function toScreen(vx, vy) {
+                return [
+                    pad + (vx / drawMaxX) * plotW,
+                    size - pad - (vy / drawMaxY) * plotH
+                ];
+            }
+
+            // Draw shifted PPC if shift != 0
+            if (state.shift !== 0) {
+                ppcCtx.strokeStyle = '#68d391';
+                ppcCtx.lineWidth = 2;
+                ppcCtx.setLineDash([6, 4]);
+                ppcCtx.beginPath();
+                for (let i = 0; i <= 200; i++) {
+                    const vx = (eff.maxX * i) / 200;
+                    const vy = ppcY(vx, eff.maxX, eff.maxY, state.curvature);
+                    const [sx, sy] = toScreen(vx, vy);
+                    if (i === 0) ppcCtx.moveTo(sx, sy);
+                    else ppcCtx.lineTo(sx, sy);
+                }
+                ppcCtx.stroke();
+                ppcCtx.setLineDash([]);
+            }
+
+            // Shade feasible region (light)
+            ppcCtx.fillStyle = 'rgba(66,153,225,0.06)';
+            ppcCtx.beginPath();
+            const [ox, oy] = toScreen(0, 0);
+            ppcCtx.moveTo(ox, oy);
+            for (let i = 0; i <= 200; i++) {
+                const vx = (state.maxX * i) / 200;
+                const vy = ppcY(vx, state.maxX, state.maxY, state.curvature);
+                const [sx, sy] = toScreen(vx, vy);
+                ppcCtx.lineTo(sx, sy);
+            }
+            const [bx, by] = toScreen(state.maxX, 0);
+            ppcCtx.lineTo(bx, by);
+            ppcCtx.closePath();
+            ppcCtx.fill();
+
+            // Draw current PPC
+            ppcCtx.strokeStyle = '#2b6cb0';
+            ppcCtx.lineWidth = 2.5;
+            ppcCtx.beginPath();
+            for (let i = 0; i <= 200; i++) {
+                const vx = (state.maxX * i) / 200;
+                const vy = ppcY(vx, state.maxX, state.maxY, state.curvature);
+                const [sx, sy] = toScreen(vx, vy);
+                if (i === 0) ppcCtx.moveTo(sx, sy);
+                else ppcCtx.lineTo(sx, sy);
+            }
+            ppcCtx.stroke();
+
+            // Current point on the PPC
+            const chosenX = state.x;
+            const yOnCurve = ppcY(chosenX, state.maxX, state.maxY, state.curvature);
+
+            // Draw tangent line at point
+            const slope = ppcSlope(chosenX, state.maxX, state.maxY, state.curvature);
+            const tangentLen = drawMaxX * 0.18;
+            const tx1 = chosenX - tangentLen;
+            const ty1 = yOnCurve - slope * (-tangentLen);
+            const tx2 = chosenX + tangentLen;
+            const ty2 = yOnCurve - slope * (tangentLen);
+            ppcCtx.strokeStyle = 'rgba(229,62,62,0.35)';
+            ppcCtx.lineWidth = 1.5;
+            ppcCtx.setLineDash([4, 3]);
+            ppcCtx.beginPath();
+            const [tsx1, tsy1] = toScreen(tx1, ty1);
+            const [tsx2, tsy2] = toScreen(tx2, ty2);
+            ppcCtx.moveTo(tsx1, tsy1);
+            ppcCtx.lineTo(tsx2, tsy2);
+            ppcCtx.stroke();
+            ppcCtx.setLineDash([]);
+
+            // Dashed lines from point to axes
+            const [px, py] = toScreen(chosenX, yOnCurve);
+            ppcCtx.strokeStyle = '#a0aec0';
+            ppcCtx.lineWidth = 1;
+            ppcCtx.setLineDash([4, 3]);
+            ppcCtx.beginPath();
+            ppcCtx.moveTo(px, py);
+            ppcCtx.lineTo(px, size - pad + 5);
+            ppcCtx.moveTo(px, py);
+            ppcCtx.lineTo(pad, py);
+            ppcCtx.stroke();
+            ppcCtx.setLineDash([]);
+
+            // Draw the chosen point
+            ppcCtx.beginPath();
+            ppcCtx.arc(px, py, 7, 0, Math.PI * 2);
+            ppcCtx.fillStyle = '#e53e3e';
+            ppcCtx.fill();
+            ppcCtx.strokeStyle = '#fff';
+            ppcCtx.lineWidth = 2;
+            ppcCtx.stroke();
+
+            // Label the point
+            ppcCtx.fillStyle = '#2d3748';
+            ppcCtx.font = 'bold 12px Monaco, Consolas, monospace';
+            ppcCtx.textAlign = 'left';
+            ppcCtx.fillText(`(${Math.round(chosenX)}, ${Math.round(yOnCurve)})`, px + 12, py - 8);
+
+            // OC label
+            const oc = Math.abs(slope);
+            ppcCtx.fillStyle = '#e53e3e';
+            ppcCtx.font = '11px Segoe UI, system-ui, sans-serif';
+            ppcCtx.fillText(`slope = -${oc.toFixed(2)}`, tsx2 + 4, tsy2 - 4);
+        }
+
+        // --- OC Drawing ---
+        function drawOC() {
+            const size = setupCanvas(ocCanvas, ocCtx);
+            ocCtx.clearRect(0, 0, size, size);
+
+            // Compute max OC for scale
+            let maxOC = 0;
+            for (let i = 1; i <= 200; i++) {
+                const vx = (state.maxX * i) / 200;
+                const s = Math.abs(ppcSlope(vx, state.maxX, state.maxY, state.curvature));
+                if (s > maxOC) maxOC = s;
+            }
+            maxOC = Math.max(maxOC * 1.2, 1);
+
+            const { pad, plotW, plotH } = drawAxes(ocCtx, size, 'Good X (Food)', 'Opp. Cost (units of Y per X)', state.maxX * 1.05, maxOC);
+
+            function toScreen(vx, vy) {
+                return [
+                    pad + (vx / (state.maxX * 1.05)) * plotW,
+                    size - pad - (vy / maxOC) * plotH
+                ];
+            }
+
+            // Draw OC curve
+            ocCtx.strokeStyle = '#e53e3e';
+            ocCtx.lineWidth = 2.5;
+            ocCtx.beginPath();
+            for (let i = 1; i <= 200; i++) {
+                const vx = (state.maxX * i) / 200;
+                const vy = Math.abs(ppcSlope(vx, state.maxX, state.maxY, state.curvature));
+                const [sx, sy] = toScreen(vx, vy);
+                if (i === 1) ocCtx.moveTo(sx, sy);
+                else ocCtx.lineTo(sx, sy);
+            }
+            ocCtx.stroke();
+
+            // Mark current point
+            const chosenX = Math.max(state.x, 0.5);
+            const oc = Math.abs(ppcSlope(chosenX, state.maxX, state.maxY, state.curvature));
+            const [cx, cy] = toScreen(chosenX, oc);
+
+            // Dashed lines
+            ocCtx.strokeStyle = '#a0aec0';
+            ocCtx.lineWidth = 1;
+            ocCtx.setLineDash([4, 3]);
+            ocCtx.beginPath();
+            ocCtx.moveTo(cx, cy);
+            ocCtx.lineTo(cx, size - pad + 5);
+            ocCtx.moveTo(cx, cy);
+            ocCtx.lineTo(pad, cy);
+            ocCtx.stroke();
+            ocCtx.setLineDash([]);
+
+            // Point
+            ocCtx.beginPath();
+            ocCtx.arc(cx, cy, 7, 0, Math.PI * 2);
+            ocCtx.fillStyle = '#4299e1';
+            ocCtx.fill();
+            ocCtx.strokeStyle = '#fff';
+            ocCtx.lineWidth = 2;
+            ocCtx.stroke();
+
+            // Label
+            ocCtx.fillStyle = '#2d3748';
+            ocCtx.font = 'bold 12px Monaco, Consolas, monospace';
+            ocCtx.textAlign = 'left';
+            ocCtx.fillText(`OC = ${oc.toFixed(2)}`, cx + 12, cy - 8);
+
+            // Annotation for what curve shape means
+            if (state.curvature > 1.1) {
+                ocCtx.fillStyle = '#718096';
+                ocCtx.font = '11px Segoe UI, system-ui, sans-serif';
+                ocCtx.textAlign = 'center';
+                ocCtx.fillText('Increasing opportunity cost', pad + plotW / 2, 30);
+                ocCtx.fillText('(resources are specialized)', pad + plotW / 2, 46);
+            } else if (state.curvature < 0.9) {
+                ocCtx.fillStyle = '#718096';
+                ocCtx.font = '11px Segoe UI, system-ui, sans-serif';
+                ocCtx.textAlign = 'center';
+                ocCtx.fillText('Decreasing opportunity cost', pad + plotW / 2, 30);
+            } else {
+                ocCtx.fillStyle = '#718096';
+                ocCtx.font = '11px Segoe UI, system-ui, sans-serif';
+                ocCtx.textAlign = 'center';
+                ocCtx.fillText('Constant opportunity cost', pad + plotW / 2, 30);
+            }
+        }
+
+        // --- Update UI ---
+        function updateAll() {
+            state.x = parseFloat(xSlider.value);
+            state.curvature = parseFloat(curveSlider.value);
+            state.maxX = parseFloat(maxXSlider.value);
+            state.maxY = parseFloat(maxYSlider.value);
+            state.shift = parseFloat(shiftSlider.value);
+
+            // Clamp x to maxX
+            if (state.x > state.maxX) {
+                state.x = state.maxX;
+                xSlider.value = state.x;
+            }
+            xSlider.max = state.maxX;
+
+            const yOnCurve = ppcY(state.x, state.maxX, state.maxY, state.curvature);
+            const oc = Math.abs(ppcSlope(Math.max(state.x, 0.5), state.maxX, state.maxY, state.curvature));
+
+            // Update displays
+            document.getElementById('x-val').textContent = Math.round(state.x);
+            document.getElementById('curve-val').textContent = state.curvature.toFixed(1);
+            document.getElementById('max-x-val').textContent = Math.round(state.maxX);
+            document.getElementById('max-y-val').textContent = Math.round(state.maxY);
+            document.getElementById('shift-val').textContent = (state.shift >= 0 ? '+' : '') + state.shift + '%';
+
+            document.getElementById('stat-x').textContent = Math.round(state.x);
+            document.getElementById('stat-y').textContent = Math.round(yOnCurve);
+            document.getElementById('stat-oc').textContent = oc.toFixed(2);
+            document.getElementById('stat-eff').textContent = '100%';
+
+            // Status
+            const statusDiv = document.getElementById('point-status');
+            statusDiv.className = 'status-display efficient';
+            statusDiv.innerHTML = `
+                <div class="status-label">Status</div>
+                <div class="status-value efficiency-efficient">On the PPC (Efficient)</div>
+            `;
+
+            // Insight
+            const insightEl = document.getElementById('insight');
+            if (state.x < 5) {
+                insightEl.innerHTML = `<strong>All-in on Good Y:</strong> Producing almost entirely clothing. The opportunity cost of the first units of food is very low (${oc.toFixed(2)} units of Y per X).`;
+            } else if (state.x > state.maxX - 5) {
+                insightEl.innerHTML = `<strong>All-in on Good X:</strong> Producing almost entirely food. The opportunity cost of the last units of food is very high (${oc.toFixed(2)} units of Y per X).`;
+            } else if (state.curvature > 1.5) {
+                insightEl.innerHTML = `<strong>Increasing OC:</strong> Each additional unit of food costs ${oc.toFixed(2)} units of clothing. As you produce more food, the cost rises because resources are <strong>specialized</strong>.`;
+            } else if (state.curvature < 0.9) {
+                insightEl.innerHTML = `<strong>Decreasing OC:</strong> Each additional unit of food costs ${oc.toFixed(2)} units of clothing. Rare in practice — resources become <em>more</em> productive as you specialize.`;
+            } else {
+                insightEl.innerHTML = `<strong>Constant OC:</strong> Each unit of food always costs ${oc.toFixed(2)} units of clothing. Resources are equally suited to both goods — a linear PPC.`;
+            }
+
+            if (state.shift > 0) {
+                insightEl.innerHTML += `<br><br><strong>Growth:</strong> The dashed green curve shows expanded possibilities from a ${state.shift}% increase in technology/resources.`;
+            } else if (state.shift < 0) {
+                insightEl.innerHTML += `<br><br><strong>Contraction:</strong> The dashed green curve shows reduced possibilities from a ${Math.abs(state.shift)}% loss in resources.`;
+            }
+
+            drawPPC();
+            drawOC();
+        }
+
+        // --- Scenarios ---
+        function setScenario(name) {
+            switch (name) {
+                case 'linear':
+                    curveSlider.value = 1.0;
+                    maxXSlider.value = 100;
+                    maxYSlider.value = 100;
+                    shiftSlider.value = 0;
+                    xSlider.value = 50;
+                    break;
+                case 'bowed':
+                    curveSlider.value = 2.0;
+                    maxXSlider.value = 100;
+                    maxYSlider.value = 100;
+                    shiftSlider.value = 0;
+                    xSlider.value = 50;
+                    break;
+                case 'growth':
+                    curveSlider.value = 2.0;
+                    maxXSlider.value = 100;
+                    maxYSlider.value = 100;
+                    shiftSlider.value = 30;
+                    xSlider.value = 50;
+                    break;
+                case 'asymmetric':
+                    curveSlider.value = 2.0;
+                    maxXSlider.value = 60;
+                    maxYSlider.value = 150;
+                    shiftSlider.value = 0;
+                    xSlider.value = 30;
+                    break;
+            }
+            updateAll();
+        }
+
+        // --- Events ---
+        xSlider.addEventListener('input', updateAll);
+        curveSlider.addEventListener('input', updateAll);
+        maxXSlider.addEventListener('input', updateAll);
+        maxYSlider.addEventListener('input', updateAll);
+        shiftSlider.addEventListener('input', updateAll);
+
+        window.addEventListener('resize', updateAll);
+
+        // --- Init ---
+        updateAll();
+    </script>
+</body>
+</html>

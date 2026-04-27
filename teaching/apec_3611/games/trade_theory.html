@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two-Country Trade Theory: Comparative Advantage</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #fafafa;
+    --panel-border: #e5e5e5;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --ink-faint: #888;
+    --accent: #8a1538;
+    --c1: #2a6f97;
+    --c2: #c1666b;
+    --world: #4a7c59;
+    --supply: #1a4d6b;
+    --demand: #8b3a3a;
+    --autarky: #b08600;
+    --grid: #ececec;
+    --axis: #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+  .container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px 32px 60px;
+  }
+  header.title-bar {
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-family: 'Crimson Pro', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  /* ---------- GRAPHS ---------- */
+  .graphs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .graph-card {
+    background: white;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 12px 12px 8px;
+    position: relative;
+  }
+  .graph-card .gtitle {
+    font-family: 'Crimson Pro', serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .graph-card .gsub {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    height: 16px;
+  }
+  .gtitle.c1 { color: var(--c1); }
+  .gtitle.c2 { color: var(--c2); }
+  .gtitle.world { color: var(--world); }
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---------- READOUTS ---------- */
+  .readouts {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .ro {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+  .ro h4 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  .ro h4.c1 { color: var(--c1); }
+  .ro h4.c2 { color: var(--c2); }
+  .ro h4.world { color: var(--world); }
+  .ro-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    padding: 3px 0;
+    color: var(--ink-soft);
+  }
+  .ro-line .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .ro-line.highlight .num { color: var(--accent); font-weight: 600; }
+  .ro-line.divider { border-top: 1px dashed var(--panel-border); margin-top: 4px; padding-top: 6px; }
+
+  /* ---------- CONTROLS (below plots, 4-col grid) ---------- */
+  .controls {
+    margin-top: 22px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 220px;
+    gap: 22px;
+  }
+  .ctrl-section h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--panel-border);
+    color: var(--ink);
+  }
+  .ctrl-section h3.c1 { color: var(--c1); border-bottom-color: var(--c1); }
+  .ctrl-section h3.c2 { color: var(--c2); border-bottom-color: var(--c2); }
+  .slider-row { margin-bottom: 8px; }
+  .slider-row label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 2px;
+  }
+  .slider-row .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .toggle-row input { cursor: pointer; }
+  button.reset-btn {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--panel-border);
+    border-radius: 3px;
+    padding: 7px 10px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.15s;
+  }
+  button.reset-btn:hover { background: #f0f0f0; }
+
+  /* ---------- EXPLAINER ---------- */
+  .explainer {
+    margin-top: 22px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 18px 22px;
+  }
+  .explainer h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+  }
+  .explainer p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+  }
+  .explainer .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    margin: 0 2px;
+  }
+  .tag.c1 { background: rgba(42,111,151,0.13); color: var(--c1); }
+  .tag.c2 { background: rgba(193,102,107,0.16); color: var(--c2); }
+  .tag.w  { background: rgba(74,124,89,0.16); color: var(--world); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="title-bar">
+  <h1>Two-Country Trade Theory &mdash; Comparative Advantage and World Price</h1>
+  <div class="subtitle">A linked diagram showing how a common world price $P^W$ generates exports from the low-cost country and imports to the high-cost country.</div>
+</header>
+
+<!-- ====================== GRAPHS ====================== -->
+<div class="graphs">
+  <div class="graph-card">
+    <div class="gtitle c1">Country 1 — Exporter</div>
+    <div class="gsub">domestic market</div>
+    <canvas id="cv1" width="900" height="900"></canvas>
+  </div>
+  <div class="graph-card">
+    <div class="gtitle world">World Market</div>
+    <div class="gsub">excess supply $=$ excess demand</div>
+    <canvas id="cvW" width="900" height="900"></canvas>
+  </div>
+  <div class="graph-card">
+    <div class="gtitle c2">Country 2 — Importer</div>
+    <div class="gsub">domestic market</div>
+    <canvas id="cv2" width="900" height="900"></canvas>
+  </div>
+</div>
+
+<!-- ====================== READOUTS ====================== -->
+<div class="readouts">
+  <div class="ro">
+    <h4 class="c1">Country 1</h4>
+    <div class="ro-line"><span>Autarky price $P_1^A$</span><span class="num" id="r_PA1">—</span></div>
+    <div class="ro-line"><span>Autarky qty $Q_1^A$</span><span class="num" id="r_QA1">—</span></div>
+    <div class="ro-line divider highlight"><span>Trade price $P^W$</span><span class="num" id="r_PW1">—</span></div>
+    <div class="ro-line"><span>Production $Q_1^S$</span><span class="num" id="r_QS1">—</span></div>
+    <div class="ro-line"><span>Consumption $Q_1^D$</span><span class="num" id="r_QD1">—</span></div>
+    <div class="ro-line highlight"><span>Exports $X_1$</span><span class="num" id="r_X1">—</span></div>
+  </div>
+  <div class="ro">
+    <h4 class="world">World Market</h4>
+    <div class="ro-line highlight"><span>World price $P^W$</span><span class="num" id="r_PW">—</span></div>
+    <div class="ro-line"><span>Volume of trade $Q^W$</span><span class="num" id="r_QW">—</span></div>
+    <div class="ro-line divider"><span>Direction</span><span class="num" id="r_dir">—</span></div>
+    <div class="ro-line"><span>$P_1^A$ vs $P_2^A$</span><span class="num" id="r_cmp">—</span></div>
+    <div class="ro-line"><span>Total gains from trade</span><span class="num" id="r_gain">—</span></div>
+  </div>
+  <div class="ro">
+    <h4 class="c2">Country 2</h4>
+    <div class="ro-line"><span>Autarky price $P_2^A$</span><span class="num" id="r_PA2">—</span></div>
+    <div class="ro-line"><span>Autarky qty $Q_2^A$</span><span class="num" id="r_QA2">—</span></div>
+    <div class="ro-line divider highlight"><span>Trade price $P^W$</span><span class="num" id="r_PW2">—</span></div>
+    <div class="ro-line"><span>Production $Q_2^S$</span><span class="num" id="r_QS2">—</span></div>
+    <div class="ro-line"><span>Consumption $Q_2^D$</span><span class="num" id="r_QD2">—</span></div>
+    <div class="ro-line highlight"><span>Imports $M_2$</span><span class="num" id="r_M2">—</span></div>
+  </div>
+</div>
+
+<!-- ====================== CONTROLS (now below) ====================== -->
+<div class="controls">
+  <div class="ctrl-section">
+    <h3 class="c1">Country 1 (potential exporter)</h3>
+    <div class="slider-row">
+      <label>Demand intercept $a_1$ <span class="val" id="v_a1">110</span></label>
+      <input type="range" id="a1" min="60" max="160" step="1" value="110">
+    </div>
+    <div class="slider-row">
+      <label>Demand slope $b_1$ <span class="val" id="v_b1">1.00</span></label>
+      <input type="range" id="b1" min="0.4" max="2.0" step="0.05" value="1.0">
+    </div>
+    <div class="slider-row">
+      <label>Supply intercept $c_1$ <span class="val" id="v_c1">5</span></label>
+      <input type="range" id="c1" min="0" max="60" step="1" value="5">
+    </div>
+    <div class="slider-row">
+      <label>Supply slope $d_1$ <span class="val" id="v_d1">1.00</span></label>
+      <input type="range" id="d1" min="0.3" max="2.0" step="0.05" value="1.0">
+    </div>
+  </div>
+
+  <div class="ctrl-section">
+    <h3 class="c2">Country 2 (potential importer)</h3>
+    <div class="slider-row">
+      <label>Demand intercept $a_2$ <span class="val" id="v_a2">100</span></label>
+      <input type="range" id="a2" min="60" max="160" step="1" value="100">
+    </div>
+    <div class="slider-row">
+      <label>Demand slope $b_2$ <span class="val" id="v_b2">1.00</span></label>
+      <input type="range" id="b2" min="0.4" max="2.0" step="0.05" value="1.0">
+    </div>
+    <div class="slider-row">
+      <label>Supply intercept $c_2$ <span class="val" id="v_c2">40</span></label>
+      <input type="range" id="c2" min="0" max="80" step="1" value="40">
+    </div>
+    <div class="slider-row">
+      <label>Supply slope $d_2$ <span class="val" id="v_d2">1.00</span></label>
+      <input type="range" id="d2" min="0.3" max="2.5" step="0.05" value="1.0">
+    </div>
+  </div>
+
+  <div class="ctrl-section">
+    <h3>Functional forms</h3>
+    <p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px 0">
+      Each country has linear demand and supply:
+    </p>
+    <p style="font-size:13.5px;margin:0 0 4px 0">$D_i(P)=a_i-b_i\,P$</p>
+    <p style="font-size:13.5px;margin:0 0 8px 0">$S_i(P)=\max(0,\,-c_i+d_i\,P)$</p>
+    <p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:0">
+      Autarky: $P_i^A=(a_i+c_i)/(b_i+d_i)$. World price clears $X_1=M_2$.
+    </p>
+  </div>
+
+  <div class="ctrl-section">
+    <h3>Display</h3>
+    <label class="toggle-row"><input type="checkbox" id="showAutarky" checked> Show autarky prices</label>
+    <label class="toggle-row"><input type="checkbox" id="showLinks" checked> Show world price link</label>
+    <label class="toggle-row"><input type="checkbox" id="showShading" checked> Shade trade quantities</label>
+    <button class="reset-btn" id="resetBtn">Reset to defaults</button>
+  </div>
+</div>
+
+<!-- ====================== EXPLAINER ====================== -->
+<div class="explainer">
+  <h3>How to read this diagram</h3>
+  <p>
+    Each country has its own demand curve $D_i(P)=a_i-b_i P$ and supply curve $S_i(P)=\max(0,\,-c_i+d_i P)$. In autarky, each market clears at its own price $P_i^A$ where $D_i=S_i$.
+  </p>
+  <p>
+    The middle panel constructs the world market by horizontally summing <span class="tag c1">Country 1's excess supply</span> $ES_1(P)=S_1(P)-D_1(P)$ for prices above $P_1^A$ and <span class="tag c2">Country 2's excess demand</span> $ED_2(P)=D_2(P)-S_2(P)$ for prices below $P_2^A$. They intersect at the <span class="tag w">world price $P^W$</span>, which clears global trade: $X_1=M_2$.
+  </p>
+  <p>
+    The horizontal dashed line at $P^W$ is the bridge across all three panels &mdash; it's the same price everywhere under free trade. At that price, Country 1 produces more than it consumes (the gap is exports) and Country 2 consumes more than it produces (the gap is imports). The country with the lower autarky price has the comparative advantage and becomes the exporter.
+  </p>
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  a1: 110, b1: 1.0, c1: 5,  d1: 1.0,
+  a2: 100, b2: 1.0, c2: 40, d2: 1.0,
+  showAutarky: true,
+  showLinks: true,
+  showShading: true,
+};
+
+/* ============================================================
+   ECONOMICS
+   ============================================================ */
+function demand(P, a, b) { return Math.max(0, a - b * P); }
+function supply(P, c, d) { return Math.max(0, -c + d * P); }
+
+function autarky(a, b, c, d) {
+  const P = (a + c) / (b + d);
+  const Q = demand(P, a, b);
+  return { P, Q };
+}
+
+function ES(P, a, b, c, d) { return supply(P, c, d) - demand(P, a, b); }
+
+function worldPrice(s) {
+  let P = (s.a1 + s.a2 + s.c1 + s.c2) / (s.b1 + s.b2 + s.d1 + s.d2);
+  for (let i = 0; i < 5; i++) {
+    const f = ES(P, s.a1, s.b1, s.c1, s.d1) + ES(P, s.a2, s.b2, s.c2, s.d2);
+    const fp = (s.b1 + s.d1) + (s.b2 + s.d2);
+    P -= f / fp;
+  }
+  return P;
+}
+
+function computeAll(s) {
+  const A1 = autarky(s.a1, s.b1, s.c1, s.d1);
+  const A2 = autarky(s.a2, s.b2, s.c2, s.d2);
+  const PW = worldPrice(s);
+
+  const QS1 = supply(PW, s.c1, s.d1);
+  const QD1 = demand(PW, s.a1, s.b1);
+  const QS2 = supply(PW, s.c2, s.d2);
+  const QD2 = demand(PW, s.a2, s.b2);
+
+  const X1 = QS1 - QD1;
+  const M2 = QD2 - QS2;
+  const QW = Math.abs(X1);
+
+  const G1 = 0.5 * Math.abs(PW - A1.P) * Math.abs(X1);
+  const G2 = 0.5 * Math.abs(A2.P - PW) * Math.abs(M2);
+
+  return { A1, A2, PW, QS1, QD1, QS2, QD2, X1, M2, QW, G1, G2 };
+}
+
+/* ============================================================
+   CANVAS HELPERS
+   ============================================================ */
+const DPR = 2;
+
+function setupCanvas(canvas, cssW, cssH) {
+  canvas.width  = cssW * DPR;
+  canvas.height = cssH * DPR;
+  canvas.style.width  = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return ctx;
+}
+
+const COLOR = {
+  axis:   '#2a2a2a',
+  grid:   '#ececec',
+  ink:    '#1a1a1a',
+  inkSoft:'#555',
+  c1:     '#2a6f97',
+  c2:     '#c1666b',
+  world:  '#4a7c59',
+  supply: '#1a4d6b',
+  demand: '#8b3a3a',
+  autarky:'#b08600',
+  shadeExp: 'rgba(42, 111, 151, 0.16)',
+  shadeImp: 'rgba(193, 102, 107, 0.16)',
+  shadeESW: 'rgba(42, 111, 151, 0.13)',
+  shadeEDW: 'rgba(193, 102, 107, 0.13)',
+};
+
+function px(plot, q, qMax) { return plot.x0 + (q / qMax) * plot.w; }
+function py(plot, p, pMax) { return plot.y0 - (p / pMax) * plot.h; }
+
+function drawAxes(ctx, plot, xMax, pMax) {
+  const { x0, y0, w, h } = plot;
+  ctx.save();
+  ctx.strokeStyle = COLOR.grid;
+  ctx.lineWidth = 1;
+  ctx.font = "11px 'JetBrains Mono', monospace";
+  ctx.fillStyle = COLOR.inkSoft;
+
+  const xTicks = 5, yTicks = 5;
+  for (let i = 0; i <= xTicks; i++) {
+    const xv = (xMax / xTicks) * i;
+    const xp = x0 + (xv / xMax) * w;
+    ctx.beginPath();
+    ctx.moveTo(xp, y0);
+    ctx.lineTo(xp, y0 - h);
+    ctx.stroke();
+    if (i > 0) ctx.fillText(xv.toFixed(0), xp - 8, y0 + 14);
+  }
+  for (let i = 0; i <= yTicks; i++) {
+    const pv = (pMax / yTicks) * i;
+    const yp = y0 - (pv / pMax) * h;
+    ctx.beginPath();
+    ctx.moveTo(x0, yp);
+    ctx.lineTo(x0 + w, yp);
+    ctx.stroke();
+    if (i > 0) ctx.fillText(pv.toFixed(0), x0 - 30, yp + 4);
+  }
+  ctx.strokeStyle = COLOR.axis;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0 - h - 4); ctx.lineTo(x0, y0); ctx.lineTo(x0 + w + 4, y0);
+  ctx.stroke();
+
+  const arrow = (x, y, dx, dy) => {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - dx + dy*0.4, y - dy - dx*0.4);
+    ctx.lineTo(x - dx - dy*0.4, y - dy + dx*0.4);
+    ctx.closePath();
+    ctx.fillStyle = COLOR.axis;
+    ctx.fill();
+  };
+  arrow(x0 + w + 4, y0, -6, 0);
+  arrow(x0, y0 - h - 4, 0, -6);
+
+  ctx.fillStyle = COLOR.ink;
+  ctx.font = "italic 14px 'Crimson Pro', serif";
+  ctx.fillText('Q', x0 + w + 8, y0 + 4);
+  ctx.fillText('P', x0 - 18, y0 - h - 6);
+
+  ctx.restore();
+}
+
+function drawCurve(ctx, plot, qMax, pMax, fn, pLo, pHi, color, width, dash) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath();
+  const steps = 200;
+  let started = false;
+  for (let i = 0; i <= steps; i++) {
+    const p = pLo + (pHi - pLo) * (i / steps);
+    const q = fn(p);
+    if (q < 0 || isNaN(q) || q > qMax * 1.05) { started = false; continue; }
+    const x = px(plot, q, qMax), y = py(plot, p, pMax);
+    if (!started) { ctx.moveTo(x, y); started = true; }
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function labelCurve(ctx, plot, qMax, pMax, fn, pLabel, color, text, dxPx, dyPx) {
+  const q = fn(pLabel);
+  if (q < 0 || q > qMax) return;
+  const x = px(plot, q, qMax), y = py(plot, pLabel, pMax);
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.font = "italic 15px 'Crimson Pro', serif";
+  ctx.fillText(text, x + dxPx, y + dyPx);
+  ctx.restore();
+}
+
+/* horizontal line across plot, label sits to the LEFT of the y-axis */
+function drawHLineLabeledLeft(ctx, plot, p, pMax, color, label, dash) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.3;
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath();
+  const y = py(plot, p, pMax);
+  ctx.moveTo(plot.x0, y);
+  ctx.lineTo(plot.x0 + plot.w, y);
+  ctx.stroke();
+  ctx.restore();
+
+  if (label) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.font = "11px 'JetBrains Mono', monospace";
+    const tw = ctx.measureText(label).width;
+    ctx.fillText(label, plot.x0 - tw - 6, py(plot, p, pMax) + 4);
+    ctx.restore();
+  }
+}
+
+function drawDot(ctx, plot, q, p, qMax, pMax, color, r) {
+  const x = px(plot, q, qMax), y = py(plot, p, pMax);
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, r || 4, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+}
+
+/* tick mark on x-axis with label below */
+function drawXTickLabel(ctx, plot, q, qMax, color, label, labelOffsetY) {
+  const x = px(plot, q, qMax);
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(x, plot.y0);
+  ctx.lineTo(x, plot.y0 + 5);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = "11px 'JetBrains Mono', monospace";
+  const tw = ctx.measureText(label).width;
+  ctx.fillText(label, x - tw / 2, plot.y0 + (labelOffsetY || 30));
+  ctx.restore();
+}
+
+/* trade-quantity bracket BELOW the x-axis spanning [qA, qB] */
+function drawTradeBracketBelow(ctx, plot, qA, qB, qMax, color, label) {
+  if (Math.abs(qA - qB) < 0.5) return;
+  const xL = px(plot, Math.min(qA, qB), qMax);
+  const xR = px(plot, Math.max(qA, qB), qMax);
+  const yTop = plot.y0 + 50;
+  const yBot = plot.y0 + 56;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(xL, yTop); ctx.lineTo(xL, yBot);
+  ctx.lineTo(xR, yBot); ctx.lineTo(xR, yTop);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = "12px 'JetBrains Mono', monospace";
+  const tw = ctx.measureText(label).width;
+  ctx.fillText(label, (xL + xR) / 2 - tw / 2, yBot + 14);
+  ctx.restore();
+}
+
+/* ============================================================
+   COUNTRY PANEL DRAW (decluttered)
+   ============================================================ */
+function drawCountry(canvas, opts) {
+  const cssW = canvas.clientWidth;
+  const cssH = cssW;
+  const ctx = setupCanvas(canvas, cssW, cssH);
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, cssW, cssH);
+
+  // generous left margin (price tags) and bottom margin (Q labels + trade bracket)
+  const plot = { x0: 78, y0: cssH - 88, w: cssW - 96, h: cssH - 118 };
+
+  const { a, b, c, d, PA, QA, PW, QS, QD, color, label, isExporter, qMax, pMax,
+          showAutarky, showLinks, showShading } = opts;
+
+  drawAxes(ctx, plot, qMax, pMax);
+
+  // shaded trade rectangle (between QD and QS, between PW and PA)
+  if (showShading && Math.abs(QS - QD) > 0.5) {
+    const yPW = py(plot, PW, pMax);
+    const yPA = py(plot, PA, pMax);
+    const xLo = px(plot, Math.min(QS, QD), qMax);
+    const xHi = px(plot, Math.max(QS, QD), qMax);
+    ctx.save();
+    ctx.fillStyle = isExporter ? COLOR.shadeExp : COLOR.shadeImp;
+    ctx.fillRect(xLo, Math.min(yPW, yPA), xHi - xLo, Math.abs(yPA - yPW));
+    ctx.restore();
+  }
+
+  // demand: label upper-left of curve
+  drawCurve(ctx, plot, qMax, pMax, (P) => demand(P, a, b), 0, pMax, COLOR.demand, 2.2);
+  labelCurve(ctx, plot, qMax, pMax, (P) => demand(P, a, b), pMax * 0.78, COLOR.demand, 'D', -16, -4);
+
+  // supply: label upper-right of curve
+  drawCurve(ctx, plot, qMax, pMax, (P) => supply(P, c, d), 0, pMax, COLOR.supply, 2.2);
+  labelCurve(ctx, plot, qMax, pMax, (P) => supply(P, c, d), pMax * 0.92, COLOR.supply, 'S', 8, 4);
+
+  // horizontal price lines, labels OUTSIDE plot to the LEFT
+  if (showAutarky) {
+    drawHLineLabeledLeft(ctx, plot, PA, pMax, COLOR.autarky, 'P^A=' + PA.toFixed(1), [3,3]);
+  }
+  if (showLinks) {
+    drawHLineLabeledLeft(ctx, plot, PW, pMax, COLOR.world, 'P^W=' + PW.toFixed(1), [6,4]);
+  }
+
+  // bare dots, no inline text
+  if (showAutarky) drawDot(ctx, plot, QA, PA, qMax, pMax, COLOR.autarky, 4);
+  drawDot(ctx, plot, QS, PW, qMax, pMax, COLOR.supply, 4);
+  drawDot(ctx, plot, QD, PW, qMax, pMax, COLOR.demand, 4);
+
+  // x-axis ticks under QD and QS, with labels BELOW the axis
+  // stagger so they don't overlap when QD and QS are close
+  const qLo = Math.min(QD, QS), qHi = Math.max(QD, QS);
+  const closeXLabels = (px(plot, qHi, qMax) - px(plot, qLo, qMax)) < 70;
+  if (QD < QS) {
+    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), 18);
+    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), closeXLabels ? 32 : 18);
+  } else {
+    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), 18);
+    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), closeXLabels ? 32 : 18);
+  }
+
+  // trade-quantity bracket BELOW the axis area, well clear of equilibrium points
+  if (Math.abs(QS - QD) > 0.5) {
+    drawTradeBracketBelow(ctx, plot, QD, QS, qMax, color,
+                          label + ' = ' + Math.abs(QS - QD).toFixed(1));
+  }
+}
+
+/* ============================================================
+   WORLD PANEL DRAW (decluttered)
+   ============================================================ */
+function drawWorld(canvas, opts) {
+  const cssW = canvas.clientWidth;
+  const cssH = cssW;
+  const ctx = setupCanvas(canvas, cssW, cssH);
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, cssW, cssH);
+
+  const plot = { x0: 78, y0: cssH - 88, w: cssW - 96, h: cssH - 118 };
+  const { s, A1, A2, PW, QW, qMax, pMax, showAutarky, showLinks, showShading } = opts;
+
+  drawAxes(ctx, plot, qMax, pMax);
+
+  const ES1 = (P) => Math.max(0, supply(P, s.c1, s.d1) - demand(P, s.a1, s.b1));
+  const ED2 = (P) => Math.max(0, demand(P, s.a2, s.b2) - supply(P, s.c2, s.d2));
+
+  if (showShading) {
+    ctx.save();
+    ctx.fillStyle = COLOR.shadeESW;
+    ctx.beginPath();
+    ctx.moveTo(px(plot, 0, qMax), py(plot, A1.P, pMax));
+    for (let i = 0; i <= 100; i++) {
+      const p = A1.P + (pMax - A1.P) * (i / 100);
+      ctx.lineTo(px(plot, ES1(p), qMax), py(plot, p, pMax));
+    }
+    ctx.lineTo(px(plot, 0, qMax), py(plot, pMax, pMax));
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = COLOR.shadeEDW;
+    ctx.beginPath();
+    ctx.moveTo(px(plot, 0, qMax), py(plot, A2.P, pMax));
+    for (let i = 0; i <= 100; i++) {
+      const p = A2.P * (1 - i / 100);
+      ctx.lineTo(px(plot, ED2(p), qMax), py(plot, p, pMax));
+    }
+    ctx.lineTo(px(plot, 0, qMax), py(plot, 0, pMax));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  drawCurve(ctx, plot, qMax, pMax, ES1, A1.P, pMax, COLOR.c1, 2.4);
+  drawCurve(ctx, plot, qMax, pMax, ED2, 0, A2.P, COLOR.c2, 2.4);
+
+  // labels OFF the intersection -- ES1 high, ED2 low
+  const pLabES = A1.P + (pMax - A1.P) * 0.78;
+  const qLabES = ES1(pLabES);
+  if (qLabES > 0 && qLabES < qMax) {
+    ctx.save();
+    ctx.fillStyle = COLOR.c1;
+    ctx.font = "italic 15px 'Crimson Pro', serif";
+    ctx.fillText('ES₁', px(plot, qLabES, qMax) + 8, py(plot, pLabES, pMax) + 4);
+    ctx.restore();
+  }
+  const pLabED = A2.P * 0.22;
+  const qLabED = ED2(pLabED);
+  if (qLabED > 0 && qLabED < qMax) {
+    ctx.save();
+    ctx.fillStyle = COLOR.c2;
+    ctx.font = "italic 15px 'Crimson Pro', serif";
+    ctx.fillText('ED₂', px(plot, qLabED, qMax) + 8, py(plot, pLabED, pMax) + 4);
+    ctx.restore();
+  }
+
+  // autarky reference lines, all labels at LEFT of y-axis
+  if (showAutarky) {
+    drawHLineLabeledLeft(ctx, plot, A1.P, pMax, COLOR.c1, 'P_1^A=' + A1.P.toFixed(1), [3,3]);
+    drawHLineLabeledLeft(ctx, plot, A2.P, pMax, COLOR.c2, 'P_2^A=' + A2.P.toFixed(1), [3,3]);
+  }
+  drawHLineLabeledLeft(ctx, plot, PW, pMax, COLOR.world, 'P^W=' + PW.toFixed(1), [6,4]);
+
+  // equilibrium dot only -- label goes under the axis as a tick
+  drawDot(ctx, plot, QW, PW, qMax, pMax, COLOR.world, 5);
+  drawXTickLabel(ctx, plot, QW, qMax, COLOR.world, 'Q^W=' + QW.toFixed(1), 18);
+
+  // optional vertical drop line from W to axis
+  if (showLinks) {
+    ctx.save();
+    ctx.strokeStyle = COLOR.world;
+    ctx.setLineDash([3, 4]);
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.moveTo(px(plot, QW, qMax), py(plot, PW, pMax));
+    ctx.lineTo(px(plot, QW, qMax), plot.y0);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+/* ============================================================
+   MAIN UPDATE
+   ============================================================ */
+function update() {
+  const ids = ['a1','b1','c1','d1','a2','b2','c2','d2'];
+  ids.forEach(k => {
+    state[k] = parseFloat(document.getElementById(k).value);
+    document.getElementById('v_' + k).textContent =
+      (k.startsWith('b') || k.startsWith('d')) ? state[k].toFixed(2) : state[k].toFixed(0);
+  });
+  state.showAutarky = document.getElementById('showAutarky').checked;
+  state.showLinks   = document.getElementById('showLinks').checked;
+  state.showShading = document.getElementById('showShading').checked;
+
+  const R = computeAll(state);
+
+  const pCandidates = [R.A1.P, R.A2.P, R.PW, state.a1/state.b1, state.a2/state.b2];
+  const pMax = Math.max(...pCandidates) * 1.25;
+
+  const qCandidates = [
+    demand(0, state.a1, state.b1), demand(0, state.a2, state.b2),
+    R.QS1, R.QD1, R.QS2, R.QD2
+  ];
+  const qMaxCountry = Math.max(...qCandidates) * 1.15;
+
+  const ES1max = Math.max(0, supply(pMax, state.c1, state.d1) - demand(pMax, state.a1, state.b1));
+  const ED2max = demand(0, state.a2, state.b2);
+  const qMaxWorld = Math.max(R.QW * 2.2, Math.min(ES1max, ED2max) * 1.2, 10);
+
+  drawCountry(document.getElementById('cv1'), {
+    a: state.a1, b: state.b1, c: state.c1, d: state.d1,
+    PA: R.A1.P, QA: R.A1.Q, PW: R.PW, QS: R.QS1, QD: R.QD1,
+    color: COLOR.c1, label: 'Exports X₁', isExporter: true,
+    qMax: qMaxCountry, pMax,
+    showAutarky: state.showAutarky, showLinks: state.showLinks, showShading: state.showShading,
+  });
+
+  drawWorld(document.getElementById('cvW'), {
+    s: state, A1: R.A1, A2: R.A2, PW: R.PW, QW: R.QW,
+    qMax: qMaxWorld, pMax,
+    showAutarky: state.showAutarky, showLinks: state.showLinks, showShading: state.showShading,
+  });
+
+  drawCountry(document.getElementById('cv2'), {
+    a: state.a2, b: state.b2, c: state.c2, d: state.d2,
+    PA: R.A2.P, QA: R.A2.Q, PW: R.PW, QS: R.QS2, QD: R.QD2,
+    color: COLOR.c2, label: 'Imports M₂', isExporter: false,
+    qMax: qMaxCountry, pMax,
+    showAutarky: state.showAutarky, showLinks: state.showLinks, showShading: state.showShading,
+  });
+
+  // readouts
+  const f1 = (x) => x.toFixed(1);
+  document.getElementById('r_PA1').textContent = f1(R.A1.P);
+  document.getElementById('r_QA1').textContent = f1(R.A1.Q);
+  document.getElementById('r_PW1').textContent = f1(R.PW);
+  document.getElementById('r_QS1').textContent = f1(R.QS1);
+  document.getElementById('r_QD1').textContent = f1(R.QD1);
+  document.getElementById('r_X1').textContent  = f1(R.X1);
+
+  document.getElementById('r_PA2').textContent = f1(R.A2.P);
+  document.getElementById('r_QA2').textContent = f1(R.A2.Q);
+  document.getElementById('r_PW2').textContent = f1(R.PW);
+  document.getElementById('r_QS2').textContent = f1(R.QS2);
+  document.getElementById('r_QD2').textContent = f1(R.QD2);
+  document.getElementById('r_M2').textContent  = f1(R.M2);
+
+  document.getElementById('r_PW').textContent  = f1(R.PW);
+  document.getElementById('r_QW').textContent  = f1(R.QW);
+
+  let dirText, cmpText;
+  if (R.A1.P < R.A2.P - 0.05) {
+    dirText = 'C1 → C2';
+    cmpText = f1(R.A1.P) + ' < ' + f1(R.A2.P);
+  } else if (R.A1.P > R.A2.P + 0.05) {
+    dirText = 'C2 → C1';
+    cmpText = f1(R.A1.P) + ' > ' + f1(R.A2.P);
+  } else {
+    dirText = 'no trade';
+    cmpText = '≈ equal';
+  }
+  document.getElementById('r_dir').textContent = dirText;
+  document.getElementById('r_cmp').textContent = cmpText;
+  document.getElementById('r_gain').textContent = f1(R.G1 + R.G2);
+}
+
+/* ============================================================
+   WIRE UP
+   ============================================================ */
+['a1','b1','c1','d1','a2','b2','c2','d2'].forEach(id =>
+  document.getElementById(id).addEventListener('input', update)
+);
+['showAutarky','showLinks','showShading'].forEach(id =>
+  document.getElementById(id).addEventListener('change', update)
+);
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const defaults = { a1:110, b1:1.0, c1:5, d1:1.0, a2:100, b2:1.0, c2:40, d2:1.0 };
+  Object.entries(defaults).forEach(([k,v]) => {
+    document.getElementById(k).value = v;
+  });
+  document.getElementById('showAutarky').checked = true;
+  document.getElementById('showLinks').checked = true;
+  document.getElementById('showShading').checked = true;
+  update();
+});
+
+window.addEventListener('resize', () => requestAnimationFrame(update));
+window.addEventListener('load', update);
+update();
+</script>
+</body>
+</html>

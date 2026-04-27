@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Country × 3-Sector CGE Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#1a1a1a; --muted:#666; --line:#d8d8d8; --soft:#f4f4f2;
+    --accent:#7a1f2b; --accent-2:#1f4e7a; --accent-3:#2f6b3a; --warn:#b8860b;
+    --c-usa:#1f4e7a; --c-eu:#7a1f2b; --c-row:#2f6b3a;
+    --s-agr:#2f6b3a; --s-mfg:#7a1f2b; --s-svc:#1f4e7a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Source Sans 3',sans-serif;font-weight:400;line-height:1.5}
+  .wrap{max-width:1280px;margin:0 auto;padding:28px 28px 80px}
+  h1{font-family:'Crimson Pro',serif;font-weight:700;font-size:34px;margin:0 0 4px;letter-spacing:-0.01em}
+  h2{font-family:'Crimson Pro',serif;font-weight:600;font-size:22px;margin:28px 0 10px;letter-spacing:-0.01em}
+  h3{font-family:'Crimson Pro',serif;font-weight:600;font-size:17px;margin:14px 0 8px}
+  .lede{color:var(--muted);font-size:15.5px;max-width:900px;margin-bottom:18px}
+  .num{font-family:'JetBrains Mono',monospace;font-weight:500}
+  .tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.04em;background:var(--soft);padding:3px 8px;border:1px solid var(--line);border-radius:3px;color:var(--muted);margin-right:6px}
+
+  .panel{border:1px solid var(--line);background:#fff;border-radius:6px;margin:14px 0}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;user-select:none;border-bottom:1px solid transparent}
+  .panel-head h2{margin:0}
+  .panel-head .chev{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:13px}
+  .panel.open .panel-head{border-bottom:1px solid var(--line)}
+  .panel-body{display:none;padding:16px}
+  .panel.open .panel-body{display:block}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media (max-width:980px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+  .ctrl{border:1px solid var(--line);border-radius:5px;padding:12px 14px;background:#fff}
+  .ctrl-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:6px 0}
+  .ctrl-row label{font-size:13.5px;color:var(--ink)}
+  .ctrl-row .val{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);min-width:62px;text-align:right}
+  input[type=range]{flex:1;accent-color:var(--accent)}
+  select,input[type=number]{font-family:'JetBrains Mono',monospace;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:3px;background:#fff}
+
+  button{font-family:'Source Sans 3',sans-serif;font-size:13.5px;font-weight:500;padding:7px 14px;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:4px;cursor:pointer;transition:all .12s}
+  button:hover{background:var(--ink);color:#fff}
+  button.primary{background:var(--ink);color:#fff}
+  button.primary:hover{background:var(--accent);border-color:var(--accent)}
+  button.ghost{border-color:var(--line);color:var(--muted)}
+  button.ghost:hover{border-color:var(--ink);color:var(--ink);background:#fff}
+
+  table{border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px;width:100%}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:right}
+  th{background:var(--soft);font-weight:600}
+  th.lbl,td.lbl{text-align:left;font-family:'Source Sans 3',sans-serif;background:var(--soft);font-weight:500}
+  td.lbl{background:#fff;font-weight:400}
+  .pos{color:var(--accent-3)}
+  .neg{color:var(--accent)}
+  .small{font-size:12px;color:var(--muted)}
+
+  canvas{display:block;width:100%;height:auto}
+  .canvas-wrap{position:relative;border:1px solid var(--line);border-radius:5px;background:#fff;overflow:hidden}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted);margin-top:6px}
+  .legend span.sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+  .topbar{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+
+  .pill{display:inline-block;padding:2px 7px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;border:1px solid var(--line);background:var(--soft);color:var(--muted)}
+  .pill.eq{border-color:var(--accent-3);color:var(--accent-3)}
+  .pill.warn{border-color:var(--warn);color:var(--warn)}
+
+  .scenario-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .sc-btn{font-size:12.5px;padding:5px 10px;border:1px solid var(--line);border-radius:14px;background:var(--soft);color:var(--ink);cursor:pointer}
+  .sc-btn:hover{border-color:var(--ink)}
+  .sc-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .footnote{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .equation-box{background:var(--soft);border-left:3px solid var(--accent);padding:10px 14px;margin:8px 0;font-size:14px}
+  .equation-box i{font-family:'Crimson Pro',serif;font-style:italic;font-weight:600}
+  .equation-box sub,.equation-box sup{font-family:'Crimson Pro',serif;font-style:italic;font-weight:500}
+  .eqn{font-family:'Crimson Pro',serif;font-size:16px;text-align:center;padding:10px 6px;color:#1a1a1a;line-height:1.6}
+  .eqn i{font-style:italic;font-weight:600}
+  /* Inline math-style italics outside equation-box (in headings/text) */
+  h3 i, p i, .footnote i{font-family:'Crimson Pro',serif;font-style:italic;font-weight:600}
+  .kv{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--line);font-size:13px}
+  .kv:last-child{border-bottom:none}
+  .kv .k{color:var(--muted)}
+  .kv .v{font-family:'JetBrains Mono',monospace;font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <h1>3-Country × 3-Sector CGE Model</h1>
+      <div class="lede">A miniature computable general equilibrium model with three regions (USA, EU, ROW) producing three goods (Agriculture, Manufacturing, Services). Goods are imperfectly substitutable across origins (Armington), production uses Cobb–Douglas with capital, labor, and intermediate composites, and households consume a CES bundle of domestic and imported varieties. Markets clear via a tâtonnement-style price solver.</div>
+      <div>
+        <span class="tag">Armington trade</span>
+        <span class="tag">CD production</span>
+        <span class="tag">CES demand</span>
+        <span class="tag">Walrasian closure</span>
+        <span id="solveStatus" class="pill eq">equilibrium</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="btnReset">Reset</button>
+      <button class="primary" id="btnSolve">Re-solve</button>
+    </div>
+  </div>
+
+  <!-- =============== SCENARIO + CONTROLS =============== -->
+  <div class="panel open">
+    <div class="panel-head" onclick="togglePanel(this)">
+      <h2>1. Scenario &amp; Policy Shocks</h2>
+      <span class="chev">[−]</span>
+    </div>
+    <div class="panel-body">
+      <div class="small" style="margin-bottom:6px">Pick a preset scenario or move the sliders below. The model resolves to a new general equilibrium after every change.</div>
+      <div class="scenario-row" id="scenarioRow">
+        <button class="sc-btn active" data-sc="base">Baseline</button>
+        <button class="sc-btn" data-sc="usa_tariff">USA tariff 25% on EU manufacturing</button>
+        <button class="sc-btn" data-sc="eu_tax_agr">EU productivity boost in agriculture (+15%)</button>
+        <button class="sc-btn" data-sc="row_growth">ROW labor endowment +20%</button>
+        <button class="sc-btn" data-sc="svc_demand">Global preference shift toward services</button>
+      </div>
+
+      <div class="grid-3" style="margin-top:14px">
+        <div class="ctrl">
+          <h3>Tariffs (importer × good)</h3>
+          <div class="small" style="margin-bottom:6px">Ad valorem tariff applied by the importing country on imports of a good from <em>both</em> trading partners.</div>
+          <div id="tariffControls"></div>
+        </div>
+        <div class="ctrl">
+          <h3>Productivity shifters <i>A<sub>r,s</sub></i></h3>
+          <div class="small" style="margin-bottom:6px">Hicks-neutral total factor productivity multiplier (1.00 = baseline).</div>
+          <div id="prodControls"></div>
+        </div>
+        <div class="ctrl">
+          <h3>Endowments &amp; preferences</h3>
+          <div id="endowControls"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== EQUILIBRIUM SUMMARY =============== -->
+  <div class="panel open">
+    <div class="panel-head" onclick="togglePanel(this)">
+      <h2>2. Equilibrium Summary</h2>
+      <span class="chev">[−]</span>
+    </div>
+    <div class="panel-body">
+      <div class="grid-3">
+        <div class="ctrl">
+          <h3>Real GDP &amp; welfare (% Δ from baseline)</h3>
+          <div id="welfareKVs"></div>
+        </div>
+        <div class="ctrl">
+          <h3>Equilibrium prices</h3>
+          <table id="priceTable"></table>
+          <div class="footnote">Numéraire: USA wage <i>w<sub>USA</sub></i> = 1. All other prices are relative.</div>
+        </div>
+        <div class="ctrl">
+          <h3>Trade balances</h3>
+          <table id="tbTable"></table>
+          <div class="footnote">Sums across goods. Walras' law ⇒ world balance ≈ 0.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== GRAPHICAL VIEW =============== -->
+  <div class="panel open">
+    <div class="panel-head" onclick="togglePanel(this)">
+      <h2>3. Graphical View — Production, Trade, and Consumption</h2>
+      <span class="chev">[−]</span>
+    </div>
+    <div class="panel-body">
+      <div class="grid-2">
+        <div>
+          <h3>Sectoral output by country (Δ vs. baseline)</h3>
+          <div class="canvas-wrap"><canvas id="cvOutput" width="1200" height="640"></canvas></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--s-agr)"></span>Agriculture</span>
+            <span><span class="sw" style="background:var(--s-mfg)"></span>Manufacturing</span>
+            <span><span class="sw" style="background:var(--s-svc)"></span>Services</span>
+          </div>
+        </div>
+        <div>
+          <h3>Bilateral trade flows (Sankey-style)</h3>
+          <div class="canvas-wrap"><canvas id="cvTrade" width="1200" height="640"></canvas></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--c-usa)"></span>USA origin</span>
+            <span><span class="sw" style="background:var(--c-eu)"></span>EU origin</span>
+            <span><span class="sw" style="background:var(--c-row)"></span>ROW origin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:14px">
+        <div>
+          <h3>Circular flow: factor incomes → household → consumption</h3>
+          <div class="canvas-wrap"><canvas id="cvFlow" width="1200" height="900"></canvas></div>
+        </div>
+        <div>
+          <h3>Price level by country &amp; sector</h3>
+          <div class="canvas-wrap"><canvas id="cvPrices" width="1200" height="540"></canvas></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--c-usa)"></span>USA</span>
+            <span><span class="sw" style="background:var(--c-eu)"></span>EU</span>
+            <span><span class="sw" style="background:var(--c-row)"></span>ROW</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== NUMERICAL VIEW =============== -->
+  <div class="panel open">
+    <div class="panel-head" onclick="togglePanel(this)">
+      <h2>4. Numerical View — Social Accounting Matrix</h2>
+      <span class="chev">[−]</span>
+    </div>
+    <div class="panel-body">
+      <div class="grid-2">
+        <div>
+          <h3>Production (output, value added, intermediates)</h3>
+          <table id="prodTable"></table>
+        </div>
+        <div>
+          <h3>Final consumption <i>C<sub>r,s,o</sub></i> (importer × good × origin)</h3>
+          <table id="consTable"></table>
+          <div class="footnote">Rows are (importer, good); columns are origin country. Values in real units.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <h3>Bilateral trade matrix (exporter → importer, summed across goods)</h3>
+        <table id="bilatTable"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== MODEL DOCS =============== -->
+  <div class="panel">
+    <div class="panel-head" onclick="togglePanel(this)">
+      <h2>5. Model Specification</h2>
+      <span class="chev">[+]</span>
+    </div>
+    <div class="panel-body">
+      <h3>Sets</h3>
+      <p>Regions <i>r</i> &isin; {USA, EU, ROW}, sectors <i>s</i> &isin; {AGR, MFG, SVC}, origins <i>o</i> &isin; {USA, EU, ROW}.</p>
+
+      <h3>Production</h3>
+      <div class="equation-box">
+        Cobb–Douglas value added with intermediates as a fixed-coefficient composite at the top:
+        <div class="eqn"><i>Y<sub>r,s</sub></i> = <i>A<sub>r,s</sub></i> &middot; min( <i>VA<sub>r,s</sub></i> / &alpha;<sup>VA</sup><sub>r,s</sub> &nbsp;,&nbsp; <i>INT<sub>r,s</sub></i> / &alpha;<sup>INT</sup><sub>r,s</sub> )</div>
+        <div class="eqn"><i>VA<sub>r,s</sub></i> = <i>K<sub>r,s</sub></i><sup>&beta;<sub>r,s</sub></sup> &middot; <i>L<sub>r,s</sub></i><sup>1&minus;&beta;<sub>r,s</sub></sup></div>
+      </div>
+
+      <h3>Armington aggregation (consumer side)</h3>
+      <div class="equation-box">
+        Consumers in region <i>r</i> buy a CES composite of domestic and imported varieties of good <i>s</i>:
+        <div class="eqn"><i>Q<sub>r,s</sub></i> = [ &Sigma;<sub>o</sub> &delta;<sub>r,s,o</sub><sup>1/&sigma;</sup> &middot; <i>X<sub>r,s,o</sub></i><sup>(&sigma;&minus;1)/&sigma;</sup> ]<sup>&sigma;/(&sigma;&minus;1)</sup></div>
+        with elasticity &sigma; = 3 and ad valorem tariff &tau;<sub>r,s</sub> on imports (<i>o</i> &ne; <i>r</i>).
+      </div>
+
+      <h3>Household demand</h3>
+      <div class="equation-box">
+        Cobb–Douglas over Armington composites with budget shares &theta;<sub>r,s</sub>:
+        <div class="eqn">max &Pi;<sub>s</sub> <i>Q<sub>r,s</sub></i><sup>&theta;<sub>r,s</sub></sup> &nbsp; s.t. &nbsp; &Sigma;<sub>s</sub> <i>P<sup>Q</sup><sub>r,s</sub></i> &middot; <i>Q<sub>r,s</sub></i> = <i>I<sub>r</sub></i></div>
+        Income <i>I<sub>r</sub></i> = <i>w<sub>r</sub></i> &middot; <i>L̄<sub>r</sub></i> + &rho;<sub>r</sub> &middot; <i>K̄<sub>r</sub></i> + <i>T<sub>r</sub></i>, where <i>T<sub>r</sub></i> is tariff revenue rebated lump-sum.
+      </div>
+
+      <h3>Equilibrium conditions</h3>
+      <p>(i) Zero profits in each (<i>r</i>,&thinsp;<i>s</i>). (ii) Goods market clearing: <i>Y<sub>r,s</sub></i> = &Sigma;<sub>r&prime;</sub> <i>X<sub>r&prime;,s,r</sub></i> + intermediates. (iii) Factor markets: &Sigma;<sub>s</sub> <i>L<sub>r,s</sub></i> = <i>L̄<sub>r</sub></i>, &nbsp; &Sigma;<sub>s</sub> <i>K<sub>r,s</sub></i> = <i>K̄<sub>r</sub></i>. (iv) Household budget binds. (v) Tariff revenue identity. The solver iterates on prices { <i>P<sub>r,s</sub></i>, <i>w<sub>r</sub></i>, &rho;<sub>r</sub> } until excess demands fall below 10<sup>&minus;6</sup>.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   3 × 3 CGE — minimal but proper general equilibrium
+   ============================================================ */
+
+const REGIONS = ['USA','EU','ROW'];
+const SECTORS = ['AGR','MFG','SVC'];
+const SECTOR_LBL = {AGR:'Agriculture', MFG:'Manufacturing', SVC:'Services'};
+const REGION_COL = {USA:'#1f4e7a', EU:'#7a1f2b', ROW:'#2f6b3a'};
+const SECTOR_COL = {AGR:'#2f6b3a', MFG:'#7a1f2b', SVC:'#1f4e7a'};
+
+// ---------- Baseline calibration ----------
+// Endowments
+const baseEndow = {
+  USA:{L:100, K:120},
+  EU :{L: 90, K:100},
+  ROW:{L:200, K: 60},
+};
+
+// Cobb-Douglas capital share by (r,s)
+const beta = {
+  USA:{AGR:0.30, MFG:0.45, SVC:0.35},
+  EU :{AGR:0.30, MFG:0.45, SVC:0.40},
+  ROW:{AGR:0.25, MFG:0.40, SVC:0.30},
+};
+
+// TFP (Hicks-neutral)
+const baseA = {
+  USA:{AGR:1.00, MFG:1.20, SVC:1.30},
+  EU :{AGR:1.05, MFG:1.15, SVC:1.20},
+  ROW:{AGR:0.85, MFG:0.80, SVC:0.75},
+};
+
+// Household budget shares
+const baseTheta = {
+  USA:{AGR:0.10, MFG:0.30, SVC:0.60},
+  EU :{AGR:0.12, MFG:0.32, SVC:0.56},
+  ROW:{AGR:0.30, MFG:0.40, SVC:0.30},
+};
+
+// Armington share (preference for origin o by importer r in good s)
+// Home bias: own origin gets larger weight
+function defaultArmington(){
+  const d = {};
+  for(const r of REGIONS){ d[r]={}; for(const s of SECTORS){
+    d[r][s] = {};
+    for(const o of REGIONS){ d[r][s][o] = (o===r)?0.55:0.225; }
+  }}
+  return d;
+}
+
+const SIGMA = 3.0; // Armington elasticity
+
+// ---------- State ----------
+let state = freshState();
+let baseline = null;
+
+function freshState(){
+  return {
+    endow: deepCopy(baseEndow),
+    A: deepCopy(baseA),
+    theta: deepCopy(baseTheta),
+    delta: defaultArmington(),
+    tariff: {USA:{AGR:0,MFG:0,SVC:0}, EU:{AGR:0,MFG:0,SVC:0}, ROW:{AGR:0,MFG:0,SVC:0}},
+  };
+}
+function deepCopy(o){return JSON.parse(JSON.stringify(o));}
+
+// ---------- Solver ----------
+/*
+  Simplified flow (no I-O intermediates loop, to keep the toy tractable):
+  - Each region produces with CD value-added: Y_{r,s} = A * K^β * L^(1-β)
+  - Factor allocation across sectors maximizes value-added income given factor prices
+    With CD and a single composite output price, the supply allocation reduces to:
+      L_{r,s} ∝ θ̃_{r,s} * (1-β_{r,s}) ; K_{r,s} ∝ θ̃_{r,s} * β_{r,s}
+    where θ̃ is the share of nominal output in region r going to sector s, which
+    we tie to demand in equilibrium (so factor allocation responds endogenously).
+
+  For a transparent toy, we use an iterative tâtonnement:
+    1. Guess output prices P_{r,s}
+    2. Solve cost-minimizing factor demands and producer output Y_{r,s} given factor prices
+    3. Solve household demand worldwide given prices
+    4. Compute Armington composite prices, total demand by (r,s,origin)
+    5. Update P_{r,s} (producer prices) toward market-clearing
+    6. Update factor prices to clear L,K markets
+    7. Repeat
+*/
+
+function solve(s){
+  // Initial guesses
+  let P = {}; // producer price by (origin, sector)
+  let w = {}, rho = {};
+  for(const r of REGIONS){ w[r]=1.0; rho[r]=1.0; P[r]={}; for(const sec of SECTORS) P[r][sec]=1.0; }
+  // Numéraire: w_USA = 1
+  w.USA = 1.0;
+
+  // Factor allocation shares (will be updated each iter)
+  let Lalloc = {}, Kalloc = {};
+  for(const r of REGIONS){ Lalloc[r]={}; Kalloc[r]={};
+    for(const sec of SECTORS){ Lalloc[r][sec]=1/3; Kalloc[r][sec]=1/3; }}
+
+  const MAX_ITER = 400;
+  const TOL = 1e-6;
+  let converged = false;
+  let lastErr = 0;
+
+  for(let it=0; it<MAX_ITER; it++){
+    // ----- 1. Production given factor allocations -----
+    const Y = {};
+    for(const r of REGIONS){
+      Y[r] = {};
+      for(const sec of SECTORS){
+        const L = Lalloc[r][sec] * s.endow[r].L;
+        const K = Kalloc[r][sec] * s.endow[r].K;
+        const b = beta[r][sec];
+        const A = s.A[r][sec];
+        Y[r][sec] = A * Math.pow(Math.max(K,1e-9), b) * Math.pow(Math.max(L,1e-9), 1-b);
+      }
+    }
+
+    // ----- 2. Producer prices from zero-profit (unit cost) -----
+    // Unit cost CD: c = (1/A) * (rho/β)^β * (w/(1-β))^(1-β)
+    const Pnew = {};
+    for(const r of REGIONS){
+      Pnew[r] = {};
+      for(const sec of SECTORS){
+        const b = beta[r][sec];
+        const A = s.A[r][sec];
+        const cost = (1/A) * Math.pow(rho[r]/b, b) * Math.pow(w[r]/(1-b), 1-b);
+        Pnew[r][sec] = cost;
+      }
+    }
+
+    // ----- 3. Armington composite prices for each (importer r, good sec) -----
+    // P^Q = [ Σ_o δ_{r,s,o} * (P_o,s * (1+τ if o≠r))^(1-σ) ]^(1/(1-σ))
+    const PQ = {};
+    for(const r of REGIONS){ PQ[r] = {};
+      for(const sec of SECTORS){
+        let sum = 0;
+        for(const o of REGIONS){
+          const tau = (o===r)?0:s.tariff[r][sec];
+          const p = Pnew[o][sec] * (1+tau);
+          sum += s.delta[r][sec][o] * Math.pow(p, 1-SIGMA);
+        }
+        PQ[r][sec] = Math.pow(sum, 1/(1-SIGMA));
+      }
+    }
+
+    // ----- 4. Household income & demand -----
+    // First need tariff revenue, which depends on imports → solve fixed point in 1 sub-iter
+    let Tariff = {USA:0, EU:0, ROW:0};
+    let income = {};
+    let Q = {}; // Armington composite quantity demanded by (r, sec)
+    let X = {}; // X[r][sec][o] origin-specific demand
+    for(let sub=0; sub<8; sub++){
+      for(const r of REGIONS){
+        income[r] = w[r]*s.endow[r].L + rho[r]*s.endow[r].K + Tariff[r];
+      }
+      // CD demand over composites
+      for(const r of REGIONS){ Q[r]={}; X[r]={};
+        for(const sec of SECTORS){
+          const expend = s.theta[r][sec] * income[r];
+          Q[r][sec] = expend / PQ[r][sec];
+          // origin-specific demand within Armington
+          X[r][sec] = {};
+          let denom = 0;
+          for(const o of REGIONS){
+            const tau = (o===r)?0:s.tariff[r][sec];
+            const p = Pnew[o][sec] * (1+tau);
+            denom += s.delta[r][sec][o] * Math.pow(p, 1-SIGMA);
+          }
+          for(const o of REGIONS){
+            const tau = (o===r)?0:s.tariff[r][sec];
+            const p = Pnew[o][sec] * (1+tau);
+            const share = s.delta[r][sec][o] * Math.pow(p, -SIGMA) / Math.pow(PQ[r][sec], -SIGMA);
+            // Equivalent: X_{r,s,o} = δ * (P_Q / p)^σ * Q  (with tariff baked into p relative to PQ)
+            X[r][sec][o] = s.delta[r][sec][o] * Math.pow(PQ[r][sec]/p, SIGMA) * Q[r][sec];
+          }
+        }
+      }
+      // recompute tariff revenue
+      const Tnew = {USA:0,EU:0,ROW:0};
+      for(const r of REGIONS){
+        for(const sec of SECTORS){
+          for(const o of REGIONS){
+            if(o===r) continue;
+            const tau = s.tariff[r][sec];
+            Tnew[r] += tau * Pnew[o][sec] * X[r][sec][o];
+          }
+        }
+      }
+      let dT = 0; for(const r of REGIONS){ dT += Math.abs(Tnew[r]-Tariff[r]); Tariff[r]=Tnew[r]; }
+      if(dT < 1e-8) break;
+    }
+
+    // ----- 5. Goods market excess demand -----
+    // Demand for (origin r, sector sec) = Σ_{r'} X_{r',sec,r}
+    const Dem = {};
+    for(const r of REGIONS){ Dem[r]={};
+      for(const sec of SECTORS){
+        let d = 0;
+        for(const rp of REGIONS){ d += X[rp][sec][r]; }
+        Dem[r][sec] = d;
+      }
+    }
+
+    // ----- 6. Update factor allocations from value-added shares -----
+    // Nominal value of output by (r,sec)
+    const VAL = {};
+    let totVal = {USA:0,EU:0,ROW:0};
+    for(const r of REGIONS){ VAL[r]={};
+      for(const sec of SECTORS){
+        VAL[r][sec] = Pnew[r][sec] * Dem[r][sec];
+        totVal[r] += VAL[r][sec];
+      }
+    }
+    // CD: L_{r,s} = (1-β) * VAL_{r,s} / w_r ; K_{r,s} = β * VAL_{r,s} / rho_r
+    const Lnew = {}, Knew = {};
+    let totL = {USA:0,EU:0,ROW:0}, totK = {USA:0,EU:0,ROW:0};
+    for(const r of REGIONS){ Lnew[r]={}; Knew[r]={};
+      for(const sec of SECTORS){
+        Lnew[r][sec] = (1-beta[r][sec]) * VAL[r][sec] / Math.max(w[r],1e-9);
+        Knew[r][sec] = beta[r][sec] * VAL[r][sec] / Math.max(rho[r],1e-9);
+        totL[r] += Lnew[r][sec];
+        totK[r] += Knew[r][sec];
+      }
+    }
+    // Update factor prices to clear factor markets:
+    // ratio = totL / Lbar tells us how much w should rise
+    const wnew = {}, rhonew = {};
+    for(const r of REGIONS){
+      wnew[r]   = w[r]   * Math.pow(totL[r]/s.endow[r].L, 0.5);
+      rhonew[r] = rho[r] * Math.pow(totK[r]/s.endow[r].K, 0.5);
+    }
+    // Re-normalize: numéraire w_USA = 1
+    const norm = wnew.USA;
+    for(const r of REGIONS){ wnew[r]/=norm; rhonew[r]/=norm; }
+    for(const r of REGIONS){ for(const sec of SECTORS){ Pnew[r][sec]/=norm; } }
+
+    // Update factor allocations as shares
+    for(const r of REGIONS){
+      for(const sec of SECTORS){
+        Lalloc[r][sec] = Lnew[r][sec] / Math.max(totL[r],1e-9);
+        Kalloc[r][sec] = Knew[r][sec] / Math.max(totK[r],1e-9);
+      }
+    }
+
+    // Damped update of prices
+    const lam = 0.6;
+    let err = 0;
+    for(const r of REGIONS){
+      err += Math.abs(w[r]-wnew[r]) + Math.abs(rho[r]-rhonew[r]);
+      w[r]   = lam*wnew[r]   + (1-lam)*w[r];
+      rho[r] = lam*rhonew[r] + (1-lam)*rho[r];
+      for(const sec of SECTORS){
+        err += Math.abs(P[r][sec]-Pnew[r][sec]);
+        P[r][sec] = lam*Pnew[r][sec] + (1-lam)*P[r][sec];
+      }
+    }
+    lastErr = err;
+    if(err < TOL){ converged = true; break; }
+  }
+
+  // ---- Final pass: compute equilibrium quantities cleanly with converged factors ----
+  const Y = {};
+  for(const r of REGIONS){ Y[r] = {};
+    for(const sec of SECTORS){
+      const L = Lalloc[r][sec] * s.endow[r].L;
+      const K = Kalloc[r][sec] * s.endow[r].K;
+      const b = beta[r][sec];
+      const A = s.A[r][sec];
+      Y[r][sec] = A * Math.pow(Math.max(K,1e-9), b) * Math.pow(Math.max(L,1e-9), 1-b);
+    }
+  }
+  const PQ = {};
+  for(const r of REGIONS){ PQ[r]={};
+    for(const sec of SECTORS){
+      let sum=0;
+      for(const o of REGIONS){
+        const tau = (o===r)?0:s.tariff[r][sec];
+        const p = P[o][sec]*(1+tau);
+        sum += s.delta[r][sec][o]*Math.pow(p,1-SIGMA);
+      }
+      PQ[r][sec] = Math.pow(sum, 1/(1-SIGMA));
+    }
+  }
+  // Iterate income/tariff once more
+  let Tariff={USA:0,EU:0,ROW:0}, income={}, Q={}, X={};
+  for(let sub=0; sub<10; sub++){
+    for(const r of REGIONS) income[r] = w[r]*s.endow[r].L + rho[r]*s.endow[r].K + Tariff[r];
+    for(const r of REGIONS){ Q[r]={}; X[r]={};
+      for(const sec of SECTORS){
+        const expend = s.theta[r][sec]*income[r];
+        Q[r][sec] = expend/PQ[r][sec];
+        X[r][sec]={};
+        for(const o of REGIONS){
+          const tau = (o===r)?0:s.tariff[r][sec];
+          const p = P[o][sec]*(1+tau);
+          X[r][sec][o] = s.delta[r][sec][o]*Math.pow(PQ[r][sec]/p,SIGMA)*Q[r][sec];
+        }
+      }
+    }
+    const Tnew={USA:0,EU:0,ROW:0};
+    for(const r of REGIONS) for(const sec of SECTORS) for(const o of REGIONS){
+      if(o===r) continue;
+      Tnew[r] += s.tariff[r][sec]*P[o][sec]*X[r][sec][o];
+    }
+    let dT=0; for(const r of REGIONS){ dT+=Math.abs(Tnew[r]-Tariff[r]); Tariff[r]=Tnew[r]; }
+    if(dT<1e-9) break;
+  }
+  const Dem = {};
+  for(const r of REGIONS){ Dem[r]={};
+    for(const sec of SECTORS){
+      let d=0; for(const rp of REGIONS) d+=X[rp][sec][r]; Dem[r][sec]=d;
+    }
+  }
+  // Welfare = real income = income/CPI, where CPI uses CD price index over PQ
+  const welfare = {};
+  for(const r of REGIONS){
+    let logCPI = 0;
+    for(const sec of SECTORS) logCPI += s.theta[r][sec]*Math.log(Math.max(PQ[r][sec],1e-9));
+    const CPI = Math.exp(logCPI);
+    welfare[r] = income[r]/CPI;
+  }
+  // Real GDP at base prices (Laspeyres-ish)
+  const realGDP = {};
+  for(const r of REGIONS){
+    let g = 0;
+    for(const sec of SECTORS){
+      const basePrice = baseline ? baseline.P[r][sec] : 1.0;
+      g += basePrice * Y[r][sec];
+    }
+    realGDP[r] = g;
+  }
+  // Trade balance by region
+  const TB = {};
+  for(const r of REGIONS){
+    let exports = 0, imports = 0;
+    for(const sec of SECTORS){
+      for(const rp of REGIONS){
+        if(rp===r) continue;
+        exports += P[r][sec]*X[rp][sec][r];   // r ships to rp
+        imports += P[rp][sec]*X[r][sec][rp];  // r buys from rp (FOB)
+      }
+    }
+    TB[r] = exports - imports;
+  }
+
+  return {
+    converged, err: lastErr,
+    P, w, rho, PQ, Y, Q, X, Dem,
+    income, Tariff, welfare, realGDP, TB,
+    Lalloc, Kalloc
+  };
+}
+
+// ---------- UI ----------
+function $(id){return document.getElementById(id);}
+
+function buildControls(){
+  // Tariffs: 9 sliders (3 importers × 3 goods)
+  const tHost = $('tariffControls');
+  tHost.innerHTML = '';
+  for(const r of REGIONS){
+    for(const sec of SECTORS){
+      const id = `tar_${r}_${sec}`;
+      const row = document.createElement('div');
+      row.className = 'ctrl-row';
+      row.innerHTML = `<label>${r} on ${SECTOR_LBL[sec]}</label>
+        <input type="range" id="${id}" min="0" max="0.5" step="0.01" value="0">
+        <span class="val" id="${id}_v">0%</span>`;
+      tHost.appendChild(row);
+      row.querySelector('input').addEventListener('input', e=>{
+        const v = parseFloat(e.target.value);
+        state.tariff[r][sec] = v;
+        $(id+'_v').textContent = (v*100).toFixed(0)+'%';
+        clearScenarioActive(); recompute();
+      });
+    }
+  }
+  // Productivity: 9 sliders
+  const pHost = $('prodControls');
+  pHost.innerHTML='';
+  for(const r of REGIONS){
+    for(const sec of SECTORS){
+      const id = `A_${r}_${sec}`;
+      const row = document.createElement('div');
+      row.className='ctrl-row';
+      row.innerHTML=`<label>${r} · ${SECTOR_LBL[sec]}</label>
+        <input type="range" id="${id}" min="0.5" max="1.6" step="0.01" value="${baseA[r][sec]}">
+        <span class="val" id="${id}_v">${baseA[r][sec].toFixed(2)}</span>`;
+      pHost.appendChild(row);
+      row.querySelector('input').addEventListener('input', e=>{
+        const v=parseFloat(e.target.value);
+        state.A[r][sec]=v;
+        $(id+'_v').textContent=v.toFixed(2);
+        clearScenarioActive(); recompute();
+      });
+    }
+  }
+  // Endowments + global theta shift
+  const eHost = $('endowControls');
+  eHost.innerHTML='';
+  for(const r of REGIONS){
+    for(const f of ['L','K']){
+      const id = `E_${r}_${f}`;
+      const baseV = baseEndow[r][f];
+      const row = document.createElement('div');
+      row.className='ctrl-row';
+      const flbl = f==='L'?'Labor':'Capital';
+      row.innerHTML=`<label>${r} ${flbl}</label>
+        <input type="range" id="${id}" min="${baseV*0.5}" max="${baseV*1.5}" step="1" value="${baseV}">
+        <span class="val" id="${id}_v">${baseV.toFixed(0)}</span>`;
+      eHost.appendChild(row);
+      row.querySelector('input').addEventListener('input', e=>{
+        const v=parseFloat(e.target.value);
+        state.endow[r][f]=v;
+        $(id+'_v').textContent=v.toFixed(0);
+        clearScenarioActive(); recompute();
+      });
+    }
+  }
+  // Service preference shift (global)
+  const row = document.createElement('div');
+  row.className='ctrl-row';
+  row.innerHTML=`<label>Global services preference shift</label>
+    <input type="range" id="svcShift" min="-0.15" max="0.15" step="0.01" value="0">
+    <span class="val" id="svcShift_v">+0%</span>`;
+  eHost.appendChild(row);
+  row.querySelector('input').addEventListener('input', e=>{
+    const v=parseFloat(e.target.value);
+    $('svcShift_v').textContent = (v>=0?'+':'')+(v*100).toFixed(0)+'%';
+    // shift theta: SVC up by v, AGR/MFG split the loss proportionally
+    for(const r of REGIONS){
+      const a = baseTheta[r].AGR, m = baseTheta[r].MFG, sv = baseTheta[r].SVC;
+      const newSv = Math.min(0.95, Math.max(0.05, sv + v));
+      const remain = 1 - newSv;
+      const am = a + m;
+      state.theta[r].AGR = remain * a/am;
+      state.theta[r].MFG = remain * m/am;
+      state.theta[r].SVC = newSv;
+    }
+    clearScenarioActive(); recompute();
+  });
+}
+
+function setSliderUI(){
+  for(const r of REGIONS){
+    for(const sec of SECTORS){
+      $(`tar_${r}_${sec}`).value = state.tariff[r][sec];
+      $(`tar_${r}_${sec}_v`).textContent = (state.tariff[r][sec]*100).toFixed(0)+'%';
+      $(`A_${r}_${sec}`).value = state.A[r][sec];
+      $(`A_${r}_${sec}_v`).textContent = state.A[r][sec].toFixed(2);
+    }
+    $(`E_${r}_L`).value = state.endow[r].L;
+    $(`E_${r}_L_v`).textContent = state.endow[r].L.toFixed(0);
+    $(`E_${r}_K`).value = state.endow[r].K;
+    $(`E_${r}_K_v`).textContent = state.endow[r].K.toFixed(0);
+  }
+}
+
+function clearScenarioActive(){
+  document.querySelectorAll('#scenarioRow .sc-btn').forEach(b=>b.classList.remove('active'));
+}
+
+function applyScenario(name){
+  state = freshState();
+  if(name==='usa_tariff'){
+    state.tariff.USA.MFG = 0.25;
+  } else if(name==='eu_tax_agr'){
+    state.A.EU.AGR = baseA.EU.AGR * 1.15;
+  } else if(name==='row_growth'){
+    state.endow.ROW.L = baseEndow.ROW.L * 1.20;
+  } else if(name==='svc_demand'){
+    for(const r of REGIONS){
+      const a=baseTheta[r].AGR, m=baseTheta[r].MFG, sv=baseTheta[r].SVC;
+      const newSv = Math.min(0.9, sv + 0.10);
+      const remain = 1-newSv;
+      const am = a+m;
+      state.theta[r].AGR = remain*a/am;
+      state.theta[r].MFG = remain*m/am;
+      state.theta[r].SVC = newSv;
+    }
+  }
+  setSliderUI();
+  // also reset the svc shift slider visual
+  if($('svcShift')){ $('svcShift').value = (name==='svc_demand')?0.10:0; $('svcShift_v').textContent = (name==='svc_demand'?'+10%':'+0%'); }
+  recompute();
+}
+
+// ---------- Recompute & render ----------
+function recompute(){
+  const t0 = performance.now();
+  const eq = solve(state);
+  const ms = (performance.now()-t0).toFixed(0);
+  $('solveStatus').textContent = eq.converged ? `equilibrium · ${ms}ms` : `not fully converged · err=${eq.err.toExponential(2)}`;
+  $('solveStatus').className = 'pill ' + (eq.converged ? 'eq' : 'warn');
+  render(eq);
+}
+
+function render(eq){
+  renderWelfare(eq);
+  renderPriceTable(eq);
+  renderTBTable(eq);
+  renderProdTable(eq);
+  renderConsTable(eq);
+  renderBilatTable(eq);
+  drawOutput(eq);
+  drawTrade(eq);
+  drawFlow(eq);
+  drawPrices(eq);
+}
+
+function renderWelfare(eq){
+  const host = $('welfareKVs');
+  let h = '';
+  for(const r of REGIONS){
+    const dGDP = baseline ? (eq.realGDP[r]/baseline.realGDP[r]-1)*100 : 0;
+    const dW   = baseline ? (eq.welfare[r]/baseline.welfare[r]-1)*100 : 0;
+    const cls = (x)=> x>0.05?'pos': x<-0.05?'neg':'';
+    h += `<div class="kv"><span class="k">${r} real GDP</span><span class="v ${cls(dGDP)}">${dGDP>=0?'+':''}${dGDP.toFixed(2)}%</span></div>`;
+    h += `<div class="kv"><span class="k">${r} welfare (real income)</span><span class="v ${cls(dW)}">${dW>=0?'+':''}${dW.toFixed(2)}%</span></div>`;
+  }
+  host.innerHTML = h;
+}
+
+function renderPriceTable(eq){
+  const t = $('priceTable');
+  let h = '<tr><th class="lbl">Country</th><th>w (wage)</th><th>ρ (rental)</th><th>P_AGR</th><th>P_MFG</th><th>P_SVC</th></tr>';
+  for(const r of REGIONS){
+    h += `<tr><td class="lbl">${r}</td>
+      <td>${eq.w[r].toFixed(3)}</td><td>${eq.rho[r].toFixed(3)}</td>
+      <td>${eq.P[r].AGR.toFixed(3)}</td><td>${eq.P[r].MFG.toFixed(3)}</td><td>${eq.P[r].SVC.toFixed(3)}</td></tr>`;
+  }
+  t.innerHTML = h;
+}
+
+function renderTBTable(eq){
+  const t = $('tbTable');
+  let h = '<tr><th class="lbl">Country</th><th>Exports</th><th>Imports</th><th>Balance</th></tr>';
+  let world = 0;
+  for(const r of REGIONS){
+    let ex=0, im=0;
+    for(const sec of SECTORS) for(const rp of REGIONS){
+      if(rp===r) continue;
+      ex += eq.P[r][sec]*eq.X[rp][sec][r];
+      im += eq.P[rp][sec]*eq.X[r][sec][rp];
+    }
+    const bal = ex-im; world += bal;
+    const cls = bal>0.01?'pos':bal<-0.01?'neg':'';
+    h += `<tr><td class="lbl">${r}</td><td>${ex.toFixed(2)}</td><td>${im.toFixed(2)}</td><td class="${cls}">${bal>=0?'+':''}${bal.toFixed(2)}</td></tr>`;
+  }
+  h += `<tr><td class="lbl">World</td><td colspan="2"></td><td>${world.toFixed(3)}</td></tr>`;
+  t.innerHTML = h;
+}
+
+function renderProdTable(eq){
+  const t = $('prodTable');
+  let h = '<tr><th class="lbl">Country</th><th class="lbl">Sector</th><th>Output Y</th><th>Labor</th><th>Capital</th><th>Price P</th><th>Value Y·P</th></tr>';
+  for(const r of REGIONS){
+    for(const sec of SECTORS){
+      const L = eq.Lalloc[r][sec]*state.endow[r].L;
+      const K = eq.Kalloc[r][sec]*state.endow[r].K;
+      h += `<tr><td class="lbl">${r}</td><td class="lbl">${SECTOR_LBL[sec]}</td>
+        <td>${eq.Y[r][sec].toFixed(2)}</td><td>${L.toFixed(1)}</td><td>${K.toFixed(1)}</td>
+        <td>${eq.P[r][sec].toFixed(3)}</td><td>${(eq.Y[r][sec]*eq.P[r][sec]).toFixed(2)}</td></tr>`;
+    }
+  }
+  t.innerHTML = h;
+}
+
+function renderConsTable(eq){
+  const t = $('consTable');
+  let h = '<tr><th class="lbl">Importer</th><th class="lbl">Good</th>';
+  for(const o of REGIONS) h += `<th>from ${o}</th>`;
+  h += '<th>Total Q</th></tr>';
+  for(const r of REGIONS){
+    for(const sec of SECTORS){
+      h += `<tr><td class="lbl">${r}</td><td class="lbl">${SECTOR_LBL[sec]}</td>`;
+      let tot=0;
+      for(const o of REGIONS){ const v = eq.X[r][sec][o]; tot+=v; h+=`<td>${v.toFixed(2)}</td>`; }
+      h += `<td><b>${tot.toFixed(2)}</b></td></tr>`;
+    }
+  }
+  t.innerHTML=h;
+}
+
+function renderBilatTable(eq){
+  const t = $('bilatTable');
+  let h = '<tr><th class="lbl">Exporter ↓ / Importer →</th>';
+  for(const r of REGIONS) h += `<th>${r}</th>`;
+  h += '<th>Total exports</th></tr>';
+  for(const o of REGIONS){
+    h += `<tr><td class="lbl">${o}</td>`;
+    let tot=0;
+    for(const r of REGIONS){
+      let v=0;
+      for(const sec of SECTORS) v += eq.P[o][sec]*eq.X[r][sec][o];
+      tot += (o===r)?0:v;
+      h += `<td${o===r?' style="color:#aaa"':''}>${v.toFixed(2)}</td>`;
+    }
+    h += `<td><b>${tot.toFixed(2)}</b></td></tr>`;
+  }
+  // imports row
+  h += '<tr><td class="lbl">Total imports</td>';
+  for(const r of REGIONS){
+    let v=0;
+    for(const o of REGIONS){ if(o===r) continue;
+      for(const sec of SECTORS) v+=eq.P[o][sec]*eq.X[r][sec][o];
+    }
+    h += `<td><b>${v.toFixed(2)}</b></td>`;
+  }
+  h += '<td></td></tr>';
+  t.innerHTML=h;
+}
+
+// ---------- Canvas drawing ----------
+function setupCanvas(cv){
+  const dpr = window.devicePixelRatio || 2;
+  const cssW = cv.clientWidth || cv.parentElement.clientWidth;
+  // base aspect from attributes
+  const ratio = cv.height/cv.width;
+  const cssH = cssW * ratio;
+  cv.width = Math.floor(cssW*dpr);
+  cv.height = Math.floor(cssH*dpr);
+  cv.style.height = cssH+'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx, w:cssW, h:cssH};
+}
+
+function drawOutput(eq){
+  const cv = $('cvOutput');
+  const {ctx,w,h} = setupCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+  ctx.font = "13px 'Source Sans 3'";
+  // Grouped bar: x = country, group of 3 sectors, bar height = % change vs baseline
+  const padL = 60, padR = 18, padT = 28, padB = 50;
+  const plotW = w-padL-padR, plotH = h-padT-padB;
+
+  // compute % changes
+  const data = REGIONS.map(r=>{
+    return SECTORS.map(sec=>{
+      const cur = eq.Y[r][sec];
+      const bs  = baseline ? baseline.Y[r][sec] : cur;
+      return (cur/bs - 1)*100;
+    });
+  });
+  let maxAbs = 0;
+  for(const row of data) for(const v of row) maxAbs = Math.max(maxAbs, Math.abs(v));
+  maxAbs = Math.max(maxAbs, 5); // at least ±5%
+
+  // axes
+  ctx.strokeStyle = '#d8d8d8'; ctx.lineWidth = 1;
+  // y grid
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'right'; ctx.textBaseline='middle';
+  const ticks = [-maxAbs, -maxAbs/2, 0, maxAbs/2, maxAbs];
+  for(const t of ticks){
+    const y = padT + plotH/2 - (t/maxAbs)*(plotH/2);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-padR, y); ctx.stroke();
+    ctx.fillText(t.toFixed(1)+'%', padL-6, y);
+  }
+  // zero line bold
+  const y0 = padT + plotH/2;
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(padL,y0); ctx.lineTo(w-padR,y0); ctx.stroke();
+
+  const groupW = plotW / REGIONS.length;
+  const barW = groupW*0.22;
+
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.font="600 13px 'Source Sans 3'"; ctx.fillStyle='#1a1a1a';
+  for(let i=0;i<REGIONS.length;i++){
+    const cx = padL + groupW*i + groupW/2;
+    ctx.fillText(REGIONS[i], cx, h-padB+8);
+    for(let j=0;j<SECTORS.length;j++){
+      const v = data[i][j];
+      const bx = cx + (j-1)*barW*1.05 - barW/2;
+      const bh = (v/maxAbs)*(plotH/2);
+      ctx.fillStyle = SECTOR_COL[SECTORS[j]];
+      if(bh>=0){ ctx.fillRect(bx, y0-bh, barW, bh); }
+      else { ctx.fillRect(bx, y0, barW, -bh); }
+      // value labels
+      ctx.fillStyle='#1a1a1a';
+      ctx.font="500 11px 'JetBrains Mono'";
+      const lblY = bh>=0 ? y0-bh-4 : y0-bh+4;
+      ctx.textBaseline = bh>=0?'bottom':'top';
+      if(Math.abs(v)>0.05) ctx.fillText((v>=0?'+':'')+v.toFixed(1)+'%', bx+barW/2, lblY);
+    }
+  }
+  // title
+  ctx.font="600 13px 'Source Sans 3'"; ctx.fillStyle='#666'; ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.fillText('Δ Output (%) vs. baseline', padL, 8);
+}
+
+function drawTrade(eq){
+  const cv = $('cvTrade');
+  const {ctx,w,h} = setupCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+
+  // Build bilateral flows (origin -> importer, summed across goods, in value terms)
+  const flows = [];
+  let maxFlow = 0;
+  for(const o of REGIONS){
+    for(const r of REGIONS){
+      if(o===r) continue;
+      let v = 0;
+      for(const sec of SECTORS) v += eq.P[o][sec]*eq.X[r][sec][o];
+      flows.push({from:o, to:r, val:v});
+      maxFlow = Math.max(maxFlow, v);
+    }
+  }
+
+  // Layout: left column = origins, right column = importers
+  const padL=70, padR=70, padT=30, padB=40;
+  const colY = padT, colH = h-padT-padB;
+  const blockH = colH/REGIONS.length;
+  const blockGap = 14;
+  const blockW = 80;
+  const leftX = padL;
+  const rightX = w-padR-blockW;
+
+  // sums for each side
+  const outSum = {}, inSum = {};
+  for(const r of REGIONS){ outSum[r]=0; inSum[r]=0; }
+  for(const f of flows){ outSum[f.from]+=f.val; inSum[f.to]+=f.val; }
+  const maxSum = Math.max(...Object.values(outSum), ...Object.values(inSum));
+
+  // draw blocks
+  ctx.font = "600 13px 'Source Sans 3'";
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  const leftCenters = {}, rightCenters = {};
+  REGIONS.forEach((r,i)=>{
+    const yTop = colY + i*blockH + blockGap/2;
+    const bh = blockH - blockGap;
+    // left (origin)
+    const leftH = (outSum[r]/maxSum)*bh*0.95 + bh*0.05;
+    const lyTop = yTop + (bh - leftH)/2;
+    ctx.fillStyle = REGION_COL[r];
+    ctx.fillRect(leftX, lyTop, blockW, leftH);
+    ctx.fillStyle='#fff';
+    ctx.fillText(r+' →', leftX+blockW/2, lyTop+leftH/2 - 7);
+    ctx.font="500 11px 'JetBrains Mono'";
+    ctx.fillText('exp '+outSum[r].toFixed(1), leftX+blockW/2, lyTop+leftH/2 + 8);
+    ctx.font="600 13px 'Source Sans 3'";
+    leftCenters[r] = {x:leftX+blockW, top:lyTop, h:leftH};
+
+    // right (importer)
+    const rightH = (inSum[r]/maxSum)*bh*0.95 + bh*0.05;
+    const ryTop = yTop + (bh - rightH)/2;
+    ctx.fillStyle = REGION_COL[r];
+    ctx.fillRect(rightX, ryTop, blockW, rightH);
+    ctx.fillStyle='#fff';
+    ctx.fillText('→ '+r, rightX+blockW/2, ryTop+rightH/2 - 7);
+    ctx.font="500 11px 'JetBrains Mono'";
+    ctx.fillText('imp '+inSum[r].toFixed(1), rightX+blockW/2, ryTop+rightH/2 + 8);
+    ctx.font="600 13px 'Source Sans 3'";
+    rightCenters[r] = {x:rightX, top:ryTop, h:rightH};
+  });
+
+  // Draw flows: cumulative offset on each side
+  const leftOff = {}, rightOff = {};
+  for(const r of REGIONS){ leftOff[r]=0; rightOff[r]=0; }
+  // sort flows by value descending so big ones go first
+  flows.sort((a,b)=>b.val-a.val);
+  for(const f of flows){
+    const lc = leftCenters[f.from];
+    const rc = rightCenters[f.to];
+    const lw = (f.val/outSum[f.from])*lc.h;
+    const rw = (f.val/inSum[f.to])*rc.h;
+    const ly0 = lc.top + leftOff[f.from];
+    const ly1 = ly0 + lw;
+    const ry0 = rc.top + rightOff[f.to];
+    const ry1 = ry0 + rw;
+    leftOff[f.from] += lw;
+    rightOff[f.to] += rw;
+
+    // bezier ribbon
+    const x0 = lc.x, x1 = rc.x;
+    const cx1 = x0 + (x1-x0)*0.5;
+    const cx2 = x1 - (x1-x0)*0.5;
+    ctx.beginPath();
+    ctx.moveTo(x0, ly0);
+    ctx.bezierCurveTo(cx1, ly0, cx2, ry0, x1, ry0);
+    ctx.lineTo(x1, ry1);
+    ctx.bezierCurveTo(cx2, ry1, cx1, ly1, x0, ly1);
+    ctx.closePath();
+    const grd = ctx.createLinearGradient(x0,0,x1,0);
+    grd.addColorStop(0, hexA(REGION_COL[f.from],0.55));
+    grd.addColorStop(1, hexA(REGION_COL[f.from],0.18));
+    ctx.fillStyle = grd;
+    ctx.fill();
+  }
+
+  // headers
+  ctx.fillStyle='#666'; ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.font="600 12px 'Source Sans 3'";
+  ctx.fillText('Origin (exporter)', padL, 8);
+  ctx.textAlign='right';
+  ctx.fillText('Destination (importer)', w-padR, 8);
+}
+
+function hexA(hex, a){
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function drawFlow(eq){
+  const cv = $('cvFlow');
+  const {ctx,w,h} = setupCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+
+  // Three columns: factors → producers → households
+  // One circular flow per region stacked vertically.
+  const padL=20, padR=20, padT=24, padB=20;
+  const rowGap = 16;
+  const rowH = (h - padT - padB - rowGap*(REGIONS.length-1)) / REGIONS.length;
+
+  // Box geometry: title (20) + body lines (5 lines × 17 = 85) + padding (16) ≈ 121
+  // We'll explicitly anchor content to the box top.
+  const TITLE_H = 22;
+  const LINE_H  = 17;
+  const BODY_PAD_TOP = 8;
+  const BODY_PAD_BOT = 12;
+  // Producer box has 3 sector lines, factor + household have 3 stat lines each
+  const N_LINES = 3;
+  const boxH = TITLE_H + BODY_PAD_TOP + N_LINES*LINE_H + BODY_PAD_BOT; // ~ 22 + 8 + 51 + 12 = 93
+  // Vertically center each box within its row
+  const colGap = 36;
+  const boxW = (w - padL - padR - 2*colGap) / 3;
+
+  REGIONS.forEach((r,i)=>{
+    const rowTop = padT + i*(rowH + rowGap);
+    const yBox = rowTop + (rowH - boxH)/2;
+    const xF = padL;
+    const xP = padL + boxW + colGap;
+    const xH = padL + 2*(boxW + colGap);
+    const yC = yBox + boxH/2;
+
+    // Boxes
+    drawRoundRect(ctx, xF, yBox, boxW, boxH, 8, '#fff', REGION_COL[r]);
+    drawRoundRect(ctx, xP, yBox, boxW, boxH, 8, '#fff', REGION_COL[r]);
+    drawRoundRect(ctx, xH, yBox, boxW, boxH, 8, '#fff', REGION_COL[r]);
+
+    // Titles (anchored to box top)
+    ctx.fillStyle = REGION_COL[r];
+    ctx.font = "600 13px 'Source Sans 3'";
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(r + ' · Factor markets', xF + 12, yBox + 8);
+    ctx.fillText(r + ' · Producers',      xP + 12, yBox + 8);
+    ctx.fillText(r + ' · Households',     xH + 12, yBox + 8);
+
+    // Body content lines: y starts after title
+    const bodyY = yBox + TITLE_H + BODY_PAD_TOP;
+    ctx.font = "500 11.5px 'JetBrains Mono'";
+    ctx.fillStyle = '#1a1a1a';
+
+    // --- Factor markets box ---
+    ctx.fillText(`L̄ = ${state.endow[r].L.toFixed(0)}, K̄ = ${state.endow[r].K.toFixed(0)}`, xF + 12, bodyY);
+    ctx.fillText(`w = ${eq.w[r].toFixed(3)}`,   xF + 12, bodyY + LINE_H);
+    ctx.fillText(`ρ = ${eq.rho[r].toFixed(3)}`, xF + 12, bodyY + 2*LINE_H);
+
+    // --- Producers box: one line per sector ---
+    for(let k=0; k<SECTORS.length; k++){
+      const sec = SECTORS[k];
+      const ly = bodyY + k*LINE_H;
+      ctx.fillStyle = SECTOR_COL[sec];
+      ctx.fillRect(xP + 12, ly + 3, 8, 8);
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillText(`${SECTOR_LBL[sec].slice(0,3)}  Y=${eq.Y[r][sec].toFixed(1)}  P=${eq.P[r][sec].toFixed(2)}`,
+                   xP + 26, ly);
+    }
+
+    // --- Households box ---
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillText(`Income I = ${eq.income[r].toFixed(2)}`,   xH + 12, bodyY);
+    ctx.fillText(`Tariff T = ${eq.Tariff[r].toFixed(2)}`,   xH + 12, bodyY + LINE_H);
+    ctx.fillText(`Welfare W = ${eq.welfare[r].toFixed(2)}`, xH + 12, bodyY + 2*LINE_H);
+
+    // --- Arrows between boxes (centered on box vertical mid) ---
+    drawArrow(ctx, xF + boxW, yC - 10, xP,        yC - 10, REGION_COL[r], 'L, K');
+    drawArrow(ctx, xP,        yC + 10, xF + boxW, yC + 10, REGION_COL[r], 'wL + ρK');
+    drawArrow(ctx, xP + boxW, yC - 10, xH,        yC - 10, REGION_COL[r], 'goods');
+    drawArrow(ctx, xH,        yC + 10, xP + boxW, yC + 10, REGION_COL[r], 'P·Q');
+  });
+}
+function drawRoundRect(ctx,x,y,w,h,r,fill,stroke){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+  ctx.fillStyle=fill; ctx.fill();
+  ctx.strokeStyle=stroke; ctx.lineWidth=1.4; ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,label){
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=1.4;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  // arrowhead
+  const ang = Math.atan2(y2-y1,x2-x1);
+  const ah = 6;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ah*Math.cos(ang-Math.PI/7), y2-ah*Math.sin(ang-Math.PI/7));
+  ctx.lineTo(x2-ah*Math.cos(ang+Math.PI/7), y2-ah*Math.sin(ang+Math.PI/7));
+  ctx.closePath(); ctx.fill();
+  // label
+  ctx.font="500 10.5px 'JetBrains Mono'";
+  ctx.textAlign='center'; ctx.textBaseline='bottom';
+  ctx.fillStyle=color;
+  ctx.fillText(label, (x1+x2)/2, Math.min(y1,y2)-2);
+}
+
+function drawPrices(eq){
+  const cv = $('cvPrices');
+  const {ctx,w,h} = setupCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+  const padL=60, padR=20, padT=30, padB=44;
+  const plotW = w-padL-padR, plotH = h-padT-padB;
+  // Grouped bars: x = sector (3 groups), within each 3 country bars showing P
+  const data = SECTORS.map(sec=> REGIONS.map(r=>eq.P[r][sec]));
+  let maxV = 0; for(const row of data) for(const v of row) maxV=Math.max(maxV,v);
+  maxV = Math.ceil(maxV*10)/10;
+
+  ctx.strokeStyle='#d8d8d8'; ctx.lineWidth=1;
+  ctx.fillStyle='#888'; ctx.font="11px 'JetBrains Mono'"; ctx.textAlign='right'; ctx.textBaseline='middle';
+  for(let i=0;i<=5;i++){
+    const v = maxV*i/5;
+    const y = padT+plotH - (v/maxV)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+    ctx.fillText(v.toFixed(2), padL-6, y);
+  }
+
+  const groupW = plotW/SECTORS.length;
+  const barW = groupW*0.22;
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  for(let i=0;i<SECTORS.length;i++){
+    const cx = padL + groupW*i + groupW/2;
+    ctx.fillStyle='#1a1a1a'; ctx.font="600 13px 'Source Sans 3'";
+    ctx.fillText(SECTOR_LBL[SECTORS[i]], cx, h-padB+8);
+    for(let j=0;j<REGIONS.length;j++){
+      const v = data[i][j];
+      const bx = cx + (j-1)*barW*1.05 - barW/2;
+      const bh = (v/maxV)*plotH;
+      ctx.fillStyle = REGION_COL[REGIONS[j]];
+      ctx.fillRect(bx, padT+plotH-bh, barW, bh);
+      ctx.fillStyle='#1a1a1a';
+      ctx.font="500 10.5px 'JetBrains Mono'";
+      ctx.textBaseline='bottom';
+      ctx.fillText(v.toFixed(2), bx+barW/2, padT+plotH-bh-2);
+      ctx.textBaseline='top';
+    }
+  }
+  ctx.font="600 13px 'Source Sans 3'"; ctx.fillStyle='#666';
+  ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.fillText('Producer prices P_{r,s}', padL, 8);
+}
+
+// ---------- Misc UI ----------
+function togglePanel(head){
+  const p = head.parentElement;
+  p.classList.toggle('open');
+  head.querySelector('.chev').textContent = p.classList.contains('open') ? '[−]' : '[+]';
+}
+
+window.togglePanel = togglePanel;
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  buildControls();
+  // Compute baseline once with fresh state
+  const baseEq = solve(state);
+  baseline = {
+    Y: deepCopy(baseEq.Y),
+    P: deepCopy(baseEq.P),
+    realGDP: deepCopy(baseEq.realGDP),
+    welfare: deepCopy(baseEq.welfare),
+  };
+  recompute();
+
+  // Scenario buttons
+  document.querySelectorAll('#scenarioRow .sc-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('#scenarioRow .sc-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      applyScenario(b.dataset.sc);
+    });
+  });
+
+  $('btnReset').addEventListener('click', ()=>{
+    document.querySelectorAll('#scenarioRow .sc-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelector('#scenarioRow .sc-btn[data-sc=base]').classList.add('active');
+    applyScenario('base');
+  });
+  $('btnSolve').addEventListener('click', recompute);
+
+  window.addEventListener('resize', ()=>recompute());
+});
+</script>
+</body>
+</html>

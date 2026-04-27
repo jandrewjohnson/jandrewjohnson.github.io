@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -461,6 +462,91 @@ const COLOR = {
 function px(plot, q, qMax) { return plot.x0 + (q / qMax) * plot.w; }
 function py(plot, p, pMax) { return plot.y0 - (p / pMax) * plot.h; }
 
+/* ----------------------------------------------------------
+   Mini-typesetter: parse a string with `^{...}` and `_{...}`
+   into runs of {text, kind: 'base'|'sup'|'sub'} for canvas.
+   Also accepts `^x` / `_x` for single-character super/subscripts.
+   ---------------------------------------------------------- */
+function parseRichText(s) {
+  const runs = [];
+  let i = 0;
+  let buf = '';
+  const flush = () => { if (buf) { runs.push({ text: buf, kind: 'base' }); buf = ''; } };
+  while (i < s.length) {
+    const ch = s[i];
+    if (ch === '^' || ch === '_') {
+      flush();
+      const kind = ch === '^' ? 'sup' : 'sub';
+      i++;
+      if (s[i] === '{') {
+        const end = s.indexOf('}', i + 1);
+        if (end < 0) { buf += ch; continue; }
+        runs.push({ text: s.slice(i + 1, end), kind });
+        i = end + 1;
+      } else if (i < s.length) {
+        runs.push({ text: s[i], kind });
+        i++;
+      }
+    } else {
+      buf += ch;
+      i++;
+    }
+  }
+  flush();
+  return runs;
+}
+
+/* Measure the rich-text width given a base font size in px (mono). */
+function measureRich(ctx, runs, basePx) {
+  const baseFont  = `${basePx}px 'JetBrains Mono', monospace`;
+  const smallFont = `${Math.round(basePx * 0.72)}px 'JetBrains Mono', monospace`;
+  let w = 0;
+  for (const r of runs) {
+    ctx.font = (r.kind === 'base') ? baseFont : smallFont;
+    w += ctx.measureText(r.text).width;
+  }
+  return w;
+}
+
+/* Draw rich text with super/subscripts at (x, y), where y is the BASELINE.
+   basePx = base font size; superscripts are raised, subscripts dropped. */
+function drawRich(ctx, runs, x, y, basePx) {
+  const baseFont  = `${basePx}px 'JetBrains Mono', monospace`;
+  const smallFont = `${Math.round(basePx * 0.72)}px 'JetBrains Mono', monospace`;
+  const supDy = -Math.round(basePx * 0.42);
+  const subDy =  Math.round(basePx * 0.22);
+  let cx = x;
+  for (const r of runs) {
+    if (r.kind === 'base') {
+      ctx.font = baseFont;
+      ctx.fillText(r.text, cx, y);
+    } else if (r.kind === 'sup') {
+      ctx.font = smallFont;
+      ctx.fillText(r.text, cx, y + supDy);
+    } else { // sub
+      ctx.font = smallFont;
+      ctx.fillText(r.text, cx, y + subDy);
+    }
+    ctx.font = (r.kind === 'base') ? baseFont : smallFont;
+    cx += ctx.measureText(r.text).width;
+  }
+}
+
+/* Convenience: draw left-aligned rich text and return its width */
+function fillRich(ctx, text, x, y, basePx, color) {
+  const runs = parseRichText(text);
+  ctx.save();
+  ctx.fillStyle = color;
+  drawRich(ctx, runs, x, y, basePx);
+  ctx.restore();
+  return measureRich(ctx, runs, basePx);
+}
+
+/* Convenience: width-measurement for centering / right-aligning */
+function richWidth(ctx, text, basePx) {
+  return measureRich(ctx, parseRichText(text), basePx);
+}
+
 function drawAxes(ctx, plot, xMax, pMax) {
   const { x0, y0, w, h } = plot;
   ctx.save();
@@ -559,12 +645,10 @@ function drawHLineLabeledLeft(ctx, plot, p, pMax, color, label, dash) {
   ctx.restore();
 
   if (label) {
-    ctx.save();
-    ctx.fillStyle = color;
-    ctx.font = "11px 'JetBrains Mono', monospace";
-    const tw = ctx.measureText(label).width;
-    ctx.fillText(label, plot.x0 - tw - 6, py(plot, p, pMax) + 4);
-    ctx.restore();
+    const basePx = 11;
+    const tw = richWidth(ctx, label, basePx);
+    // sit to the LEFT of the y-axis, well clear of the y-tick numbers
+    fillRich(ctx, label, plot.x0 - tw - 38, py(plot, p, pMax) + 4, basePx, color);
   }
 }
 
@@ -591,11 +675,12 @@ function drawXTickLabel(ctx, plot, q, qMax, color, label, labelOffsetY) {
   ctx.moveTo(x, plot.y0);
   ctx.lineTo(x, plot.y0 + 5);
   ctx.stroke();
-  ctx.fillStyle = color;
-  ctx.font = "11px 'JetBrains Mono', monospace";
-  const tw = ctx.measureText(label).width;
-  ctx.fillText(label, x - tw / 2, plot.y0 + (labelOffsetY || 30));
   ctx.restore();
+  const basePx = 11;
+  const tw = richWidth(ctx, label, basePx);
+  // push WELL below the axis -- below the numeric tick labels (which sit at +14)
+  const y = plot.y0 + (labelOffsetY || 32);
+  fillRich(ctx, label, x - tw / 2, y, basePx, color);
 }
 
 /* trade-quantity bracket BELOW the x-axis spanning [qA, qB] */
@@ -603,8 +688,8 @@ function drawTradeBracketBelow(ctx, plot, qA, qB, qMax, color, label) {
   if (Math.abs(qA - qB) < 0.5) return;
   const xL = px(plot, Math.min(qA, qB), qMax);
   const xR = px(plot, Math.max(qA, qB), qMax);
-  const yTop = plot.y0 + 50;
-  const yBot = plot.y0 + 56;
+  const yTop = plot.y0 + 64;
+  const yBot = plot.y0 + 70;
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.6;
@@ -612,11 +697,10 @@ function drawTradeBracketBelow(ctx, plot, qA, qB, qMax, color, label) {
   ctx.moveTo(xL, yTop); ctx.lineTo(xL, yBot);
   ctx.lineTo(xR, yBot); ctx.lineTo(xR, yTop);
   ctx.stroke();
-  ctx.fillStyle = color;
-  ctx.font = "12px 'JetBrains Mono', monospace";
-  const tw = ctx.measureText(label).width;
-  ctx.fillText(label, (xL + xR) / 2 - tw / 2, yBot + 14);
   ctx.restore();
+  const basePx = 12;
+  const tw = richWidth(ctx, label, basePx);
+  fillRich(ctx, label, (xL + xR) / 2 - tw / 2, yBot + 16, basePx, color);
 }
 
 /* ============================================================
@@ -631,7 +715,7 @@ function drawCountry(canvas, opts) {
   ctx.fillRect(0, 0, cssW, cssH);
 
   // generous left margin (price tags) and bottom margin (Q labels + trade bracket)
-  const plot = { x0: 78, y0: cssH - 88, w: cssW - 96, h: cssH - 118 };
+  const plot = { x0: 110, y0: cssH - 110, w: cssW - 128, h: cssH - 140 };
 
   const { a, b, c, d, PA, QA, PW, QS, QD, color, label, isExporter, qMax, pMax,
           showAutarky, showLinks, showShading } = opts;
@@ -672,15 +756,15 @@ function drawCountry(canvas, opts) {
   drawDot(ctx, plot, QD, PW, qMax, pMax, COLOR.demand, 4);
 
   // x-axis ticks under QD and QS, with labels BELOW the axis
-  // stagger so they don't overlap when QD and QS are close
+  // primary at +32 (clear of numeric ticks at +14); stagger to +50 if close
   const qLo = Math.min(QD, QS), qHi = Math.max(QD, QS);
-  const closeXLabels = (px(plot, qHi, qMax) - px(plot, qLo, qMax)) < 70;
+  const closeXLabels = (px(plot, qHi, qMax) - px(plot, qLo, qMax)) < 80;
   if (QD < QS) {
-    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), 18);
-    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), closeXLabels ? 32 : 18);
+    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), 32);
+    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), closeXLabels ? 50 : 32);
   } else {
-    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), 18);
-    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), closeXLabels ? 32 : 18);
+    drawXTickLabel(ctx, plot, QS, qMax, COLOR.supply, 'Q^S=' + QS.toFixed(1), 32);
+    drawXTickLabel(ctx, plot, QD, qMax, COLOR.demand, 'Q^D=' + QD.toFixed(1), closeXLabels ? 50 : 32);
   }
 
   // trade-quantity bracket BELOW the axis area, well clear of equilibrium points
@@ -701,7 +785,7 @@ function drawWorld(canvas, opts) {
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, cssW, cssH);
 
-  const plot = { x0: 78, y0: cssH - 88, w: cssW - 96, h: cssH - 118 };
+  const plot = { x0: 110, y0: cssH - 110, w: cssW - 128, h: cssH - 140 };
   const { s, A1, A2, PW, QW, qMax, pMax, showAutarky, showLinks, showShading } = opts;
 
   drawAxes(ctx, plot, qMax, pMax);
@@ -767,7 +851,7 @@ function drawWorld(canvas, opts) {
 
   // equilibrium dot only -- label goes under the axis as a tick
   drawDot(ctx, plot, QW, PW, qMax, pMax, COLOR.world, 5);
-  drawXTickLabel(ctx, plot, QW, qMax, COLOR.world, 'Q^W=' + QW.toFixed(1), 18);
+  drawXTickLabel(ctx, plot, QW, qMax, COLOR.world, 'Q^W=' + QW.toFixed(1), 32);
 
   // optional vertical drop line from W to axis
   if (showLinks) {

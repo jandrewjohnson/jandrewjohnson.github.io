@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land-Use Change Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f7fa;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#2d3748;padding:16px;}
+h1{text-align:center;color:#1a202c;font-size:1.7rem;font-weight:700;margin-bottom:4px;}
+.subtitle{text-align:center;color:#718096;font-size:0.92rem;margin-bottom:18px;max-width:700px;margin-left:auto;margin-right:auto;}
+
+.app-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:260px auto 1fr;grid-template-rows:auto;gap:14px;}
+.controls-panel{grid-row:1/2;grid-column:1;}
+.grid-panel{position:relative;grid-column:2;}
+.metrics-panel{grid-column:3;}
+
+.panel{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.panel-title{font-size:0.76rem;text-transform:uppercase;letter-spacing:1.1px;color:#718096;font-weight:600;margin-bottom:10px;}
+.section-divider{border:none;border-top:1px solid #edf2f7;margin:14px 0;}
+
+/* Land Palette */
+.land-palette{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.land-btn{width:60px;height:54px;border-radius:8px;border:2px solid #e2e8f0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.62rem;font-weight:600;transition:all 0.15s;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.3);}
+.land-btn.active{box-shadow:0 0 0 3px rgba(66,153,225,0.4);transform:scale(1.05);}
+.land-btn .icon{font-size:1.1rem;margin-bottom:2px;}
+
+/* Sliders */
+.slider-group{margin-bottom:10px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.78rem;color:#4a5568;}
+.slider-value{background:#edf2f7;padding:1px 7px;border-radius:4px;font-family:'Consolas','Monaco',monospace;font-size:0.74rem;font-weight:600;color:#2d3748;}
+input[type="range"]{-webkit-appearance:none;width:100%;height:5px;border-radius:3px;background:#e2e8f0;outline:none;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#4299e1;cursor:pointer;box-shadow:0 1px 3px rgba(66,153,225,0.4);}
+input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#4299e1;cursor:pointer;border:none;}
+
+/* Toggle Switches */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:0.78rem;color:#4a5568;}
+.toggle-switch{position:relative;width:38px;height:20px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e0;border-radius:20px;transition:0.2s;}
+.toggle-slider:before{content:"";position:absolute;height:16px;width:16px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:0.2s;}
+.toggle-switch input:checked+.toggle-slider{background:#4299e1;}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(18px);}
+.policy-detail{display:none;padding-left:4px;margin-bottom:8px;}
+.policy-detail.show{display:block;}
+
+/* Buttons */
+.action-btn{width:100%;padding:10px;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.15s;margin-bottom:6px;}
+.action-btn.primary{background:#4299e1;color:#fff;}
+.action-btn.primary:hover{background:#3182ce;}
+.action-btn.secondary{background:#edf2f7;color:#4a5568;}
+.action-btn.secondary:hover{background:#e2e8f0;}
+.preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.preset-btn{padding:4px 10px;border-radius:6px;border:1px solid #e2e8f0;font-size:0.68rem;cursor:pointer;background:#fff;color:#4a5568;transition:all 0.15s;font-weight:500;}
+.preset-btn:hover{background:#edf2f7;border-color:#a0aec0;}
+.preset-btn.active{background:#4299e1;color:#fff;border-color:#4299e1;}
+
+/* Grid Canvas */
+#gridCanvas{width:480px;height:480px;display:block;cursor:pointer;border-radius:8px;background:#edf2f7;}
+.cell-tooltip{position:absolute;background:rgba(26,32,44,0.92);color:#fff;border-radius:6px;padding:8px 12px;font-size:0.72rem;pointer-events:none;z-index:10;display:none;line-height:1.5;white-space:nowrap;}
+
+/* Summary Bar */
+.summary-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.stat-item{flex:1;min-width:80px;text-align:center;}
+.stat-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;font-weight:600;}
+.stat-value{font-family:'Consolas','Monaco',monospace;font-size:1.0rem;font-weight:700;color:#2d3748;}
+
+/* Market State (read-only display of endogenous prices) */
+.market-state{background:#fef5e7;border:1px solid #f6e05e;border-radius:8px;padding:10px;margin-bottom:12px;}
+.market-header{font-size:0.66rem;text-transform:uppercase;letter-spacing:1px;color:#744210;font-weight:700;margin-bottom:6px;}
+.market-sub{text-transform:none;letter-spacing:0;color:#a0826d;font-weight:500;font-style:italic;}
+.market-row{display:flex;gap:10px;}
+.market-cell{flex:1;text-align:center;padding:4px;}
+.market-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.5px;color:#744210;font-weight:600;}
+.market-val{font-family:'Consolas','Monaco',monospace;font-size:1.05rem;font-weight:700;color:#1a202c;transition:color 0.3s;}
+
+/* Charts Grid */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.chart-box{background:#f7fafc;border:1px solid #edf2f7;border-radius:8px;padding:8px;}
+.chart-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:0.72rem;color:#718096;font-weight:600;}
+.chart-val{font-family:'Consolas','Monaco',monospace;font-weight:700;font-size:0.78rem;}
+.chart-box canvas{width:100%;height:60px;display:block;border-radius:4px;}
+
+/* Welfare Bar */
+.welfare-bar{background:#f7fafc;border:1px solid #edf2f7;border-left:3px solid #4299e1;border-radius:8px;padding:12px;display:flex;align-items:center;gap:14px;}
+.welfare-score{font-family:'Consolas','Monaco',monospace;font-size:1.5rem;font-weight:800;min-width:50px;text-align:center;}
+.welfare-breakdown{font-size:0.7rem;color:#718096;line-height:1.6;}
+.welfare-breakdown span{font-family:'Consolas','Monaco',monospace;font-weight:600;}
+
+/* === GAME UI === */
+.period-pill{float:right;font-family:'Consolas','Monaco',monospace;background:#edf2f7;padding:2px 10px;border-radius:10px;font-size:0.72rem;color:#2d3748;text-transform:none;letter-spacing:0;font-weight:600;}
+.game-resources{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.resource-card{padding:12px;border-radius:10px;text-align:center;}
+.score-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;}
+.budget-card{background:linear-gradient(135deg,#f6ad55 0%,#ed8936 100%);color:#fff;}
+.resource-card.flash{animation:flashRed 0.4s ease;}
+.resource-card.pulse-green{animation:pulseGreen 0.6s ease;}
+@keyframes flashRed{0%{transform:scale(1);}50%{transform:scale(1.05);background:linear-gradient(135deg,#e53e3e 0%,#c53030 100%);}100%{transform:scale(1);}}
+@keyframes pulseGreen{0%{transform:scale(1);}50%{transform:scale(1.08);box-shadow:0 0 0 6px rgba(72,187,120,0.4);}100%{transform:scale(1);box-shadow:none;}}
+.resource-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;opacity:0.85;font-weight:600;margin-bottom:4px;}
+.resource-value{font-family:'Consolas','Monaco',monospace;font-size:1.7rem;font-weight:800;}
+.target-tag{font-size:0.55rem;background:#fed7aa;color:#9c4221;padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:600;letter-spacing:0.5px;text-transform:none;}
+.target-tag.met{background:#9ae6b4;color:#22543d;}
+
+/* Modal */
+.modal-backdrop{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:100;backdrop-filter:blur(4px);}
+.modal-backdrop.show{display:flex;animation:fadeIn 0.3s;}
+.modal-content{background:#fff;border-radius:16px;padding:32px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.game-over-title{font-size:0.78rem;text-transform:uppercase;letter-spacing:2px;color:#a0aec0;font-weight:700;margin-bottom:8px;}
+.game-over-score{font-family:'Consolas','Monaco',monospace;font-size:3.5rem;font-weight:800;color:#1a202c;line-height:1;}
+.game-over-label{font-size:0.74rem;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+.new-best{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%);color:#fff;padding:6px 14px;border-radius:20px;font-weight:700;display:inline-block;margin-bottom:14px;font-size:0.84rem;letter-spacing:1px;}
+.score-breakdown{background:#f7fafc;border-radius:8px;padding:10px;margin-bottom:12px;font-size:0.82rem;}
+.score-breakdown div{display:flex;justify-content:space-between;padding:3px 0;color:#4a5568;}
+.score-breakdown span{font-family:'Consolas','Monaco',monospace;font-weight:700;color:#1a202c;}
+.bonus-list{text-align:left;margin-bottom:12px;}
+.bonus-header{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;font-weight:600;margin-bottom:6px;}
+.bonus-row{display:flex;justify-content:space-between;padding:4px 0;font-size:0.86rem;color:#2d3748;}
+.best-score{font-size:0.74rem;color:#a0aec0;margin-top:8px;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* Info box */
+.info-box{background:#f7fafc;border:1px solid #e2e8f0;border-left:3px solid #4299e1;border-radius:8px;padding:10px;font-size:0.74rem;color:#4a5568;line-height:1.5;}
+
+/* Land composition bar */
+.composition-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;margin-bottom:10px;background:#edf2f7;}
+.composition-bar div{transition:width 0.4s ease;}
+.comp-legend{display:flex;flex-wrap:wrap;gap:8px;font-size:0.65rem;color:#718096;margin-bottom:6px;}
+.comp-legend span{display:flex;align-items:center;gap:3px;}
+.comp-swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+/* Auto-play row */
+.autoplay-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.speed-label{font-size:0.68rem;color:#a0aec0;}
+
+/* Overlay controls */
+.overlay-controls{margin-top:12px;padding-top:12px;border-top:1px solid #edf2f7;}
+.overlay-header{display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:#718096;font-weight:600;margin-bottom:8px;}
+.overlay-opacity-label{font-family:'Consolas','Monaco',monospace;text-transform:none;letter-spacing:0;color:#4a5568;font-weight:500;}
+.overlay-row{display:flex;gap:6px;flex-wrap:wrap;}
+.overlay-btn{padding:5px 10px;border:1.5px solid;border-radius:6px;background:#fff;font-size:0.7rem;cursor:pointer;font-weight:600;transition:all 0.15s;}
+.overlay-btn:hover{background:#f7fafc;}
+.overlay-btn.active{background:currentColor;color:#fff !important;}
+.overlay-btn.active span,.overlay-btn.active{color:#fff;}
+
+@media(max-width:1100px){
+  .app-grid{grid-template-columns:260px 1fr;grid-template-rows:auto auto;}
+  .controls-panel{grid-row:1/3;grid-column:1;}
+  .grid-panel{grid-column:2;grid-row:1;}
+  .metrics-panel{grid-column:2;grid-row:2;}
+  #gridCanvas{width:100%;max-width:480px;height:auto;aspect-ratio:1;}
+}
+@media(max-width:700px){
+  .app-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto;}
+  .controls-panel{grid-row:auto;grid-column:auto;}
+  .grid-panel{grid-column:auto;}
+  .metrics-panel{grid-column:auto;}
+  #gridCanvas{width:100%;max-width:400px;height:auto;aspect-ratio:1;margin:0 auto;}
+}
+</style>
+</head>
+<body>
+
+<h1>Land-Use Change Simulator</h1>
+<p class="subtitle">Landowners autonomously convert parcels based on market incentives. Set policies and market conditions to shape how the landscape evolves. You can also directly override cells.</p>
+
+<div class="app-grid">
+
+<!-- LEFT: Controls -->
+<div class="controls-panel panel">
+  <div class="panel-title">Land Type Tool</div>
+  <div class="land-palette">
+    <div class="land-btn active" data-type="0" style="background:#38a169;border-color:#38a169;"><span class="icon">🌲</span>Forest</div>
+    <div class="land-btn" data-type="1" style="background:#d69e2e;border-color:#d69e2e;"><span class="icon">🌾</span>Farm</div>
+    <div class="land-btn" data-type="2" style="background:#718096;border-color:#718096;"><span class="icon">🏢</span>Urban</div>
+    <div class="land-btn" data-type="3" style="background:#276749;border-color:#276749;"><span class="icon">🛡️</span>Protect</div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="panel-title">Policy Instruments</div>
+
+  <div class="toggle-row"><span>Carbon Tax</span><label class="toggle-switch"><input type="checkbox" id="tCarbonTax"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dCarbonTax">
+    <div class="slider-group"><div class="slider-label"><span>Tax rate</span><span class="slider-value" id="vCarbonTax">$25/ton</span></div>
+    <input type="range" id="sCarbonTax" min="0" max="100" value="25" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Conservation Subsidy</span><label class="toggle-switch"><input type="checkbox" id="tSubsidy"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dSubsidy">
+    <div class="slider-group"><div class="slider-label"><span>Payment</span><span class="slider-value" id="vSubsidy">$15/cell</span></div>
+    <input type="range" id="sSubsidy" min="0" max="50" value="15" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Zoning (Min Forest %)</span><label class="toggle-switch"><input type="checkbox" id="tZoning"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dZoning">
+    <div class="slider-group"><div class="slider-label"><span>Min forest</span><span class="slider-value" id="vZoning">30%</span></div>
+    <input type="range" id="sZoning" min="0" max="80" value="30" step="5"></div>
+  </div>
+
+  <div class="toggle-row"><span>Development Tax</span><label class="toggle-switch"><input type="checkbox" id="tDevTax"><span class="toggle-slider"></span></label></div>
+  <div class="policy-detail" id="dDevTax">
+    <div class="slider-group"><div class="slider-label"><span>Tax</span><span class="slider-value" id="vDevTax">$50/conv</span></div>
+    <input type="range" id="sDevTax" min="0" max="100" value="50" step="5"></div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="panel-title">Time Controls</div>
+
+  <button class="action-btn primary" id="btnAdvance">Next Period ▶</button>
+  <div class="autoplay-row">
+    <button class="action-btn secondary" id="btnAuto" style="width:auto;padding:6px 14px;font-size:0.76rem;">Auto ▶▶</button>
+    <input type="range" id="sSpeed" min="200" max="2000" value="800" step="100" style="flex:1;">
+    <span class="speed-label" id="vSpeed">0.8s</span>
+  </div>
+  <button class="action-btn secondary" id="btnReset">↻ New Game</button>
+
+  <hr class="section-divider">
+  <div class="panel-title">Presets</div>
+  <div class="preset-row">
+    <button class="preset-btn active" data-preset="balanced">Balanced</button>
+    <button class="preset-btn" data-preset="deforestation">Deforestation</button>
+    <button class="preset-btn" data-preset="green">Green Deal</button>
+    <button class="preset-btn" data-preset="laissez">Laissez-Faire</button>
+  </div>
+
+  <div class="info-box"><strong>Goal:</strong> Maximize cumulative welfare over 60 periods. Start with 15 placements; +1 every 2 periods (max 25). Use policies to shape the system — market prices respond endogenously to your land allocation. Bonus points at game end for hitting biodiversity, carbon, food, and treasury targets.</div>
+</div>
+
+<!-- RIGHT TOP: Grid -->
+<div class="grid-panel panel">
+  <div class="panel-title">Land Grid <span style="float:right;font-family:Consolas,monospace;color:#2d3748;" id="periodLabel">Period 0</span></div>
+  <div class="comp-legend">
+    <span><span class="comp-swatch" style="background:#38a169;"></span> Forest</span>
+    <span><span class="comp-swatch" style="background:#d69e2e;"></span> Agriculture</span>
+    <span><span class="comp-swatch" style="background:#718096;"></span> Urban</span>
+    <span><span class="comp-swatch" style="background:#276749;"></span> Conservation</span>
+  </div>
+  <div class="composition-bar" id="compBar"></div>
+  <canvas id="gridCanvas"></canvas>
+  <div class="cell-tooltip" id="cellTooltip"></div>
+
+  <div class="overlay-controls">
+    <div class="overlay-header">
+      <span>Suitability Overlay</span>
+      <span class="overlay-opacity-label">Opacity: <span id="vOpacity">100%</span></span>
+    </div>
+    <div class="overlay-row">
+      <button class="overlay-btn active" data-overlay="none" style="border-color:#a0aec0;color:#4a5568;">Off</button>
+      <button class="overlay-btn" data-overlay="0" style="border-color:#38a169;color:#38a169;">🌲 Forest</button>
+      <button class="overlay-btn" data-overlay="1" style="border-color:#d69e2e;color:#d69e2e;">🌾 Farm</button>
+      <button class="overlay-btn" data-overlay="2" style="border-color:#718096;color:#718096;">🏢 Urban</button>
+      <button class="overlay-btn" data-overlay="3" style="border-color:#276749;color:#276749;">🛡️ Conserv</button>
+    </div>
+    <input type="range" id="sOpacity" min="0" max="100" value="100" step="5" style="width:100%;margin-top:6px;">
+    <button class="action-btn secondary" id="btnNewMap" style="margin-top:8px;font-size:0.76rem;padding:6px;">🎲 Regenerate Suitability Rasters</button>
+  </div>
+</div>
+
+<!-- RIGHT BOTTOM: Metrics -->
+<div class="metrics-panel panel">
+  <div class="panel-title">Game Dashboard <span class="period-pill" id="periodPill">Period 0/60</span></div>
+
+  <!-- TOP: Game Resources -->
+  <div class="game-resources">
+    <div class="resource-card score-card">
+      <div class="resource-label">Score</div>
+      <div class="resource-value" id="svScore">0</div>
+    </div>
+    <div class="resource-card budget-card">
+      <div class="resource-label">Placements (max 25)</div>
+      <div class="resource-value" id="svBudget">15</div>
+    </div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="stat-item"><div class="stat-label">Treasury</div><div class="stat-value" id="svTreasury">$0</div></div>
+    <div class="stat-item"><div class="stat-label">Population</div><div class="stat-value" id="svPop">100</div></div>
+    <div class="stat-item"><div class="stat-label">Auto Changes</div><div class="stat-value" id="svChanges" style="color:#805ad5;">0</div></div>
+  </div>
+
+  <div class="market-state">
+    <div class="market-header">Market Prices <span class="market-sub">(endogenous — driven by supply/demand)</span></div>
+    <div class="market-row">
+      <div class="market-cell">
+        <div class="market-label">Food Price</div>
+        <div class="market-val" id="svFoodPrice">$40</div>
+      </div>
+      <div class="market-cell">
+        <div class="market-label">Urban Dev Value</div>
+        <div class="market-val" id="svUrbanVal">$100</div>
+      </div>
+      <div class="market-cell">
+        <div class="market-label">Carbon Credit</div>
+        <div class="market-val" id="svCarbonCredit">$10</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-box">
+      <div class="chart-title"><span>Revenue</span><span class="chart-val" id="cvRevenue" style="color:#4299e1;">$0</span></div>
+      <canvas id="chartRevenue"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Carbon Stock <span class="target-tag" id="ttCarbon">≥3000</span></span><span class="chart-val" id="cvCarbon" style="color:#38a169;">0t</span></div>
+      <canvas id="chartCarbon"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Biodiversity <span class="target-tag" id="ttBio">≥50</span></span><span class="chart-val" id="cvBio" style="color:#276749;">0</span></div>
+      <canvas id="chartBio"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title"><span>Food Security <span class="target-tag" id="ttFood">≥90%</span></span><span class="chart-val" id="cvFood" style="color:#d69e2e;">0%</span></div>
+      <canvas id="chartFood"></canvas>
+    </div>
+  </div>
+
+  <div class="welfare-bar">
+    <div class="welfare-score" id="welfareScore">0</div>
+    <div class="welfare-breakdown">
+      Welfare per period (added to score)<br>
+      Revenue: <span id="wbRev">0</span> | Carbon: <span id="wbCarb">0</span> | Biodiversity: <span id="wbBio">0</span> | Food: <span id="wbFood">0</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app-grid -->
+
+<!-- Game Over Modal -->
+<div class="modal-backdrop" id="gameOverModal">
+  <div class="modal-content" id="gameOverContent"></div>
+</div>
+
+<script>
+// ============================================================
+// CONSTANTS
+// ============================================================
+const GS = 20; // grid size
+const TOTAL_CELLS = GS * GS;
+const TYPES = { FOREST: 0, AGRICULTURE: 1, URBAN: 2, CONSERVATION: 3 };
+const COLORS = { 0: '#38a169', 1: '#d69e2e', 2: '#718096', 3: '#276749' };
+const HEX_TO_RGB = { 0: [56,161,105], 1: [214,158,46], 2: [113,128,150], 3: [39,103,73] };
+const LABELS = { 0: 'Forest', 1: 'Agriculture', 2: 'Urban', 3: 'Conservation' };
+
+const BASE = {
+    0: { revenue: 5,   carbon: 10, bio: 1.0, food: 0 },
+    1: { revenue: 40,  carbon: 2,  bio: 0.3, food: 1.0 },
+    2: { revenue: 100, carbon: 0,  bio: 0.1, food: 0 },
+    3: { revenue: 0,   carbon: 12, bio: 1.5, food: 0 },
+};
+
+// cost[from][to]
+const CONV_COST = [
+    [0, 30, 50, 10],
+    [20, 0, 25, 15],
+    [40, 35, 0, 45],
+    [5, 25, 55, 0]
+];
+
+// carbon released when converting FROM this type
+const CARBON_RELEASE = [8, 1, 0, 10];
+
+// Endogenous change parameters
+const CHANGE_SENSITIVITY = 0.012;       // lowered from 0.025 — slower, smoother dynamics
+const MAX_CHANGES_PER_PERIOD = 8;       // lowered from 14 — fewer simultaneous flips
+const AMORTIZE_YEARS = 6;               // raised from 3 — conversion costs hurt more
+const SWITCH_THRESHOLD = 5;             // require profit advantage > $5/yr before switching (deters thrashing)
+const HYSTERESIS_LOCK = 5;              // hard lock-in for 5 periods after conversion (was 3)
+const STICKINESS_DECAY = 10;            // stickiness bonus decays over 10 periods (was 6)
+const STICKINESS_AMOUNT = 8;            // $ per period of remaining stickiness
+
+// === REALISTIC EQUILIBRIUM PARAMETERS ===
+// Soft caps: shares above these trigger steeply diminishing returns.
+// Tightened from earlier values — these are long-run equilibrium ceilings
+// under "normal" conditions and prevent any single type from dominating.
+const SOFT_CAPS = {
+    [TYPES.FOREST]:       0.65,  // forest dominates "natural" landscapes — only mild penalty above this
+    [TYPES.AGRICULTURE]:  0.35,  // tighter — ag would otherwise eat everything at high prices
+    [TYPES.URBAN]:        0.15,  // tighter — urban congests fast
+    [TYPES.CONSERVATION]: 0.30,
+};
+// How sharply profits fall once over the cap.
+// We now apply BOTH a multiplicative profit-decay (dominates at high prices)
+// AND an additive penalty (dominates near the cap). See applySaturation().
+const CAP_DECAY_RATE = 8.0;        // exponential decay constant for multiplicative
+const CAP_ADDITIVE = 600;          // $ per unit (share-cap)^2 additive
+const HARD_CAP_BUFFER = 0.10;      // beyond cap + this, profit collapses to ~0
+// Agglomeration strengths — how strongly each type wants to cluster with itself
+const AGGLOMERATION = {
+    [TYPES.URBAN]:        12.0,
+    [TYPES.AGRICULTURE]:  6.0,
+    [TYPES.FOREST]:       3.0,
+    [TYPES.CONSERVATION]: 5.0,
+};
+// Frontier requirement: how much exposure to existing same-type is needed
+const FRONTIER_THRESHOLD = {
+    [TYPES.URBAN]:        1,
+    [TYPES.AGRICULTURE]:  1,
+    [TYPES.FOREST]:       0,
+    [TYPES.CONSERVATION]: 1,
+};
+
+// Suitability raster influence — how much suitability affects profit ($)
+// Suitability is 0..1; this is multiplied by suitability to give a profit boost
+const SUITABILITY_WEIGHT = {
+    [TYPES.FOREST]:       12,
+    [TYPES.AGRICULTURE]:  18,  // ag is highly soil-dependent
+    [TYPES.URBAN]:        10,
+    [TYPES.CONSERVATION]: 14,  // protected areas favor high-biodiversity terrain
+};
+
+// ============================================================
+// SUITABILITY RASTERS
+// ============================================================
+// Each land type gets its own underlying suitability raster (0..1 per cell).
+// Built from layered value-noise so the patterns look natural and clumpy
+// rather than uniform. Different types use different gradients/seeds so
+// their "best" areas overlap only partially — creating tension between uses.
+
+let SUIT = null;  // SUIT[type] = 2D array [r][c] of suitability in [0,1]
+
+// Deterministic 2D value noise. Hash function gives repeatable pseudo-random
+// values per integer grid point; we bilinearly interpolate between them.
+function hash2(x, y, seed) {
+    let h = Math.sin(x * 374.761 + y * 197.337 + seed * 51.193) * 43758.5453;
+    return h - Math.floor(h);
+}
+function smoothstep(t) { return t * t * (3 - 2 * t); }
+
+function valueNoise(x, y, seed) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const u = smoothstep(xf), v = smoothstep(yf);
+    const a = hash2(xi,     yi,     seed);
+    const b = hash2(xi + 1, yi,     seed);
+    const c = hash2(xi,     yi + 1, seed);
+    const d = hash2(xi + 1, yi + 1, seed);
+    return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
+}
+
+// Fractal Brownian motion: sum of value noise at multiple scales
+function fbm(x, y, seed, octaves = 4) {
+    let sum = 0, amp = 1, freq = 1, maxAmp = 0;
+    for (let i = 0; i < octaves; i++) {
+        sum += valueNoise(x * freq, y * freq, seed + i * 17.3) * amp;
+        maxAmp += amp;
+        amp *= 0.5;
+        freq *= 2;
+    }
+    return sum / maxAmp;
+}
+
+// Generate all four suitability rasters. Each type uses different
+// noise scales, seeds, and structural overlays so they have distinct character.
+let RASTER_SEED = 0; // bumped by user to regenerate
+
+function generateSuitabilityRasters() {
+    SUIT = { 0: [], 1: [], 2: [], 3: [] };
+    for (let t = 0; t < 4; t++) {
+        for (let r = 0; r < GS; r++) SUIT[t][r] = new Array(GS);
+    }
+
+    const SEED = RASTER_SEED * 137.5;
+
+    // Each type gets a unique noise seed and structural bias.
+    // FOREST — large, smooth blobs with edge preference (climate zones)
+    // AGRICULTURE — medium-scale variation with mid-latitude band (best soils)
+    // URBAN — small-scale clusters with central + corridor bias (transport)
+    // CONSERVATION — large blobs aligned with rough terrain / forest gradient
+
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const x = c / GS, y = r / GS;
+
+            // FOREST — broad, smooth gradients, edge bias (cool moist climates)
+            let sf = fbm(c * 0.18, r * 0.18, 11.0 + SEED, 3);
+            const edge = Math.min(x, 1 - x, y, 1 - y);
+            sf = sf * 0.7 + (1 - edge * 1.5) * 0.0 + edge * 0.4; // edge boost
+            SUIT[TYPES.FOREST][r][c] = clamp01(sf);
+
+            // AGRICULTURE — mid-scale noise with horizontal "best soil" band
+            const band = Math.exp(-Math.pow((y - 0.55) * 2.2, 2)); // gaussian band
+            let sa = fbm(c * 0.32, r * 0.28, 47.0 + SEED, 4);
+            sa = sa * 0.55 + band * 0.45;
+            SUIT[TYPES.AGRICULTURE][r][c] = clamp01(sa);
+
+            // URBAN — small-scale clusters with central preference + corridor
+            let su = fbm(c * 0.55, r * 0.55, 83.0 + SEED, 4);
+            const central = Math.exp(-Math.pow(Math.hypot(x - 0.5, y - 0.5) * 1.8, 2));
+            const corridor = Math.exp(-Math.pow((y - 0.45) * 4.0, 2)) * 0.4; // east-west corridor
+            su = su * 0.45 + central * 0.40 + corridor * 0.15;
+            SUIT[TYPES.URBAN][r][c] = clamp01(su);
+
+            // CONSERVATION — large blobs, partly anti-correlated with ag (rough terrain)
+            let sc = fbm(c * 0.20, r * 0.20, 113.0 + SEED, 3);
+            // Conservation favors places that aren't great for ag (mountains/wetlands)
+            sc = sc * 0.7 + (1 - SUIT[TYPES.AGRICULTURE][r][c]) * 0.3;
+            SUIT[TYPES.CONSERVATION][r][c] = clamp01(sc);
+        }
+    }
+
+    // Normalize each layer to use full 0..1 range (percentile stretch)
+    for (let t = 0; t < 4; t++) {
+        const flat = [];
+        for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) flat.push(SUIT[t][r][c]);
+        flat.sort((a, b) => a - b);
+        const lo = flat[Math.floor(flat.length * 0.02)];
+        const hi = flat[Math.floor(flat.length * 0.98)];
+        const range = Math.max(0.01, hi - lo);
+        for (let r = 0; r < GS; r++) {
+            for (let c = 0; c < GS; c++) {
+                SUIT[t][r][c] = clamp01((SUIT[t][r][c] - lo) / range);
+            }
+        }
+    }
+}
+
+function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+
+// ============================================================
+// STATE
+// ============================================================
+let S = {};
+
+function freshState() {
+    return {
+        grid: [],
+        cellAge: [],
+        period: 0,
+        selectedTool: 0,
+        isPainting: false,
+        hoverCell: null,
+        treasury: 0,
+        population: 100,
+        foodPrice: 40,
+        urbanValue: 100,
+        carbonPrice: 10,
+        conversions: [],
+        autoPlay: false,
+        autoTimer: null,
+        history: { revenue: [], carbon: [], bio: [], food: [], welfare: [] },
+        recentChanges: new Set(),
+        overlay: null,
+        overlayOpacity: 1.0,
+        // === GAME STATE ===
+        placementsRemaining: GAME_PLACEMENT_BUDGET,
+        cumulativeWelfare: 0,       // running total welfare points
+        bonusPoints: 0,             // bonuses for hitting targets
+        gameOver: false,            // true after MAX_PERIODS
+    };
+}
+
+// ============================================================
+// GAME CONFIGURATION
+// ============================================================
+const GAME_MAX_PERIODS = 60;             // doubled from 30
+const GAME_PLACEMENT_BUDGET = 15;        // smaller starting budget (was 40)
+const PLACEMENT_REGEN_RATE = 1;          // placements added per regen interval
+const PLACEMENT_REGEN_INTERVAL = 2;      // periods between regen ticks
+const PLACEMENT_MAX = 25;                // hard cap on accumulated placements
+// Base "user-set" market prices — now constants since players can't edit them.
+// These are the underlying drivers; updateMarketFeedback() applies endogenous
+// supply/demand multipliers on top to produce the displayed prices.
+const BASE_FOOD_PRICE   = 40;
+const BASE_URBAN_VALUE  = 100;
+const BASE_CARBON_PRICE = 10;
+// Bonus thresholds — hit any of these at game end for bonus points
+const TARGETS = {
+    biodiversity: { threshold: 50, bonus: 200, label: 'Biodiversity ≥ 50' },
+    carbon:       { threshold: 3000, bonus: 200, label: 'Carbon stock ≥ 3000t' },
+    food:         { threshold: 90, bonus: 150, label: 'Food security ≥ 90%' },
+    treasury:     { threshold: 50000, bonus: 150, label: 'Treasury ≥ $50k' },
+};
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const $ = id => document.getElementById(id);
+const gridCanvas = $('gridCanvas');
+const gridCtx = gridCanvas.getContext('2d');
+const tooltip = $('cellTooltip');
+
+const chartEls = {
+    revenue: { canvas: $('chartRevenue'), val: $('cvRevenue') },
+    carbon:  { canvas: $('chartCarbon'),  val: $('cvCarbon') },
+    bio:     { canvas: $('chartBio'),     val: $('cvBio') },
+    food:    { canvas: $('chartFood'),    val: $('cvFood') },
+};
+
+// ============================================================
+// GRID INITIALIZATION
+// ============================================================
+function initGrid(preset) {
+    S = freshState();
+    const g = S.grid;
+    const a = S.cellAge;
+    for (let r = 0; r < GS; r++) {
+        g[r] = [];
+        a[r] = [];
+        for (let c = 0; c < GS; c++) {
+            g[r][c] = TYPES.FOREST;
+            a[r][c] = 5;
+        }
+    }
+
+    if (preset === 'balanced') {
+        // Place urban core at the highest-suitability urban location
+        // (only if rasters exist; otherwise fall back to dead-center)
+        let urbanCenter = { r: 10, c: 10 };
+        if (SUIT) {
+            let bestS = -1;
+            for (let r = 4; r < GS - 4; r++) {
+                for (let c = 4; c < GS - 4; c++) {
+                    if (SUIT[TYPES.URBAN][r][c] > bestS) {
+                        bestS = SUIT[TYPES.URBAN][r][c];
+                        urbanCenter = { r, c };
+                    }
+                }
+            }
+        }
+        const uc = urbanCenter;
+        // Urban core: 4x4 around the best urban cell
+        for (let dr = -2; dr < 2; dr++) {
+            for (let dc = -2; dc < 2; dc++) {
+                const r = uc.r + dr, c = uc.c + dc;
+                if (r >= 0 && r < GS && c >= 0 && c < GS) {
+                    g[r][c] = TYPES.URBAN; a[r][c] = 0;
+                }
+            }
+        }
+        // Ag ring: 8x8 around urban core, but only on non-urban cells
+        for (let dr = -4; dr < 4; dr++) {
+            for (let dc = -4; dc < 4; dc++) {
+                const r = uc.r + dr, c = uc.c + dc;
+                if (r >= 0 && r < GS && c >= 0 && c < GS && g[r][c] === TYPES.FOREST) {
+                    g[r][c] = TYPES.AGRICULTURE; a[r][c] = 3;
+                }
+            }
+        }
+        // Conservation in corners
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 0; r < 3; r++) for (let c = 17; c < 20; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 17; r < 20; r++) for (let c = 0; c < 3; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+        for (let r = 17; r < 20; r++) for (let c = 17; c < 20; c++) { g[r][c] = TYPES.CONSERVATION; a[r][c] = 10; }
+    } else if (preset === 'deforestation') {
+        for (let r = 9; r < 11; r++) for (let c = 9; c < 11; c++) { g[r][c] = TYPES.URBAN; a[r][c] = 0; }
+        for (let r = 7; r < 13; r++) for (let c = 7; c < 13; c++) {
+            if (g[r][c] === TYPES.FOREST) { g[r][c] = TYPES.AGRICULTURE; a[r][c] = 2; }
+        }
+        setSliders({ foodPrice: 80, carbonCredit: 5, urbanVal: 150, popGrowth: 5 });
+        setPolicies({ carbonTax: false, subsidy: false, zoning: false, devTax: false });
+    } else if (preset === 'green') {
+        initGrid('balanced');
+        setSliders({ foodPrice: 40, carbonCredit: 30, urbanVal: 80, popGrowth: 1 });
+        setPolicies({ carbonTax: true, carbonTaxRate: 50, subsidy: true, subsidyRate: 25, zoning: true, zoningRate: 40, devTax: true, devTaxRate: 75 });
+        return;
+    } else if (preset === 'laissez') {
+        initGrid('balanced');
+        setSliders({ foodPrice: 40, carbonCredit: 5, urbanVal: 150, popGrowth: 3 });
+        setPolicies({ carbonTax: false, subsidy: false, zoning: false, devTax: false });
+        return;
+    }
+}
+
+function setSliders(v) {
+    if (v.foodPrice !== undefined) { S.foodPrice = v.foodPrice; }
+    if (v.carbonCredit !== undefined) { S.carbonPrice = v.carbonCredit; }
+    if (v.urbanVal !== undefined) { S.urbanValue = v.urbanVal; }
+}
+
+function setPolicies(v) {
+    $('tCarbonTax').checked = !!v.carbonTax;
+    $('dCarbonTax').classList.toggle('show', !!v.carbonTax);
+    if (v.carbonTaxRate !== undefined) { $('sCarbonTax').value = v.carbonTaxRate; $('vCarbonTax').textContent = '$' + v.carbonTaxRate + '/ton'; }
+
+    $('tSubsidy').checked = !!v.subsidy;
+    $('dSubsidy').classList.toggle('show', !!v.subsidy);
+    if (v.subsidyRate !== undefined) { $('sSubsidy').value = v.subsidyRate; $('vSubsidy').textContent = '$' + v.subsidyRate + '/cell'; }
+
+    $('tZoning').checked = !!v.zoning;
+    $('dZoning').classList.toggle('show', !!v.zoning);
+    if (v.zoningRate !== undefined) { $('sZoning').value = v.zoningRate; $('vZoning').textContent = v.zoningRate + '%'; }
+
+    $('tDevTax').checked = !!v.devTax;
+    $('dDevTax').classList.toggle('show', !!v.devTax);
+    if (v.devTaxRate !== undefined) { $('sDevTax').value = v.devTaxRate; $('vDevTax').textContent = '$' + v.devTaxRate + '/conv'; }
+}
+
+// ============================================================
+// CANVAS SETUP
+// ============================================================
+function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+}
+
+// ============================================================
+// GRID DRAWING
+// ============================================================
+function drawGrid() {
+    const { ctx, w, h } = setupCanvas(gridCanvas);
+    const cellSize = Math.min(w, h) / GS;
+
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const type = S.grid[r][c];
+            const x = c * cellSize;
+            const y = r * cellSize;
+
+            ctx.fillStyle = COLORS[type];
+            ctx.fillRect(x, y, cellSize, cellSize);
+
+            if ((type === TYPES.FOREST || type === TYPES.CONSERVATION) && S.cellAge[r][c] > 3) {
+                const alpha = Math.min(0.15, (S.cellAge[r][c] - 3) * 0.02);
+                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+                ctx.fillRect(x, y, cellSize, cellSize);
+            }
+
+            if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+                const neighbors = countNaturalNeighbors(r, c);
+                if (neighbors >= 3) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                    ctx.fillRect(x, y, cellSize, cellSize);
+                }
+            }
+        }
+    }
+
+    // === SUITABILITY OVERLAY ===
+    // Render the chosen suitability layer as a heatmap on top of the LULC.
+    // At opacity = 100% the overlay is fully opaque (LULC hidden).
+    // At opacity = 0% the overlay is invisible (LULC fully visible).
+    // Uses a continuous viridis-like colormap so suitability is readable
+    // across the whole 0..1 range.
+    if (S.overlay !== null && S.overlay !== undefined && SUIT) {
+        const t = S.overlay;
+        const alpha = S.overlayOpacity; // 0..1
+        for (let r = 0; r < GS; r++) {
+            for (let c = 0; c < GS; c++) {
+                const s = SUIT[t][r][c];
+                const [rr, gg, bb] = suitabilityColor(s, t);
+                ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
+                ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+            }
+        }
+    }
+
+    if (S.recentChanges.size > 0) {
+        ctx.strokeStyle = 'rgba(128,90,213,0.7)';
+        ctx.lineWidth = 2;
+        for (const key of S.recentChanges) {
+            const [rr, cc] = key.split(',').map(Number);
+            ctx.strokeRect(cc * cellSize + 1, rr * cellSize + 1, cellSize - 2, cellSize - 2);
+        }
+    }
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= GS; i++) {
+        const p = i * cellSize;
+        ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, GS * cellSize); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(GS * cellSize, p); ctx.stroke();
+    }
+
+    if (S.hoverCell) {
+        const { row, col } = S.hoverCell;
+        ctx.strokeStyle = '#1a202c';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(col * cellSize + 1, row * cellSize + 1, cellSize - 2, cellSize - 2);
+    }
+}
+
+function countNaturalNeighbors(r, c) {
+    let n = 0;
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < GS && nc >= 0 && nc < GS) {
+            const t = S.grid[nr][nc];
+            if (t === TYPES.FOREST || t === TYPES.CONSERVATION) n++;
+        }
+    }
+    return n;
+}
+
+// Continuous colormap from low (dark) to high (saturated type color).
+// Goes through three stops: deep purple/blue (low) → mid neutral → type color (high)
+// At s=0 the color is dark; at s=1 the color is the bright type color.
+// This way every cell gets a visible color, and at full opacity the whole
+// raster looks like a proper heatmap with no LULC bleed-through.
+function suitabilityColor(s, type) {
+    s = Math.max(0, Math.min(1, s));
+    const lo = [40, 30, 75];          // dark purple-blue for low suitability
+    const mid = [220, 220, 200];      // pale neutral mid
+    const hi = HEX_TO_RGB[type];      // bright type color for high suitability
+    let r, g, b;
+    if (s < 0.5) {
+        const t = s * 2; // 0..1
+        r = lo[0] + (mid[0] - lo[0]) * t;
+        g = lo[1] + (mid[1] - lo[1]) * t;
+        b = lo[2] + (mid[2] - lo[2]) * t;
+    } else {
+        const t = (s - 0.5) * 2; // 0..1
+        r = mid[0] + (hi[0] - mid[0]) * t;
+        g = mid[1] + (hi[1] - mid[1]) * t;
+        b = mid[2] + (hi[2] - mid[2]) * t;
+    }
+    return [Math.round(r), Math.round(g), Math.round(b)];
+}
+
+// ============================================================
+// COMPOSITION BAR
+// ============================================================
+function updateCompositionBar() {
+    const counts = [0, 0, 0, 0];
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) counts[S.grid[r][c]]++;
+    const bar = $('compBar');
+    bar.innerHTML = '';
+    for (let t = 0; t < 4; t++) {
+        const pct = (counts[t] / TOTAL_CELLS * 100);
+        if (pct > 0) {
+            const d = document.createElement('div');
+            d.style.width = pct + '%';
+            d.style.background = COLORS[t];
+            d.title = LABELS[t] + ': ' + counts[t] + ' cells (' + pct.toFixed(0) + '%)';
+            bar.appendChild(d);
+        }
+    }
+}
+
+// ============================================================
+// ECONOMIC MODEL
+// ============================================================
+function getCounts() {
+    const counts = [0, 0, 0, 0];
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) counts[S.grid[r][c]]++;
+    return counts;
+}
+
+function getMarket() {
+    return {
+        foodPrice: S.foodPrice,
+        carbonCredit: S.carbonPrice,
+        urbanVal: S.urbanValue,
+        popGrowth: 1.5,  // fixed at 1.5%/period — game challenge is constant
+    };
+}
+
+function getPolicies() {
+    return {
+        carbonTax:    { on: $('tCarbonTax').checked, rate: parseFloat($('sCarbonTax').value) },
+        subsidy:      { on: $('tSubsidy').checked,   rate: parseFloat($('sSubsidy').value) },
+        zoning:       { on: $('tZoning').checked,     rate: parseFloat($('sZoning').value) },
+        devTax:       { on: $('tDevTax').checked,     rate: parseFloat($('sDevTax').value) },
+    };
+}
+
+function computeRevenue() {
+    const m = getMarket();
+    const p = getPolicies();
+    const counts = getCounts();
+    let rev = 0;
+
+    rev += counts[TYPES.FOREST] * BASE[TYPES.FOREST].revenue;
+    rev += counts[TYPES.AGRICULTURE] * m.foodPrice;
+    rev += counts[TYPES.URBAN] * m.urbanVal;
+    rev += counts[TYPES.CONSERVATION] * BASE[TYPES.CONSERVATION].revenue;
+
+    const carbonStock = computeCarbonStock();
+    rev += carbonStock * m.carbonCredit / 100;
+
+    if (p.subsidy.on) rev += counts[TYPES.CONSERVATION] * p.subsidy.rate;
+
+    for (const cv of S.conversions) {
+        rev -= CONV_COST[cv.from][cv.to];
+        if (p.carbonTax.on && (cv.from === TYPES.FOREST || cv.from === TYPES.CONSERVATION)) {
+            rev -= CARBON_RELEASE[cv.from] * p.carbonTax.rate;
+        }
+        if (p.devTax.on && cv.to === TYPES.URBAN) {
+            rev -= p.devTax.rate;
+        }
+    }
+
+    if (p.zoning.on) {
+        const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS * 100;
+        if (forestPct < p.zoning.rate) {
+            const shortfall = p.zoning.rate - forestPct;
+            rev -= shortfall * 20;
+        }
+    }
+
+    return Math.round(rev);
+}
+
+function computeCarbonStock() {
+    let c = 0;
+    for (let r = 0; r < GS; r++) {
+        for (let col = 0; col < GS; col++) {
+            const type = S.grid[r][col];
+            c += BASE[type].carbon;
+            if ((type === TYPES.FOREST || type === TYPES.CONSERVATION) && S.cellAge[r][col] > 3) {
+                c += Math.min(4, (S.cellAge[r][col] - 3) * 0.5);
+            }
+        }
+    }
+    return Math.round(c);
+}
+
+function computeBiodiversity() {
+    let total = 0;
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const type = S.grid[r][c];
+            let val = BASE[type].bio;
+            if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+                const neighbors = countNaturalNeighbors(r, c);
+                val += neighbors * 0.2 * BASE[type].bio;
+                if (neighbors === 0) val *= 0.5;
+            }
+            total += val;
+        }
+    }
+    const maxBio = TOTAL_CELLS * (BASE[TYPES.CONSERVATION].bio + 4 * 0.2 * BASE[TYPES.CONSERVATION].bio);
+    return Math.round(total / maxBio * 100);
+}
+
+function computeFoodSecurity() {
+    const counts = getCounts();
+    const supply = counts[TYPES.AGRICULTURE] * BASE[TYPES.AGRICULTURE].food;
+    const demand = S.population * 0.01;
+    return Math.min(supply / Math.max(demand, 0.01), 1.0) * 100;
+}
+
+function computeWelfare(revenue, carbon, bio, food) {
+    const maxRevenue = TOTAL_CELLS * getMarket().urbanVal;
+    const maxCarbon = TOTAL_CELLS * 12;
+    const rNorm = Math.min(revenue / Math.max(maxRevenue, 1), 1);
+    const cNorm = carbon / maxCarbon;
+    const bNorm = bio / 100;
+    const fNorm = food / 100;
+    return Math.round((rNorm * 0.25 + cNorm * 0.25 + bNorm * 0.25 + fNorm * 0.25) * 100);
+}
+
+// ============================================================
+// (Random events removed — system dynamics now driven entirely by prices,
+// suitability rasters, and policy. Easier to interpret in equilibrium.)
+// ============================================================
+
+// ============================================================
+// ENDOGENOUS LAND-USE CHANGE — REALISTIC EQUILIBRIUM
+// ============================================================
+
+// Count neighbors of a specific type (8-connected by default)
+function countNeighborsOfType(r, c, type, eightConn = true) {
+    let n = 0;
+    const dirs = eightConn
+        ? [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
+        : [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < GS && nc >= 0 && nc < GS && S.grid[nr][nc] === type) n++;
+    }
+    return n;
+}
+
+// Saturation factor: multiplicative decay (0..1) applied to per-cell revenue.
+// At share = cap → factor = 1 (no penalty)
+// At share = cap + 5% → factor ≈ 0.67 (significant)
+// At share = cap + 10% → factor ≈ 0.45
+// At share = cap + 20% → factor ≈ 0.20 (severe)
+// This scales with prices, so high food prices DO NOT outrun the cap.
+function saturationFactor(type, counts) {
+    const share = counts[type] / TOTAL_CELLS;
+    const cap = SOFT_CAPS[type];
+    if (share <= cap) return 1.0;
+    const excess = share - cap;
+    return Math.exp(-CAP_DECAY_RATE * excess);
+}
+
+// Additive saturation penalty (in $) — kicks in earlier and provides
+// a price-independent backstop near the cap. Quadratic in excess.
+function saturationAdditive(type, counts) {
+    const share = counts[type] / TOTAL_CELLS;
+    const cap = SOFT_CAPS[type];
+    if (share <= cap) return 0;
+    const excess = share - cap;
+    let penalty = CAP_ADDITIVE * excess * excess;
+    // Cliff: beyond cap + buffer, profits collapse hard
+    if (excess > HARD_CAP_BUFFER) {
+        const beyond = excess - HARD_CAP_BUFFER;
+        penalty += 3000 * beyond * beyond;
+    }
+    return penalty;
+}
+
+// Compute the effective annual profit a landowner earns for a given type at (r,c)
+// (used for both "stay as is" and "what would I earn if I switched")
+function cellProfit(type, r, c, counts) {
+    const m = getMarket();
+    const p = getPolicies();
+
+    // Gross revenue (price-dependent component) — this is what gets
+    // multiplicatively scaled by the saturation factor so that high
+    // prices cannot overwhelm the cap.
+    let grossRev = 0;
+    if (type === TYPES.FOREST) grossRev = BASE[TYPES.FOREST].revenue;
+    else if (type === TYPES.AGRICULTURE) grossRev = m.foodPrice;
+    else if (type === TYPES.URBAN) grossRev = m.urbanVal;
+    else if (type === TYPES.CONSERVATION) grossRev = 0;
+
+    // Carbon credit income (price-dependent → scales with saturation)
+    const carbonPerCell = BASE[type].carbon;
+    grossRev += carbonPerCell * m.carbonCredit / 100;
+
+    // Apply MULTIPLICATIVE saturation to gross revenue (price-dependent component only)
+    const satFactor = saturationFactor(type, counts);
+    let profit = grossRev * satFactor;
+
+    // === CARBON TAX / PAYMENTS FOR ECOSYSTEM SERVICES (annual) ===
+    // Strong, asymmetric, applied AFTER saturation so policy effects don't dilute
+    // when one type dominates. Reference carbon = 5 (mean across types):
+    //   forest (10): gains $50/period at rate=$25
+    //   conservation (12): gains $70 at rate=$25
+    //   ag (2): pays $30 at rate=$25
+    //   urban (0): pays $50 at rate=$25
+    if (p.carbonTax.on) {
+        const refCarbon = 5;
+        profit += (carbonPerCell - refCarbon) * p.carbonTax.rate * 0.4;
+    }
+
+    // === CONSERVATION SUBSIDY (annual, post-saturation) ===
+    if (p.subsidy.on && type === TYPES.CONSERVATION) {
+        profit += p.subsidy.rate;
+    }
+    // Forest also receives a partial PES payment (working forests)
+    if (p.subsidy.on && type === TYPES.FOREST) {
+        profit += p.subsidy.rate * 0.4;
+    }
+
+    // Development tax annual cost
+    if (p.devTax.on && type === TYPES.URBAN) {
+        profit -= p.devTax.rate * 0.25;
+    }
+
+    // Zoning penalty for non-forest when below minimum
+    if (p.zoning.on && (type === TYPES.AGRICULTURE || type === TYPES.URBAN)) {
+        const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS * 100;
+        if (forestPct < p.zoning.rate) {
+            profit -= (p.zoning.rate - forestPct) * 0.5;
+        }
+    }
+
+    // ADDITIVE saturation penalty (price-independent backstop near the cap)
+    profit -= saturationAdditive(type, counts);
+
+    // === LOCATION QUALITY: spatial heterogeneity from suitability rasters ===
+    profit += locationQuality(r, c, type);
+
+    return profit;
+}
+
+// Pseudo-random but stable productivity per cell per type
+// Now reads from the pre-computed suitability raster for that type.
+// Returns a $ value: SUITABILITY_WEIGHT[type] * (suitability - 0.5)
+// (centered so average suitability is neutral; high-suit cells get a bonus,
+//  low-suit cells get a penalty)
+function locationQuality(r, c, type) {
+    if (!SUIT) return 0;
+    const s = SUIT[type][r][c];
+    return SUITABILITY_WEIGHT[type] * (s - 0.5) * 2; // range: -W to +W
+}
+
+function simulateEndogenousChange() {
+    const m = getMarket();
+    const p = getPolicies();
+    S.recentChanges = new Set();
+    const counts = getCounts();
+
+    const candidates = [];
+
+    for (let r = 0; r < GS; r++) {
+        for (let c = 0; c < GS; c++) {
+            const current = S.grid[r][c];
+
+            // Conservation cells are legally protected
+            if (current === TYPES.CONSERVATION) continue;
+
+            const age = S.cellAge[r][c];
+            // Hysteresis: hard lock-in immediately after conversion
+            if (age < HYSTERESIS_LOCK) continue;
+            // Stickiness: linear decay from STICKINESS_AMOUNT at age=lock down to 0 at age=DECAY
+            const stickiness = age < STICKINESS_DECAY
+                ? STICKINESS_AMOUNT * (1 - age / STICKINESS_DECAY)
+                : 0;
+
+            const currentProfit = cellProfit(current, r, c, counts);
+
+            // Evaluate each alternative
+            for (let alt = 0; alt < 4; alt++) {
+                if (alt === current) continue;
+
+                // === FRONTIER REQUIREMENT ===
+                // Most types can ONLY expand from their own kind
+                // (urban-from-urban, ag-from-ag, conservation-from-conservation)
+                const sameTypeNeighbors = countNeighborsOfType(r, c, alt, true);
+                const threshold = FRONTIER_THRESHOLD[alt];
+
+                if (alt !== TYPES.FOREST && sameTypeNeighbors < threshold) continue;
+
+                // Conservation can be created when subsidy is on, with adjacency to existing reserve.
+                // Lowered thresholds so the policy is meaningfully effective at lower rates.
+                if (alt === TYPES.CONSERVATION) {
+                    if (!p.subsidy.on) continue;
+                    if (sameTypeNeighbors < 1) continue;     // was 2 — only need 1 conservation neighbor
+                    if (p.subsidy.rate < 5) continue;        // was 15 — small subsidies now matter
+                }
+
+                let altProfit = cellProfit(alt, r, c, counts);
+
+                // === AGGLOMERATION BONUS (same-type clustering) ===
+                // Strongly increases with same-type neighbors, with diminishing returns
+                // log-style: 1 neighbor gives meaningful bonus, 8 gives only ~3x the 1-neighbor bonus
+                const agglomFactor = Math.log(1 + sameTypeNeighbors) / Math.log(2); // 0, 1, 1.58, 2, 2.32...
+                altProfit += AGGLOMERATION[alt] * agglomFactor;
+
+                // === REPULSION between incompatible uses ===
+                // Urban damages adjacent ag (pollution, runoff costs)
+                if (alt === TYPES.AGRICULTURE) {
+                    const urbanAdj = countNeighborsOfType(r, c, TYPES.URBAN, true);
+                    altProfit -= urbanAdj * 1.5;
+                }
+                // Ag/urban harder to establish next to dense forest (clearing cost)
+                if (alt === TYPES.AGRICULTURE || alt === TYPES.URBAN) {
+                    const forestAdj = countNeighborsOfType(r, c, TYPES.FOREST, true);
+                    if (forestAdj >= 5) altProfit -= 3; // dense forest: extra clearing cost
+                }
+
+                // Amortized one-time conversion cost
+                altProfit -= CONV_COST[current][alt] / AMORTIZE_YEARS;
+
+                // Amortized carbon tax on clearing forest
+                if (p.carbonTax.on && current === TYPES.FOREST) {
+                    altProfit -= CARBON_RELEASE[current] * p.carbonTax.rate / AMORTIZE_YEARS;
+                }
+
+                // Amortized dev tax
+                if (p.devTax.on && alt === TYPES.URBAN) {
+                    altProfit -= p.devTax.rate / AMORTIZE_YEARS;
+                }
+
+                // === DEMAND PRESSURE ===
+                // Population pressure boosts urban + ag demand
+                const popPressure = Math.max(0, (S.population - 100) / 200);
+                if (alt === TYPES.URBAN) altProfit += popPressure * 5;
+                if (alt === TYPES.AGRICULTURE) altProfit += popPressure * 3;
+
+                // Food scarcity drives ag expansion at the frontier
+                const foodDemand = S.population * 0.01;
+                const foodSupply = counts[TYPES.AGRICULTURE];
+                if (alt === TYPES.AGRICULTURE && foodSupply < foodDemand * 1.2) {
+                    altProfit += (foodDemand * 1.2 - foodSupply) * 1.5;
+                }
+
+                // === FOREST REGENERATION ===
+                // Forest only "wins" on cells that are unprofitable for alternatives
+                // (abandoned ag near other natural land)
+                if (alt === TYPES.FOREST && current === TYPES.AGRICULTURE) {
+                    const naturalNeighbors = countNaturalNeighbors(r, c);
+                    altProfit += naturalNeighbors * 2.5; // seed source bonus
+                    // But only attractive if ag is genuinely failing here
+                    // (handled implicitly via current profit being low)
+                }
+                // Forest generally cannot "invade" healthy ag/urban — needs current type to be unprofitable
+                if (alt === TYPES.FOREST && current === TYPES.URBAN) continue;
+
+                const diff = altProfit - currentProfit - stickiness;
+                // Require advantage to exceed SWITCH_THRESHOLD before considering conversion.
+                // This prevents thrashing on small price wiggles and produces stable equilibria.
+                if (diff > SWITCH_THRESHOLD) {
+                    // Probability scales with how much the diff exceeds the threshold
+                    const prob = Math.min(0.5, (diff - SWITCH_THRESHOLD) * CHANGE_SENSITIVITY);
+                    candidates.push({ r, c, from: current, to: alt, diff, prob });
+                }
+            }
+        }
+    }
+
+    // Process candidates: stochastic, biased toward highest-differential first
+    // Shuffle within tiers so spatial pattern doesn't always pick the same row first
+    candidates.sort((a, b) => b.diff - a.diff);
+
+    let changes = 0;
+    const changed = new Set();
+
+    for (const cand of candidates) {
+        if (changes >= MAX_CHANGES_PER_PERIOD) break;
+        const key = cand.r + ',' + cand.c;
+        if (changed.has(key)) continue;
+
+        if (Math.random() < cand.prob) {
+            S.conversions.push({ from: cand.from, to: cand.to, row: cand.r, col: cand.c });
+            S.grid[cand.r][cand.c] = cand.to;
+            S.cellAge[cand.r][cand.c] = 0;
+            S.recentChanges.add(key);
+            changed.add(key);
+            changes++;
+        }
+    }
+
+    return changes;
+}
+
+// ============================================================
+// ADVANCE PERIOD
+// ============================================================
+function updateMarketFeedback() {
+    const counts = getCounts();
+    const userFoodBase = BASE_FOOD_PRICE;
+    const userUrbanBase = BASE_URBAN_VALUE;
+    const userCarbonBase = BASE_CARBON_PRICE;
+
+    // SMOOTHING: prices adjust toward equilibrium gradually rather than jumping.
+    // This is essentially exponential moving average — like real commodity markets
+    // with sticky contracts and futures. Damps the urban/crop chase pattern.
+    const PRICE_SMOOTH = 0.35; // 0=instant, 1=frozen. 0.35 = 35% weight on previous, 65% on new
+
+    // FOOD PRICE: rises with scarcity, drops with surplus (less aggressive than before)
+    const foodSupply = counts[TYPES.AGRICULTURE];
+    const foodDemand = S.population * 0.01;
+    const foodRatio = foodSupply / Math.max(foodDemand, 0.01);
+    let foodMult;
+    if (foodRatio >= 1) {
+        foodMult = Math.max(0.4, 1.0 - (foodRatio - 1) * 0.4);
+    } else {
+        foodMult = Math.min(2.2, 1.0 + (1 - foodRatio) * 1.8);  // was 3.5, 3.0 — much gentler
+    }
+    const targetFood = Math.max(10, Math.min(150, userFoodBase * foodMult));
+    S.foodPrice = Math.round(S.foodPrice * PRICE_SMOOTH + targetFood * (1 - PRICE_SMOOTH));
+
+    // URBAN VALUE: steep congestion penalty
+    const urbanPct = counts[TYPES.URBAN] / TOTAL_CELLS;
+    const urbanMult = Math.max(0.15, 1.0 / (1 + 8 * Math.pow(urbanPct, 0.9)));
+    const targetUrban = Math.max(15, Math.min(200, userUrbanBase * urbanMult));
+    S.urbanValue = Math.round(S.urbanValue * PRICE_SMOOTH + targetUrban * (1 - PRICE_SMOOTH));
+
+    // CARBON CREDIT: scarcity premium as forest disappears (also smoothed)
+    const forestPct = (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) / TOTAL_CELLS;
+    let carbonMult;
+    if (forestPct >= 0.5) {
+        carbonMult = Math.max(0.5, 1.0 - (forestPct - 0.5) * 0.6);
+    } else {
+        carbonMult = Math.min(4.0, 1.0 + Math.pow(0.5 - forestPct, 0.8) * 5.0);
+    }
+    const targetCarbon = Math.max(1, Math.min(50, userCarbonBase * carbonMult));
+    S.carbonPrice = Math.round(S.carbonPrice * PRICE_SMOOTH + targetCarbon * (1 - PRICE_SMOOTH));
+
+    $('svFoodPrice').textContent = '$' + S.foodPrice;
+    $('svUrbanVal').textContent = '$' + S.urbanValue;
+    $('svCarbonCredit').textContent = '$' + S.carbonPrice;
+}
+
+function advancePeriod() {
+    if (S.gameOver) return;
+
+    S.period++;
+
+    // === PLACEMENT REGEN ===
+    // Players accumulate new placements every PLACEMENT_REGEN_INTERVAL periods,
+    // capped at PLACEMENT_MAX. This rewards patient play and prevents stockpiling.
+    if (S.period % PLACEMENT_REGEN_INTERVAL === 0) {
+        S.placementsRemaining = Math.min(PLACEMENT_MAX, S.placementsRemaining + PLACEMENT_REGEN_RATE);
+        // Visually pulse the budget card to signal regen
+        const card = $('svBudget') ? $('svBudget').parentElement : null;
+        if (card) {
+            card.classList.remove('pulse-green');
+            void card.offsetWidth;
+            card.classList.add('pulse-green');
+        }
+    }
+
+    updateMarketFeedback();
+    const numChanges = simulateEndogenousChange();
+
+    for (let r = 0; r < GS; r++) for (let c = 0; c < GS; c++) S.cellAge[r][c]++;
+
+    let revenue = computeRevenue();
+    const carbon = computeCarbonStock();
+    const bio = computeBiodiversity();
+    const food = computeFoodSecurity();
+
+    const welfare = computeWelfare(revenue, carbon, bio, food);
+
+    S.treasury += revenue;
+    S.cumulativeWelfare += welfare;  // accumulate score each period
+
+    // === LOGISTIC POPULATION GROWTH WITH ENDOGENOUS CARRYING CAPACITY ===
+    const m = getMarket();
+    const counts = getCounts();
+    const K = counts[TYPES.AGRICULTURE] * 50
+            + counts[TYPES.URBAN] * 25
+            + (counts[TYPES.FOREST] + counts[TYPES.CONSERVATION]) * 2
+            + 50;
+    const intrinsicRate = m.popGrowth / 100;
+    const ratio = S.population / Math.max(K, 1);
+    const dP = S.population * intrinsicRate * (1 - ratio);
+    S.population = Math.max(20, Math.round(S.population + dP));
+
+    S.history.revenue.push(revenue);
+    S.history.carbon.push(carbon);
+    S.history.bio.push(bio);
+    S.history.food.push(Math.round(food));
+    S.history.welfare.push(welfare);
+
+    const MAX_HIST = 60;
+    for (const key of Object.keys(S.history)) {
+        if (S.history[key].length > MAX_HIST) S.history[key].shift();
+    }
+
+    S.conversions = [];
+
+    updateAll(revenue, carbon, bio, food, welfare, numChanges);
+    updateGameUI();
+
+    // === GAME END ===
+    if (S.period >= GAME_MAX_PERIODS) {
+        endGame(carbon, bio, food);
+    }
+}
+
+function endGame(carbon, bio, food) {
+    S.gameOver = true;
+
+    // Auto-pause
+    if (S.autoPlay) {
+        S.autoPlay = false;
+        clearInterval(S.autoTimer);
+        $('btnAuto').textContent = 'Auto ▶▶';
+        $('btnAuto').style.background = '';
+        $('btnAuto').style.color = '';
+    }
+
+    // Calculate bonuses
+    const bonuses = [];
+    if (bio >= TARGETS.biodiversity.threshold) bonuses.push(TARGETS.biodiversity);
+    if (carbon >= TARGETS.carbon.threshold) bonuses.push(TARGETS.carbon);
+    if (food >= TARGETS.food.threshold) bonuses.push(TARGETS.food);
+    if (S.treasury >= TARGETS.treasury.threshold) bonuses.push(TARGETS.treasury);
+
+    S.bonusPoints = bonuses.reduce((s, b) => s + b.bonus, 0);
+    const finalScore = S.cumulativeWelfare + S.bonusPoints;
+
+    // Save the score to localStorage if it's a high score
+    let bestScore = 0;
+    try {
+        bestScore = parseInt(localStorage.getItem('landuseSimBestScore') || '0');
+        if (finalScore > bestScore) {
+            localStorage.setItem('landuseSimBestScore', finalScore);
+            bestScore = finalScore;
+        }
+    } catch (e) { /* localStorage might be blocked */ }
+
+    showGameOverModal(finalScore, bonuses, bestScore);
+}
+
+function showGameOverModal(finalScore, bonuses, bestScore) {
+    const modal = $('gameOverModal');
+    const isNewBest = finalScore >= bestScore;
+
+    let bonusHtml = '';
+    if (bonuses.length === 0) {
+        bonusHtml = '<div style="color:#a0aec0;font-style:italic;">No targets met — try again!</div>';
+    } else {
+        bonusHtml = bonuses.map(b =>
+            `<div class="bonus-row">✓ ${b.label} <span style="color:#38a169;font-weight:700;">+${b.bonus}</span></div>`
+        ).join('');
+    }
+
+    $('gameOverContent').innerHTML = `
+        <div class="game-over-title">Game Over</div>
+        <div class="game-over-score">${finalScore.toLocaleString()}</div>
+        <div class="game-over-label">Final Score</div>
+        ${isNewBest && finalScore > 0 ? '<div class="new-best">🏆 NEW BEST!</div>' : ''}
+        <div class="score-breakdown">
+            <div>Cumulative Welfare: <span>${S.cumulativeWelfare.toLocaleString()}</span></div>
+            <div>Target Bonuses: <span>${S.bonusPoints.toLocaleString()}</span></div>
+        </div>
+        <div class="bonus-list">
+            <div class="bonus-header">Targets:</div>
+            ${bonusHtml}
+        </div>
+        <div class="best-score">Best score: ${bestScore.toLocaleString()}</div>
+        <button class="action-btn primary" id="btnPlayAgain" style="margin-top:12px;">Play Again</button>
+    `;
+    modal.classList.add('show');
+
+    $('btnPlayAgain').addEventListener('click', () => {
+        modal.classList.remove('show');
+        startNewGame();
+    });
+}
+
+function startNewGame() {
+    const active = document.querySelector('.preset-btn.active');
+    const preset = active ? active.dataset.preset : 'balanced';
+    initGrid(preset);
+    const carbon = computeCarbonStock();
+    const bio = computeBiodiversity();
+    const food = computeFoodSecurity();
+    updateAll(0, carbon, bio, food, computeWelfare(0, carbon, bio, food));
+    updateGameUI();
+}
+
+// ============================================================
+// MINI CHART DRAWING
+// ============================================================
+function drawMiniChart(canvasEl, data, color) {
+    const { ctx, w, h } = setupCanvas(canvasEl);
+    if (data.length === 0) { ctx.clearRect(0, 0, w, h); return; }
+
+    const pad = { top: 4, right: 4, bottom: 4, left: 4 };
+    const gw = w - pad.left - pad.right;
+    const gh = h - pad.top - pad.bottom;
+
+    let minV = Math.min(...data);
+    let maxV = Math.max(...data);
+    if (maxV === minV) { maxV += 1; minV -= 1; }
+    const range = maxV - minV;
+
+    function px(i) { return pad.left + (data.length === 1 ? gw / 2 : (i / (data.length - 1)) * gw); }
+    function py(v) { return pad.top + gh - ((v - minV) / range) * gh; }
+
+    ctx.beginPath();
+    ctx.moveTo(px(0), pad.top + gh);
+    for (let i = 0; i < data.length; i++) ctx.lineTo(px(i), py(data[i]));
+    ctx.lineTo(px(data.length - 1), pad.top + gh);
+    ctx.closePath();
+    ctx.fillStyle = color + '20';
+    ctx.fill();
+
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+        i === 0 ? ctx.moveTo(px(i), py(data[i])) : ctx.lineTo(px(i), py(data[i]));
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if (data.length > 0) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px(data.length - 1), py(data[data.length - 1]), 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// ============================================================
+// UPDATE ALL UI
+// ============================================================
+function updateGameUI() {
+    $('svScore').textContent = S.cumulativeWelfare.toLocaleString();
+    $('svBudget').textContent = S.placementsRemaining;
+    $('svBudget').style.color = S.placementsRemaining === 0 ? '#fff' : '#fff'; // keep white
+    $('periodPill').textContent = `Period ${S.period}/${GAME_MAX_PERIODS}`;
+
+    // Disable advance button when game over
+    const btn = $('btnAdvance');
+    if (btn) {
+        btn.disabled = S.gameOver;
+        btn.style.opacity = S.gameOver ? '0.4' : '1';
+        btn.style.cursor = S.gameOver ? 'not-allowed' : 'pointer';
+    }
+
+    // Update target tag colors based on whether thresholds are met
+    const last = (arr) => arr.length ? arr[arr.length - 1] : 0;
+    const carbon = last(S.history.carbon);
+    const bio = last(S.history.bio);
+    const food = last(S.history.food);
+
+    const ttCarbon = $('ttCarbon');
+    const ttBio = $('ttBio');
+    const ttFood = $('ttFood');
+    if (ttCarbon) ttCarbon.classList.toggle('met', carbon >= TARGETS.carbon.threshold);
+    if (ttBio) ttBio.classList.toggle('met', bio >= TARGETS.biodiversity.threshold);
+    if (ttFood) ttFood.classList.toggle('met', food >= TARGETS.food.threshold);
+}
+
+// Initialize target tag labels from TARGETS object
+function initTargetTags() {
+    const ttCarbon = $('ttCarbon');
+    const ttBio = $('ttBio');
+    const ttFood = $('ttFood');
+    if (ttCarbon) ttCarbon.textContent = '≥' + TARGETS.carbon.threshold + 't';
+    if (ttBio) ttBio.textContent = '≥' + TARGETS.biodiversity.threshold;
+    if (ttFood) ttFood.textContent = '≥' + TARGETS.food.threshold + '%';
+}
+
+function updateAll(revenue, carbon, bio, food, welfare, changes) {
+    $('svChanges').textContent = changes !== undefined ? changes : 0;
+    $('svTreasury').textContent = '$' + S.treasury.toLocaleString();
+    $('svTreasury').style.color = S.treasury >= 0 ? '#38a169' : '#e53e3e';
+    $('svPop').textContent = S.population.toLocaleString();
+    $('svFoodPrice').textContent = '$' + S.foodPrice;
+    $('svFoodPrice').style.color = S.foodPrice > BASE_FOOD_PRICE * 1.2 ? '#e53e3e' : S.foodPrice < BASE_FOOD_PRICE * 0.8 ? '#38a169' : '#1a202c';
+    // Also color the urban value and carbon credit similarly so players see the deviation
+    $('svUrbanVal').textContent = '$' + S.urbanValue;
+    $('svUrbanVal').style.color = S.urbanValue > BASE_URBAN_VALUE * 1.2 ? '#e53e3e' : S.urbanValue < BASE_URBAN_VALUE * 0.8 ? '#38a169' : '#1a202c';
+    $('svCarbonCredit').textContent = '$' + S.carbonPrice;
+    $('svCarbonCredit').style.color = S.carbonPrice > BASE_CARBON_PRICE * 1.5 ? '#38a169' : S.carbonPrice < BASE_CARBON_PRICE * 0.7 ? '#e53e3e' : '#1a202c';
+    $('periodLabel').textContent = 'Period ' + S.period;
+
+    chartEls.revenue.val.textContent = '$' + (revenue !== undefined ? revenue : 0);
+    chartEls.carbon.val.textContent = (carbon !== undefined ? carbon : 0) + 't';
+    chartEls.bio.val.textContent = (bio !== undefined ? bio : 0);
+    chartEls.food.val.textContent = (food !== undefined ? Math.round(food) : 0) + '%';
+
+    drawMiniChart(chartEls.revenue.canvas, S.history.revenue, '#4299e1');
+    drawMiniChart(chartEls.carbon.canvas, S.history.carbon, '#38a169');
+    drawMiniChart(chartEls.bio.canvas, S.history.bio, '#276749');
+    drawMiniChart(chartEls.food.canvas, S.history.food, '#d69e2e');
+
+    const w = welfare !== undefined ? welfare : 0;
+    $('welfareScore').textContent = w;
+    $('welfareScore').style.color = w > 60 ? '#38a169' : w > 35 ? '#d69e2e' : '#e53e3e';
+
+    const h2 = S.history;
+    const last = (arr) => arr.length ? arr[arr.length - 1] : 0;
+    $('wbRev').textContent = revenue !== undefined ? revenue : last(h2.revenue);
+    $('wbCarb').textContent = carbon !== undefined ? carbon : last(h2.carbon);
+    $('wbBio').textContent = bio !== undefined ? bio : last(h2.bio);
+    $('wbFood').textContent = (food !== undefined ? Math.round(food) : last(h2.food)) + '%';
+
+    updateCompositionBar();
+    drawGrid();
+    updateGameUI();
+}
+
+// ============================================================
+// CELL INTERACTION
+// ============================================================
+function getCellFromEvent(e) {
+    const rect = gridCanvas.getBoundingClientRect();
+    const scaleX = rect.width / GS;
+    const scaleY = rect.height / GS;
+    let clientX, clientY;
+    if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    const col = Math.floor((clientX - rect.left) / scaleX);
+    const row = Math.floor((clientY - rect.top) / scaleY);
+    if (row >= 0 && row < GS && col >= 0 && col < GS) return { row, col };
+    return null;
+}
+
+function paintCell(cell) {
+    if (!cell) return;
+    if (S.gameOver) return;
+    if (S.placementsRemaining <= 0) {
+        // Flash the budget card to signal exhaustion
+        const card = $('svBudget').parentElement;
+        if (card) {
+            card.classList.remove('flash');
+            void card.offsetWidth; // force reflow to restart animation
+            card.classList.add('flash');
+        }
+        return;
+    }
+    const { row, col } = cell;
+    const current = S.grid[row][col];
+    if (current === S.selectedTool) return;
+
+    S.conversions.push({ from: current, to: S.selectedTool, row, col });
+    S.grid[row][col] = S.selectedTool;
+    S.cellAge[row][col] = 0;
+    S.placementsRemaining--;
+    drawGrid();
+    updateCompositionBar();
+    updateGameUI();
+}
+
+function showTooltip(e, cell) {
+    if (!cell) { tooltip.style.display = 'none'; S.hoverCell = null; drawGrid(); return; }
+    S.hoverCell = cell;
+    const { row, col } = cell;
+    const type = S.grid[row][col];
+    const age = S.cellAge[row][col];
+    const neighbors = countNaturalNeighbors(row, col);
+    const sameNeighbors = countNeighborsOfType(row, col, type, true);
+    const b = BASE[type];
+
+    let html = `<strong>${LABELS[type]}</strong> (${row},${col})<br>`;
+    html += `Carbon: ${b.carbon}t | Bio: ${b.bio}`;
+    if (type === TYPES.FOREST || type === TYPES.CONSERVATION) {
+        html += ` + ${(neighbors * 0.2 * b.bio).toFixed(1)} adj`;
+    }
+    html += `<br>Age: ${age} | Same-type nbrs: ${sameNeighbors}/8`;
+    if (age > 3 && (type === TYPES.FOREST || type === TYPES.CONSERVATION)) {
+        html += ' (mature)';
+    }
+    if (SUIT) {
+        html += `<br>Suitability — F:${(SUIT[0][row][col]*100).toFixed(0)} A:${(SUIT[1][row][col]*100).toFixed(0)} U:${(SUIT[2][row][col]*100).toFixed(0)} C:${(SUIT[3][row][col]*100).toFixed(0)}`;
+    }
+
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+
+    const rect = gridCanvas.parentElement.getBoundingClientRect();
+    const ex = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const ey = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    tooltip.style.left = Math.min(ex + 12, rect.width - 200) + 'px';
+    tooltip.style.top = (ey + 12) + 'px';
+
+    drawGrid();
+}
+
+gridCanvas.addEventListener('mousedown', e => { S.isPainting = true; paintCell(getCellFromEvent(e)); });
+gridCanvas.addEventListener('mousemove', e => {
+    const cell = getCellFromEvent(e);
+    showTooltip(e, cell);
+    if (S.isPainting) paintCell(cell);
+});
+gridCanvas.addEventListener('mouseup', () => { S.isPainting = false; });
+gridCanvas.addEventListener('mouseleave', () => {
+    S.isPainting = false;
+    tooltip.style.display = 'none';
+    S.hoverCell = null;
+    drawGrid();
+});
+
+gridCanvas.addEventListener('touchstart', e => { e.preventDefault(); S.isPainting = true; paintCell(getCellFromEvent(e)); }, { passive: false });
+gridCanvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const cell = getCellFromEvent(e);
+    showTooltip(e, cell);
+    if (S.isPainting) paintCell(cell);
+}, { passive: false });
+gridCanvas.addEventListener('touchend', () => { S.isPainting = false; });
+
+document.querySelectorAll('.land-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.land-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        S.selectedTool = parseInt(btn.dataset.type);
+    });
+});
+
+// Overlay buttons
+document.querySelectorAll('.overlay-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.overlay-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const v = this.dataset.overlay;
+        S.overlay = (v === 'none') ? null : parseInt(v);
+        drawGrid();
+    });
+});
+
+// Opacity slider
+$('sOpacity').addEventListener('input', function() {
+    S.overlayOpacity = parseInt(this.value) / 100;
+    $('vOpacity').textContent = this.value + '%';
+    drawGrid();
+});
+
+// Regenerate rasters
+$('btnNewMap').addEventListener('click', function() {
+    RASTER_SEED++;
+    generateSuitabilityRasters();
+    // Reset to current preset so the landscape starts fresh on the new rasters
+    if (S.autoPlay) {
+        S.autoPlay = false;
+        clearInterval(S.autoTimer);
+        $('btnAuto').textContent = 'Auto ▶▶';
+        $('btnAuto').style.background = '';
+        $('btnAuto').style.color = '';
+    }
+    const active = document.querySelector('.preset-btn.active');
+    const preset = active ? active.dataset.preset : 'balanced';
+    initGrid(preset);
+    const carbon = computeCarbonStock();
+    const bio = computeBiodiversity();
+    const food = computeFoodSecurity();
+    updateAll(0, carbon, bio, food, computeWelfare(0, carbon, bio, food));
+});
+
+['CarbonTax', 'Subsidy', 'Zoning', 'DevTax'].forEach(name => {
+    $('t' + name).addEventListener('change', function() {
+        $('d' + name).classList.toggle('show', this.checked);
+    });
+});
+
+function wireSlider(id, displayId, fmt) {
+    $(id).addEventListener('input', function() {
+        $(displayId).textContent = fmt(this.value);
+    });
+}
+wireSlider('sCarbonTax', 'vCarbonTax', v => '$' + v + '/ton');
+wireSlider('sSubsidy', 'vSubsidy', v => '$' + v + '/cell');
+wireSlider('sZoning', 'vZoning', v => v + '%');
+wireSlider('sDevTax', 'vDevTax', v => '$' + v + '/conv');
+wireSlider('sSpeed', 'vSpeed', v => (v / 1000).toFixed(1) + 's');
+
+$('btnAdvance').addEventListener('click', advancePeriod);
+
+$('btnAuto').addEventListener('click', function() {
+    S.autoPlay = !S.autoPlay;
+    this.textContent = S.autoPlay ? 'Pause ⏸' : 'Auto ▶▶';
+    this.style.background = S.autoPlay ? '#4299e1' : '';
+    this.style.color = S.autoPlay ? '#fff' : '';
+    if (S.autoPlay) {
+        S.autoTimer = setInterval(advancePeriod, parseInt($('sSpeed').value));
+    } else {
+        clearInterval(S.autoTimer);
+    }
+});
+
+$('sSpeed').addEventListener('input', function() {
+    if (S.autoPlay) {
+        clearInterval(S.autoTimer);
+        S.autoTimer = setInterval(advancePeriod, parseInt(this.value));
+    }
+});
+
+$('btnReset').addEventListener('click', () => {
+    if (S.autoPlay) {
+        S.autoPlay = false;
+        clearInterval(S.autoTimer);
+        $('btnAuto').textContent = 'Auto ▶▶';
+        $('btnAuto').style.background = '';
+        $('btnAuto').style.color = '';
+    }
+    // Hide modal if it was showing
+    $('gameOverModal').classList.remove('show');
+    startNewGame();
+});
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        if (S.autoPlay) {
+            S.autoPlay = false;
+            clearInterval(S.autoTimer);
+            $('btnAuto').textContent = 'Auto ▶▶';
+            $('btnAuto').style.background = '';
+            $('btnAuto').style.color = '';
+        }
+        initGrid(this.dataset.preset);
+        const carbon = computeCarbonStock();
+        const bio = computeBiodiversity();
+        const food = computeFoodSecurity();
+        updateAll(0, carbon, bio, food, computeWelfare(0, carbon, bio, food));
+    });
+});
+
+window.addEventListener('resize', () => {
+    drawGrid();
+    drawMiniChart(chartEls.revenue.canvas, S.history.revenue, '#4299e1');
+    drawMiniChart(chartEls.carbon.canvas, S.history.carbon, '#38a169');
+    drawMiniChart(chartEls.bio.canvas, S.history.bio, '#276749');
+    drawMiniChart(chartEls.food.canvas, S.history.food, '#d69e2e');
+});
+
+generateSuitabilityRasters();
+initGrid('balanced');
+initTargetTags();
+const _c = computeCarbonStock();
+const _b = computeBiodiversity();
+const _f = computeFoodSecurity();
+updateAll(0, _c, _b, _f, computeWelfare(0, _c, _b, _f));
+
+</script>
+</body>
+</html>

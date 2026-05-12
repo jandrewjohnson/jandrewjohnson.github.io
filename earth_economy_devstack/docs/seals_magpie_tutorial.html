@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>seals_magpie_tutorial – Justin Andrew Johnson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-fabeed3329234993a4d83c1b0fda0427.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Justin Andrew Johnson</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teaching" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teaching</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teaching">    
+        <li>
+    <a class="dropdown-item" href="../../teaching/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../teaching/applied_earth_economy_modeling.html">
+ <span class="dropdown-text">Applied Earth-Economy Modeling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../teaching/big_data_ml_and_ai_for_economists.html">
+ <span class="dropdown-text">Big Data, Machine Learning and AI for Economists</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../teaching/environmental_economics.html">
+ <span class="dropdown-text">Undergraduate Environmental and Natural ResourceEconomics</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../research/index.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../books/index.html"> 
+<span class="menu-text">Books</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gtap-invest" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">GTAP-InVEST</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-gtap-invest">    
+        <li>
+    <a class="dropdown-item" href="../../gtap_invest/index.html">
+ <span class="dropdown-text">GTAP-InVEST Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../gtap_invest/user_guide/index.html">
+ <span class="dropdown-text">User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../gtap_invest/results/index.html">
+ <span class="dropdown-text">Results</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-software" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Software</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-software">    
+        <li>
+    <a class="dropdown-item" href="../../earth_economy_devstack/index.qmd">
+ <span class="dropdown-text">Earth-Economy Devstack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../mesh/index.html">
+ <span class="dropdown-text">MESH</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../earth_economy_devstack/seals_overview.qmd">
+ <span class="dropdown-text">SEALS</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../data/index.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv-bio/index.html"> 
+<span class="menu-text">CV/Bio</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jandrewjohnson"> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="incremental">
+  <li><a href="#applying-seals-to-downscale-magpie-outputs" id="toc-applying-seals-to-downscale-magpie-outputs" class="nav-link active" data-scroll-target="#applying-seals-to-downscale-magpie-outputs">Applying SEALS to downscale MAgPIE outputs</a>
+  <ul class="incremental collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#create-magpie-outputs-for-seals-by-using-output-scripts" id="toc-create-magpie-outputs-for-seals-by-using-output-scripts" class="nav-link" data-scroll-target="#create-magpie-outputs-for-seals-by-using-output-scripts">Create MAgPIE outputs for SEALS by using output scripts</a>
+  <ul class="incremental collapse">
+  <li><a href="#change-your-start-script-to-generate-magpie-outputs-for-seals" id="toc-change-your-start-script-to-generate-magpie-outputs-for-seals" class="nav-link" data-scroll-target="#change-your-start-script-to-generate-magpie-outputs-for-seals">Change your start script to generate MAgPIE outputs for SEALS</a></li>
+  </ul></li>
+  <li><a href="#setting-up-seals-to-downscale-magpie-outputs" id="toc-setting-up-seals-to-downscale-magpie-outputs" class="nav-link" data-scroll-target="#setting-up-seals-to-downscale-magpie-outputs">Setting up SEALS to downscale MAgPIE outputs</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="applying-seals-to-downscale-magpie-outputs" class="level1">
+<h1>Applying SEALS to downscale MAgPIE outputs</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The Model of Agricultural Production and Its Impact on the Environment (MAgPIE) is a global food and land system modelling framework. It uses a wide range of spatially-explicit biophysical and socioeconomic information to model global land-use dynamics throughout the 21st century. MAgPIE operates at two spatial scales that include a coarse scale of twelve model regions with similar socioeconomic characteristics and a subregional level that combines biophysical information, such as suitability for agricultural production (crop yield potential, irrigation water requirements, travel time to urban markets etc.), to determine the cost-effectiveness of different land-use activities. Both these resolutions, however, are typically too coarse to assess how global land-use dynamics could drive landscape-scale changes and associated changes in biodiversity and ecosystems service supply, which is a key sustainability challenge.</p>
+<p>The Spatial Economic Allocation Landscape Simulator (SEALS) model can therefore be applied to spatially allocate projected land-use dynamics to spatial scale that is relevant for assessing landscape and biodiversity change. SEALS uses empirically calibrated adjacency relationships, physical suitability and conversion eligibility information at a spatial resolution of 300 x 300 Meter to allocate land use activities across space.</p>
+<p>In the following this tutorial describes how both the MAgPIE and SEALS models can be linked using some of the functionalities provided by MAgPIE and SEALS to processes model outputs (MAgPIE) or inputs (SEALS) respectively. This tutorial therefore assumes some familiarity with the MAgPIE model - in particular how to set up model runs. Basic tutorials on how to run the MAgPIE model can be found here https://magpiemodel.github.io/tutorials/. A full documentation of the MAgPIE model (release version 4.7.2) can be accessed under https://rse.pik-potsdam.de/doc/magpie/4.7.2/ (substitute the version number 4.7.2 with any newer release version number to get the latest documentation).</p>
+</section>
+<section id="create-magpie-outputs-for-seals-by-using-output-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="create-magpie-outputs-for-seals-by-using-output-scripts">Create MAgPIE outputs for SEALS by using output scripts</h2>
+<p>The MAgPIE model provides several output scripts that can be executed after a model run and are stored under <code>scripts/output</code> in the MAgPIE folder. Two scripts are particularly relevant for providing MAgPIE outputs to SEALS: the <code>extra/disaggregation.R</code> script and the <code>extra/reportMAgPIE2SEALS.R</code> script. The <code>extra/disaggregation.R</code> script disaggregates coarse-resolution land-use projections to a spatial resolution of 0.5 degrees and is run by default after each model run. The <code>extra/reportMAgPIE2SEALS.R</code> script, on the other hand, generates a NetCDF file that can readily be used by SEALS but is <em>not</em> run by default.</p>
+<p>The output scripts can be selected and executed via the command line. Therefore, on the command prompt, navigate to the MAgPIE model folder and use the following command:</p>
+<pre><code>Rscript output.R</code></pre>
+<p>On the command line you are now asked for which of the model runs you would like to do the postprocessing. You can choose <code>all</code>, select a specific run, or run the postprocessing for a selection of runs by choosing <code>search by the pattern.</code></p>
+<p><img src="images/magpie_output_script.png" class="img-fluid"></p>
+<p>After this you can select the output script that you want to execute. Choose <code>extra</code>.</p>
+<p><img src="images/magpie_scripts_extra.png" class="img-fluid"></p>
+<p>Next select <code>reportMAgPIE2SEALS</code>.</p>
+<p><img src="images/magpie_scripts_seals.png" class="img-fluid"></p>
+<p>Finally, choose the run submission type, e.g.&nbsp;<code>Direct execution</code>.</p>
+<p><img src="images/magpie_submission_type.png" class="img-fluid"></p>
+<p>All outputs are written to a subfolder in the <code>output</code> folder within the MAgPIE directory. This subfolder (or run folder) is created automatically at the beginning of a model run and its name is a combination of the run title and date (For further information see https://magpiemodel.github.io/tutorials/t06-changingconfig). Before you run <code>reportMAgPIE2SEALS</code>, please make sure that the script <code>extra/disaggregation.R</code> was executed without error. If the script <code>extra/disaggregation.R</code> was completed successfully, the run folder should contain the file <code>cell.land_0.5_share.mz</code>. Once the script <code>extra/reportMAgPIE2SEALS.R</code> has finished the run folder should contain a file named <code>cell.land_0.5_SEALS_&lt;run title&gt;.nc</code>. This file contains spatially-explicit information on the share of total land per grid cell used for different land-use activities (cropland, pasture, forest, urban etc.) projected until 2050, which can now be used as an input for SEALS.</p>
+<p><img src="images/magpie_output_seals.png" class="img-fluid"></p>
+<section id="change-your-start-script-to-generate-magpie-outputs-for-seals" class="level3">
+<h3 class="anchored" data-anchor-id="change-your-start-script-to-generate-magpie-outputs-for-seals">Change your start script to generate MAgPIE outputs for SEALS</h3>
+<p>If you are familiar with setting up a start script for MAgPIE runs (see https://magpiemodel.github.io/tutorials/t07-startscript), an alternative way of generating MAgPIE outputs for SEALS is by adding <code>"extra/reportMAgPIE2SEALS"</code> to the setting</p>
+<pre><code>cfg$output &lt;- c("output_check", "extra/disaggregation", "rds_report")</code></pre>
+<p>so that it reads</p>
+<pre><code>cfg$output &lt;- c("output_check", "extra/disaggregation", "rds_report", "extra/reportMAgPIE2SEALS")</code></pre>
+<p>As the order of the vector determines the order of execution, please make sure that <code>"extra/reportMAgPIE2SEALS"</code> is called after <code>"extra/disaggregation"</code>.</p>
+</section>
+</section>
+<section id="setting-up-seals-to-downscale-magpie-outputs" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-seals-to-downscale-magpie-outputs">Setting up SEALS to downscale MAgPIE outputs</h2>
+<p>After generating the output <code>cell.land_0.5_SEALS_&lt;run title&gt;.nc</code>, the following describes how this information can be used as input for the SEALS model.</p>
+<p>First, we need to relate the land use types of the MAgPIE model to the land cover types used by the SEALS model. While MAgPIE separates seven different main land types (cropland, grassland, primary forest, secondary forest, forestry, non-forest vegetation &amp; urban), the SEALS model only allocates changes for 5 main land types (urban, cropland, grassland, forest &amp; other natural vegetation). Below a mapping between the different land types is shown.</p>
+<pre><code>src_id,dst_id,src_label,dst_label,src_description,dst_description
+6,1,urban,urban,urban land,
+1,2,crop,cropland,cropland,
+2,3,past,grassland,grassland,
+3,4,primforest,forest,primary forest,
+4,4,secdforest,forest,secondary forest,
+5,4,forestry,forest,forestry,
+7,5,other,othernat,non-forest vegetation,</code></pre>
+<p>Copy and paste this mapping into a CSV file and save it, e.g.&nbsp;under <code>base_data/seals/default_inputs/magpie_seals7_correspondence.csv</code>. The folder <code>base_data/seals/default_inputs</code> also contains other mappings such as a mapping betweehn LUH2v2 land types and SEALS. This mapping can now be used to set up the <code>scenario_definitions.csv</code>. The <code>scenario_definitions.csv</code> provides SEALS with all necessary information on the input data (or MAgPIE outputs), including the path to the MAgPIE outputs. The <code>scenario_definitions.csv</code> also allows the user to set up multiple SEALS runs (e.g.&nbsp;in the case of different scenario runs) in one go. One way to better understand the <code>scenario_definitions.csv</code> is to run SEALS on the test data without further modification. This will automatically generate a <code>scenario_definitions.csv</code> in a test project folder. This <code>scenario_definitions.csv</code> can then be tailored to your project needs.</p>
+<p>The following shows how an example <code>scenario_definitions_tutorial.csv</code> is created that provides relevant information for a set of different MAgPIE test runs. Assume we have created land use projections for three different test scenarios: a reference ‘business-as-usual’ scenario (<code>weeklyTests_SSP2EU-Ref</code>), a low ambition mitigation scenario, in which current nationally determined contributions (NDCs) under the Paris agreement for the land sector are fulfilled (<code>weeklyTests_SSP2EU-NDC</code>) and a highly ambitious mitigation scenario in line with the 1.5 degree target (<code>weeklyTests_SSP2EU-PkBudg650</code>). For each of the scenarios, we have created gridded land-use projections in a format that can be read by SEALS using the output script <code>extra/reportMAgPIE2SEALS.R</code> (see above).</p>
+<p>Here, the <code>scenario_definitions_tutorial.csv</code> contains a line for each scenario specified under <code>scenario_label</code>. Note that the <code>Baseline</code> always needs to be defined as well. In the years column you can specify the years for which SEALS should do a downscaling. Multiple years can be separated by a space.</p>
+<p><img src="images/magpie_scenario_definitions1.png" class="img-fluid"></p>
+<p>Set the path to the gridded MAgPIE outputs in the column <code>coarse_projections_input_path</code></p>
+<p><img src="images/magpie_scenario_definitions2.png" class="img-fluid"></p>
+<p>The <code>lulc_correspondence_path</code> gives the path to a mapping between ESA CCI land cover classes and the aggregated land cover types used in SEALS.</p>
+<p><img src="images/magpie_scenario_definitions3.png" class="img-fluid"></p>
+<p>The default mapping in SEALS is stored under <code>base_data\seals\default_inputs\esa_seals7_correspondence.csv</code>. For MAgPIE-SEALS couplings, however, it is recommended to use a mapping that classifies “crop_natural_mosaic” as “othernat” and “natural_crop_mosaic” as “forest” to better align the total cropland extent of the ESA map with the cropland initialisation in MAgPIE. That there is an overestimation of the cropland extent in the ESA CCI data is a well-know issue. Thus, the lines in <code>esa_seals7_correspondence.csv</code></p>
+<pre><code>6,,30,2,crop_natural_mosaic,cropland
+7,,40,2,natural_crop_mosaic,cropland</code></pre>
+<p>are changed to</p>
+<pre><code>6,,30,2,crop_natural_mosaic,othernat
+7,,40,2,natural_crop_mosaic,forest</code></pre>
+<p>in <code>esa_seals7_correspondence_mosaic-natural.csv</code>.</p>
+<p>Next, we set the path to the mapping between MAgPIE land use types to SEALS land cover types, as defined above</p>
+<p><img src="images/magpie_scenario_definitions4.png" class="img-fluid"></p>
+<p>We also specify a set of regressors used during downscaling. Tables of trained model coefficients used by SEALS can be found under <code>base_data/seals/default_inputs</code>. Here we can also align some model constraints between MAgPIE and SEALS. If, for example, compliance with currently implemented land policies such as protected areas is assumed in MAgPIE, these constraints also need to be reflected during the downscaling. We here therefore add an additional multiplicative regressor that precludes expansion of agricultural land (cropland and grassland) in legally protected areas as reported by the WDPA database, which is in line with the assumption in MAgPIE.</p>
+<p><img src="images/magpie_regressors.png" class="img-fluid"></p>
+<p>Similarly, the same functionality can also be used to specify policy scenarios, such as the expansion of protected areas in line with the 30x30 goal of the Global Biodiversity Framework. The <code>seals/static_regressors/magpie_30by30.tif</code> contains both currently protected areas from the WDPA database and areas that might be protected under a global 30x30 protection scenario.</p>
+<p><img src="images/magpie_regressors_30by30.png" class="img-fluid"></p>
+<p>Finally, the path to the regressor used during the downscaling must also be added to the <code>scenario_definitions.csv</code> file, while the base land-cover data <code>base_year_lulc_path</code> must refer to the same year as defined in the <code>Baseline</code> case.</p>
+<p><img src="images/magpie_scenario_definitions5.png" class="img-fluid"></p>
+<p>Save the <code>scenario_definitions_tutorial.csv</code> under <code>./input</code> in your SEALS project folder and don’t forget to add it to your SEALS run file and you are good to go.</p>
+<p><img src="images/magpie_scenario_definitions6.png" class="img-fluid"></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

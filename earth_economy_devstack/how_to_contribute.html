@@ -339,6 +339,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Magpie Tutorial</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kenya DEMETRA-SEALS Tutorial</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -409,7 +415,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The Earth Economy Devstack and all of its published article code is available as open source software at GitHub, which not only allows users to download and run the code but also to develop it collaboratively. GitHub is based on the free and open source distributed version control system <strong>git</strong> (<a href="https://git-scm.com/)." class="uri">https://git-scm.com/).</a> <strong>git</strong> allows users to track changes in code development, to work on different code branches and to revert changes to previous code versions, if necessary. Workflows using the version control system <strong>git</strong> can vary and there generally is no ‘right’ or ‘wrong’ in collaborative software development. We also create and host a curated base_data. This data can be seamlessly downloaded using ProjectFlow within the devstack via the <code>get_path()</code> method. See the last section of this page for details on contributing data.</p>
 <p>There are two different ways to interact with a github repository:</p>
 <ol class="incremental" type="1">
-<li><p>Branching for internal collaborators. Needs to be a member of the NatCapTEEMs github organization. We use a process called Github Flow, documented below.</p></li>
+<li><p>Branching for internal collaborators. Needs to be a member of the NatCapTEEMs github organization. We use <strong>Git Flow</strong> (a <code>main</code> branch for releases plus a <code>develop</code> integration branch), documented below.</p></li>
 <li><p>Forking with pull requests. Works for external collaborators. Anyone can do it!</p></li>
 </ol>
 <p>Below we summarize these two processes.</p>
@@ -431,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are many other graphical user interfaces that help with git commands (so you don’t have to memorize all of the commands), including Github Desktop, Sourcetree and others. We also will use a VS Code plug called GitGraph to manage our repository. To install GitGraph, go the the Extensions left tab in VS Code and search for it. Once installed, you will find a button on the status bar to launch it. Using the gtap_invest_dev repository as an example, it should look like this:</p>
 <section id="using-git-graph-to-make-a-change" class="level4">
 <h4 class="anchored" data-anchor-id="using-git-graph-to-make-a-change">Using Git Graph to make a change</h4>
-<p>STATUS NOTE: We are debating if we should have GitHub Flow style contribution (which has no develop branch separate from Main) and Git Flow style, which does have the develop branch. Below we document Git Flow.</p>
+<p>We use <strong>Git Flow</strong>: a <code>develop</code> integration branch separate from <code>main</code> (which holds releases). Feature branches are made off <code>develop</code> and pull requests target <code>develop</code>. Below we document this workflow.</p>
 <p>Suppose you want to make a change to the <code>hazelbean_dev</code> repository. We will use this example to explain how we use Git Graph to make this contribution. First, let’s take a look at the Git Graph interface.</p>
 <p><img src="images/2024-02-02-12-41-04.png" class="img-fluid"></p>
 <p>First note the Repo dropdown box indicating we are looking at the hazelbean_dev repo. Here you could switch to other Repos that have been added to your workspace. The next thing to note are the three different branch tages (Blue, Magenta and Green boxes on the Git Graph tree view). These are the three branches that are currently in the hazelbean_dev repository. The blue branch is the <code>main</code> branch, the magenta branch is the <code>develop</code> branch and the green branch is a branch specific to the user and/or the feature. In this case, it is <code>develop_justin</code> branch. The lines and dots indicates the history of how files were edited and then how the different branches were merged back together after an edit. By default, when you clone a repository, you will be on the <code>main</code> branch. To switch to another branch, right-click the tag and select <code>checkout branch</code>. When you do this, the files on your harddrive will be changed by Git to match the status of the branch you just checked out. In the image below, we can see which is the current branch because it has an open-circle dot in the graph and the name is bold. Other things to notice is that after the name of the branch there is the word <code>origin</code>. This indicates that the branch is synced with the remote repository (named origin by convention).</p>

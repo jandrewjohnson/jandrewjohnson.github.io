@@ -339,6 +339,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Magpie Tutorial</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kenya DEMETRA-SEALS Tutorial</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -380,63 +386,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link active" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
-  <li><a href="#id-index-label-name-description" id="toc-id-index-label-name-description" class="nav-link" data-scroll-target="#id-index-label-name-description">Id, index, label, name, description</a></li>
-  <li><a href="#id-index-etc.-in-the-context-of-vector-data" id="toc-id-index-etc.-in-the-context-of-vector-data" class="nav-link" data-scroll-target="#id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</a></li>
+  <li><a href="#ee-spec-conventions" id="toc-ee-spec-conventions" class="nav-link active" data-scroll-target="#ee-spec-conventions">EE Spec Conventions</a>
+  <ul class="incremental collapse">
+  <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
+  <li><a href="#identifiers-and-labels" id="toc-identifiers-and-labels" class="nav-link" data-scroll-target="#identifiers-and-labels">Identifiers and labels</a>
+  <ul class="incremental collapse">
+  <li><a href="#idindex-in-vector-data" id="toc-idindex-in-vector-data" class="nav-link" data-scroll-target="#idindex-in-vector-data"><code>id</code>/<code>index</code> in vector data</a></li>
+  </ul></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
-  <li><a href="#correspondences" id="toc-correspondences" class="nav-link" data-scroll-target="#correspondences">Correspondences</a></li>
+  <li><a href="#correspondences" id="toc-correspondences" class="nav-link" data-scroll-target="#correspondences">Correspondences</a>
+  <ul class="incremental collapse">
   <li><a href="#combined-ids" id="toc-combined-ids" class="nav-link" data-scroll-target="#combined-ids">Combined ids</a></li>
   <li><a href="#correspondences-with-geometries" id="toc-correspondences-with-geometries" class="nav-link" data-scroll-target="#correspondences-with-geometries">Correspondences with geometries</a></li>
-  <li><a href="#more-on-naming-conventions" id="toc-more-on-naming-conventions" class="nav-link" data-scroll-target="#more-on-naming-conventions">More on naming Conventions</a></li>
-  <li><a href="#variable-and-scenario-naming-conventions" id="toc-variable-and-scenario-naming-conventions" class="nav-link" data-scroll-target="#variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</a></li>
+  </ul></li>
+  <li><a href="#project-level-variable-names" id="toc-project-level-variable-names" class="nav-link" data-scroll-target="#project-level-variable-names">Project-level variable names</a>
+  <ul class="incremental collapse">
+  <li><a href="#srcdst-vs-inputoutput" id="toc-srcdst-vs-inputoutput" class="nav-link" data-scroll-target="#srcdst-vs-inputoutput">src/dst vs input/output</a></li>
+  </ul></li>
+  <li><a href="#scenario-naming" id="toc-scenario-naming" class="nav-link" data-scroll-target="#scenario-naming">Scenario naming</a>
+  <ul class="incremental collapse">
+  <li><a href="#filename-conventions" id="toc-filename-conventions" class="nav-link" data-scroll-target="#filename-conventions">Filename conventions</a></li>
+  <li><a href="#nested-variable-names" id="toc-nested-variable-names" class="nav-link" data-scroll-target="#nested-variable-names">Nested variable names</a></li>
+  <li><a href="#year-typing" id="toc-year-typing" class="nav-link" data-scroll-target="#year-typing">Year typing</a></li>
+  <li><a href="#scenario-types" id="toc-scenario-types" class="nav-link" data-scroll-target="#scenario-types">Scenario types</a></li>
+  <li><a href="#supported-filetypes" id="toc-supported-filetypes" class="nav-link" data-scroll-target="#supported-filetypes">Supported filetypes</a></li>
+  </ul></li>
   <li><a href="#get_path-and-ref_path" id="toc-get_path-and-ref_path" class="nav-link" data-scroll-target="#get_path-and-ref_path">get_path and ref_path</a></li>
-  <li><a href="#setting-the-environment" id="toc-setting-the-environment" class="nav-link" data-scroll-target="#setting-the-environment">Setting the environment</a></li>
-  <li><a href="#dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" id="toc-dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" class="nav-link" data-scroll-target="#dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide">Dealing with UTF-8 Encoding Issues in Data Analysis: A Practical Guide</a></li>
+  <li><a href="#function-and-method-naming" id="toc-function-and-method-naming" class="nav-link" data-scroll-target="#function-and-method-naming">Function and method naming</a></li>
+  <li><a href="#directory-and-file-naming" id="toc-directory-and-file-naming" class="nav-link" data-scroll-target="#directory-and-file-naming">Directory and file naming</a></li>
+  <li><a href="#variable-naming" id="toc-variable-naming" class="nav-link" data-scroll-target="#variable-naming">Variable naming</a></li>
+  <li><a href="#priority-and-debug-markers" id="toc-priority-and-debug-markers" class="nav-link" data-scroll-target="#priority-and-debug-markers">Priority and debug markers</a></li>
+  <li><a href="#file-type-specific" id="toc-file-type-specific" class="nav-link" data-scroll-target="#file-type-specific">File-type-specific</a></li>
+  <li><a href="#python-style" id="toc-python-style" class="nav-link" data-scroll-target="#python-style">Python style</a></li>
   <li><a href="#docstrings" id="toc-docstrings" class="nav-link" data-scroll-target="#docstrings">Docstrings</a></li>
-  <li><a href="#function-and-method-naming-conventions" id="toc-function-and-method-naming-conventions" class="nav-link" data-scroll-target="#function-and-method-naming-conventions">Function and Method Naming Conventions</a>
-  <ul class="incremental collapse">
-  <li><a href="#factory-and-creation-functions" id="toc-factory-and-creation-functions" class="nav-link" data-scroll-target="#factory-and-creation-functions">Factory and Creation Functions</a></li>
-  <li><a href="#file-operations" id="toc-file-operations" class="nav-link" data-scroll-target="#file-operations">File Operations</a></li>
-  <li><a href="#data-manipulation" id="toc-data-manipulation" class="nav-link" data-scroll-target="#data-manipulation">Data Manipulation</a></li>
-  <li><a href="#collection-operations" id="toc-collection-operations" class="nav-link" data-scroll-target="#collection-operations">Collection Operations</a></li>
-  </ul></li>
-  <li><a href="#directory-and-file-naming" id="toc-directory-and-file-naming" class="nav-link" data-scroll-target="#directory-and-file-naming">Directory and File Naming</a>
-  <ul class="incremental collapse">
-  <li><a href="#directory-conventions" id="toc-directory-conventions" class="nav-link" data-scroll-target="#directory-conventions">Directory Conventions</a></li>
-  <li><a href="#file-naming" id="toc-file-naming" class="nav-link" data-scroll-target="#file-naming">File Naming</a></li>
-  </ul></li>
-  <li><a href="#variable-naming-conventions" id="toc-variable-naming-conventions" class="nav-link" data-scroll-target="#variable-naming-conventions">Variable Naming Conventions</a>
-  <ul class="incremental collapse">
-  <li><a href="#counting-and-size" id="toc-counting-and-size" class="nav-link" data-scroll-target="#counting-and-size">Counting and Size</a></li>
-  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">Data Types</a></li>
-  <li><a href="#geospatial-conventions" id="toc-geospatial-conventions" class="nav-link" data-scroll-target="#geospatial-conventions">Geospatial Conventions</a></li>
-  <li><a href="#bounding-boxes" id="toc-bounding-boxes" class="nav-link" data-scroll-target="#bounding-boxes">Bounding Boxes</a></li>
-  <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">Coordinates</a></li>
-  </ul></li>
-  <li><a href="#identifiers-and-indexing" id="toc-identifiers-and-indexing" class="nav-link" data-scroll-target="#identifiers-and-indexing">Identifiers and Indexing</a></li>
-  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">Data Processing</a></li>
-  <li><a href="#standard-library-abbreviations" id="toc-standard-library-abbreviations" class="nav-link" data-scroll-target="#standard-library-abbreviations">Standard Library Abbreviations</a></li>
-  <li><a href="#special-conventions" id="toc-special-conventions" class="nav-link" data-scroll-target="#special-conventions">Special Conventions</a>
-  <ul class="incremental collapse">
-  <li><a href="#priority-indicators" id="toc-priority-indicators" class="nav-link" data-scroll-target="#priority-indicators">Priority Indicators</a></li>
-  <li><a href="#naming-to-avoid" id="toc-naming-to-avoid" class="nav-link" data-scroll-target="#naming-to-avoid">Naming to Avoid</a></li>
-  <li><a href="#debug-conventions" id="toc-debug-conventions" class="nav-link" data-scroll-target="#debug-conventions">Debug Conventions</a></li>
-  </ul></li>
-  <li><a href="#miscellaneous-conventions" id="toc-miscellaneous-conventions" class="nav-link" data-scroll-target="#miscellaneous-conventions">Miscellaneous Conventions</a></li>
-  <li><a href="#file-type-specific" id="toc-file-type-specific" class="nav-link" data-scroll-target="#file-type-specific">File Type Specific</a></li>
-  <li><a href="#scenario-naming-conventions" id="toc-scenario-naming-conventions" class="nav-link" data-scroll-target="#scenario-naming-conventions">Scenario Naming Conventions</a>
-  <ul class="incremental collapse">
-  <li><a href="#filename-conventions" id="toc-filename-conventions" class="nav-link" data-scroll-target="#filename-conventions">Filename Conventions</a></li>
-  </ul></li>
-  <li><a href="#utf-8-encoding-guidelines" id="toc-utf-8-encoding-guidelines" class="nav-link" data-scroll-target="#utf-8-encoding-guidelines">UTF-8 Encoding Guidelines</a></li>
-  <li><a href="#python-style-guidelines" id="toc-python-style-guidelines" class="nav-link" data-scroll-target="#python-style-guidelines">Python Style Guidelines</a>
-  <ul class="incremental collapse">
-  <li><a href="#docstringsgeneral-style" id="toc-docstringsgeneral-style" class="nav-link" data-scroll-target="#docstringsgeneral-style">DocstringsGeneral Style</a></li>
-  </ul></li>
-  <li><a href="#styleguide" id="toc-styleguide" class="nav-link" data-scroll-target="#styleguide">Styleguide</a></li>
-  <li><a href="#unsorted" id="toc-unsorted" class="nav-link" data-scroll-target="#unsorted">UNSORTED</a>
-  <ul class="incremental collapse">
-  <li><a href="#single-vs-double-quotes" id="toc-single-vs-double-quotes" class="nav-link" data-scroll-target="#single-vs-double-quotes">Single vs Double quotes</a></li>
+  <li><a href="#utf-8-encoding" id="toc-utf-8-encoding" class="nav-link" data-scroll-target="#utf-8-encoding">UTF-8 encoding</a></li>
+  <li><a href="#projectflow-conventions" id="toc-projectflow-conventions" class="nav-link" data-scroll-target="#projectflow-conventions">ProjectFlow conventions</a></li>
+  <li><a href="#git-workflow" id="toc-git-workflow" class="nav-link" data-scroll-target="#git-workflow">Git workflow</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -447,42 +432,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="slashes-vs-backslashes" class="level3">
-<h3 class="anchored" data-anchor-id="slashes-vs-backslashes">Slashes vs backslashes</h3>
-<p>On windows, for historical sillyness reasons, paths at the most bare-metal level separate levels with backslash \. However, nearly everything else within windows correctly interprets a forward slash / as a backslash at the os level. Thus, although we can’t control how OTHER programs process or report out on backslashes, we follow the basic rule that if we are inputting it as text into our repos, <strong>always use forward slash</strong>, no matter what ($5 bounty: argue a case where this needs an exception within our devstack). Linux/mac always uses forward slash (henceforth, aka slash), so this should work well.</p>
+<section id="ee-spec-conventions" class="level1">
+<h1>EE Spec Conventions</h1>
+<p>These are the Earth-Economy (EE) coding and naming conventions used across the devstack. This page is the canonical, deduplicated reference; its contents are maintained in <code>_conventions_reference.md</code> and included here so the website and our tooling (e.g.&nbsp;Claude Code) read from a single source.</p>
+<section id="slashes-vs-backslashes" class="level2">
+<h2 class="anchored" data-anchor-id="slashes-vs-backslashes">Slashes vs backslashes</h2>
+<p>On Windows, at the most bare-metal level, paths separate levels with a backslash <code>\</code>. However, nearly everything else within Windows correctly interprets a forward slash <code>/</code> at the OS level. We can’t control how <em>other</em> programs report backslashes, but for anything we type into our repos we follow one rule: <strong>always use forward slash</strong>, no matter the platform. Linux/mac always use forward slash, so this works everywhere. ($5 bounty for a case inside our devstack that genuinely needs an exception.)</p>
 </section>
-<section id="id-index-label-name-description" class="level3">
-<h3 class="anchored" data-anchor-id="id-index-label-name-description">Id, index, label, name, description</h3>
-<p>In programming, <code>id</code> and <code>index</code> are two different concepts that are used in different contexts.</p>
-<p><code>id</code> refers to the unique identifier of an object. In this specification, it is an integer that is sorted by the ONE in the many-to-one correspondence, sorted alphabetically at generation time (though not necessarily to remain sorted given downstream correspondences). In the devstack (though not in programming in general), we will assume that id is an integer greater or equal to 1 where 0 denotes NDV. This enables faster computation with e.g.&nbsp;id_raster and reclassify_raster.</p>
-<p><code>index</code> refers to the position of an element in a sequence (e.g.&nbsp;a list or a string). In the context of a correspondence file, this is the position of the row within the sorted spreadsheet, but is not assumed to be stable and shouldn’t generally be used.</p>
-<p><code>labelheader</code> refers to an (exactly) 4 character string that is lowercase-alphanumeric with no special symbols. Useful for the Header label in har files. Technically is case insensitive but we assume lowercase.</p>
-<p><code>labelshort</code> refers to an 8-character or less string that is lowercase-alphanumeric with no special symbols. Useful for .har files.</p>
-<p><code>label</code> refers to a string that is lowercase-alphanumeric with no special symbols besides the hyphen.</p>
-<p><code>name</code> refers to a string of any ascii characters with python-style escaping of special characters: <code>'She\'s a star!'</code> . It’s assumed to be short enough to view as a column header or plot label</p>
-<p><code>Description</code>refers to a <code>name</code> of any length with detailed description, possibly even formatted MD text.</p>
-<p>If there is a domain, described below, id, index, etc all should prepended with it to be eg gadm_id.</p>
+<section id="identifiers-and-labels" class="level2">
+<h2 class="anchored" data-anchor-id="identifiers-and-labels">Identifiers and labels</h2>
+<p>These terms form a ladder from most-compact machine key to most-verbose human text. Use them consistently.</p>
+<ul class="incremental">
+<li><p><strong><code>id</code></strong> — the unique identifier of an object. In the devstack, an integer <strong>≥ 1</strong>, where <strong>0 denotes NDV</strong> (no-data value). This enables fast computation with e.g.&nbsp;id-rasters and <code>reclassify_raster</code>. In a many-to-one correspondence it is sorted by the “one” side, alphabetically at generation time (not guaranteed to stay sorted downstream). <strong><code>id</code> is the stable key we persist</strong> in data, files, and correspondences.</p></li>
+<li><p><strong><code>index</code></strong> — the <em>position</em> of an element in a sequence (list, string, or the row position in a spreadsheet). It is <strong>transient and not stable</strong>: never persist it, and never use it as the identifier column in a DataFrame or file, because the position can change. Use <code>id</code> for anything durable.</p></li>
+<li><p><strong><code>labelheader</code></strong> — an exactly-4-character, lowercase-alphanumeric string (no special symbols). Useful for the Header label in <code>.har</code> files. Technically case-insensitive; we assume lowercase.</p></li>
+<li><p><strong><code>labelshort</code></strong> — an ≤8-character, lowercase-alphanumeric string (no special symbols). Useful for <code>.har</code> files, which cap label length at 8.</p></li>
+<li><p><strong><code>label</code></strong> — a lowercase-alphanumeric string whose only allowed special symbol is the hyphen. Keep it short (≤8 characters is ideal for HAR compatibility). Avoid capitalization.</p></li>
+<li><p><strong><code>name</code></strong> — a short human-readable string of any ASCII characters, with Python-style escaping of special characters. Short enough to serve as a column header or plot label, and has a 1:1 correspondence to a <code>label</code> (usually defined via a correspondence dictionary).</p></li>
+<li><p><strong><code>description</code></strong> — a <code>name</code> of any length, with a detailed description, possibly formatted Markdown.</p></li>
+</ul>
+<p>If a domain applies (see below), prepend it to the term, e.g.&nbsp;<code>gadm_id</code>.</p>
+<section id="idindex-in-vector-data" class="level3">
+<h3 class="anchored" data-anchor-id="idindex-in-vector-data"><code>id</code>/<code>index</code> in vector data</h3>
+<p>GeoPandas indexes vector data with an FID — the order geometries were added, which gets wonky with legacy formats (e.g.&nbsp;ESRI Shapefiles). Also, writing a GPKG to CSV drops the FID, so you can lose data. <strong>EE spec therefore requires</strong> that any GPKG saved as CSV gets a new <code>id</code> column added as the first column, generated starting at 1 and incrementing by 1 <em>after sorting on the simplest non-FID label</em> (e.g.&nbsp;<code>iso3_label</code>). See <code>gtap_invest_generate_base_data.py</code>.</p>
 </section>
-<section id="id-index-etc.-in-the-context-of-vector-data" class="level3">
-<h3 class="anchored" data-anchor-id="id-index-etc.-in-the-context-of-vector-data">Id, Index etc. in the context of vector data</h3>
-<p>Note that geopandas assumes the vector data are indexed with an FID. This is the order in which the geometries are added to the file and can get wonky when dealing with legacy file types (like ESRI Shapefiles). Additionally, when you write a GPKG to a CSV, it will not include the fid, so you might lose data. To fix this, EE spec requires that any GPKG when saved as a CSV have a new column, <code>id</code> added as the first col, which is generated starting at 1 and incrementing up by 1 after having sorted the data on the simplest non-fid label (e.g., iso3_label). See gtap_invest_generate_base_data.py.</p>
 </section>
-<section id="labels-files" class="level3">
-<h3 class="anchored" data-anchor-id="labels-files">Labels files</h3>
-<p>Based on how the GTAP database is structured, EE spec defines several file types of files to systemetize how dimensions/sets are defined (and then used in e.g.&nbsp;figure plotting). A single dimension is first defined by a labels file. The labels file has at least 3 columns of domain_id, domain_label, domain_name and optionally a domain_description. If present, a column needs to be fully filled (no missing values). Label files are used in other contexts to, e.g., go from id to name for labeling an axis on a plot, as well as building the correspondence files below.</p>
+<section id="labels-files" class="level2">
+<h2 class="anchored" data-anchor-id="labels-files">Labels files</h2>
+<p>Based on the GTAP database structure, EE spec defines file types that systematize how dimensions/sets are defined (and then used in e.g.&nbsp;plotting). A single dimension is first defined by a <strong>labels file</strong>, which has at least three columns — <code>domain_id</code>, <code>domain_label</code>, <code>domain_name</code> — and optionally a <code>domain_description</code>. Every column present must be fully filled (no missing values). Labels files are used elsewhere to go from id → name (e.g.&nbsp;labeling a plot axis) and to build the correspondence files below.</p>
 </section>
-<section id="correspondences" class="level3">
-<h3 class="anchored" data-anchor-id="correspondences">Correspondences</h3>
-<p>Model linkages often require mapping many-to-one relationship in a consistent way. Correspondence files define this via a src-to-dst (source and destination). They are named according to a relatively complex pattern. Specifically, using the file path <code>gadm_r263_gtapv7_r251_r160_r50_correspondence</code>, we have a domain label <code>gadm</code> followed by a src dimension-size pair <code>r263</code> (where r is a label, short for region in this case, and 263 is the number of unique entries in that dimension). To be a correspondence,there needs to be at least one other dst dimension-size pair, where in this case there are 3 additional dimension-size pairs (<code>r251</code>, <code>r160</code>, and <code>r50</code>). However, the later three pairs are from a different domain, namely that of <code>gtapv7</code>. Each pair is identified with the domain most identified most closely prior. The dst dimension-size pairs are sorted in order of decreasing size. The dst dimension-size pairs are then followed by the word <code>correspondence</code>. This example creates a correspondence file that maps from the GADM 263 regions to the GTAPv7 251 regions, which are then mapped to the GTAPv7 160 regions, which are then mapped to the GTAPv7 50 regions.</p>
-<p>An example of a 2-type correspondence is below. However, in this file, src and dst would have to be replaced with the specific domain names used.</p>
+<section id="correspondences" class="level2">
+<h2 class="anchored" data-anchor-id="correspondences">Correspondences</h2>
+<p>Model linkages often require mapping a many-to-one relationship consistently. Correspondence files define this via a src-to-dst (source → destination) mapping, named by a specific pattern. Using <code>gadm_r263_gtapv7_r251_r160_r50_correspondence</code> as the example:</p>
+<ul class="incremental">
+<li><code>gadm</code> is the domain label,</li>
+<li><code>r263</code> is a src dimension-size pair (<code>r</code> = region, <code>263</code> = number of unique entries),</li>
+<li>to be a correspondence there must be at least one dst dimension-size pair; here there are three (<code>r251</code>, <code>r160</code>, <code>r50</code>),</li>
+<li>each pair is identified with the domain named most closely before it (the later three are <code>gtapv7</code>),</li>
+<li>dst pairs are sorted by <strong>decreasing size</strong>,</li>
+<li>the pairs are followed by the word <code>correspondence</code>.</li>
+</ul>
+<p>This maps GADM 263 regions → GTAPv7 251 → 160 → 50 regions.</p>
+<p>A 2-domain correspondence table looks like this (replace <code>src</code>/<code>dst</code> with the specific domain names):</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 23%">
+<col style="width: 23%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -513,539 +512,242 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Here are the specific labels and corespondence files generated for gtapv7-aez-rd:</p>
-<p><img src="images/paste-22.png" class="img-fluid"></p>
-<p>If defined exactly right, 2 dimensional correspondence files will work with <code>Hazelbean</code> via</p>
-<p><code>seals_utils.set_derived_attributes(p)</code></p>
-<p>and</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)}`</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># return a very useful dictionary for various reclassification tasks:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>return_dict <span class="op">=</span> {} return_dict[<span class="st">'dst_to_src_reclassification_dict'</span>] <span class="op">=</span> dst_to_src_reclassification_dict  <span class="co"># Dict of one-to-many keys to lists of what each dst_key should be mapped to from each src_key. Useful when aggrigating multiple layers to a aggregated dest type </span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] <span class="op">=</span> src_to_dst_reclassification_dict <span class="co"># Useful when going to a specific value. </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_to_src_labels_dict'</span>] <span class="op">=</span> dst_to_src_labels_dict <span class="co"># Dictionary of lists of labels that map to each dst label </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(src_ids) <span class="co"># Unique set of src_ids r</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_ids) <span class="co"># Unique set of dst_ids </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(src_labels) <span class="co"># Unique set of src_labels </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels'</span>] <span class="op">=</span> remove_duplicates_in_order(dst_labels) <span class="co"># Unique set of dst_labels </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_ids'</span>], return_dict[<span class="st">'src_labels'</span>])} <span class="co"># one-to-one dictionary of src ids to labels </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_ids_to_labels'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_ids'</span>], return_dict[<span class="st">'dst_labels'</span>])} <span class="co"># one-to-one dictionary of dst ids to labels </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'src_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'src_labels'</span>], return_dict[<span class="st">'src_ids'</span>])} <span class="co"># one-to-one dictionary of src labels to ids </span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>return_dict[<span class="st">'dst_labels_to_ids'</span>] <span class="op">=</span> {k: v <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">zip</span>(return_dict[<span class="st">'dst_labels'</span>], return_dict[<span class="st">'dst_ids'</span>])} <span class="co"># one-to-one dictionary of dst labels to ids}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Among other possibilities, this could be used for reclassifying LULC geotiffs via</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>] hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<p>If defined exactly right, 2-dimensional correspondence files work with Hazelbean via <code>seals_utils.set_derived_attributes(p)</code> and:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p.lulc_correspondence_dict <span class="op">=</span> hb.utils.get_reclassification_dict_from_df(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    p.lulc_correspondence_path, <span class="st">'src_id'</span>, <span class="st">'dst_id'</span>, <span class="st">'src_label'</span>, <span class="st">'dst_label'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That returns a dictionary useful for many reclassification tasks, including keys such as <code>src_to_dst_reclassification_dict</code> (map to a specific dst value), <code>dst_to_src_reclassification_dict</code> (one dst → the list of srcs that aggregate into it), the corresponding label dicts, and the unique id/label sets. It can be used to reclassify LULC geotiffs via:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> p.lulc_correspondence_dict[<span class="st">'src_to_dst_reclassification_dict'</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hb.reclassify_raster_hb(raster_path, rules, output_path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="combined-ids" class="level3">
 <h3 class="anchored" data-anchor-id="combined-ids">Combined ids</h3>
-<p>One special case of ids is when two different ids are combined together leveraging their decimal position to compress data. For example, if you want a Region-AEZ-specific id stored in single column, you can do that by saying the joined id is 5 digits long, the first three correspond to ee_r264 and the final two correspond to aez18, as in this example:</p>
-<p><img src="images/paste-29.png" class="img-fluid"></p>
-<p>In the event of a combined id, not that the _id column above has two region-specifications combined (which otherwise violates the ee spec defined above for non combined ids).</p>
+<p>One special case is when two ids are combined into a single column by leveraging decimal position to compress data. For example, a Region-AEZ id can be stored as a 5-digit integer where the first three digits are <code>ee_r264</code> and the final two are <code>aez18</code>. Note that a combined <code>_id</code> column intentionally violates the single-id rule above (it encodes two identifiers).</p>
 </section>
 <section id="correspondences-with-geometries" class="level3">
 <h3 class="anchored" data-anchor-id="correspondences-with-geometries">Correspondences with geometries</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The rules for naming correspondences are a little different when adding geometry to the data. Because}     </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # only 1 geometry can be assigned per file, and becasue membership of aggregated regions and their     </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># # members can get confusing, each correspondence file keeps all the labels but then is also saved along     </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # with a geometry file that drops the other labels (and the word correspondence in the filename).     </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p.ee_r264_correspondence_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))     </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p.ee_r264_vector_path <span class="op">=</span> p.get_path(os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264.gpkg'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Because only one geometry can be assigned per file — and membership of aggregated regions can get confusing — each correspondence file keeps all its labels but is <em>also</em> saved alongside a geometry file that drops the other labels (and drops the word <code>correspondence</code> from the filename):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p.ee_r264_correspondence_vector_path <span class="op">=</span> p.get_path(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p.ee_r264_vector_path <span class="op">=</span> p.get_path(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    os.path.join(<span class="st">'gtap_invest'</span>, <span class="st">'region_boundaries'</span>, <span class="st">'ee_r264.gpkg'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="more-on-naming-conventions" class="level3">
-<h3 class="anchored" data-anchor-id="more-on-naming-conventions">More on naming Conventions</h3>
-<p>The names of project-level variables are carefully defined. For example, in <code>gtapv7_r251_r160_correspondence_input_path</code>,</p>
+</section>
+<section id="project-level-variable-names" class="level2">
+<h2 class="anchored" data-anchor-id="project-level-variable-names">Project-level variable names</h2>
+<p>Project-level variable names are carefully structured. In <code>gtapv7_r251_r160_correspondence_input_path</code>:</p>
 <ul class="incremental">
-<li>The <code>input</code> when put right before the word path implies it is a raw asset we obtained from an external source but haven’t processed it yet. This means that it can be a non-compliant XLSX file. Aslo, path implies that it is a string type that points to a location in a storage device.</li>
-<li>In this name, we see two other structures. First, the <code>gtapv7</code> label indicates the “domain” of the correspondence defined in all of the following dimensions (until another domain label). Above, this means that it is the 251 regions, as defined by the gtapv7 domain, mapped to the 160 regions in the same domain.</li>
+<li><code>input</code> immediately before <code>path</code> means it is a <strong>raw asset</strong> obtained from an external source and not yet processed — so it may be a non-compliant XLSX.</li>
+<li><code>path</code> means it is a string that points to a location on a storage device (as opposed to the loaded object itself — see src/dst vs input/output below).</li>
+<li><code>gtapv7</code> is the domain of every dimension that follows until another domain label appears — here, 251 regions mapped to 160 regions within the <code>gtapv7</code> domain.</li>
 </ul>
-<p>You can have multiple mappings in a single correspondence file. For example, gtapv7_r251_s65_r50_s26_correspondence_input_path, we are mapping r251 to r50 and s (sectors) 65 to s26, all in the gtapv7 domain.</p>
-<p>Appart from correspondence files, we also have <strong>labels</strong> files, such as gtapv7_r251_labels_path. Labels files are for a single set/variable/dimension but map together the synonymous categorizers. Specifically, it must have an id, label, and name, all filled out for every entry. It can optionally have others like description.</p>
-<p>In the filename gtapv7_r251_labels_path we extract from the input_path and write a EE-compliant labels table for the gtapv7 r251 set. In the filename <code>gtap11_gtapaez11_region_correspondence_path</code>, we use these regions and then connect it to the gtapaez11 labels. We can infer also that it is from a mapping labeled gtap11 to gtapaez11 and that the variable in question is the regions while the word correspondence then indicates this is a many-to-one mapping file.</p>
-<p>Note that the file path says “regions” while the column label in the CSV says “region”. Almost always, a table should never have column indices that are plural. The file path can, because it contains many of the thing and can’t on its own refer to a single entry of itself.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)     </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)     </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondance.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A single correspondence file can hold multiple mappings, e.g. <code>gtapv7_r251_s65_r50_s26_correspondence_input_path</code> maps r251→r50 and sectors s65→s26, all in the <code>gtapv7</code> domain.</p>
+<p>Note: a <strong>file path</strong> may be plural (it contains many of the thing), but a <strong>column label</strong> should almost never be plural — e.g.&nbsp;the file is <code>..._regions_...</code> while the CSV column is <code>region</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_correspondence_input_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'GTAP-ctry2reg.xlsx'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p.gtap11_region_names_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_region_names.csv'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondence.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="srcdst-vs-inputoutput" class="level3">
+<h3 class="anchored" data-anchor-id="srcdst-vs-inputoutput">src/dst vs input/output</h3>
+<ul class="incremental">
+<li><strong>src/dst</strong> is a pointer/reference to a thing; <strong>input/output</strong> is the thing itself. This is especially useful for paths: you often see <code>input_array = hb.as_array(src_path)</code>.</li>
+<li><code>_path</code> and <code>_dir</code> imply the string is a reference, so <code>src_path</code> and <code>src_dir</code> are common.</li>
+</ul>
 </section>
-<section id="variable-and-scenario-naming-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="variable-and-scenario-naming-conventions">Variable and Scenario Naming Conventions</h2>
-<p>TODO: This one section is possibly redundant with above and some practices are out of date.</p>
-<p>To keep track of the MANY different filetypes, data processes, variables, scenarios, policies etc, please follow exactly the specifications below.</p>
+</section>
+<section id="scenario-naming" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-naming">Scenario naming</h2>
+<p>Scenarios are defined in a nested structure. Each level is a <code>label</code>:</p>
+<ol class="incremental" type="1">
+<li><strong>Exogenous assumptions</strong> (no hyphens) — e.g.&nbsp;which SSP, GDP, population. Typically fully defined by the SSP.</li>
+<li><strong>Climate assumption</strong> (no hyphens) — which RCP.</li>
+<li><strong>Model</strong> (<strong>may</strong> have hyphens — the only level allowed to, because hyphens are used for multi-step scenario processing) — e.g.&nbsp;<code>magpie</code>, <code>luh2-message</code>.</li>
+<li><strong>Counterfactual</strong> — policy assumption/definition, including <code>bau</code> (a special counterfactual others are compared against). Different counterfactuals correspond to different shockfiles or LUC projection priorities.
 <ul class="incremental">
-<li><p>The word label refers to a relatively short string (preferably 8 characters long or less) with no spaces, underscores or punctuation (but may have hyphens). This is case-sensitive, but try to avoid capitalization.</p></li>
-<li><p>The word short_label refers to a label that is strictly less or equal to 8 characters to ensure compatibility with HAR files.</p></li>
-<li><p>The word name refers to a longer string that describes a specific label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary.</p></li>
-<li><p>The words index, indices or id refers to numerical data that describes a label with a 1:1 correspondence. Will usually be defined via a correspondence dictionary. If both are used, index/indices refer to a unique, ordered list of ints while an id/ids refer are unique but not necessarily ordered. It’s best to use index/indices and never id/ids.</p></li>
-<li><p>The word class refers to LULC class. Consider renaming this to lc-class?</p></li>
-<li><p>Scenarios are defined in the following nested structure:</p>
-<ul class="incremental">
-<li><p>Label (with no hyphens) for Exogenous Assumptions (e.g., which SSP, which GDP, which population). Typically this will be fully defined by the SSP.</p></li>
-<li><p>Label (with no hyphens) for Climate Assumption (which RCP)</p></li>
-<li><p>Label (can have hyphens) for which model is used (e.g., magpie, luh2-message). Only model is allowed to have hyphens (because they are used for multistep scenario processing of counterfactuals)</p></li>
-<li><p>Label for Counterfactual. This often represent policy Assumptions/Definition and can include BAU, which is a special counterfactual against which other policies are compared. Different counterfactuals correspond to different shockfiles in the econ model or different LUC projection priorities, etc.</p>
-<ul class="incremental">
-<li><p>Counterfactuals may have multiple processing steps, which will be denoted by appending a hyphen and exactly 4 chars to the end of the base counterfactual label.</p>
-<ul class="incremental">
-<li>IFor example, a run excludes consideration of ES, insert “-noes”, at the end of the policy_name if it does include ES, postpend nothing (as this will be the one that is referenced by default)</li>
+<li>A counterfactual may have processing steps, appended as a hyphen + exactly 4 characters. For example, a run that <strong>excludes</strong> ecosystem services uses the <code>-noes</code> suffix; the run that <strong>includes</strong> ES appends nothing (it is the default that gets referenced).</li>
 </ul></li>
-</ul></li>
-<li><p>Year</p>
+<li><strong>Year</strong> — see the year typing rules below.</li>
+</ol>
+<p>The labels map to a directory hierarchy, with the final level folded into the filename rather than becoming its own directory:</p>
+<pre><code>ssp2/rcp45/luh2-message/bau/filename_2050.tif</code></pre>
+<section id="filename-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="filename-conventions">Filename conventions</h3>
+<p>Two conventions are supported. In both, the variable name (e.g.&nbsp;<code>lulc</code>) stays at the <strong>front</strong> of the filename.</p>
 <ul class="incremental">
-<li><p>When the variable is singular, it must be an int. If it is plural, as is ints in a list. However, when either is stored in a dataframe, always type always type check as follows:</p>
+<li><p><strong>Implied</strong> — the directory structure supplies all labels except year (which is appended to the filename):</p>
+<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif</code></pre></li>
+<li><p><strong>Explicit</strong> — every label is repeated in the filename even though the directory implies it:</p>
+<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></pre>
+<p>The same file with <strong>no ES considered</strong> carries the <code>-noes</code> suffix on the counterfactual:</p>
+<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau-noes/lulc_ssp2_rcp45_bau-noes_luh2-message_2050.tif</code></pre></li>
+</ul>
+</section>
+<section id="nested-variable-names" class="level3">
+<h3 class="anchored" data-anchor-id="nested-variable-names">Nested variable names</h3>
+<p>A variable name may itself have nested layers, distinct from the scenario nesting. For example:</p>
+<pre><code>base_data/lulc/esa/seals7/binaries/2014/lulc_esa_seals7_binary_2014_cropland.tif</code></pre>
+<p>Here <code>lulc</code> is the variable label; <code>esa</code> denotes origin, <code>seals7</code> denotes recategorization, <code>binaries</code> denotes binary (is-class vs is-not-class) processing, and year comes last. Keep sub-nest ordering consistent (it usually depends on what you iterate over).</p>
+<p>Because labels contain no spaces or underscores, the nested structure can collapse to a single string, e.g.&nbsp;<code>filename_ssp2_rcp45_policyname_year.tif</code>.</p>
+</section>
+<section id="year-typing" class="level3">
+<h3 class="anchored" data-anchor-id="year-typing">Year typing</h3>
 <ul class="incremental">
-<li><p>If singular, do str(value), int(value) or float(value) as appropriate when reading from the df into a python variable.</p></li>
-<li><p>If plural, assume the df value is a space-delimited string that needs to be split, e.g.&nbsp;as [int(i) for i in value.split(’ ‘)], or’ ’.join(values) if going into the DF.</p>
+<li>When a variable is <strong>singular</strong> it must be an <code>int</code>; when <strong>plural</strong> it is a list of ints. <code>base_years</code> is always a list even with a single entry (the name is plural). Always use <code>base_years</code>, <strong>never</strong> <code>baseline_years</code> (to avoid confusion between “baseline” and “bau”).</li>
+<li>When stored in a DataFrame, type-check on read:
 <ul class="incremental">
-<li>TODO: This needs to be updated with the json-style parsing added to scenarios.csv files.</li>
-</ul></li>
-</ul></li>
-<li><p>Three types of years exist, including</p>
-<ul class="incremental">
-<li>p.base_years, (which recall will always be a list even if there is a single entry because the variable name is plural)</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><p>Together, the labels above mean that the scenarios can be represented by directories as follows:</p>
-<ul class="incremental">
-<li><code>ssp2/rcp45/luh2-message/bau/filename_2050.tif</code>
-<ul class="incremental">
-<li>Note, the last layer of the hierarchy will be included as a the suffix of the filename start rather than as a directory (also see below for filename conventions)</li>
-</ul></li>
-</ul></li>
-<li><p>For filenames, there are two possible conventions:</p>
-<ul class="incremental">
-<li><p>Implied: This means that the directory structure above defines all the labels with the exception of year (which is postpended to the filename label) and the current variable name (such as lulc) which appears at the front of the filename.</p>
-<ul class="incremental">
-<li>e.g., <code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif</code></li>
-</ul></li>
-<li><p>Explicit: Even if a file is in a directory which implies its labels, explicit file naming will always include each label (and the variable label stays in front of the filename), so the above example is:</p>
-<ul class="incremental">
-<li><p><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
-<li><p>And if there are no ES considered, it would be <code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif</code></p></li>
-</ul></li>
-<li><p>notice that in both examples, the variable still starts with the variable name “lulc” before the scenario information (if it’s included).</p></li>
-</ul></li>
-<li><p>For defining variable names (like “lulc” above), you might have multiple nested layers of the variable definition. These can be (or ARE) distinct from the nesting implied by scenarios. So for example, consider the base data path:</p>
-<ul class="incremental">
-<li><p><code>C:\Users\jajohns\Files\base_data\lulc\esa\seals7\binaries\2014\lulc_esa_seals7_binary_2014_cropland.tif</code></p></li>
-<li><p>Here, lulc is the variable label, but it then has sub nests for esa to denote its origin. seals7 to denote it has been recategorized, binaries to denote the seals7 has been processed into binary format (is-class vs is-not-class), and the year comes last. I haven’t figured out a standard that sets the order of the subnests, but it should be consistent. It probably depends on which element you’re going to iterate over, so years should probably be last? Actually no, once you’re in a year, you’d then iterate over class labels.</p></li>
-</ul></li>
-<li><p>Because labels have no spaces or underscores, it is possible to convert the nested structure above to a single string, as in <code>filename_ssp2_rcp45_policyname_year.tif</code>.</p></li>
-<li><p>Filetypes that supported in this computation environment include</p>
-<ul class="incremental">
-<li><p>Netcdf with the above listed dimensions in the same order</p></li>
-<li><p>A set of geotiffs embedded in directories. Each label gets a directory level expect for year, which by convention, will ALWAYS be the last 4 characters of a filename before the extension (with an underscore before it).</p></li>
-<li><p>A spreadsheet linkable to a geographic representation (e.g., a shapefile or a geopackage) in vertical format</p></li>
-</ul></li>
-<li><p>Also we will create a set of tables to analyze results</p>
-<ul class="incremental">
-<li><p>These will define Regions (<code>shp</code>) for quick result plotting</p></li>
-<li><p>Specifically, we will have a full vertically stacked CSV of results, then for each Report Archetype we would output 1 minimal info CSV and the corresponding Figure.</p></li>
-</ul></li>
-<li><p>Miscellaneous:</p>
-<ul class="incremental">
-<li>base_years is correct, never baseline_years (due to confusion between baseline and bau)</li>
-</ul></li>
-<li><p>Scenario types</p>
-<ul class="incremental">
-<li>Three scenario_types are supported: baseline, bau and policy
-<ul class="incremental">
-<li>Baseline assumes the year has data existing from observations (rather than modelled) and that these years are defined in p.years (and identically defined in <code>p.base_years</code>).
-<ul class="incremental">
-<li>One exception is when eg GTAP is used to update the base year from 2017 to 2023, and then policies are applied on 2023.</li>
-</ul></li>
-<li>BAU and policy scenarios assume the results are modelled and that their years are defined in p.years (but not <code>p.base_years</code>)</li>
-</ul></li>
-<li>Clarify what is the naming difference between src dst versus input output. Is the former only for file paths or can it also be e.g.&nbsp;array. OR does this have to do with if it is a function return.
-<ul class="incremental">
-<li><p>Proposed answer: src/dst is a pointer/reference to a thing and Input/Output is the thing itself. Esp useful for paths.</p></li>
-<li><p>Similarly, _path and _dir imply the string is a reference, so src_path and src_dir are common.</p></li>
-<li><p>You might often see e.g.&nbsp;<code>input_array = hb.as_array(src_path)</code>, illustrating this difference.</p></li>
-</ul></li>
+<li>Singular: <code>str(value)</code>, <code>int(value)</code>, or <code>float(value)</code> as appropriate.</li>
+<li>Plural: the cell is a space-delimited string — <code>[int(i) for i in value.split(' ')]</code> on read, <code>' '.join(values)</code> on write. (Being updated to the JSON-style parsing used in <code>scenarios.csv</code> files.)</li>
 </ul></li>
 </ul>
+</section>
+<section id="scenario-types" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-types">Scenario types</h3>
+<p>Three <code>scenario_type</code>s are supported: <code>baseline</code>, <code>bau</code>, and <code>policy</code>.</p>
+<ul class="incremental">
+<li><strong>baseline</strong> — the year has observed (not modelled) data; these years are in <code>p.years</code> and identically in <code>p.base_years</code>. (Exception: when e.g.&nbsp;GTAP updates the base year from 2017 to 2023, policies are then applied on 2023.)</li>
+<li><strong>bau</strong> and <strong>policy</strong> — results are modelled; their years are in <code>p.years</code> but <em>not</em> in <code>p.base_years</code>.</li>
+</ul>
+</section>
+<section id="supported-filetypes" class="level3">
+<h3 class="anchored" data-anchor-id="supported-filetypes">Supported filetypes</h3>
+<ul class="incremental">
+<li>NetCDF with the dimensions above, in the same order.</li>
+<li>A set of geotiffs embedded in directories — each label gets a directory level except year, which is <strong>always</strong> the last 4 characters of the filename before the extension (preceded by an underscore).</li>
+<li>A spreadsheet linkable to a geographic representation (shapefile or geopackage) in vertical format.</li>
+</ul>
+</section>
 </section>
 <section id="get_path-and-ref_path" class="level2">
 <h2 class="anchored" data-anchor-id="get_path-and-ref_path">get_path and ref_path</h2>
-<p>Paths that are ready to use are denoted with ‘_path’ as the last 5 characters.</p>
-<p><code>p.ha_per_cell_10sec_ref_path = os.path.join(p.base_data_dir, 'pyramids', "ha_per_cell_10sec.tif")</code></p>
-<p>However prior to calling get_path, the root directory of the path is not clear. Get path will search all the options given an inputted reference path. These follow the convention that the last 8 characters are ‘ref_path’, it is a relative path, and specifically, it is relative to one of the many possible root directories, which include by default</p>
+<p>Paths that are ready to use end in <code>_path</code> (last 5 characters). Before <code>get_path</code> is called, the root directory is not yet resolved; a <strong>reference path</strong> ends in <code>ref_path</code> (last 8 characters) and is relative to one of several possible root directories. <code>get_path</code> searches those roots in order and returns the most useful hit:</p>
 <ol class="incremental" type="1">
-<li>cur_dir (i.e., for when something will be generated by the task and if it exists the task should be skipped)</li>
-<li>input_dir (for project specific inputs)</li>
-<li>base_data_dir (for cross-project dirs, is the default download location from the next step)</li>
+<li><code>cur_dir</code> — the current task’s directory (so a task can skip itself if its output already exists),</li>
+<li><code>input_dir</code> — project-specific inputs,</li>
+<li><code>base_data_dir</code> — cross-project data (also the default download location),</li>
 <li>the cloud storage location.</li>
 </ol>
-<p>p.ha_per_cell_10sec_ref_path = os.path.join(‘pyramids’, “ha_per_cell_10sec.tif”)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p.ha_per_cell_10sec_ref_path <span class="op">=</span> os.path.join(<span class="st">'pyramids'</span>, <span class="st">'ha_per_cell_10sec.tif'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Choosing a relative path that matches the desired location <em>relative to base_data_dir</em> lets a task generate a file into its <code>cur_dir</code> and later have the exact same relative path found in <code>base_data_dir</code> — this is how base-data- generating tasks work. Outside a task (e.g.&nbsp;in the run file before the task tree is built) the default roots don’t apply, so pass them explicitly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p.countries_iso3_path <span class="op">=</span> p.get_path(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    os.path.join(<span class="st">'cartographic'</span>, <span class="st">'gadm'</span>, <span class="st">'gadm_adm0_10sec.gpkg'</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    possible_dirs<span class="op">=</span>[p.input_dir, p.base_data_dir])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="setting-the-environment" class="level2">
-<h2 class="anchored" data-anchor-id="setting-the-environment">Setting the environment</h2>
+<section id="function-and-method-naming" class="level2">
+<h2 class="anchored" data-anchor-id="function-and-method-naming">Function and method naming</h2>
+<p><strong>Factory / creation</strong> - <strong>make</strong> — factory functions/methods that create new <em>instances</em> (<code>make_dataset</code>, <code>make_grid</code>). - <strong>create</strong> — generate new objects/files from scratch (<code>create_empty_raster</code>, <code>create_new_project</code>).</p>
+<p><strong>File operations</strong> - <strong>open</strong> — open file handles/connections; load metadata, not full data (<code>gdal.Open</code>). - <strong>load</strong> — read entire data into memory (<code>load_dataset</code>). - <strong>read</strong> — get data into memory from a path or file-like object, often chunk-based (<code>read_csv</code>). - <strong>write</strong> — output data to disk/stream, often incremental (<code>write_results</code>). - <strong>save</strong> — persist a complete object/state to disk, typically all at once (<code>save_model</code>).</p>
+<p><strong>Data manipulation</strong> - <strong>extract</strong> — pull specific portions from a larger structure (<code>extract_features</code>). - <strong>execute</strong> — run commands/scripts/processes (<code>execute_query</code>). - <strong>convert</strong> — transform between formats/types (<code>convert_crs</code>).</p>
+<p><strong>Collections</strong> - <strong>list</strong> — return a collection, typically a Python list (<code>list_files</code>). - <strong>remove</strong> — delete from an in-memory collection/structure (<code>remove_duplicates</code>). - <strong>delete</strong> — permanently remove from disk/database (<code>delete_file</code>). - <strong>displace</strong> — (in-house) rename a path with e.g.&nbsp;a timestamp so you can write a new file into the old place without destroying the original; has optional <code>delete_on_exit</code>. - <strong>rename</strong> — change name, same location (<code>rename_column</code>). - <strong>replace</strong> — substitute one value/object for another (<code>replace_missing_values</code>). - <strong>move</strong> — relocate to a different location/container (<code>move_to_archive</code>).</p>
+</section>
+<section id="directory-and-file-naming" class="level2">
+<h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and file naming</h2>
 <ul class="incremental">
-<li>What does this mean?
-<ul class="incremental">
-<li>Let’s find the executable we installed with Mamba</li>
-<li><img src="images/2024-02-29-09-03-41.png" class="img-fluid"></li>
-</ul></li>
-<li>When we set the interpretter/environment in VS Code, we are essentially telling it to look for this python.exe file in this exact folder.
-<ul class="incremental">
-<li>To get the path, we can right click on the file and select “Copy Path”
-<ul class="incremental">
-<li><img src="images/2024-02-29-09-05-53.png" class="img-fluid"></li>
-</ul></li>
-</ul></li>
-<li>Why might you need the actual path?
-<ul class="incremental">
-<li>On the command line, when we call <code>python this_script.py</code> sometimes it will fail to find (or find the right) python executable to call. We could have been explicit by calling <code>C:\Users\jajohns\mambaforge\envs\env2023a\python.exe this_script.py</code> instead.</li>
-<li>Additionally, when you are publishing Quarto Books or Jupyter Notebooks, you might want to set the path explicitly
-<ul class="incremental">
-<li>For example, to publish the EE Devstack, I have a line in the <code>quarto.yml</code> file like this:</li>
-<li><code>yaml     execute:         engine: python         python: C:\Users\jajohns\mambaforge\envs\env2023a\python.exe</code></li>
-</ul></li>
-</ul></li>
+<li><strong>dir</strong> — avoid as a standalone noun (directory or direction?); <strong>use <code>directory</code></strong>. It <em>can</em> be a suffix (<code>temp_dir</code>), and is fine inside function names for brevity (<code>delete_dir()</code>, <code>create_dir()</code>), matching Unix heritage.</li>
+<li><strong>directory</strong> — preferred over <code>dir</code> for clarity (<code>output_directory</code>).</li>
+<li><strong>folder</strong> — avoid except in user-facing docs.</li>
+<li><strong>dirname</strong> — preferred; matches stdlib. Name of a directory without its path.</li>
+<li><strong>dir_name</strong> — avoid.</li>
+<li><strong>dir_path</strong> — the full directory path.</li>
+<li><strong>directory_name</strong> — avoid (too long).</li>
+<li><strong>path</strong> — full path to a file/directory (<code>input_path</code>, <code>config_path</code>).</li>
+<li><strong>file_name</strong> — full filename with extension (<code>data.csv</code>). Preferred over <code>filename</code>.</li>
+<li><strong>filename</strong> — avoid (use <code>file_name</code>), though it is broadly used elsewhere.</li>
+<li><strong>file_root</strong> — filename without extension (<code>data</code> from <code>data.csv</code>).</li>
+<li><strong>fileroot</strong> — avoid (use <code>file_root</code>), though broadly used elsewhere.</li>
+<li><strong>file_extension</strong> — suffix including the dot (<code>.csv</code>).</li>
+<li><strong>parent_directory</strong> — one level up (<code>os.path.dirname(path)</code>).</li>
+<li><strong>grandparent_path</strong> — two levels up; consider <code>pathlib</code> for clarity.</li>
 </ul>
 </section>
-<section id="dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide" class="level2">
-<h2 class="anchored" data-anchor-id="dealing-with-utf-8-encoding-issues-in-data-analysis-a-practical-guide">Dealing with UTF-8 Encoding Issues in Data Analysis: A Practical Guide</h2>
-<p>If you’ve ever loaded a CSV file in pandas and found your first column mysteriously renamed to something like <code>Ã¯Â»Â¿fao_country_id</code>, or noticed that place names like “Åland” turn into garbled text like “Ã…land”, you’ve encountered UTF-8 encoding problems. These issues are incredibly common when working with international datasets and can be frustrating to debug. Understanding what’s happening and how to fix it will save you hours of headaches.</p>
-<p>The weird characters you’re seeing are typically caused by Byte Order Mark (BOM) confusion or encoding mismatches. When you see <code>Ã¯Â»Â¿</code> at the start of column names, that’s the UTF-8 BOM (bytes EF BB BF) being incorrectly interpreted as Latin-1 characters. To fix this when reading CSV files, use <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code> instead of the default encoding. If you’ve already loaded the data, you can rename the column with <code>df.rename(columns={df.columns[0]: 'correct_name'})</code> or strip the BOM from all columns with <code>df.columns = df.columns.str.replace('\ufeff', '')</code>.</p>
-<p>When working with geospatial data, you might load a GeoPackage file that correctly displays international characters, but then find those characters get mangled when you drop the geometry and save as CSV. This happens because programs like Excel don’t properly handle UTF-8 files unless they have a BOM signature. The solution is to explicitly specify the encoding when saving: <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code>. The <code>-sig</code> part adds the BOM that tells programs like Excel “this file is UTF-8 encoded.”</p>
-<p>The key difference between <code>utf-8</code> and <code>utf-8-sig</code> is the presence of a 3-byte signature at the beginning of the file. Plain <code>utf-8</code> follows the Unicode standard exactly and produces smaller files, while <code>utf-8-sig</code> adds a BOM that acts as a hint to applications about the file’s encoding. Modern web applications and APIs typically expect plain UTF-8, while desktop applications like Excel often need the BOM to interpret international characters correctly.</p>
-<p>Excel causes problems when it encounters UTF-8 files without the BOM because it assumes the file uses Windows-1252 encoding (or your system’s default). When Excel tries to interpret UTF-8 bytes using the wrong encoding, single international characters get split and displayed as multiple garbled characters. For example, “Å” (stored as bytes C3 85 in UTF-8) gets interpreted as “Ã…” because Excel reads each byte separately using Windows-1252.</p>
-<p>For most data analysis workflows, using <code>utf-8-sig</code> everywhere is the safest approach. While it adds 3 bytes to your files, this overhead is negligible, and you’ll avoid encoding issues when sharing data or opening files in different applications. Only use plain <code>utf-8</code> when you’re specifically working in environments that expect it (like certain Unix command-line tools) or when you know the consuming application handles UTF-8 correctly without needing the BOM signature.</p>
+<section id="variable-naming" class="level2">
+<h2 class="anchored" data-anchor-id="variable-naming">Variable naming</h2>
+<p><strong>Counting and size</strong> - <strong>n_cols</strong> — shorthand for counts in scientific computing (<code>n_samples</code>). - <strong>num_cols</strong> — more explicit; good for public APIs (<code>num_iterations</code>). - <strong>number_cols</strong> — too verbose; prefer <code>n_</code> or <code>num_</code>. - <strong>shape</strong> — dimensions tuple for arrays (<code>array.shape</code>). - <strong>size</strong> — total number of elements or bytes (<code>array.size</code>).</p>
+<p><strong>Data types</strong> - <strong>data_type</strong> — preferred, for consistency with numpy/pandas. - <strong>dtype</strong> — avoid except where a library uses it explicitly (numpy). - <strong>datatype</strong> — avoid except where a library uses it explicitly.</p>
+<p><strong>Geospatial</strong> - <strong>cell_size</strong> — spatial resolution of a single raster cell. - <strong>res</strong> — common abbreviation for resolution. - <strong>resolution</strong> — full word preferred in public APIs/docs. - <strong>x_res / y_res</strong> — horizontal / vertical resolution in map units. - <strong>raster_info / vector_info</strong> — metadata object for gridded / feature data.</p>
+<p><strong>Bounding boxes</strong> - <strong>bb</strong> — common abbreviation for bounding box. - <strong>bounding_box</strong> — preferred for clarity. - <strong>bb_exact</strong> — pyramids-specific: the bb aligns with a pyramidal ID raster (preferably named, like <code>bb_exact_30sec</code>). - <strong>bounding_box_min_max_notation</strong> — <code>[xmin, ymin, xmax, ymax]</code>. - <strong>bounding_box_xy_notation</strong> — <code>[xmin, xmax, ymin, ymax]</code>. - <strong>cr_widthheight</strong> — <code>[col, row, width, height]</code>, optimized for GDAL.</p>
+<p><strong>Coordinates</strong> - <strong>lat</strong> — latitude. <strong>lon</strong> — longitude (always <code>lon</code>, never <code>long</code>, which conflicts with a Python built-in). - <strong>lat_size / lon_size</strong> — height / width in degrees or number of values.</p>
+<p><strong>Identifiers and indexing</strong> (see the full ladder above) - <strong>index</strong> — position in a sequence or DB index; never use for an id column in a DataFrame (position can change). - <strong>id</strong> — the unique identifier (integer ≥ 1, 0 = NDV); prefer domain-specific names like <code>feature_id</code>. - <strong>counter</strong> — loop/accumulation counter (<code>iteration_counter</code>). With many counters, prefer <code>c_row, row in enumerate(rows)</code> to avoid confusion.</p>
+<p><strong>Data processing</strong> - <strong>valid</strong> — boolean/mask for valid data; prefer <code>invalid</code> over <code>not_valid</code>. - <strong>mask</strong> — boolean array for filtering (True where the condition holds). - <strong>ndv</strong> — preferred over <code>nodata</code>, <code>no_data</code>, <code>no_data_value</code>, etc. - <strong>nonzero</strong> — elements/indices where value != 0.</p>
+<p><strong>Standard abbreviations</strong> - <strong>array</strong> — generic numpy array. <strong>df</strong> — pandas DataFrame (with many, use a <code>df_</code> prefix). <strong>gdf</strong> — GeoPandas GeoDataFrame. - Import aliases: <strong>np</strong> (numpy), <strong>pd</strong> (pandas), <strong>gpd</strong> (geopandas).</p>
+<p><strong>Special</strong> - <strong>default</strong> — default parameter values (<code>default_crs</code>). - <strong>paths_to_delete_at_exit</strong> — cleanup list for temp files (preferred). <code>uris_to_delete_at_exit</code> is outdated — use <code>paths_...</code>. - <strong>plots_to_display_at_exit</strong> — deferred plotting for batch processing. - <strong>info</strong> — generic metadata container (<code>dataset_info</code>). - <strong>describe / desc</strong> — statistical summary / description in metadata. - <strong>run_dir</strong> — directory for the current execution’s outputs. - Postpend a type when helpful: <code>temps_array</code> vs <code>temps_list</code>.</p>
+<p><strong>Naming to avoid</strong> - <strong>globals</strong> — avoid global variables; if unavoidable, use <code>UPPER_CASE</code>. - <strong>temp</strong> — never use (temporary or temperature?). Use <code>temporary</code> or <code>temperature</code>. - <strong>old_</strong> — prefix for previous versions during refactoring (<code>old_algorithm</code>).</p>
+</section>
+<section id="priority-and-debug-markers" class="level2">
+<h2 class="anchored" data-anchor-id="priority-and-debug-markers">Priority and debug markers</h2>
+<ul class="incremental">
+<li><strong>todo / todoo / todooo</strong> — increasing O’s mean <em>lower</em> priority (standard, lower, lowest). (The priority ordering is deliberately opposite to most coders’ convention, so it’s stated explicitly.)</li>
+<li><strong>print()</strong> with no space before the paren likely marks debug code to remove; <strong>print ()</strong> with a space marks intentional output to keep.</li>
+</ul>
+</section>
+<section id="file-type-specific" class="level2">
+<h2 class="anchored" data-anchor-id="file-type-specific">File-type-specific</h2>
+<ul class="incremental">
+<li><strong>shapefile</strong> — use only to specify an ESRI Shapefile explicitly (vs.&nbsp;e.g.&nbsp;a geopackage).</li>
+<li><strong>tiff</strong> — never use except in the GDAL driver name <code>GTiff</code>.</li>
+</ul>
+</section>
+<section id="python-style" class="level2">
+<h2 class="anchored" data-anchor-id="python-style">Python style</h2>
+<p>We follow PEP 8 with a few departures:</p>
+<ul class="incremental">
+<li><strong>Line length</strong> — more than 80 characters is allowed; keep lines within <strong>160</strong> characters (except comments trailing a code line).</li>
+<li><strong>Blank lines</strong> — use a <strong>single</strong> blank line between functions, not two, so more functions are visible when folded.</li>
+<li><strong>Case</strong> — <code>snake_case</code> for variables and functions, <code>CamelCase</code> for classes.</li>
+<li><strong>Quotes</strong> — outer strings use <strong>double quotes</strong>; inner strings (e.g.&nbsp;dict-key string values inside an f-string) use single quotes. Preferring double quotes on the outside avoids escaping apostrophes.</li>
+<li>Avoid global variables; keep functions concise and focused on a single task.</li>
+</ul>
 </section>
 <section id="docstrings" class="level2">
 <h2 class="anchored" data-anchor-id="docstrings">Docstrings</h2>
-<p>We use “Google style docstrings” , which work well with Quarto.</p>
-<p>Example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fibonacci(n):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate the nth Fibonacci number.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">        n (int): The position in the Fibonacci sequence.</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">        int: The nth Fibonacci number.</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Raises:</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">        NameError: If n is not an int.</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Basic usage:</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">        ```python</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(5)  # Returns 5</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(10) # Returns 55</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">        ```</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use <strong>Google-style docstrings</strong> (they render well with Quarto):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fibonacci(n):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate the nth Fibonacci number.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">        n (int): The position in the Fibonacci sequence.</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">        int: The nth Fibonacci number.</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Raises:</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">        NameError: If n is not an int.</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Basic usage:</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">        ```python</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(5)  # Returns 5</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(10) # Returns 55</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">        ```</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="function-and-method-naming-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="function-and-method-naming-conventions">Function and Method Naming Conventions</h2>
-<section id="factory-and-creation-functions" class="level3">
-<h3 class="anchored" data-anchor-id="factory-and-creation-functions">Factory and Creation Functions</h3>
-<p><strong>make</strong><br>
-Reserved for factory functions or methods that create new instances (e.g., make_dataset, make_grid)</p>
-<p><strong>create</strong><br>
-For functions that generate new objects/files from scratch (e.g., create_empty_raster, create_new_project)</p>
-</section>
-<section id="file-operations" class="level3">
-<h3 class="anchored" data-anchor-id="file-operations">File Operations</h3>
-<p><strong>open</strong><br>
-Opens file handles or connections, loads metadata but not full data (e.g., gdal.Open, open_database_connection)</p>
-<p><strong>load</strong><br>
-Reads entire data into memory from disk or remote source (e.g., load_dataset, load_model_weights)</p>
-<p><strong>read</strong><br>
-Gets data into memory from filepath or file-like object, often line-by-line or chunk-based (e.g., read_csv, read_lines)</p>
-<p><strong>write</strong><br>
-Outputs data to disk or stream, often incremental (e.g., write_results, write_to_buffer)</p>
-<p><strong>save</strong><br>
-Persists complete objects/states to disk, typically all at once (e.g., save_model, save_checkpoint)</p>
-</section>
-<section id="data-manipulation" class="level3">
-<h3 class="anchored" data-anchor-id="data-manipulation">Data Manipulation</h3>
-<p><strong>extract</strong><br>
-Pulls out specific portions from larger data structures (e.g., extract_features, extract_roi)</p>
-<p><strong>execute</strong><br>
-Runs commands, scripts, or processes (e.g., execute_query, execute_pipeline)</p>
-<p><strong>convert</strong><br>
-Transforms data from one format/type to another (e.g., convert_to_numpy, convert_crs)</p>
-</section>
-<section id="collection-operations" class="level3">
-<h3 class="anchored" data-anchor-id="collection-operations">Collection Operations</h3>
-<p><strong>list</strong><br>
-Returns collection of items, typically as Python list (e.g., list_files, list_available_datasets)</p>
-<p><strong>remove</strong><br>
-Deletes from collections/memory structures (e.g., remove_duplicates, remove_from_cache)</p>
-<p><strong>delete</strong><br>
-Permanently removes from disk/database (e.g., delete_file, delete_record)</p>
-<p><strong>displace</strong><br>
-In-house term for renaming a path with e.g.&nbsp;a timestamp so you can write a new file into the old place (without eliminating the original). Has optional delete_on_exit functionality</p>
-<p><strong>rename</strong><br>
-Changes name while keeping same location (e.g., rename_file, rename_column)</p>
-<p><strong>replace</strong><br>
-Substitutes one value/object with another (e.g., replace_missing_values, replace_substring)</p>
-<p><strong>move</strong><br>
-Relocates to different location/container (e.g., move_file, move_to_archive)</p>
-</section>
-</section>
-<section id="directory-and-file-naming" class="level2">
-<h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and File Naming</h2>
-<section id="directory-conventions" class="level3">
-<h3 class="anchored" data-anchor-id="directory-conventions">Directory Conventions</h3>
-<p><strong>dir</strong><br>
-Avoid - ambiguous (directory or direction?). Use ‘directory’ instead. Note that it CAN be used as a suffix, like temp_dir. Function Names Exception: Use <code>dir</code> in function names (e.g., <code>delete_dir()</code>, <code>create_dir()</code>) for brevity, matching Unix heritage.</p>
-<p><strong>directory</strong><br>
-Preferred over ‘dir’ for clarity (e.g., output_directory, working_directory)</p>
-<p><strong>folder</strong><br>
-Avoid using unless it’s user-facing documentation. Alternative to ‘directory’, more GUI-oriented.</p>
-<p><strong>dirname</strong><br>
-Preferred in most cases. Matches stdlib conventions. Name of directory without path (e.g., “outputs” from “/home/user/outputs”)</p>
-<p><strong>dir_name</strong><br>
-Avoid. Used when following strict PEP 8 in a codebase that emphasizes readability</p>
-<p><strong>dir_path</strong><br>
-The full directory path (e.g., “/home/user/documents”)</p>
-<p><strong>directory_name</strong><br>
-Avoid. Too long.</p>
-</section>
-<section id="file-naming" class="level3">
-<h3 class="anchored" data-anchor-id="file-naming">File Naming</h3>
-<p><strong>path</strong><br>
-Full path to file/directory (e.g., input_path, config_path)</p>
-<p><strong>file_name</strong><br>
-Full filename with extension (e.g., “data.csv”, “image.tif”). Preferred over filename.</p>
-<p><strong>filename</strong><br>
-Avoid. Use file_name. However this is broadly used elsewhere.</p>
-<p><strong>file_root</strong><br>
-Filename without extension (e.g., “data” from “data.csv”)</p>
-<p><strong>fileroot</strong><br>
-Avoid. Use file_root. However this is broadly used elsewhere.</p>
-<p><strong>file_extension</strong><br>
-File suffix including dot (e.g., “.csv”, “.tif”)</p>
-<p><strong>parent_directory</strong><br>
-One level up in directory tree (e.g., os.path.dirname(path))</p>
-<p><strong>grandparent_path</strong><br>
-Two levels up; consider using pathlib for clarity</p>
-</section>
-</section>
-<section id="variable-naming-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="variable-naming-conventions">Variable Naming Conventions</h2>
-<section id="counting-and-size" class="level3">
-<h3 class="anchored" data-anchor-id="counting-and-size">Counting and Size</h3>
-<p><strong>n_cols</strong><br>
-Common shorthand for counts in scientific computing (e.g., n_samples, n_features)</p>
-<p><strong>num_cols</strong><br>
-More explicit than n_, good for public APIs (e.g., num_iterations, num_bands)</p>
-<p><strong>number_cols</strong><br>
-Too verbose; prefer n_ or num_ prefix</p>
-<p><strong>shape</strong><br>
-Dimensions tuple for arrays/matrices (e.g., array.shape returns (rows, cols))</p>
-<p><strong>size</strong><br>
-Total number of elements or bytes (e.g., array.size, file_size)</p>
-</section>
-<section id="data-types" class="level3">
-<h3 class="anchored" data-anchor-id="data-types">Data Types</h3>
-<p><strong>data_type</strong><br>
-Preferred option for most cases and consistency with numpy/pandas conventions</p>
-<p><strong>dtype</strong><br>
-Avoid except where a library uses it explicitly, specifically numpy</p>
-<p><strong>datatype</strong><br>
-Avoid except where a library uses it explicitly</p>
-</section>
-<section id="geospatial-conventions" class="level3">
-<h3 class="anchored" data-anchor-id="geospatial-conventions">Geospatial Conventions</h3>
-<p><strong>cell_size</strong><br>
-Spatial resolution of single raster cell (e.g., 30m for Landsat)</p>
-<p><strong>res</strong><br>
-Common abbreviation for resolution in geospatial contexts</p>
-<p><strong>resolution</strong><br>
-Full word preferred in public APIs, documentation</p>
-<p><strong>x_res</strong><br>
-Horizontal resolution (width of pixel in map units)</p>
-<p><strong>y_res</strong><br>
-Vertical resolution (height of pixel in map units)</p>
-<p><strong>raster_info</strong><br>
-Metadata dict/object for gridded data (extent, projection, resolution)</p>
-<p><strong>vector_info</strong><br>
-Metadata dict/object for feature data (geometry type, attribute schema)</p>
-</section>
-<section id="bounding-boxes" class="level3">
-<h3 class="anchored" data-anchor-id="bounding-boxes">Bounding Boxes</h3>
-<p><strong>bb</strong><br>
-Common abbreviation for bounding box in geospatial code</p>
-<p><strong>bounding_box</strong><br>
-Preferred for clarity</p>
-<p>**bb_exact** Pyramids-specific notation that the bb aligns with some pyramidal ID raster. (preferably identified in the name, like bb_exact_30sec)</p>
-<p><strong>bounding_box_min_max_notation</strong><br>
-[xmin, ymin, xmax, ymax]</p>
-<p><strong>bounding_box_xy_notation</strong><br>
-[xmin, xmax, ymin, ymax]</p>
-<p><strong>cr_widthheight</strong><br>
-[col, row, width, height] Specific usecase optimized for use with GDAL notation on bounding boxes.</p>
-</section>
-<section id="coordinates" class="level3">
-<h3 class="anchored" data-anchor-id="coordinates">Coordinates</h3>
-<p><strong>lat</strong><br>
-Standard abbreviation for latitude</p>
-<p><strong>lon</strong><br>
-Standard abbreviation for longitude (preferred over ‘long’)</p>
-<p><strong>lon_vs_long</strong><br>
-Always use ‘lon’; ‘long’ conflicts with Python built-in type</p>
-<p><strong>lat_size</strong><br>
-Height in degrees or number of latitude values</p>
-<p><strong>lon_size</strong><br>
-Width in degrees or number of longitude values</p>
-</section>
-</section>
-<section id="identifiers-and-indexing" class="level2">
-<h2 class="anchored" data-anchor-id="identifiers-and-indexing">Identifiers and Indexing</h2>
-<p><strong>index</strong><br>
-Position in sequence or database index (e.g., row_index, spatial_index). DO NOT USE for id columns in e.g.&nbsp;pandas DataFrames as the position can change.</p>
-<p><strong>id</strong><br>
-Unique identifier; prefer ‘identifier’ or specific names (e.g., user_id, feature_id)</p>
-<p><strong>counter</strong><br>
-For loop counters or accumulation (e.g., error_counter, iteration_counter). When lots of counters are being used, consider c_row, row in enumerate(rows) or c_col, col in enumerate(cols) to avoid confusion.</p>
-</section>
-<section id="data-processing" class="level2">
-<h2 class="anchored" data-anchor-id="data-processing">Data Processing</h2>
-<p><strong>valid</strong><br>
-Boolean or mask indicating valid/usable data points</p>
-<p><strong>not_valid</strong><br>
-Prefer ‘invalid’ or use boolean logic with ‘valid’</p>
-<p><strong>mask</strong><br>
-Boolean array for filtering/selection (True where condition met)</p>
-<p><strong>ndv</strong><br>
-Preferred option over nodata, no_data, no_data_value, etc.</p>
-<p><strong>nonzero</strong><br>
-Elements/indices where value != 0 (e.g., numpy.nonzero())</p>
-</section>
-<section id="standard-library-abbreviations" class="level2">
-<h2 class="anchored" data-anchor-id="standard-library-abbreviations">Standard Library Abbreviations</h2>
-<p><strong>array</strong><br>
-Generic numpy/array object (e.g., data_array, temperature_array)</p>
-<p><strong>df</strong><br>
-Standard abbreviation for pandas DataFrame. If you have many dfs, consider using df_ prefix (e.g., df_sales, df_customers)</p>
-<p><strong>gdf</strong><br>
-Standard abbreviation for GeoPandas GeoDataFrame</p>
-<p><strong>gpd</strong><br>
-Standard import alias for geopandas (import geopandas as gpd)</p>
-<p><strong>pd</strong><br>
-Standard import alias for pandas (import pandas as pd)</p>
-<p><strong>np</strong><br>
-Standard import alias for numpy (import numpy as np)</p>
-</section>
-<section id="special-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="special-conventions">Special Conventions</h2>
-<p><strong>default</strong><br>
-Default parameter values (e.g., default_crs, default_timeout)</p>
-<p><strong>paths_to_delete_at_exit</strong><br>
-Clear naming for cleanup list; good practice for temp files</p>
-<p><strong>uris_to_delete_at_exit</strong><br>
-Outdated. Use paths_to_delete_at_exit instead.</p>
-<p><strong>plots_to_display_at_exit</strong><br>
-Clear naming for deferred plotting; useful for batch processing</p>
-<section id="priority-indicators" class="level3">
-<h3 class="anchored" data-anchor-id="priority-indicators">Priority Indicators</h3>
-<p><strong>todo</strong><br>
-Single TODO for standard priority tasks</p>
-<p><strong>todoo</strong><br>
-Double-O for lower priority items needing attention. The priority order for todo markers is usually opposite among coders.</p>
-<p><strong>todooo</strong><br>
-Triple-O for even lower issues that must be addressed</p>
-</section>
-<section id="naming-to-avoid" class="level3">
-<h3 class="anchored" data-anchor-id="naming-to-avoid">Naming to Avoid</h3>
-<p><strong>globals</strong><br>
-Avoid global variables; if necessary, use UPPER_CASE naming</p>
-<p><strong>temp</strong><br>
-Never use - ambiguous (temporary or temperature?)</p>
-<p><strong>temporary</strong><br>
-Better than ‘temp’ - clear meaning for short-lived objects</p>
-<p><strong>temperature</strong><br>
-Better than ‘temp’ - clear meaning for thermal data</p>
-</section>
-<section id="debug-conventions" class="level3">
-<h3 class="anchored" data-anchor-id="debug-conventions">Debug Conventions</h3>
-<p><strong>print_parentheses</strong><br>
-print() with no space likely debug code to be removed</p>
-<p><strong>print_space_parentheses</strong><br>
-print () with space indicates intentional output to keep</p>
-</section>
-</section>
-<section id="miscellaneous-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="miscellaneous-conventions">Miscellaneous Conventions</h2>
-<p><strong>use_of_word_old</strong><br>
-Prefix ‘old_’ for previous versions during refactoring (e.g., old_algorithm)</p>
-<p><strong>info</strong><br>
-Generic metadata container (e.g., dataset_info, processing_info)</p>
-<p><strong>describe</strong><br>
-Statistical summary function name (e.g., describe_dataset, pandas.describe())</p>
-<p><strong>desc</strong><br>
-Common abbreviation for description in metadata/documentation</p>
-<p><strong>run_dir</strong><br>
-Directory for current execution outputs (e.g., experiments, logs)</p>
-<p><strong>postpending_array_etc_to_var_name</strong><br>
-Good practice to indicate type (e.g., temps_array vs temps_list)</p>
-</section>
-<section id="file-type-specific" class="level2">
-<h2 class="anchored" data-anchor-id="file-type-specific">File Type Specific</h2>
-<p><strong>shapefile</strong><br>
-Only use to specify that you’re explicitly using an ESRI shapefile vs eg geopackage.</p>
-<p><strong>tiff</strong><br>
-Never use, except in GDAL Drivername GTiff</p>
-</section>
-<section id="scenario-naming-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="scenario-naming-conventions">Scenario Naming Conventions</h2>
-<p>Scenarios are defined in the following nested structure:</p>
-<ol class="incremental" type="1">
-<li><p><strong>Exogenous Assumptions Label</strong> (no hyphens) - e.g., SSP, GDP, population</p></li>
-<li><p><strong>Climate Assumption Label</strong> (no hyphens) - which RCP</p></li>
-<li><p><strong>Model Label</strong> (can have hyphens) - e.g., magpie, luh2-message</p></li>
-<li><p><strong>Counterfactual Label</strong> - includes BAU as special counterfactual</p></li>
-</ol>
-<p>Example directory structure:</p>
-<pre><code>ssp2/rcp45/luh2-message/bau/filename_2050.tif </code></pre>
-<section id="filename-conventions" class="level3">
-<h3 class="anchored" data-anchor-id="filename-conventions">Filename Conventions</h3>
-<p><strong>Implied</strong>: Directory structure defines all labels except year:</p>
-<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif </code></pre>
-<p><strong>Explicit</strong>: Include all labels in filename:</p>
-<pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_ssp2_rcp45_bau_luh2-message_2050.tif </code></pre>
-</section>
-</section>
-<section id="utf-8-encoding-guidelines" class="level2">
-<h2 class="anchored" data-anchor-id="utf-8-encoding-guidelines">UTF-8 Encoding Guidelines</h2>
-<p>When working with international datasets:</p>
+<section id="utf-8-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="utf-8-encoding">UTF-8 encoding</h2>
+<p>International datasets frequently hit Byte Order Mark (BOM) / encoding mismatches — e.g.&nbsp;a first column read as <code>Ã¯Â»Â¿fao_country_id</code>, or “Åland” mangled to “Ã…land”. Excel assumes Windows-1252 for UTF-8 files that lack a BOM, splitting each multi-byte character into garbled pieces.</p>
 <ul class="incremental">
-<li><p>Use <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code> for reading</p></li>
-<li><p>Use <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code> for writing</p></li>
-<li><p>The <code>-sig</code> adds a BOM that helps Excel correctly interpret UTF-8</p></li>
+<li><strong>Read</strong> CSVs with <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code>.</li>
+<li><strong>Write</strong> CSVs with <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code>.</li>
+<li>The <code>-sig</code> adds the 3-byte BOM that tells Excel the file is UTF-8. For most data-analysis work, prefer <code>utf-8-sig</code> everywhere; use plain <code>utf-8</code> only when the consuming tool expects it (some Unix CLI tools).</li>
+<li>To strip a stray BOM from already-loaded columns: <code>df.columns = df.columns.str.replace('﻿', '')</code>.</li>
 </ul>
 </section>
-<section id="python-style-guidelines" class="level2">
-<h2 class="anchored" data-anchor-id="python-style-guidelines">Python Style Guidelines</h2>
-<section id="docstringsgeneral-style" class="level3">
-<h3 class="anchored" data-anchor-id="docstringsgeneral-style">DocstringsGeneral Style</h3>
+<section id="projectflow-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="projectflow-conventions">ProjectFlow conventions</h2>
 <ul class="incremental">
-<li><p>Use snake_case for variables and functions</p></li>
-<li><p>Use CamelCase for classes</p></li>
-<li><p>Avoid global variables</p></li>
-<li><p>Keep functions concise and focused on a single task</p></li>
+<li>A ProjectFlow module’s root directory is marked by a file named <strong>exactly</strong> <code>run.py</code> — this markerfile identifies the module root. Only the root may have it.</li>
+<li><strong>Tasks are named as nouns</strong> (this intentionally breaks PEP 8), referencing what is stored in the task’s output directory, so the resulting file structure reads well to an outsider.</li>
+<li>A task is a function that takes <code>p</code> and returns <code>p</code>. Define project-level paths and attributes <em>before</em> the <code>if p.run_this:</code> block (these are the shared “project-level variables” other tasks may use); put all computationally intensive work <em>inside</em> <code>if p.run_this:</code>.</li>
+<li>Every computationally intensive step must be guarded by an existence check (usually <code>if not hb.path_exists(output_path):</code>) so completed work is skipped on re-run.</li>
+<li><strong><code>input_template/</code> is tracked; <code>input/</code> is derived.</strong> Definition files a run reads — scenarios CSV, parameters CSV, outputs CSV, figure/section definitions, and any other seed inputs — live in the repo’s <code>input_template/</code> directory and <strong>are committed to source control</strong>. On first run, ProjectFlow copies each item that doesn’t already exist in the project’s <code>input/</code> directory (which lives under the timestamped/project run dir and is <strong>outside source control</strong>). So: edit the copy in <code>input_template/</code>; treat <code>input/</code> as a generated working copy. A run only copies files that are missing in <code>input/</code>, so a stale <code>input/</code> file will shadow an updated template — delete it (or use a fresh project dir) to pick up template edits.</li>
+<li><strong>A test run differs from the full run only by its scenarios CSV.</strong> Keep a pared <code>&lt;project&gt;_scenarios_test.csv</code> in <code>input_template/</code> (fewer scenarios, a single future year, a single AOI region) and a thin <code>run_&lt;project&gt;_test.py</code> that calls the same <code>run_project()</code> entry point with that filename and a stable, non-timestamped project dir so repeated test runs resume in place. Don’t fork the task tree for tests.</li>
 </ul>
 </section>
-</section>
-<section id="styleguide" class="level2">
-<h2 class="anchored" data-anchor-id="styleguide">Styleguide</h2>
-<p>We follow pep8 style for Python with a few key departures. First, we allow more than 80 character-width lines. The limit is flexible but keep it what fits within 160 characters, with the exception of comments trailing a code line. For functions, only have 1 linebreak not 2 between functions. This is useful when you collapse/fold your functions, you can see more functions.</p>
-</section>
-<section id="unsorted" class="level2">
-<h2 class="anchored" data-anchor-id="unsorted">UNSORTED</h2>
-<p>TODO, needs to be put in the right place in the documentation</p>
-<p>only a projectflow module’s root dir can have the exact file run.py. This is used as a markerfile to identify the module’s root.</p>
-<section id="single-vs-double-quotes" class="level3">
-<h3 class="anchored" data-anchor-id="single-vs-double-quotes">Single vs Double quotes</h3>
-<p>Python allows both single and double quotes for strings, but they must be <em>balanced</em>. Best practices are mixed, but we do it where the outer string always uses doublequote and then inner strings (like in the dictionary key string values below) use single quotes.</p>
-<p>hb.log(f”!hb.df_merge, left had non-shared values in merge-col.&nbsp;N=: {str(len(comparison_dict[‘right_only’]))}. First few values:” + str(comparison_dict[‘right_only’])[:100] + “…”)</p>
+<section id="git-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="git-workflow">Git workflow</h2>
+<p>We use <strong>Git Flow</strong> (a <code>main</code> branch plus a <code>develop</code> branch):</p>
+<ul class="incremental">
+<li><code>main</code> holds working releases only.</li>
+<li><code>develop</code> is the integration branch. Branch features off <code>develop</code> as <code>feature_&lt;name&gt;</code> (or <code>develop_&lt;yourname&gt;</code>).</li>
+<li>Open pull requests <strong>into <code>develop</code></strong>, not <code>main</code>. <code>develop</code> is protected — only work that passes unit tests is merged. Releases are promoted from <code>develop</code> to <code>main</code> via pull request.</li>
+<li>External contributors fork, branch, and PR from their fork into the upstream <code>develop</code>.</li>
+</ul>
+<p>See the full walkthrough on the <em>Contributing</em> page.</p>
 
 
 </section>

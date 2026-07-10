@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matthew Braaksma">
+<meta name="dcterms.date" content="2026-07-10">
+
+<title>DEMETRA-SEALS-InVEST – Justin Andrew Johnson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fabeed3329234993a4d83c1b0fda0427.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Justin Andrew Johnson</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../publications/index.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teaching" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teaching</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teaching">    
+        <li>
+    <a class="dropdown-item" href="../teaching/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/applied_earth_economy_modeling.html">
+ <span class="dropdown-text">Applied Earth-Economy Modeling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/big_data_ml_and_ai_for_economists.html">
+ <span class="dropdown-text">Big Data, Machine Learning and AI for Economists</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/environmental_economics.html">
+ <span class="dropdown-text">Undergraduate Environmental and Natural ResourceEconomics</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../research/index.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books/index.html"> 
+<span class="menu-text">Books</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gtap-invest" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">GTAP-InVEST</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-gtap-invest">    
+        <li>
+    <a class="dropdown-item" href="../gtap_invest/index.html">
+ <span class="dropdown-text">GTAP-InVEST Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtap_invest/user_guide/index.html">
+ <span class="dropdown-text">User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtap_invest/results/index.html">
+ <span class="dropdown-text">Results</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-software" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Software</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-software">    
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/index.html">
+ <span class="dropdown-text">Earth-Economy Devstack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../mesh/index.html">
+ <span class="dropdown-text">MESH</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/seals_overview.html">
+ <span class="dropdown-text">SEALS</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../data/index.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../cv-bio/index.html"> 
+<span class="menu-text">CV/Bio</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jandrewjohnson"> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/seals_overview.html">SEALS</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/kenya_seals_report.html">Kenya DEMETRA-SEALS Tutorial</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Earth-Economy Devstack</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../earth_economy_devstack/hazelbean_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hazelbean</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/hazelbean_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Levels of Complexity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/project_flow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ProjectFlow</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/global_invest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Global InVEST</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GTAPPy</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/gtap_invest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GTAP-InVEST</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SEALS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_quickstart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quickstart</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_walkthrough.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Walkthrough</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/seals_magpie_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Magpie Tutorial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Kenya DEMETRA-SEALS Tutorial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../earth_economy_devstack/methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Methods</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/organization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Organization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/how_to_contribute.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Contribute</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/conventions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conventions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="incremental">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
+  <ul class="incremental">
+  <li><a href="#seals-repository-installation" id="toc-seals-repository-installation" class="nav-link" data-scroll-target="#seals-repository-installation">SEALS Repository Installation</a></li>
+  </ul></li>
+  <li><a href="#data-setup" id="toc-data-setup" class="nav-link" data-scroll-target="#data-setup">Data Setup</a>
+  <ul class="incremental">
+  <li><a href="#file-organization-structure" id="toc-file-organization-structure" class="nav-link" data-scroll-target="#file-organization-structure">File Organization Structure</a>
+  <ul class="incremental collapse">
+  <li><a href="#base-data-global-shared-data" id="toc-base-data-global-shared-data" class="nav-link" data-scroll-target="#base-data-global-shared-data">Base Data (Global Shared Data)</a></li>
+  <li><a href="#additional-invest-data" id="toc-additional-invest-data" class="nav-link" data-scroll-target="#additional-invest-data">Additional InVEST data</a></li>
+  <li><a href="#project-data-countryregion-specific" id="toc-project-data-countryregion-specific" class="nav-link" data-scroll-target="#project-data-countryregion-specific">Project Data (Country/Region-Specific)</a></li>
+  <li><a href="#additional-country-data" id="toc-additional-country-data" class="nav-link" data-scroll-target="#additional-country-data">Additional country data</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#testing-seals" id="toc-testing-seals" class="nav-link" data-scroll-target="#testing-seals">Testing SEALS</a>
+  <ul class="incremental">
+  <li><a href="#standard-test-run" id="toc-standard-test-run" class="nav-link" data-scroll-target="#standard-test-run">Standard Test Run</a></li>
+  <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues">Common Issues</a></li>
+  </ul></li>
+  <li><a href="#kenya-demetra-scenario" id="toc-kenya-demetra-scenario" class="nav-link" data-scroll-target="#kenya-demetra-scenario">Kenya DEMETRA Scenario</a>
+  <ul class="incremental">
+  <li><a href="#key-input-files" id="toc-key-input-files" class="nav-link" data-scroll-target="#key-input-files">Key Input Files</a></li>
+  <li><a href="#running-the-kenya-scenario" id="toc-running-the-kenya-scenario" class="nav-link" data-scroll-target="#running-the-kenya-scenario">Running the Kenya Scenario</a></li>
+  </ul></li>
+  <li><a href="#understanding-the-task-tree" id="toc-understanding-the-task-tree" class="nav-link" data-scroll-target="#understanding-the-task-tree">Understanding the Task Tree</a>
+  <ul class="incremental">
+  <li><a href="#task-hierarchy" id="toc-task-hierarchy" class="nav-link" data-scroll-target="#task-hierarchy">Task Hierarchy</a></li>
+  </ul></li>
+  <li><a href="#task-by-task-walkthrough" id="toc-task-by-task-walkthrough" class="nav-link" data-scroll-target="#task-by-task-walkthrough">Task-by-Task Walkthrough</a>
+  <ul class="incremental">
+  <li><a href="#project-aoi-area-of-interest" id="toc-project-aoi-area-of-interest" class="nav-link" data-scroll-target="#project-aoi-area-of-interest">1. Project AOI (Area of Interest)</a></li>
+  <li><a href="#fine-processed-inputs" id="toc-fine-processed-inputs" class="nav-link" data-scroll-target="#fine-processed-inputs">2. Fine Processed Inputs</a></li>
+  <li><a href="#coarse-change" id="toc-coarse-change" class="nav-link" data-scroll-target="#coarse-change">3. Coarse Change</a></li>
+  <li><a href="#regional-change" id="toc-regional-change" class="nav-link" data-scroll-target="#regional-change">4. Regional Change</a></li>
+  <li><a href="#allocations" id="toc-allocations" class="nav-link" data-scroll-target="#allocations">5. Allocations</a></li>
+  <li><a href="#stitched-lulc-scenarios" id="toc-stitched-lulc-scenarios" class="nav-link" data-scroll-target="#stitched-lulc-scenarios">6. Stitched LULC Scenarios</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">7. Visualization</a></li>
+  <li><a href="#invest-modules" id="toc-invest-modules" class="nav-link" data-scroll-target="#invest-modules">8. InVEST Modules</a>
+  <ul class="incremental collapse">
+  <li><a href="#reproject-to-equal-area" id="toc-reproject-to-equal-area" class="nav-link" data-scroll-target="#reproject-to-equal-area">8.1 Reproject to Equal Area</a></li>
+  <li><a href="#carbon-storage" id="toc-carbon-storage" class="nav-link" data-scroll-target="#carbon-storage">8.2 Carbon Storage</a></li>
+  <li><a href="#pollination" id="toc-pollination" class="nav-link" data-scroll-target="#pollination">8.3 Pollination</a></li>
+  <li><a href="#crop-value-and-pollination-shocks" id="toc-crop-value-and-pollination-shocks" class="nav-link" data-scroll-target="#crop-value-and-pollination-shocks">8.4 Crop Value and Pollination Shocks</a></li>
+  <li><a href="#biodiversity-index" id="toc-biodiversity-index" class="nav-link" data-scroll-target="#biodiversity-index">8.5 Biodiversity Index</a></li>
+  </ul></li>
+  <li><a href="#summary-and-visualization" id="toc-summary-and-visualization" class="nav-link" data-scroll-target="#summary-and-visualization">9. Summary and Visualization</a></li>
+  </ul></li>
+  <li><a href="#final-outputs" id="toc-final-outputs" class="nav-link" data-scroll-target="#final-outputs">Final Outputs</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/seals_overview.html">SEALS</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/kenya_seals_report.html">Kenya DEMETRA-SEALS Tutorial</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">DEMETRA-SEALS-InVEST</h1>
+<p class="subtitle lead">Workflow Walkthrough</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matthew Braaksma </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 10, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This walkthrough guides you through installing, configuring, and running the DEMETRA-SEALS-InVEST workflow. SEALS (Spatial Economic Allocation Landscape Simulator) integrates with InVEST (Integrated Valuation of Ecosystem Services and Tradeoffs) to model land-use change scenarios and their ecosystem service impacts.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_demetra-invest-v2.drawio.png" class="img-fluid figure-img"></p>
+<figcaption>Workflow Diagram</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>For complete details, see Justin Johnson’s <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">installation guide</a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prerequisites
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Before beginning, ensure you have:</p>
+<ul class="incremental">
+<li><strong>Git</strong> - <a href="https://git-scm.com/downloads">Download here</a></li>
+<li><strong>Miniforge3</strong> (Python distribution) - <a href="https://conda-forge.org/download/">Download here</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Basic Hazelbean Installation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Hazelbean is the core dependency for running SEALS. Install it with these commands:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize conda (may not be needed depending on your shell configuration)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new environment (replace 'seals_env' with your preferred name)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> seals_env</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate the environment</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Hazelbean</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install hazelbean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Note:</strong> The <code>mamba install hazelbean</code> command may take 5-10 minutes to complete.</p>
+</div>
+</div>
+</div>
+<hr>
+<section id="seals-repository-installation" class="level3">
+<h3 class="anchored" data-anchor-id="seals-repository-installation">SEALS Repository Installation</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Step 1: Install C/C++ Compiler
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Windows Users - Choose One Option:</strong></p>
+<ul class="incremental">
+<li><p><strong>Option 1:</strong> Download from <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Visual Studio Build Tools</a> and select “Download Build Tools”</p></li>
+<li><p><strong>Option 2:</strong> Use winget command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">winget</span> install Microsoft.VisualStudio.2022.BuildTools <span class="at">--force</span> <span class="at">--override</span> <span class="st">"--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Option 3:</strong> Run the <code>install.bat</code> file from the Earth Economy Devstack repository root (executes the winget command above)</p></li>
+</ul>
+<p><strong>Mac/Linux Users:</strong></p>
+<p>Most users will already have Xcode installed. If not:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xcode-select</span> <span class="at">--install</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This installs Xcode Command Line Tools including gcc and clang compilers.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Step 2: Clone SEALS Repository
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Clone the repository to your local machine:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/jandrewjohnson/seals_dev</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Recommended location:</strong> <code>C:/Users/&lt;username&gt;/Files/seals/seals_dev</code> (Windows) or <code>/Users/&lt;username&gt;/Files/seals/seals_dev</code> (Mac/Linux)</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Step 3: Install as Editable Package
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate your conda environment</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to the cloned repository</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> C:/Users/<span class="op">&lt;</span>username<span class="op">&gt;</span>/Files/seals/seals_dev</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Install as editable package</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> . <span class="at">--no-deps</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="data-setup" class="level2">
+<h2 class="anchored" data-anchor-id="data-setup">Data Setup</h2>
+<!-- Access all required data from this [Google Drive folder](https://drive.google.com/drive/folders/1ljiapyN1J_1CHrhDxqJ8YgLDAU-3-RmH?usp=drive_link). -->
+<section id="file-organization-structure" class="level3">
+<h3 class="anchored" data-anchor-id="file-organization-structure">File Organization Structure</h3>
+<p>SEALS uses a specific directory structure to locate data automatically:</p>
+<section id="base-data-global-shared-data" class="level4">
+<h4 class="anchored" data-anchor-id="base-data-global-shared-data">Base Data (Global Shared Data)</h4>
+<p>SEALS automatically downloads base data on first run to:</p>
+<pre><code>&lt;home&gt;/Files/base_data/seals/
+&lt;home&gt;/Files/base_data/lulc/</code></pre>
+<!-- **Additional InVEST data** (download from Google Drive): -->
+</section>
+<section id="additional-invest-data" class="level4">
+<h4 class="anchored" data-anchor-id="additional-invest-data">Additional InVEST data</h4>
+<pre><code>&lt;home&gt;/Files/base_data/global_invest/
+&lt;home&gt;/Files/base_data/crops/</code></pre>
+</section>
+<section id="project-data-countryregion-specific" class="level4">
+<h4 class="anchored" data-anchor-id="project-data-countryregion-specific">Project Data (Country/Region-Specific)</h4>
+<!-- Download from Google Drive and place in: -->
+</section>
+<section id="additional-country-data" class="level4">
+<h4 class="anchored" data-anchor-id="additional-country-data">Additional country data</h4>
+<pre><code>&lt;home&gt;/Files/seals/projects/run_ken_demetra/</code></pre>
+<p>This includes:</p>
+<ul class="incremental">
+<li>Region border files (shapefiles and raster GeoTIFFs)</li>
+<li>DEMETRA shock files (CSV)</li>
+<li>Downscaling coefficient files (CSV and global rasters)</li>
+<li>Scenario configuration files</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="testing-seals" class="level2">
+<h2 class="anchored" data-anchor-id="testing-seals">Testing SEALS</h2>
+<section id="standard-test-run" class="level3">
+<h3 class="anchored" data-anchor-id="standard-test-run">Standard Test Run</h3>
+<p>This basic test verifies your installation is working correctly.</p>
+<p><strong>Steps:</strong></p>
+<ol class="incremental" type="1">
+<li><p>Locate <code>run_seals_standard.py</code> in <code>seals_dev/seals/</code></p></li>
+<li><p>Ensure your conda environment is activated:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Run the script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Check for output in:</p>
+<pre><code>&lt;home&gt;/Files/seals/projects/standard_&lt;timestamp&gt;/intermediate/visualization/lulc_pngs/</code></pre></li>
+</ol>
+<p><strong>Expected Output:</strong> You should see land-use/land-cover (LULC) maps like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2050.png" class="img-fluid figure-img"></p>
+<figcaption>Example Output</figcaption>
+</figure>
+</div>
+</section>
+<section id="common-issues" class="level3">
+<h3 class="anchored" data-anchor-id="common-issues">Common Issues</h3>
+<p><em>Problem</em>: <code>ValueError: Could not open...</code> error on first run</p>
+<p><em>Solution</em>: The base_data download likely didn’t complete. Run the script again now that base_data is fully downloaded.</p>
+<hr>
+</section>
+</section>
+<section id="kenya-demetra-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="kenya-demetra-scenario">Kenya DEMETRA Scenario</h2>
+<p>This scenario demonstrates land-use change modeling for Kenya using DEMETRA economic shocks.</p>
+<section id="key-input-files" class="level3">
+<h3 class="anchored" data-anchor-id="key-input-files">Key Input Files</h3>
+<p><strong>Scripts:</strong></p>
+<ul class="incremental">
+<li>Main execution script: <code>run_ken_demetra.py</code></li>
+</ul>
+<p><strong>Data Files:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 30%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>File Type</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario Configuration</td>
+<td><code>ken_scenarios_full.csv</code></td>
+<td><code>projects/run_ken_demetra/</code></td>
+</tr>
+<tr class="even">
+<td>Default Downscaling Coefficients</td>
+<td>CSV files + Global rasters</td>
+<td><code>base_data/seals/static_regressors</code> <code>base_data/seals/default_inputs</code></td>
+</tr>
+<tr class="odd">
+<td>DEMETRA Shocks</td>
+<td>CSV files</td>
+<td><code>projects/run_ken_demetra/inputs/demetra_shocks</code></td>
+</tr>
+<tr class="even">
+<td>Regional Borders</td>
+<td>Shapefiles + Raster GeoTIFFs</td>
+<td><code>projects/run_ken_demetra/inputs/borders</code></td>
+</tr>
+<tr class="odd">
+<td>Project Downscaling Coefficients</td>
+<td>CSV files + Global rasters</td>
+<td><code>projects/run_ken_demetra/inputs/static_regressors</code> <code>projects/run_ken_demetra/inputs/coefficients</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> The structure is flexible, but ensure that the paths defined in the scenario CSV and coefficients CSV are properly defined.</p>
+</section>
+<section id="running-the-kenya-scenario" class="level3">
+<h3 class="anchored" data-anchor-id="running-the-kenya-scenario">Running the Kenya Scenario</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals_dev/seals/</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_ken_demetra.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="understanding-the-task-tree" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-the-task-tree">Understanding the Task Tree</h2>
+<p>When you run <code>run_ken_demetra.py</code>, SEALS creates a ProjectFlow object that executes a series of tasks in a hierarchical tree structure. Each task creates outputs in the <code>intermediate/</code> directory.</p>
+<section id="task-hierarchy" class="level3">
+<h3 class="anchored" data-anchor-id="task-hierarchy">Task Hierarchy</h3>
+<p>For reference, here’s the complete task tree as shown in the console output:</p>
+<pre><code>execute
+├── project_aoi
+├── fine_processed_inputs
+│   ├── generated_kernels
+│   ├── lulc_clip
+│   ├── lulc_simplifications
+│   ├── lulc_binaries
+│   └── lulc_convolutions
+├── coarse_change
+│   ├── coarse_extraction
+│   ├── coarse_simplified_proportion
+│   ├── coarse_simplified_ha
+│   └── coarse_simplified_ha_difference_from_previous_year
+├── regional_change
+├── allocations
+│   └── allocation_zones
+│       └── allocation
+├── stitched_lulc_simplified_scenarios
+├── visualization
+│   └── lulc_pngs
+├── reproject_lulc_rasters_to_equal_area
+├── run_invest_carbon
+├── run_invest_pollination
+├── calculate_crop_value_and_shock
+├── calculate_biodiversity_index
+└── summarize_and_visualize_multi_vector</code></pre>
+<p>Each task is explained in detail below.</p>
+<hr>
+</section>
+</section>
+<section id="task-by-task-walkthrough" class="level2">
+<h2 class="anchored" data-anchor-id="task-by-task-walkthrough">Task-by-Task Walkthrough</h2>
+<section id="project-aoi-area-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="project-aoi-area-of-interest">1. Project AOI (Area of Interest)</h3>
+<p><strong>Significance:</strong> Defines the geographic boundary for the analysis and creates resolution pyramids for efficient processing at multiple scales.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Loads the area of interest boundary for Kenya from the input shapefile</li>
+<li>Creates a vector geopackage (<code>.gpkg</code>) file for the AOI</li>
+<li>Generates raster “pyramids” at different resolutions:
+<ul class="incremental">
+<li>Fine resolution: Matches the base LULC data (typically 300m)</li>
+<li>Coarse resolution: Matches the coarse projection data (typically 0.25°)</li>
+</ul></li>
+</ol>
+<p><strong>Input files:</strong></p>
+<ul class="incremental">
+<li>Region shapefile from <code>projects/run_ken_demetra/inputs/borders</code></li>
+</ul>
+<p><strong>Output files:</strong></p>
+<pre><code>intermediate/project_aoi/
+├── aoi_KEN.gpkg                              # Vector boundary
+└── pyramids/
+    ├── aoi_ha_per_cell_coarse.tif           # Coarse resolution (hectares per cell)
+    └── aoi_ha_per_cell_fine.tif             # Fine resolution (hectares per cell)</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>The AOI defines the study region
+<ul class="incremental">
+<li>Can use default global country shapefile or project-specific</li>
+</ul></li>
+<li>Pyramids allow multi-scale analysis</li>
+<li>Fine resolution preserves local detail</li>
+<li>Coarse resolution matches global projections</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-aoi.png" class="img-fluid figure-img"></p>
+<figcaption>Area of Interest for Kenya with resolution pyramids</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="fine-processed-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="fine-processed-inputs">2. Fine Processed Inputs</h3>
+<p><strong>Significance:</strong> Prepares the baseline land-use/land-cover (LULC) data for allocation by simplifying classifications, creating binary masks, and generating spatial convolutions.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Generated Kernels: Creates Gaussian kernels for spatial smoothing</li>
+<li>LULC Clip: Clips global LULC data to the Kenya AOI</li>
+<li>LULC Simplifications: Reclassifies detailed ESA categories into 7 SEALS classes:
+<ul class="incremental">
+<li>Cropland</li>
+<li>Forest</li>
+<li>Grassland</li>
+<li>Urban</li>
+<li>Water</li>
+<li>Other natural (othernat)</li>
+<li>Other</li>
+</ul></li>
+<li>LULC Binaries: Creates separate binary masks for each class (1 = present, 0 = absent)</li>
+<li>LULC Convolutions: Applies Gaussian smoothing to capture neighborhood characteristics</li>
+</ol>
+<p><strong>Key Output Structure:</strong></p>
+<pre><code>intermediate/fine_processed_inputs/
+├── generated_kernels/
+│   ├── gaussian_1.tif                        # Small neighborhood kernel
+│   └── gaussian_5.tif                        # Large neighborhood kernel
+├── lulc/esa/
+│   ├── lulc_esa_2020.tif                     # Original ESA LULC
+│   └── seals7/
+│       ├── lulc_esa_seals7_2020.tif          # Simplified 7-class LULC
+│       ├── binaries/2020/                     # Binary masks by class
+│       │   ├── binary_esa_seals7_2020_cropland.tif
+│       │   ├── binary_esa_seals7_2020_forest.tif
+│       │   └── ...
+│       └── convolutions/2020/                 # Smoothed neighborhood data
+│           ├── convolution_esa_seals7_2020_cropland_gaussian_1.tif
+│           ├── convolution_esa_seals7_2020_cropland_gaussian_5.tif
+│           └── ...</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>Simplification reduces complexity while preserving key land-use patterns</li>
+<li>Binary masks enable class-specific analysis</li>
+<li>Convolutions capture spatial context</li>
+<li>These features inform the allocation model’s decision-making</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-fine-inputs.png" class="img-fluid figure-img"></p>
+<figcaption>Fine processed inputs example: Cropland processing pipeline</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="coarse-change" class="level3">
+<h3 class="anchored" data-anchor-id="coarse-change">3. Coarse Change</h3>
+<p><strong>Significance:</strong> Extracts and processes land-use change projections from global coarse-resolution models (e.g., LUH2) for the Kenya region.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Coarse Extraction: Clips global projection data to Kenya’s bounding box and selected year</li>
+<li>Coarse Simplified Proportion: Calculates proportions of each SEALS7 class</li>
+<li>Coarse Simplified Ha: Converts proportions to hectares</li>
+<li>Ha Difference: Calculates change in hectares between time periods (e.g., 2035 → 2050)</li>
+</ol>
+<p><strong>Key Output Example:</strong></p>
+<pre><code>intermediate/coarse_change/coarse_simplified_ha_difference_from_previous_year/
+└── ssp2/rcp45/luh2-message/bau/2050/
+    ├── cropland_2050_2035_ha_diff_ssp2_rcp45_luh2-message_bau.tif
+    ├── forest_2050_2035_ha_diff_ssp2_rcp45_luh2-message_bau.tif
+    └── ...</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>Links exogenous global scenarios (SSP2, RCP4.5) to local allocation</li>
+<li>Tracks changes over time (2035 baseline → 2050 projection)</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-coarse-change.png" class="img-fluid figure-img"></p>
+<figcaption>Coarse-resolution cropland change (2035-2050) under LP+FP scenario</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="regional-change" class="level3">
+<h3 class="anchored" data-anchor-id="regional-change">4. Regional Change</h3>
+<p><strong>Significance:</strong> Adjusts coarse-resolution changes using regional covariates to account for local constraints and opportunities.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Creates a region ID map dividing AOI into separately shocked zones</li>
+<li>Applies various algorithms (e.g., proportional, covariate sum shift) to downscale from regional to coarse</li>
+</ol>
+<p><strong>Key Outputs:</strong></p>
+<pre><code>intermediate/regional_change/
+├── region_ids.tif                              # Regional zone identifiers
+└── ssp2/rcp45/luh2-message/LP/2050/
+    └── cropland_2050_2035_ha_diff_ssp2_rcp45_luh2-message_LP_covariate_sum_shift.tif</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>Accounts for local factors (infrastructure, topography, current land use)</li>
+<li>Bridges the gap between coarse change and regional change</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-regional-change.png" class="img-fluid figure-img"></p>
+<figcaption>Regional + Coarse change for cropland allocation</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="allocations" class="level3">
+<h3 class="anchored" data-anchor-id="allocations">5. Allocations</h3>
+<p><strong>Significance:</strong> Performs the core SEALS allocation, distributing coarse-resolution changes to fine-resolution pixels based on suitability.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Divides Kenya into allocation zones (e.g., zone 213_84)</li>
+<li>For each zone, runs an allocation algorithm that:
+<ul class="incremental">
+<li>Considers spatial covariates (convolutions, distance, etc.)</li>
+<li>Respects constraints (protected areas, water bodies)</li>
+<li>Tracks cumulative change</li>
+</ul></li>
+<li>Produces new LULC maps for each scenario and year</li>
+</ol>
+<p><strong>Key Output Structure:</strong></p>
+<pre><code>intermediate/allocations/ssp2/rcp45/luh2-message/bau/2050/
+└── allocation_zones/213_84/allocation/
+    ├── block_ha_per_cell_coarse.tif              # Coarse resolution for this block
+    ├── cumulative_change_happened.tif            # Tracking allocated changes
+    └── lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2050.tif  # New LULC</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>This is the core of SEALS, where changes actually get placed on the landscape</li>
+<li>Allocation uses machine learning and optimization to find the “best” locations</li>
+<li>Results are spatially explicit: you can see exactly where cropland expanded</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-allocations.png" class="img-fluid figure-img"></p>
+<figcaption>Example allocation zone showing LULC projection and cumulative change</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="stitched-lulc-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="stitched-lulc-scenarios">6. Stitched LULC Scenarios</h3>
+<p><strong>Significance:</strong> Combines all allocation zones back into complete Kenya-wide LULC maps for each scenario.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Stitches together individual allocation blocks</li>
+<li>Clips to exact Kenya boundary</li>
+<li>Generates outputs for all scenario combinations (bau, enablers, es_index, LP, FP, LP+FP)</li>
+</ol>
+<p><strong>Key Outputs:</strong></p>
+<pre><code>intermediate/stitched_lulc_simplified_scenarios/
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2050.tif
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP_2050.tif
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_FP_2050.tif
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.tif
+└── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050_clipped.tif</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>Provides complete LULC projections</li>
+<li>Enables comparison across scenarios</li>
+<li>Serves as input to ecosystem service models (InVEST)</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-stitched.png" class="img-fluid figure-img"></p>
+<figcaption>Complete LULC projection for Kenya under LP+FP scenario (2050)</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="visualization" class="level3">
+<h3 class="anchored" data-anchor-id="visualization">7. Visualization</h3>
+<p><strong>Significance:</strong> Creates publication-quality PNG images of LULC projections for easy viewing and sharing.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Renders each stitched LULC raster as a PNG</li>
+<li>Applies consistent color schemes</li>
+<li>Adds appropriate labels and legends</li>
+</ol>
+<p><strong>Key Outputs:</strong></p>
+<pre><code>intermediate/visualization/lulc_pngs/
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2050.png
+├── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP_2050.png
+└── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.png</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.png" class="img-fluid figure-img"></p>
+<figcaption>Default PNG image for LP+FP scenario</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="invest-modules" class="level3">
+<h3 class="anchored" data-anchor-id="invest-modules">8. InVEST Modules</h3>
+<p><strong>Significance:</strong> Calculates ecosystem service values using Natural Capital Project’s InVEST models.</p>
+<section id="reproject-to-equal-area" class="level4">
+<h4 class="anchored" data-anchor-id="reproject-to-equal-area">8.1 Reproject to Equal Area</h4>
+<p>Converts LULC maps to equal-area projection (required for accurate area-based calculations).</p>
+<pre><code>intermediate/reproject_lulc_rasters_to_equal_area/
+└── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.tif</code></pre>
+</section>
+<section id="carbon-storage" class="level4">
+<h4 class="anchored" data-anchor-id="carbon-storage">8.2 Carbon Storage</h4>
+<p>Estimates above- and below-ground carbon stocks using the InVEST Carbon model.</p>
+<p><strong>Key Output:</strong></p>
+<pre><code>intermediate/run_invest_carbon/
+└── esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050/
+    └── c_storage_bas.tif                        # Carbon storage (Mg C/ha)</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-carbon.png" class="img-fluid figure-img"></p>
+<figcaption>Carbon storage under LP+FP scenario (2050)</figcaption>
+</figure>
+</div>
+</section>
+<section id="pollination" class="level4">
+<h4 class="anchored" data-anchor-id="pollination">8.3 Pollination</h4>
+<p>Models pollinator abundance and crop pollination dependency using InVEST’s Pollination model.</p>
+<p><strong>Key Output:</strong></p>
+<pre><code>intermediate/run_invest_pollination/
+└── esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050/
+    └── total_pollinator_abundance_summer.tif    # Pollinator index</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-pollination.png" class="img-fluid figure-img"></p>
+<figcaption>Pollinator abundance under LP+FP scenario (2050)</figcaption>
+</figure>
+</div>
+</section>
+<section id="crop-value-and-pollination-shocks" class="level4">
+<h4 class="anchored" data-anchor-id="crop-value-and-pollination-shocks">8.4 Crop Value and Pollination Shocks</h4>
+<p>Calculates agricultural value and applies DEMETRA economic shocks based on pollination changes.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Baseline crop value: Combines production data from all crops weighted by pollination dependency</li>
+<li>Maximum potential loss: Calculates loss if pollination disappeared completely</li>
+<li>Pollination sufficiency threshold: Uses 0.3 as the critical threshold</li>
+<li>Adjusted crop value: For each scenario:
+<ul class="incremental">
+<li>If below threshold → apply proportional loss</li>
+<li>If at or above threshold → maintain baseline value</li>
+</ul></li>
+<li>Regional shocks: Calculates <code>shock_value = scenario_value / baseline_value</code> by region</li>
+</ol>
+<!-- **The key formula:**
+```python
+if poll_suff < 0.3:
+    adjusted_value = baseline - max_loss * (1 - (1/0.3) * poll_suff)
+else:
+    adjusted_value = baseline
+``` -->
+<p><strong>Key Outputs:</strong></p>
+<pre><code>intermediate/calculate_crop_value_and_shock/
+├── crop_value_baseline.tif                      # Baseline crop value ($/ha)
+├── crop_value_max_lost.tif                      # Maximum possible loss ($/ha)
+├── crop_value_adjusted_baseline_2020.tif        # Adjusted baseline
+├── crop_value_adjusted_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.tif  # Scenario
+├── pollination_shocks_seals7_ssp2_rcp45_luh2-message.csv         # Regional shock values
+└── pollination_shocks_alt_seals7_ssp2_rcp45_luh2-message.csv     # Alternative regions</code></pre>
+<p><strong>Significance:</strong></p>
+<ul class="incremental">
+<li>Translates ecological changes (pollination) into economic impacts</li>
+<li>Provides spatially explicit economic loss estimates</li>
+<li>Generates shock values for DEMETRA CGE model integration</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-crop-shock.png" class="img-fluid figure-img"></p>
+<figcaption>Pollination change and Crop value change</figcaption>
+</figure>
+</div>
+<table class="caption-top table">
+<caption>Region Pollination Shocks (BAU, 2050)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Year</th>
+<th style="text-align: left;">Region</th>
+<th style="text-align: right;">Shock_Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">AN</td>
+<td style="text-align: right;">0.86908</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">AS</td>
+<td style="text-align: right;">0.919913</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">CO</td>
+<td style="text-align: right;">0.921871</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">HR</td>
+<td style="text-align: right;">0.924216</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">MN</td>
+<td style="text-align: right;">0.924557</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">MO</td>
+<td style="text-align: right;">0.929781</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">MS</td>
+<td style="text-align: right;">0.977373</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2050</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0.99532</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="biodiversity-index" class="level4">
+<h4 class="anchored" data-anchor-id="biodiversity-index">8.5 Biodiversity Index</h4>
+<p>Calculates habitat quality and biodiversity index based on LULC patterns and biodiversity data (species ranges, endemic species ranges, key biodiversity areas, ecoregions). Not currently an official part of the InVEST ecosystem.</p>
+<p><strong>Key Output:</strong></p>
+<pre><code>intermediate/calculate_biodiversity_index/
+└── esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050/
+    └── esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050_index.tif</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-biodiversity.png" class="img-fluid figure-img"></p>
+<figcaption>Biodiversity index under LP+FP scenario (2050)</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+</section>
+<section id="summary-and-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="summary-and-visualization">9. Summary and Visualization</h3>
+<p><strong>Significance:</strong> Creates multi-panel comparison figures showing results across all scenarios and ecosystem services.</p>
+<p><strong>What it does:</strong></p>
+<ol class="incremental" type="1">
+<li>Compiles results from all InVEST modules</li>
+<li>Generates comparison figures across scenarios (bau, LP, FP, LP+FP, enablers, es_index)</li>
+<li>Creates summary visualizations for reports and presentations</li>
+</ol>
+<p><strong>Key Outputs:</strong></p>
+<pre><code>intermediate/summarize_and_visualize_multi_vector/
+├── biodiversity_combined/
+│   └── esa_seals7_ssp2_rcp45_luh2-message_bau_biodiversity_combined.png
+├── carbon_combined/
+│   └── esa_seals7_ssp2_rcp45_luh2-message_es_index_carbon_combined.png
+├── lulc_combined/
+│   └── esa_seals7_ssp2_rcp45_luh2-message_enablers_lulc_combined.png
+├── pollination_combined/
+│   └── esa_seals7_ssp2_rcp45_luh2-message_es_index_pollination_combined.png
+└── summary_visualizations/
+    └── summary_grouped_vertical_2050.png        # Master summary figure</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kenya_fig-summary.png" class="img-fluid figure-img"></p>
+<figcaption>Master summary visualization comparing all scenarios (2050)</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+</section>
+<section id="final-outputs" class="level2">
+<h2 class="anchored" data-anchor-id="final-outputs">Final Outputs</h2>
+<p>Output files will be generated in:</p>
+<pre><code>&lt;home&gt;/Files/seals/projects/run_ken_demetra/</code></pre>
+<p><strong>Primary outputs include:</strong></p>
+<p><strong>SEALS outputs:</strong></p>
+<ul class="incremental">
+<li>LULC geotiff files: <code>intermediate/stitched_lulc_simplified_scenarios/</code>
+<ul class="incremental">
+<li>Land-use/land-cover predictions for each scenario year</li>
+</ul></li>
+<li>LULC png files: <code>intermediate/visualization/lulc_pngs/</code>
+<ul class="incremental">
+<li>Spatial representation of land-use transitions</li>
+</ul></li>
+</ul>
+<p><strong>Project outputs:</strong></p>
+<ul class="incremental">
+<li>Figures: <code>intermediate/summarize_and_visualize_multi_vector/</code>
+<ul class="incremental">
+<li><code>biodiversity_combined</code></li>
+<li><code>carbon_combined</code></li>
+<li><code>carbon_total_combined</code></li>
+<li><code>lulc_combined</code></li>
+<li><code>pollination_combined</code></li>
+<li><code>summary_visualizations</code></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="additional-resources" class="level2">
+<h2 class="anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<ul class="incremental">
+<li>SEALS Repository: <a href="https://github.com/jandrewjohnson/seals_dev" class="uri">https://github.com/jandrewjohnson/seals_dev</a></li>
+<li>InVEST Documentation: <a href="https://naturalcapitalproject.stanford.edu/software/invest" class="uri">https://naturalcapitalproject.stanford.edu/software/invest</a></li>
+<li>InVEST Python Documentation: <a href="https://invest.readthedocs.io/en/latest/index.html" class="uri">https://invest.readthedocs.io/en/latest/index.html</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

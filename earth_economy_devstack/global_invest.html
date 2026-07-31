@@ -186,6 +186,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seals" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">SEALS</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seals">    
+        <li>
+    <a class="dropdown-item" href="../seals/index.html">
+ <span class="dropdown-text">SEALS Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../seals/index.html">
+ <span class="dropdown-text">User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../seals/SEALS-User-Guide.pdf">
+ <span class="dropdown-text">Download PDF</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-software" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Software</span>
     </a>
@@ -197,10 +216,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="../mesh/index.html">
  <span class="dropdown-text">MESH</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../earth_economy_devstack/seals_overview.html">
- <span class="dropdown-text">SEALS</span></a>
   </li>  
     </ul>
   </li>
@@ -336,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
+            <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SEALS</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -345,8 +360,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+  <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SEALS User Guide</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -357,38 +372,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_quickstart.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Quickstart</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Walkthrough</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_walkthrough_marked.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Walkthrough (Marked)</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Magpie</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_magpie_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Magpie Tutorial</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial</span></a>
+ <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
@@ -418,12 +403,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/conventions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conventions</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/run_file.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Run File</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -526,19 +505,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol class="incremental" type="1">
 <li>Create a <code>Project</code> object <code>p</code>, and set up corresponding project-directories.</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the project flow object</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow()</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set project-directories</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p.user_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>) <span class="co"># EE Devstack is defined relative to the user's directory, but could be overwritten if running not for the Devstack.    </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p.extra_dirs <span class="op">=</span> [<span class="st">'Files'</span>, <span class="st">'global_invest'</span>, <span class="st">'projects'</span>] <span class="co"># Extra directories used inside the user_dir</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> <span class="st">'test_global_invest'</span> <span class="co"># Name of the project, which will be used to create the project_dir</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>p.project_name <span class="op">=</span> p.project_name <span class="op">+</span> <span class="st">'_'</span> <span class="op">+</span> hb.pretty_time() <span class="co"># Comment this line out if you want it to use an existing project. Will skip recreation of files that already exist.</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>p.project_dir <span class="op">=</span> os.path.join(p.user_dir, os.sep.join(p.extra_dirs), p.project_name) <span class="co"># Combines above to set the user_dir. </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>p.set_project_dir(p.project_dir) <span class="co"># Based on the project_dir, create all other relevant dirs, like input, intermediate, and output.</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Set basa_data_dir. Will download required files here.</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>p.base_data_dir <span class="op">=</span> os.path.join(p.user_dir, <span class="st">'Files'</span>, <span class="st">'base_data'</span>) <span class="co"># Could be anywhere, including external storage. But, should not be cloud-controlled (like Google Drive). </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the project flow object and set up its project-directories in one call.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># extra_dirs are the directories used inside the user_dir: the EE Devstack is defined</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># relative to the user's directory, but could be overwritten if not running for the</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Devstack. The project_name names the project_dir, and run_mode='full' gives each run</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># a fresh timestamped one — use run_mode='check' to reuse an existing project, which</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># skips recreation of files that already exist. From the project_dir, ProjectFlow</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># creates all other relevant dirs, like input, intermediate, and output.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'test_global_invest'</span>, run_mode<span class="op">=</span><span class="st">'full'</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                   extra_dirs<span class="op">=</span>[<span class="st">'Files'</span>, <span class="st">'global_invest'</span>, <span class="st">'projects'</span>])</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Set basa_data_dir. Will download required files here.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>p.base_data_dir <span class="op">=</span> os.path.join(p.user_dir, <span class="st">'Files'</span>, <span class="st">'base_data'</span>) <span class="co"># Could be anywhere, including external storage. But, should not be cloud-controlled (like Google Drive). </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol class="incremental" start="2" type="1">
 <li>Define the test and paths for the LULC, region_ids, and global_regions_vector. By default, the AOI is set to Rwanda. The paths are set to the <code>catographic/ee</code> folder in the base data directory.</li>
 </ol>

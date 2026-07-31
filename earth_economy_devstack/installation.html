@@ -151,6 +151,25 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seals" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">SEALS</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seals">    
+        <li>
+    <a class="dropdown-item" href="../seals/index.html">
+ <span class="dropdown-text">SEALS Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../seals/index.html">
+ <span class="dropdown-text">User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../seals/SEALS-User-Guide.pdf">
+ <span class="dropdown-text">Download PDF</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-software" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Software</span>
     </a>
@@ -162,10 +181,6 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="../mesh/index.html">
  <span class="dropdown-text">MESH</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../earth_economy_devstack/seals_overview.html">
- <span class="dropdown-text">SEALS</span></a>
   </li>  
     </ul>
   </li>
@@ -301,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
+            <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SEALS</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -310,8 +325,8 @@ ul.task-list li input[type="checkbox"] {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+  <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SEALS User Guide</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -322,38 +337,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_quickstart.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Quickstart</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Walkthrough</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_walkthrough_marked.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Walkthrough (Marked)</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Magpie</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/seals_magpie_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Magpie Tutorial</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial</span></a>
+ <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
@@ -383,12 +368,6 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/conventions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conventions</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/run_file.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Run File</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -478,7 +457,9 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="project-installation" class="level2">
 <h2 class="anchored" data-anchor-id="project-installation">2. Project Installation</h2>
-<p>If someone has given you a project repository that you want to run and it relies on some combination of our devstack tools, but you are not planning on <em>editing</em> any of the tools, a Project Installation is your best approach. Here we will use <a href="https://github.com/jandrewjohnson/seals_cgebox_dev">seals_cgebox_dev</a> as an example project. See also our <a href="https://youtu.be/8QmE8BPK94s">video tutorial for Project installation</a>. The project repository should have steps included for installation, but check the <a href="https://github.com/jandrewjohnson/seals_cgebox_dev">seals_cgebox_dev</a> readme.md for an example. Project Installations include a setup_environment.bat or shell file that will setup the environment for you. Note that you need to have a C/C++ compiler installed, so be sure to read that section below.</p>
+<p>If someone has given you a project repository that you want to run and it relies on some combination of our devstack tools, but you are not planning on <em>editing</em> any of the tools, a Project Installation is your best approach. See also our <a href="https://youtu.be/8QmE8BPK94s">video tutorial for Project installation</a>.</p>
+<p>A project repository is one that owns a <code>run_&lt;project&gt;.py</code> plus its <code>input_template/</code> CSVs, and imports a devstack library rather than modifying it. It should carry its own installation steps in its readme; some also include a <code>setup_environment.bat</code> or shell script that builds the environment for you. Note that you need a C/C++ compiler installed, so be sure to read that section below.</p>
+<p>If you are starting a project of your own rather than running someone else’s, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> as the seed — it is the worked example of importing a library read-only and adding your own tasks around its task tree.</p>
 </section>
 <section id="developer-installation" class="level2">
 <h2 class="anchored" data-anchor-id="developer-installation">3. Developer Installation</h2>

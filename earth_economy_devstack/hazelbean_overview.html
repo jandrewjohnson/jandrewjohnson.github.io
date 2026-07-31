@@ -320,6 +320,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/hazelbean_learning_path.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning Path</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/hazelbean_examples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial Examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/hazelbean_troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Levels of Complexity</span></a>
   </div>
@@ -363,7 +381,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
+            <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SEALS</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -372,27 +390,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Release Notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/methods.html" class="sidebar-item-text sidebar-link">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Methods</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/organization.html" class="sidebar-item-text sidebar-link">
@@ -456,7 +474,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#hazelbean" id="toc-hazelbean" class="nav-link active" data-scroll-target="#hazelbean">Hazelbean</a>
   <ul class="incremental collapse">
   <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#quickstart" id="toc-quickstart" class="nav-link" data-scroll-target="#quickstart">Quickstart</a></li>
+  <li><a href="#where-to-go-next" id="toc-where-to-go-next" class="nav-link" data-scroll-target="#where-to-go-next">Where to go next</a></li>
+  <li><a href="#what-it-provides" id="toc-what-it-provides" class="nav-link" data-scroll-target="#what-it-provides">What it provides</a></li>
+  <li><a href="#source-and-release-history" id="toc-source-and-release-history" class="nav-link" data-scroll-target="#source-and-release-history">Source and release history</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -469,17 +489,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="hazelbean" class="level1">
 <h1>Hazelbean</h1>
-<p>Hazelbean is a collection of geospatial processing tools based on gdal, numpy, scipy, cython, pygeoprocessing, taskgraph, natcap.invest, geopandas and many others to assist in common spatial analysis tasks in sustainability science, ecosystem service assessment, global integrated modelling assessment, natural capital accounting, and/or calculable general equilibrium modelling.</p>
-<p>Note that for all of the features of hazelbean to work, your computer will need to be configured to compile Cython files to C code. This workflow is tested in a Python 3.10, 64 bit Windows environment. It should work on other system environments, but this is not yet tested.</p>
+<p>Hazelbean is the shared base library of the Earth-Economy Devstack. Every model in the stack — SEALS, GTAP-InVEST, GTAPpy, global_invest — imports it, and it supplies two distinct things:</p>
+<ul class="incremental">
+<li><strong>Geospatial and analytical utilities</strong> built on GDAL, NumPy, SciPy, Cython, pygeoprocessing, taskgraph, natcap.invest and geopandas, for common tasks in sustainability science, ecosystem service assessment, integrated modelling, natural capital accounting and CGE modelling.</li>
+<li><strong>ProjectFlow</strong>, the task-tree engine that gives every model its project directory layout, skip-if-already-computed re-runs, automatic base-data download, and parallel iteration.</li>
+</ul>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>Follow the instructions in the Earth-Economy Devstack repository.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install hazelbean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For the developer install from a clone — and the C/C++ compiler needed to build the Cython extensions — see <a href="../earth_economy_devstack/installation.html">Installation</a>.</p>
+<p>Test that it imports. This also triggers compilation of the Cython files if they are not already built:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="quickstart" class="level2">
-<h2 class="anchored" data-anchor-id="quickstart">Quickstart</h2>
-<p>Test that hazelbean imports correctly. Importing it will trigger compilation of the C files if they are not there.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>From here, explore examples of the useful spatial, statistical and economic functions in the examples section of this documentation. A good starting example would be the <code>zonal_statistics</code> function. These functions are documented in their code declarations and in the Hazelbean Spatial Algorithms section. #TODOO[Make Link]. Anothr good starting point would be to understand the <code>ProjectFlow()</code> object, which is described in the project_flow page #TODOO[make link]</p>
+<section id="where-to-go-next" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>page</th>
+<th>what it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../earth_economy_devstack/hazelbean_learning_path.html">Learning path</a></td>
+<td>a guided route through the library, from first import to a full workflow</td>
+</tr>
+<tr class="even">
+<td><a href="../earth_economy_devstack/hazelbean_examples.html">Tutorial examples</a></td>
+<td>a worked progression: project setup, data loading, processing, analysis, exporting results</td>
+</tr>
+<tr class="odd">
+<td><a href="../earth_economy_devstack/hazelbean_troubleshooting.html">Troubleshooting</a></td>
+<td>common environment, compilation and runtime problems</td>
+</tr>
+<tr class="even">
+<td><a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a></td>
+<td>the task-tree engine in depth</td>
+</tr>
+<tr class="odd">
+<td><a href="../earth_economy_devstack/project_complexity.html">Project complexity</a></td>
+<td>the three axes that describe how a run file is organized, and why</td>
+</tr>
+<tr class="even">
+<td><a href="../earth_economy_devstack/conventions.html">Conventions</a></td>
+<td>the naming, path and run-file rules every repo follows</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-it-provides" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-provides">What it provides</h2>
+<p><strong>Geospatial processing</strong> — raster read/write and processing, vector operations over shapefiles and GeoPackages, Cloud Optimized GeoTIFF (COG) creation and validation, and Performance Optimized GeoTIFFs (POG) for speed.</p>
+<p><strong>Larger-than-memory computation</strong> — <code>hb.raster_calculator()</code> streams a computation chunk by chunk across cores, so a global raster never has to load at once.</p>
+<p><strong>Path resolution and data acquisition</strong> — <code>p.get_path()</code> resolves a relative <em>ref_path</em> against the project input directory, then base data, then a cloud bucket, downloading whatever is missing. One <code>base_data</code> directory serves every project on a machine.</p>
+<p><strong>ProjectFlow</strong> — projects, task trees, existence-checked tasks, <code>run_mode</code> reuse policy, and parallel iterators. See <a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a>.</p>
+</section>
+<section id="source-and-release-history" class="level2">
+<h2 class="anchored" data-anchor-id="source-and-release-history">Source and release history</h2>
+<p>Hazelbean is developed at <a href="https://github.com/jandrewjohnson/hazelbean_dev">github.com/jandrewjohnson/hazelbean_dev</a>. Its release history is in the repository’s <code>CHANGELOG.md</code>, and is summarized on the <a href="../earth_economy_devstack/release_notes.html">Release Notes</a> page.</p>
 
 
 </section>

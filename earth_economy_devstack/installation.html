@@ -313,6 +313,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">ProjectFlow</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/run_templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Templates</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -483,7 +489,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="project-installation">2. Project Installation</h2>
 <p>If someone has given you a project repository that you want to run and it relies on some combination of our devstack tools, but you are not planning on <em>editing</em> any of the tools, a Project Installation is your best approach. See also our <a href="https://youtu.be/8QmE8BPK94s">video tutorial for Project installation</a>.</p>
 <p>A project repository is one that owns a <code>run_&lt;project&gt;.py</code> plus its <code>input_template/</code> CSVs, and imports a devstack library rather than modifying it. It should carry its own installation steps in its readme; some also include a <code>setup_environment.bat</code> or shell script that builds the environment for you. Note that you need a C/C++ compiler installed, so be sure to read that section below.</p>
-<p>If you are starting a project of your own rather than running someone else’s, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> as the seed — it is the worked example of importing a library read-only and adding your own tasks around its task tree.</p>
+<p>If you are starting a project of your own rather than running someone else’s, see <a href="../earth_economy_devstack/run_templates.html">Run Templates</a> and copy <code>run_template_downstream_user.py</code> as the seed — it is the worked example of importing a library read-only and adding your own tasks around its task tree.</p>
 </section>
 <section id="developer-installation" class="level2">
 <h2 class="anchored" data-anchor-id="developer-installation">3. Developer Installation</h2>

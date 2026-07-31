@@ -348,6 +348,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">ProjectFlow</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/run_templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Templates</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -839,6 +845,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="where-to-start-earning-complexity-rather-than-adopting-it" class="level2">
 <h2 class="anchored" data-anchor-id="where-to-start-earning-complexity-rather-than-adopting-it">Where to start: earning complexity rather than adopting it</h2>
+<p>Every template below is described on the <a href="../earth_economy_devstack/run_templates.html">Run Templates</a> page, which is the place to start if you want to copy one.</p>
 <p>Each tool in the six stages was adopted only when the previous stage’s pain demanded it — and that lesson applies to ProjectFlow itself. If your problem is still a stage-1 problem, do not start at configuration level 4. The spec scales down.</p>
 <p><strong>The smallest run file — a function becomes a task when you add it.</strong> The minimal ProjectFlow script is one task function plus a guarded three-line main block: <code>p = hb.ProjectFlow()</code>, <code>p.add_task(your_function)</code>, <code>p.execute()</code>. Nothing is hidden — the <code>add_task</code> call <em>is</em> the moment a plain function becomes a task (and calling <code>execute()</code> with nothing added fails with a message telling you exactly that). See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_1_minimal.py"><code>examples/run_templates/run_template_1_minimal.py</code></a> — about 30 lines, and in exchange for roughly the effort of the stage-1 script you get an organized project directory, one folder per task, skip-if-already-computed re-runs, and logging.</p>
 <p><strong>The canonical form.</strong> When you want variants, graduate to configuration level 3: <code>build_task_tree(p)</code>, <code>run_project(p)</code>, and a <code>__main__</code> guard that builds and configures the ProjectFlow. The rule that replaces a signature full of defaults: <strong><code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a constant starts varying, it moves one line up, out of <code>run_project</code> and into the caller — no signature to edit and no default to keep in sync. See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_3_canonical.py"><code>run_template_3_canonical.py</code></a>, its annotated twin in <code>examples/run_templates_annotated/</code> for the reasoning, and the <a href="../earth_economy_devstack/conventions.html">conventions</a> page for the full rules. For a project of your own that imports a devstack library as a read-only dependency, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> into your repo as its <code>run_&lt;project&gt;.py</code>; for stock SEALS, copy <a href="https://github.com/jandrewjohnson/seals_dev/blob/main/seals/run_seals_standard.py"><code>run_seals_standard.py</code></a>. The full-scale reference implementation is <a href="https://github.com/jandrewjohnson/ngfs_pnas">ngfs_pnas</a>.</p>

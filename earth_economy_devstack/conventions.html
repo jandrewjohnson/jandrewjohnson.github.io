@@ -180,8 +180,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../gtap_invest/user_guide/GTAP-InVEST-User-Guide.pdf">
+ <span class="dropdown-text">User Guide PDF</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../gtap_invest/results/index.html">
  <span class="dropdown-text">Results</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+ <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
   </li>
@@ -195,12 +203,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">SEALS Home</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../seals/index.html">
+    <a class="dropdown-item" href="../seals/user_guide/index.html">
  <span class="dropdown-text">User Guide</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../seals/SEALS-User-Guide.pdf">
- <span class="dropdown-text">Download PDF</span></a>
+    <a class="dropdown-item" href="../seals/user_guide/SEALS-User-Guide.pdf">
+ <span class="dropdown-text">User Guide PDF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+ <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
   </li>
@@ -351,19 +363,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">SEALS</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../seals/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS User Guide</span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
@@ -698,6 +704,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="directory-and-file-naming" class="level2">
 <h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and file naming</h2>
 <ul class="incremental">
+<li><strong>Name a directory for its <em>kind</em> of content, in the singular.</strong> <code>input/</code>, <code>output/</code>, <code>intermediate/</code>, <code>input_template/</code> — never <code>inputs/</code>, <code>outputs/</code>, or <code>input_templates/</code>. The directory holds one <em>kind</em> of thing, and the plural adds nothing: <code>output/</code> already contains many outputs, exactly as <code>input/</code> contains many inputs. This matches the Python ecosystem’s dominant convention and keeps the directory name identical to the stem of the attribute that points at it, so <code>p.output_dir</code> → <code>output/</code> with no translation step. Reserve the plural for a directory holding many <em>heterogeneous</em> items that share no single kind.</li>
+<li><strong>Corollary: the <code>*_dir</code> attribute and its directory must agree.</strong> A singular attribute pointing at a plural directory (<code>p.output_dir</code> → <code>outputs/</code>) is the failure mode this rule exists to prevent; it was the actual state of <code>ProjectFlow</code> until 2026-07-31, alongside a vestigial <code>p.inputs_dir</code> → <code>inputs/</code> that nothing read. Both are now singular.</li>
 <li><strong>dir</strong> — avoid as a standalone noun (directory or direction?); <strong>use <code>directory</code></strong>. It <em>can</em> be a suffix (<code>temp_dir</code>), and is fine inside function names for brevity (<code>delete_dir()</code>, <code>create_dir()</code>), matching Unix heritage.</li>
 <li><strong>directory</strong> — preferred over <code>dir</code> for clarity (<code>output_directory</code>).</li>
 <li><strong>folder</strong> — avoid except in user-facing docs.</li>
@@ -802,7 +810,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>The rule that decides what goes where: <code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a project constant starts varying, it moves one line up — out of <code>run_project</code>, into the caller. There is no signature to edit, no keyword to add, and no default that can drift out of sync with the thing it duplicates. This is why <code>run_project</code> takes no keyword arguments: a signature full of defaults restates what is already known (<code>project_name</code> restates the file’s own name, <code>run_mode</code> restates ProjectFlow’s default), it grows once per class of CSV forever, and its values are invisible to everything except Python. Attributes on <code>p</code> can be listed, logged, and diffed between variants. The cost, stated plainly: bare <code>run_project()</code> no longer works, and a variant wrapper is four lines instead of three — in exchange, every knob a run uses is visible at the call site, and omitting one raises a named <code>AttributeError</code> instead of silently using another run’s default.</li>
 <li><strong>Directory setup is the single constructor call <code>hb.ProjectFlow(project_name=..., run_mode=...)</code>, made by the caller.</strong> It validates <code>run_mode</code> and infers the project dir git-aware from the run file’s repo: <code>&lt;stack&gt;/projects/&lt;project_name&gt;</code> for a run file in a library repo, and the repo’s wrapper-parent for a project repo nested under a <code>projects/</code> tree (so outputs land beside the checkout, never inside it). Pass <code>extra_dirs</code> explicitly only for placements the inference cannot know: grouping subfolders (<code>projects/ntsp/...</code>), another stack’s tree (the devstack examples), or scripts outside any git repo. Because the caller owns this call, a notebook or harness can pass <code>extra_dirs</code> (or a fully custom <code>project_dir</code>) without the run file needing a pass-through argument for it.</li>
 <li><strong>Variant runs are their own file and share the pipeline by import — never by copy.</strong> A variant (fast, postprocess-only, smoke test, backend test) imports <code>run_project</code>, constructs its own ProjectFlow with a distinct <code>project_name</code>, sets only what differs — a different scenarios CSV, <code>p.tasks_to_skip = [...]</code> — and calls <code>run_project(p)</code>. It sits at the same position on all three complexity axes as the run it varies; if a variant has to move along an axis, it is not a variant. <code>p.skip_tasks()</code> (hazelbean) sets <code>run=0</code> by task name and warns on unknown names; skipping is run configuration, so the <em>choice</em> belongs to the caller and the <em>application</em> belongs in <code>run_project</code>, never in the builder.</li>
-<li><strong><code>run_mode</code> selects how much prior work is reused</strong> (since 2026-07-24, replacing the old <code>append_timestamp</code> boolean): <code>'check'</code> (default) reuses the stable project dir with standard skip-existing logic; <code>'fresh_intermediate'</code> deletes the stable dir’s <code>intermediate/</code> and <code>outputs/</code> in place so everything recomputes while <code>input/</code> (machine config) is kept — refused unless the resolved project name contains <code>'test'</code>; <code>'full'</code> mints a timestamped fresh project dir, also exercising <code>input_template/</code> seeding. <code>run_mode</code> is about reuse policy, not location, so it composes with an explicit <code>project_dir</code> as well as with <code>project_name</code>.</li>
+<li><strong><code>run_mode</code> selects how much prior work is reused</strong> (since 2026-07-24, replacing the old <code>append_timestamp</code> boolean): <code>'check'</code> (default) reuses the stable project dir with standard skip-existing logic; <code>'fresh_intermediate'</code> deletes the stable dir’s <code>intermediate/</code> and <code>output/</code> in place so everything recomputes while <code>input/</code> (machine config) is kept — refused unless the resolved project name contains <code>'test'</code>; <code>'full'</code> mints a timestamped fresh project dir, also exercising <code>input_template/</code> seeding. <code>run_mode</code> is about reuse policy, not location, so it composes with an explicit <code>project_dir</code> as well as with <code>project_name</code>.</li>
 <li><strong>Canonical examples of the shape:</strong> <code>examples/run_templates/run_template_3_canonical.py</code> (a scenarios CSV), <code>run_template_4_data_driven.py</code> (+ a parameters CSV), and <code>run_template_seals_example.py</code> (the same anatomy against a real library task tree). <code>examples/run_templates_annotated/</code> holds the same code with the reasoning written out, including the variant wrapper as a real file. <code>gtap_invest/projects/ngfs/ngfs_pnas/ngfs_pnas/run_ngfs_pnas.py</code> remains the largest real pipeline on this anatomy, but is still configured through a <code>run_project(...)</code> signature and is pending conversion.</li>
 <li><strong>Machine-specific configuration lives in <code>parameters.csv</code>, never in code and never in environment variables.</strong> Connection settings (<code>vm_ssh_host</code>, <code>vm_disk_prefix</code>, <code>gempack_dir</code>, <code>sc_ssh_host</code>, <code>sc_scratch</code>), credentials paths, and any other per-machine values are keys in the project’s <code>&lt;project&gt;_parameters.csv</code>. The tracked <code>input_template/</code> copy ships these keys with <strong>blank</strong> values; each machine fills in its own untracked <code>input/</code> copy.</li>
 <li><strong>Tasks are named as nouns</strong> (this intentionally breaks PEP 8), referencing what is stored in the task’s output directory, so the resulting file structure reads well to an outsider.</li>

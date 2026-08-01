@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/environment_setup.html">SEALS Environment Setup</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/environment_setup.html">Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -271,13 +271,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">What SEALS is</span></a>
+ <span class="menu-text">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/environment_setup.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">SEALS Environment Setup</span></a>
+ <span class="menu-text">Installation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -295,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/scenarios_format.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">scenarios.csv Format (v1)</span></a>
+ <span class="menu-text">Scenario Iteration</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -346,20 +346,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/walkthrough_marked.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Slides: first run walkthrough</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/SEALS-User-Guide.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">User Guide PDF</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -378,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#seals-environment-setup" id="toc-seals-environment-setup" class="nav-link active" data-scroll-target="#seals-environment-setup">SEALS Environment Setup</a>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
   <ul class="incremental collapse">
   <li><a href="#install-miniforgeconda" id="toc-install-miniforgeconda" class="nav-link" data-scroll-target="#install-miniforgeconda">1. Install Miniforge/Conda</a></li>
   <li><a href="#create-and-activate-an-environment" id="toc-create-and-activate-an-environment" class="nav-link" data-scroll-target="#create-and-activate-an-environment">2. Create and activate an environment</a></li>
@@ -395,8 +383,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="seals-environment-setup" class="level1">
-<h1>SEALS Environment Setup</h1>
+<section id="installation" class="level1">
+<h1>Installation</h1>
 <p>Two paths: a <strong>user install</strong> if you just want to run SEALS, or a <strong>developer install</strong> from a GitHub clone if you want to edit SEALS (or hazelbean) and have your edits take effect immediately.</p>
 <p>SEALS is distributed as <strong><code>sealsmodel</code></strong> and imported as <code>seals</code>. It requires hazelbean 2.0.0 or later.</p>
 <section id="install-miniforgeconda" class="level2">

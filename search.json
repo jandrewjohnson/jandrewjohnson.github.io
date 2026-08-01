@@ -1585,140 +1585,98 @@
     "href": "seals/user_guide/walkthrough_marked.html#getting-set-up",
     "title": "Justin Andrew Johnson",
     "section": "Getting set up",
-    "text": "Getting set up\n\n\nFollow the installation page first, or the shorter quickstart if you just want to run the model\nClone SEALS and Hazelbean into the devstack layout — each repo in its own project folder under ~/Files/:\n\n~/Files/hazelbean/hazelbean_dev\n~/Files/seals/seals\n\nThe layout is not cosmetic: ProjectFlow reads it to decide where project directories go\nYou know the install worked if this prints two paths inside ~/Files/, not inside site-packages:\n\npython -c \"import hazelbean, seals; print(hazelbean.__file__); print(seals.__file__)\"",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Getting set up\n\n\nFollow the installation page first, or the shorter quickstart if you just want to run the model\nClone SEALS and Hazelbean into the devstack layout — each repo in its own project folder under ~/Files/:\n\n~/Files/hazelbean/hazelbean_dev\n~/Files/seals/seals\n\nThe layout is not cosmetic: ProjectFlow reads it to decide where project directories go\nYou know the install worked if this prints two paths inside ~/Files/, not inside site-packages:\n\npython -c \"import hazelbean, seals; print(hazelbean.__file__); print(seals.__file__)\""
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#explore-the-seals-code",
     "href": "seals/user_guide/walkthrough_marked.html#explore-the-seals-code",
     "title": "Justin Andrew Johnson",
     "section": "Explore the SEALS code",
-    "text": "Explore the SEALS code\n\n\nThe repo root seals/ holds more than the library — docs, tests, scripts\nThe library itself is the seals/seals subdirectory. The nesting looks redundant but is how Python packaging works\nInside it, __init__.py is what makes the directory importable as a package\nThe modules are split by what they hold:\n\nseals_main.py, seals_tasks.py, seals_generate_base_data.py — task functions, the actual model logic\nseals_initialize_project.py — the task-tree builders\nseals_utils.py — helpers\nrun_seals_standard.py — the run file",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Explore the SEALS code\n\n\nThe repo root seals/ holds more than the library — docs, tests, scripts\nThe library itself is the seals/seals subdirectory. The nesting looks redundant but is how Python packaging works\nInside it, __init__.py is what makes the directory importable as a package\nThe modules are split by what they hold:\n\nseals_main.py, seals_tasks.py, seals_generate_base_data.py — task functions, the actual model logic\nseals_initialize_project.py — the task-tree builders\nseals_utils.py — helpers\nrun_seals_standard.py — the run file"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#run-files",
     "href": "seals/user_guide/walkthrough_marked.html#run-files",
     "title": "Justin Andrew Johnson",
     "section": "Run files",
-    "text": "Run files\n\n\nYou do not run seals_main.py directly\nA run file configures a project and executes a task tree built from the library’s task functions\nTwo ship with SEALS, both in seals/seals:\n\nrun_seals_standard.py — three scenarios, 2030 and 2050\nrun_seals_standard_test.py — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here\n\nOpen run_seals_standard.py. It is about 60 lines and has three parts",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Run files\n\n\nYou do not run seals_main.py directly\nA run file configures a project and executes a task tree built from the library’s task functions\nTwo ship with SEALS, both in seals/seals:\n\nrun_seals_standard.py — three scenarios, 2030 and 2050\nrun_seals_standard_test.py — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here\n\nOpen run_seals_standard.py. It is about 60 lines and has three parts"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#part-1-the-task-tree",
     "href": "seals/user_guide/walkthrough_marked.html#part-1-the-task-tree",
     "title": "Justin Andrew Johnson",
     "section": "Part 1: the task tree",
-    "text": "Part 1: the task tree\n\n\nbuild_task_tree(p) answers one question: what is this pipeline?\nIt contains nothing but tree construction. For stock SEALS it is one line, delegating to the shared library builder\nCompose extra library subtrees or your own tasks here if your project diverges\n\ndef build_task_tree(p):\n    seals_initialize_project.build_standard_task_tree(p)",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Part 1: the task tree\n\n\nbuild_task_tree(p) answers one question: what is this pipeline?\nIt contains nothing but tree construction. For stock SEALS it is one line, delegating to the shared library builder\nCompose extra library subtrees or your own tasks here if your project diverges\n\ndef build_task_tree(p):\n    seals_initialize_project.build_standard_task_tree(p)"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#part-2-run_project",
     "href": "seals/user_guide/walkthrough_marked.html#part-2-run_project",
     "title": "Justin Andrew Johnson",
     "section": "Part 2: run_project",
-    "text": "Part 2: run_project\n\n\nrun_project(p) answers how is it executed? It takes only p\nThe rule that decides what goes where:\n\nrun_project(p) sets what no variant ever changes — base data location, processing resolution\nthe caller sets what a variant might — project name, run mode, scenarios CSV\n\nWhen a constant starts varying, it moves one line up into the caller. There is no signature to edit and no default to keep in sync\n\ndef run_project(p):\n    p.run_in_parallel = 1        # before the tree: it has parallel iterators\n    build_task_tree(p)\n    p.skip_tasks(p.tasks_to_skip)\n\n    p.base_data_dir = os.path.join(p.user_dir, 'Files', 'base_data')\n    p.processing_resolution = 1.0\n\n    p.scenario_definitions_path = os.path.join(p.input_dir, p.scenario_definitions_filename)\n    seals_initialize_project.initialize_scenario_definitions(p)\n    seals_initialize_project.set_advanced_options(p)\n\n    p.execute()\n    return p",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Part 2: run_project\n\n\nrun_project(p) answers how is it executed? It takes only p\nThe rule that decides what goes where:\n\nrun_project(p) sets what no variant ever changes — base data location, processing resolution\nthe caller sets what a variant might — project name, run mode, scenarios CSV\n\nWhen a constant starts varying, it moves one line up into the caller. There is no signature to edit and no default to keep in sync\n\ndef run_project(p):\n    p.run_in_parallel = 1        # before the tree: it has parallel iterators\n    build_task_tree(p)\n    p.skip_tasks(p.tasks_to_skip)\n\n    p.base_data_dir = os.path.join(p.user_dir, 'Files', 'base_data')\n    p.processing_resolution = 1.0\n\n    p.scenario_definitions_path = os.path.join(p.input_dir, p.scenario_definitions_filename)\n    seals_initialize_project.initialize_scenario_definitions(p)\n    seals_initialize_project.set_advanced_options(p)\n\n    p.execute()\n    return p"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#part-3-the-__main__-guard",
     "href": "seals/user_guide/walkthrough_marked.html#part-3-the-__main__-guard",
     "title": "Justin Andrew Johnson",
     "section": "Part 3: the __main__ guard",
-    "text": "Part 3: the __main__ guard\n\n\nThis is where the project is configured — two lines of actual choice\nThe guard is mandatory: importing a run file must never start a run. That is what lets a second run file import this pipeline instead of copying it\n\nif __name__ == '__main__':\n    p = hb.ProjectFlow(project_name='seals_standard', run_mode='check')\n    p.scenario_definitions_filename = 'standard_scenarios.csv'\n\n    run_project(p)",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Part 3: the __main__ guard\n\n\nThis is where the project is configured — two lines of actual choice\nThe guard is mandatory: importing a run file must never start a run. That is what lets a second run file import this pipeline instead of copying it\n\nif __name__ == '__main__':\n    p = hb.ProjectFlow(project_name='seals_standard', run_mode='check')\n    p.scenario_definitions_filename = 'standard_scenarios.csv'\n\n    run_project(p)"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#the-p-object",
     "href": "seals/user_guide/walkthrough_marked.html#the-p-object",
     "title": "Justin Andrew Johnson",
     "section": "The p object",
-    "text": "The p object\n\n\nhb.ProjectFlow() is a class — a recipe for an object. Calling it produces an object, which we assign to p\np carries the project’s attributes: p.base_data_dir, p.scenario_definitions_filename, and so on\nIt also has methods that act on it: p.add_task(), p.skip_tasks(), p.get_path(), p.execute()\nEvery task receives p and reads its configuration from it. That is how configuration set in __main__ reaches code deep in the library",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "The p object\n\n\nhb.ProjectFlow() is a class — a recipe for an object. Calling it produces an object, which we assign to p\np carries the project’s attributes: p.base_data_dir, p.scenario_definitions_filename, and so on\nIt also has methods that act on it: p.add_task(), p.skip_tasks(), p.get_path(), p.execute()\nEvery task receives p and reads its configuration from it. That is how configuration set in __main__ reaches code deep in the library"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#where-the-project-directory-goes",
     "href": "seals/user_guide/walkthrough_marked.html#where-the-project-directory-goes",
     "title": "Justin Andrew Johnson",
     "section": "Where the project directory goes",
-    "text": "Where the project directory goes\n\n\nNot into the repo. Because the run file sits inside a cloned repo, ProjectFlow places the project dir just outside it, at ~/Files/seals/projects/&lt;project_name&gt;/\nYou do not compute this path yourself, and you should not save data in seals/seals\nrun_mode decides how much prior work is reused:\n\n'check' — reuse the stable dir, recompute only what is missing (the default)\n'fresh_intermediate' — redo all computation, keep input/ (test projects only)\n'full' — a fresh timestamped dir; everything re-runs",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Where the project directory goes\n\n\nNot into the repo. Because the run file sits inside a cloned repo, ProjectFlow places the project dir just outside it, at ~/Files/seals/projects/&lt;project_name&gt;/\nYou do not compute this path yourself, and you should not save data in seals/seals\nrun_mode decides how much prior work is reused:\n\n'check' — reuse the stable dir, recompute only what is missing (the default)\n'fresh_intermediate' — redo all computation, keep input/ (test projects only)\n'full' — a fresh timestamped dir; everything re-runs"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#the-scenarios-csv",
     "href": "seals/user_guide/walkthrough_marked.html#the-scenarios-csv",
     "title": "Justin Andrew Johnson",
     "section": "The scenarios CSV",
-    "text": "The scenarios CSV\n\n\nThe scenarios CSV specifies the runs you want. Each row is one scenario\nAs the model iterates, it re-hydrates p from the row it is on — which is why scenario-varying values belong in the CSV and not in the run file\nThe tracked copy lives in input_template/ beside the run file. ProjectFlow copies anything missing into the project’s input/ on first run and never overwrites your working copy\nIf the named file is nowhere to be found, SEALS generates a default so a first run still works\n\np.scenario_definitions_filename = 'standard_scenarios.csv'",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "The scenarios CSV\n\n\nThe scenarios CSV specifies the runs you want. Each row is one scenario\nAs the model iterates, it re-hydrates p from the row it is on — which is why scenario-varying values belong in the CSV and not in the run file\nThe tracked copy lives in input_template/ beside the run file. ProjectFlow copies anything missing into the project’s input/ on first run and never overwrites your working copy\nIf the named file is nowhere to be found, SEALS generates a default so a first run still works\n\np.scenario_definitions_filename = 'standard_scenarios.csv'"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#scenario-types",
     "href": "seals/user_guide/walkthrough_marked.html#scenario-types",
     "title": "Justin Andrew Johnson",
     "section": "Scenario types",
-    "text": "Scenario types\n\n\nscenario_type is a column in the CSV, not something a run file sets\nbaseline — the observed anchor; not downscaled, supplies base-year LULC\npolicy — a trajectory to downscale, compared against a counterfactual\nbau — business-as-usual, being deprecated in favour of baseline; it still appears in shipped CSVs\nFull column reference: scenarios_format.md",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Scenario types\n\n\nscenario_type is a column in the CSV, not something a run file sets\nbaseline — the observed anchor; not downscaled, supplies base-year LULC\npolicy — a trajectory to downscale, compared against a counterfactual\nbau — business-as-usual, being deprecated in favour of baseline; it still appears in shipped CSVs\nFull column reference: scenarios_format.md"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#automatically-downloading-data",
     "href": "seals/user_guide/walkthrough_marked.html#automatically-downloading-data",
     "title": "Justin Andrew Johnson",
     "section": "Automatically downloading data",
-    "text": "Automatically downloading data\n\n\nPaths in the CSV are ref_paths — relative locations resolved by p.get_path(), which searches the project input/ dir, then base_data, then a cloud bucket, downloading what is missing\np.base_data_dir is where those downloads land. Point it somewhere with room for very large files; the same base data serves every project\nThe directory must be named base_data to match the bucket convention\nThe default bucket is public — no credentials needed\n\np.base_data_dir = os.path.join(p.user_dir, 'Files', 'base_data')",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Automatically downloading data\n\n\nPaths in the CSV are ref_paths — relative locations resolved by p.get_path(), which searches the project input/ dir, then base_data, then a cloud bucket, downloading what is missing\np.base_data_dir is where those downloads land. Point it somewhere with room for very large files; the same base data serves every project\nThe directory must be named base_data to match the bucket convention\nThe default bucket is public — no credentials needed\n\np.base_data_dir = os.path.join(p.user_dir, 'Files', 'base_data')"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#run-the-model",
     "href": "seals/user_guide/walkthrough_marked.html#run-the-model",
     "title": "Justin Andrew Johnson",
     "section": "Run the model",
-    "text": "Run the model\n\nconda activate &lt;your_env&gt;\ncd seals/seals\npython run_seals_standard_test.py\n\nOn startup SEALS prints the task tree it is about to compute\nTo understand the model in depth, read the task functions behind those names\nRun the same command a second time: it finishes almost immediately, because every task is behind an existence check and completed work is skipped",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Run the model\n\nconda activate &lt;your_env&gt;\ncd seals/seals\npython run_seals_standard_test.py\n\nOn startup SEALS prints the task tree it is about to compute\nTo understand the model in depth, read the task functions behind those names\nRun the same command a second time: it finishes almost immediately, because every task is behind an existence check and completed work is skipped"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#find-the-output",
     "href": "seals/user_guide/walkthrough_marked.html#find-the-output",
     "title": "Justin Andrew Johnson",
     "section": "Find the output",
-    "text": "Find the output\n\n\nGo to ~/Files/seals/projects/seals_standard_test/intermediate/\nThere is one directory per task in the tree\nThe downscaled maps are in stitched_lulc_simplified_scenarios/, for example:\n\nlulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2030.tif\n\nOpen it in QGIS alongside the base-year LULC and compare — that is your high-resolution land-use change projection",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Find the output\n\n\nGo to ~/Files/seals/projects/seals_standard_test/intermediate/\nThere is one directory per task in the tree\nThe downscaled maps are in stitched_lulc_simplified_scenarios/, for example:\n\nlulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2030.tif\n\nOpen it in QGIS alongside the base-year LULC and compare — that is your high-resolution land-use change projection"
   },
   {
     "objectID": "seals/user_guide/walkthrough_marked.html#next",
     "href": "seals/user_guide/walkthrough_marked.html#next",
     "title": "Justin Andrew Johnson",
     "section": "Next",
-    "text": "Next\n\n\nQuickstart — the condensed version of this page\nConventions — the full run-file rules\nProject complexity — why run files are shaped this way",
-    "crumbs": [
-      "Slides: first run walkthrough"
-    ]
+    "text": "Next\n\n\nQuickstart — the condensed version of this page\nConventions — the full run-file rules\nProject complexity — why run files are shaped this way"
   },
   {
     "objectID": "seals/user_guide/release_notes.html",
@@ -1882,61 +1840,61 @@
   {
     "objectID": "seals/user_guide/environment_setup.html",
     "href": "seals/user_guide/environment_setup.html",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "Two paths: a user install if you just want to run SEALS, or a developer install from a GitHub clone if you want to edit SEALS (or hazelbean) and have your edits take effect immediately.\nSEALS is distributed as sealsmodel and imported as seals. It requires hazelbean 2.0.0 or later.\n\n\nIf not already installed, download and install Miniforge.\n\n\n\nconda create -n &lt;your_env&gt; python=3.10\nconda activate &lt;your_env&gt;\nPick your own environment name — the devstack does not require a particular one. Always activate it before running SEALS scripts.\n\n\n\npip install hazelbean sealsmodel\nDependencies are installed automatically. This is enough to run run_seals_standard.py and to start your own project from it.\n\n\n\nUse this if you cloned the repos and want your edits to take effect without reinstalling. SEALS compiles a Cython extension (seals/seals_cython_functions.pyx), so a C/C++ compiler is required — see Compiling C/C++ Code (xcode-select --install on macOS; Visual Studio Build Tools on Windows).\nClone into the devstack layout. Each repo lives in its own project folder under ~/Files/ (C:\\Users\\&lt;you&gt;\\Files\\ on Windows). The layout matters: ProjectFlow infers where to put project directories from it, placing them at ~/Files/seals/projects/&lt;project_name&gt;/ — outside the repo, so outputs never land in your working tree.\nmkdir -p ~/Files/hazelbean && cd ~/Files/hazelbean\ngit clone https://github.com/jandrewjohnson/hazelbean_dev.git\n\nmkdir -p ~/Files/seals && cd ~/Files/seals\ngit clone https://github.com/jandrewjohnson/seals.git\nIf you already installed hazelbean from conda-forge, remove it first so the editable install is the one that gets imported. Use conda remove, not pip uninstall — pip leaves behind directories that still shadow the source:\nconda remove hazelbean --force\nThis drops the conda-forge build but keeps its dependencies.\nMake the editable installs, hazelbean first — SEALS imports it:\ncd ~/Files/hazelbean/hazelbean_dev\npip install -e . --no-deps\n\ncd ~/Files/seals/seals\npip install -e . --no-deps\n--no-deps is deliberate: the dependencies came from conda in step 2, and letting pip resolve them again tends to replace conda’s builds of the geospatial stack (GDAL and friends) with incompatible wheels.\nVerify:\npython -c \"import hazelbean, seals; print(hazelbean.__file__); print(seals.__file__)\"\nBoth paths should point inside ~/Files/..., not into site-packages. If either points at site-packages, an installed copy is shadowing your clone — remove it and redo the editable install.\n\n\n\nThe same clone-and-editable-install pattern works for the rest of the stack, each in its own ~/Files/&lt;name&gt;/ project folder: gtap_invest_dev, global_invest_dev, gtappy_dev, gep_dev.\nSee the full installation guide for the devstack-wide version of these steps.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
     "objectID": "seals/user_guide/environment_setup.html#install-miniforgeconda",
     "href": "seals/user_guide/environment_setup.html#install-miniforgeconda",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "If not already installed, download and install Miniforge.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
     "objectID": "seals/user_guide/environment_setup.html#create-and-activate-an-environment",
     "href": "seals/user_guide/environment_setup.html#create-and-activate-an-environment",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "conda create -n &lt;your_env&gt; python=3.10\nconda activate &lt;your_env&gt;\nPick your own environment name — the devstack does not require a particular one. Always activate it before running SEALS scripts.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
     "objectID": "seals/user_guide/environment_setup.html#a.-user-install",
     "href": "seals/user_guide/environment_setup.html#a.-user-install",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "pip install hazelbean sealsmodel\nDependencies are installed automatically. This is enough to run run_seals_standard.py and to start your own project from it.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
     "objectID": "seals/user_guide/environment_setup.html#b.-developer-install-from-a-github-clone",
     "href": "seals/user_guide/environment_setup.html#b.-developer-install-from-a-github-clone",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "Use this if you cloned the repos and want your edits to take effect without reinstalling. SEALS compiles a Cython extension (seals/seals_cython_functions.pyx), so a C/C++ compiler is required — see Compiling C/C++ Code (xcode-select --install on macOS; Visual Studio Build Tools on Windows).\nClone into the devstack layout. Each repo lives in its own project folder under ~/Files/ (C:\\Users\\&lt;you&gt;\\Files\\ on Windows). The layout matters: ProjectFlow infers where to put project directories from it, placing them at ~/Files/seals/projects/&lt;project_name&gt;/ — outside the repo, so outputs never land in your working tree.\nmkdir -p ~/Files/hazelbean && cd ~/Files/hazelbean\ngit clone https://github.com/jandrewjohnson/hazelbean_dev.git\n\nmkdir -p ~/Files/seals && cd ~/Files/seals\ngit clone https://github.com/jandrewjohnson/seals.git\nIf you already installed hazelbean from conda-forge, remove it first so the editable install is the one that gets imported. Use conda remove, not pip uninstall — pip leaves behind directories that still shadow the source:\nconda remove hazelbean --force\nThis drops the conda-forge build but keeps its dependencies.\nMake the editable installs, hazelbean first — SEALS imports it:\ncd ~/Files/hazelbean/hazelbean_dev\npip install -e . --no-deps\n\ncd ~/Files/seals/seals\npip install -e . --no-deps\n--no-deps is deliberate: the dependencies came from conda in step 2, and letting pip resolve them again tends to replace conda’s builds of the geospatial stack (GDAL and friends) with incompatible wheels.\nVerify:\npython -c \"import hazelbean, seals; print(hazelbean.__file__); print(seals.__file__)\"\nBoth paths should point inside ~/Files/..., not into site-packages. If either points at site-packages, an installed copy is shadowing your clone — remove it and redo the editable install.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
     "objectID": "seals/user_guide/environment_setup.html#add-other-devstack-repos-optional",
     "href": "seals/user_guide/environment_setup.html#add-other-devstack-repos-optional",
-    "title": "SEALS Environment Setup",
+    "title": "Installation",
     "section": "",
     "text": "The same clone-and-editable-install pattern works for the rest of the stack, each in its own ~/Files/&lt;name&gt;/ project folder: gtap_invest_dev, global_invest_dev, gtappy_dev, gep_dev.\nSee the full installation guide for the devstack-wide version of these steps.",
     "crumbs": [
-      "SEALS Environment Setup"
+      "Installation"
     ]
   },
   {
@@ -1949,41 +1907,41 @@
   {
     "objectID": "seals/user_guide/index.html",
     "href": "seals/user_guide/index.html",
-    "title": "What SEALS is",
+    "title": "Introduction",
     "section": "",
-    "text": "SEALS, the Spatial Economic Allocation Landscape Simulator, is a land-use change model that downscales predictions of land-use change from aggregate (regional or coarse-gridded) inputs to a finer resolution, typically 10–300 meters.\nIts primary comparative advantage is fast computation. It downscales to 300 meters globally — roughly 8.4 billion grid cells — in about an hour on a laptop. It is designed with parallelization in mind and so scales well to high-performance, cloud, or distributed computing. Performance-critical functions are written in C++ (via Cython); everything else is Python.\nSEALS is one of three software products maintained by NatCap TEEMs (The Earth-Economy Modellers):\n\n\n\n\n\n\n\nproduct\nwhat it is\n\n\n\n\nSEALS\nthis model — the downscaler\n\n\nGTAP-InVEST\nthe coupled economy–ecosystem model that uses SEALS for its land-use step\n\n\nEarth-Economy Devstack\nthe shared platform: hazelbean, ProjectFlow, and the conventions all three follow\n\n\n\n\n\nStart at Environment Setup and Quickstart — together they take you from nothing to a downscaled map. Then:\n\nWalkthrough — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.\nscenarios.csv format — the column reference for the file that defines what SEALS runs.\nMAgPIE and the MAgPIE tutorial — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.\n\nThis guide is rendered both as a website and as a single PDF (download). If you are reading the PDF, links to the other two products point at the published site.\n\n\n\nSEALS is a model. The machinery that runs it — project directories, task trees, skip-if-already-computed re-runs, automatic base-data download — is ProjectFlow, which lives in hazelbean and is shared across all three products. This guide covers SEALS and says only as much about ProjectFlow as you need to run it.\nFor the platform itself, see the Earth-Economy Devstack documentation:\n\nConventions — the run-file spec, naming rules, and directory layout\nProject complexity — the three axes that describe how a run file is organized, and why\nProjectFlow — the task-tree engine\nInstallation — devstack-wide install options, including the developer install\n\n\n\n\nSEALS is under active development and changes rapidly. Pull the latest seals before reporting a problem.\nThe model was introduced alongside GTAP-InVEST in Johnson et al. 2023, PNAS. All code is available under a permissive open-source license.",
+    "text": "SEALS, the Spatial Economic Allocation Landscape Simulator, is a land-use change model that downscales predictions of land-use change from aggregate (regional or coarse-gridded) inputs to a finer resolution, typically 10–300 meters.\nIts primary comparative advantage is fast computation. It downscales to 300 meters globally — roughly 8.4 billion grid cells — in about an hour on a laptop. It is designed with parallelization in mind and so scales well to high-performance, cloud, or distributed computing. Performance-critical functions are written in C++ (via Cython); everything else is Python.\nSEALS is one of three software products maintained by NatCap TEEMs (The Earth-Economy Modellers):\n\n\n\n\n\n\n\nproduct\nwhat it is\n\n\n\n\nSEALS\nthis model — the downscaler\n\n\nGTAP-InVEST\nthe coupled economy–ecosystem model that uses SEALS for its land-use step\n\n\nEarth-Economy Devstack\nthe shared platform: hazelbean, ProjectFlow, and the conventions all three follow\n\n\n\n\n\nStart at Installation and Quickstart — together they take you from nothing to a downscaled map. Then:\n\nWalkthrough — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.\nScenario iteration — the column reference for the scenarios CSV that defines what SEALS runs.\nMAgPIE and the MAgPIE tutorial — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.\n\nThis guide is rendered both as a website and as a single PDF (download). If you are reading the PDF, links to the other two products point at the published site.\n\n\n\nSEALS is a model. The machinery that runs it — project directories, task trees, skip-if-already-computed re-runs, automatic base-data download — is ProjectFlow, which lives in hazelbean and is shared across all three products. This guide covers SEALS and says only as much about ProjectFlow as you need to run it.\nFor the platform itself, see the Earth-Economy Devstack documentation:\n\nConventions — the run-file spec, naming rules, and directory layout\nProject complexity — the three axes that describe how a run file is organized, and why\nProjectFlow — the task-tree engine\nInstallation — devstack-wide install options, including the developer install\n\n\n\n\nSEALS is under active development and changes rapidly. Pull the latest seals before reporting a problem.\nThe model was introduced alongside GTAP-InVEST in Johnson et al. 2023, PNAS. All code is available under a permissive open-source license.",
     "crumbs": [
-      "What SEALS is"
+      "Introduction"
     ]
   },
   {
     "objectID": "seals/user_guide/index.html#how-to-read-this-guide",
     "href": "seals/user_guide/index.html#how-to-read-this-guide",
-    "title": "What SEALS is",
+    "title": "Introduction",
     "section": "",
-    "text": "Start at Environment Setup and Quickstart — together they take you from nothing to a downscaled map. Then:\n\nWalkthrough — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.\nscenarios.csv format — the column reference for the file that defines what SEALS runs.\nMAgPIE and the MAgPIE tutorial — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.\n\nThis guide is rendered both as a website and as a single PDF (download). If you are reading the PDF, links to the other two products point at the published site.",
+    "text": "Start at Installation and Quickstart — together they take you from nothing to a downscaled map. Then:\n\nWalkthrough — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.\nScenario iteration — the column reference for the scenarios CSV that defines what SEALS runs.\nMAgPIE and the MAgPIE tutorial — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.\n\nThis guide is rendered both as a website and as a single PDF (download). If you are reading the PDF, links to the other two products point at the published site.",
     "crumbs": [
-      "What SEALS is"
+      "Introduction"
     ]
   },
   {
     "objectID": "seals/user_guide/index.html#where-seals-ends-and-the-platform-begins",
     "href": "seals/user_guide/index.html#where-seals-ends-and-the-platform-begins",
-    "title": "What SEALS is",
+    "title": "Introduction",
     "section": "",
     "text": "SEALS is a model. The machinery that runs it — project directories, task trees, skip-if-already-computed re-runs, automatic base-data download — is ProjectFlow, which lives in hazelbean and is shared across all three products. This guide covers SEALS and says only as much about ProjectFlow as you need to run it.\nFor the platform itself, see the Earth-Economy Devstack documentation:\n\nConventions — the run-file spec, naming rules, and directory layout\nProject complexity — the three axes that describe how a run file is organized, and why\nProjectFlow — the task-tree engine\nInstallation — devstack-wide install options, including the developer install",
     "crumbs": [
-      "What SEALS is"
+      "Introduction"
     ]
   },
   {
     "objectID": "seals/user_guide/index.html#status-and-citation",
     "href": "seals/user_guide/index.html#status-and-citation",
-    "title": "What SEALS is",
+    "title": "Introduction",
     "section": "",
     "text": "SEALS is under active development and changes rapidly. Pull the latest seals before reporting a problem.\nThe model was introduced alongside GTAP-InVEST in Johnson et al. 2023, PNAS. All code is available under a permissive open-source license.",
     "crumbs": [
-      "What SEALS is"
+      "Introduction"
     ]
   },
   {
@@ -2033,41 +1991,41 @@
   {
     "objectID": "seals/user_guide/scenarios_format.html",
     "href": "seals/user_guide/scenarios_format.html",
-    "title": "scenarios.csv Format (v1)",
+    "title": "Scenario Iteration",
     "section": "",
     "text": "The scenarios CSV defines your SEALS scenarios. Each row is one scenario. The tracked copies that ship with SEALS are seals/input_template/standard_scenarios.csv (three scenarios) and standard_scenarios_test.csv (a pared two-row version); this page documents their columns.\n\nThis is the v1 schema — the one the code reads today. A v2 schema is specified in scenario_definitions.qmd and no code implements it yet. v2 fixes several structural problems in v1: it replaces baseline_reference_label / comparison_counterfactual_labels / per-model time columns with a observed_reference_label / compared_to / depends_on split and a single canonical clock, and it allows hindcasting. Write v1 for now; expect a migration when the hazelbean parser lands.\n\n\n\nValues in the Example column are taken from the shipped standard_scenarios.csv.\n\n\n\n\n\n\n\n\nColumn\nDescription\nExample\n\n\n\n\nscenario_label\nUnique scenario identifier\nbaseline_luh2-message, ssp2_rcp45_luh2-message_bau\n\n\nscenario_type\nbaseline, bau, or policy — see the note below\nbaseline\n\n\naoi\nArea of interest: global, an ISO3 code, or a path to a vector\nRWA\n\n\nexogenous_label\nExogenous driver set\nbaseline, ssp2\n\n\nclimate_label\nClimate scenario\nrcp45\n\n\nmodel_label\nCoarse-projection model source\nluh2-message\n\n\ncounterfactual_label\nCounterfactual this row represents (blank on the baseline row)\nbau, bau_shift\n\n\nyears\nSpace-separated projection years\n2030 2050\n\n\nbaseline_reference_label\nscenario_label of the baseline row this one is measured against (blank on the baseline row)\nbaseline_luh2-message\n\n\nbase_years\nObserved/base year(s)\n2017\n\n\nkey_base_year\nThe base year used for LULC\n2017\n\n\ncomparison_counterfactual_labels\nScenario(s) this row is compared against in reporting\nssp2_rcp45_luh2-message_bau\n\n\ntime_dim_adjustment\nOffset applied to the source time dimension\nadd2015\n\n\ncoarse_projections_input_path\nCoarse projections NetCDF\nluh2/raw_data/rcp45_ssp2/multiple-states_..._2015-2100.nc\n\n\nlulc_src_label\nFine LULC source\nesa\n\n\nlulc_simplification_label\nFine LULC class scheme\nseals7\n\n\nlulc_correspondence_path\nFine class correspondence\nseals/default_inputs/esa_seals7_correspondence.csv\n\n\ncoarse_src_label\nCoarse data source\nluh2-14\n\n\ncoarse_simplification_label\nCoarse class scheme\nseals7\n\n\ncoarse_correspondence_path\nCoarse class correspondence\nseals/default_inputs/luh2-14_seals7_correspondence.csv\n\n\nlc_class_varname\nLand-class variable in the NetCDF\nall_variables\n\n\ndimensions\nDimensions to read\ntime\n\n\ncalibration_parameters_source\nDownscaling coefficients\nseals/default_inputs/default_global_coefficients.csv\n\n\nbase_year_lulc_path\nBase-year LULC raster\nlulc/esa/lulc_esa_2017.tif\n\n\nregional_projections_input_path\nRegional projections CSV (optional; blank if coarse-only)\nseals/default_inputs/rwa_bdi_regional_changes.csv\n\n\nregions_vector_path\nRegions vector\ncartographic/ee/ee_r264_correspondence.gpkg\n\n\nregions_column_label\nRegion column in that vector\nee_r264_label\n\n\n\nPaths are ref_paths: relative locations resolved by p.get_path(), which searches the project input/ dir, then base_data, then the cloud bucket, downloading if needed. Always write them with forward slashes, on every platform.\n\n\nThree values appear in current files:\n\nbaseline — the observed anchor. Not downscaled; it supplies base-year LULC and calibration inputs.\nbau — a business-as-usual trajectory. Deprecated in favour of baseline. The migration is in progress and unevenly applied, so bau still appears in shipped CSVs and is still read by the code. Do not rely on it for new work, but do not be surprised to see it.\npolicy — a policy trajectory, downscaled and typically compared against a BAU row via comparison_counterfactual_labels.\n\n\n\n\n\nThe shipped standard_scenarios.csv: a Rwanda baseline, a BAU trajectory, and a policy row that shifts the BAU using regional projections.\nscenario_label,scenario_type,aoi,exogenous_label,climate_label,model_label,counterfactual_label,years,baseline_reference_label,base_years,key_base_year,comparison_counterfactual_labels,time_dim_adjustment,coarse_projections_input_path,lulc_src_label,lulc_simplification_label,lulc_correspondence_path,coarse_src_label,coarse_simplification_label,coarse_correspondence_path,lc_class_varname,dimensions,calibration_parameters_source,base_year_lulc_path,regional_projections_input_path,regions_vector_path,regions_column_label\nbaseline_luh2-message,baseline,RWA,baseline,rcp45,luh2-message,,2017,,2017,2017,,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\nssp2_rcp45_luh2-message_bau,bau,RWA,ssp2,rcp45,luh2-message,bau,2030 2050,baseline_luh2-message,2017,2017,,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\nssp2_rcp45_luh2-message_bau_shift,policy,RWA,ssp2,rcp45,luh2-message,bau_shift,2030 2050,baseline_luh2-message,2017,2017,ssp2_rcp45_luh2-message_bau,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,seals/default_inputs/rwa_bdi_regional_changes.csv,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\n\nKnown wart: the shipped CSVs currently write base_year_lulc_path as lulc\\esa\\lulc_esa_2017.tif, with backslashes. The devstack rule is forward slashes everywhere, on every platform; these should be normalized.\n\n\n\n\nPut your scenarios CSV in an input_template/ directory beside your run file. It is tracked in git; ProjectFlow copies anything missing into the project’s untracked input/ on first run and never overwrites the working copy. Name it in your run file’s __main__ block:\np.scenario_definitions_filename = 'my_project_scenarios.csv'\nIf the named file is absent from both input/ and base_data, SEALS generates a default one in the project’s input/ so a first run still works — edit that copy, or better, add your own to input_template/.",
     "crumbs": [
-      "scenarios.csv Format (v1)"
+      "Scenario Iteration"
     ]
   },
   {
     "objectID": "seals/user_guide/scenarios_format.html#column-reference",
     "href": "seals/user_guide/scenarios_format.html#column-reference",
-    "title": "scenarios.csv Format (v1)",
+    "title": "Scenario Iteration",
     "section": "",
     "text": "Values in the Example column are taken from the shipped standard_scenarios.csv.\n\n\n\n\n\n\n\n\nColumn\nDescription\nExample\n\n\n\n\nscenario_label\nUnique scenario identifier\nbaseline_luh2-message, ssp2_rcp45_luh2-message_bau\n\n\nscenario_type\nbaseline, bau, or policy — see the note below\nbaseline\n\n\naoi\nArea of interest: global, an ISO3 code, or a path to a vector\nRWA\n\n\nexogenous_label\nExogenous driver set\nbaseline, ssp2\n\n\nclimate_label\nClimate scenario\nrcp45\n\n\nmodel_label\nCoarse-projection model source\nluh2-message\n\n\ncounterfactual_label\nCounterfactual this row represents (blank on the baseline row)\nbau, bau_shift\n\n\nyears\nSpace-separated projection years\n2030 2050\n\n\nbaseline_reference_label\nscenario_label of the baseline row this one is measured against (blank on the baseline row)\nbaseline_luh2-message\n\n\nbase_years\nObserved/base year(s)\n2017\n\n\nkey_base_year\nThe base year used for LULC\n2017\n\n\ncomparison_counterfactual_labels\nScenario(s) this row is compared against in reporting\nssp2_rcp45_luh2-message_bau\n\n\ntime_dim_adjustment\nOffset applied to the source time dimension\nadd2015\n\n\ncoarse_projections_input_path\nCoarse projections NetCDF\nluh2/raw_data/rcp45_ssp2/multiple-states_..._2015-2100.nc\n\n\nlulc_src_label\nFine LULC source\nesa\n\n\nlulc_simplification_label\nFine LULC class scheme\nseals7\n\n\nlulc_correspondence_path\nFine class correspondence\nseals/default_inputs/esa_seals7_correspondence.csv\n\n\ncoarse_src_label\nCoarse data source\nluh2-14\n\n\ncoarse_simplification_label\nCoarse class scheme\nseals7\n\n\ncoarse_correspondence_path\nCoarse class correspondence\nseals/default_inputs/luh2-14_seals7_correspondence.csv\n\n\nlc_class_varname\nLand-class variable in the NetCDF\nall_variables\n\n\ndimensions\nDimensions to read\ntime\n\n\ncalibration_parameters_source\nDownscaling coefficients\nseals/default_inputs/default_global_coefficients.csv\n\n\nbase_year_lulc_path\nBase-year LULC raster\nlulc/esa/lulc_esa_2017.tif\n\n\nregional_projections_input_path\nRegional projections CSV (optional; blank if coarse-only)\nseals/default_inputs/rwa_bdi_regional_changes.csv\n\n\nregions_vector_path\nRegions vector\ncartographic/ee/ee_r264_correspondence.gpkg\n\n\nregions_column_label\nRegion column in that vector\nee_r264_label\n\n\n\nPaths are ref_paths: relative locations resolved by p.get_path(), which searches the project input/ dir, then base_data, then the cloud bucket, downloading if needed. Always write them with forward slashes, on every platform.\n\n\nThree values appear in current files:\n\nbaseline — the observed anchor. Not downscaled; it supplies base-year LULC and calibration inputs.\nbau — a business-as-usual trajectory. Deprecated in favour of baseline. The migration is in progress and unevenly applied, so bau still appears in shipped CSVs and is still read by the code. Do not rely on it for new work, but do not be surprised to see it.\npolicy — a policy trajectory, downscaled and typically compared against a BAU row via comparison_counterfactual_labels.",
     "crumbs": [
-      "scenarios.csv Format (v1)"
+      "Scenario Iteration"
     ]
   },
   {
     "objectID": "seals/user_guide/scenarios_format.html#example",
     "href": "seals/user_guide/scenarios_format.html#example",
-    "title": "scenarios.csv Format (v1)",
+    "title": "Scenario Iteration",
     "section": "",
     "text": "The shipped standard_scenarios.csv: a Rwanda baseline, a BAU trajectory, and a policy row that shifts the BAU using regional projections.\nscenario_label,scenario_type,aoi,exogenous_label,climate_label,model_label,counterfactual_label,years,baseline_reference_label,base_years,key_base_year,comparison_counterfactual_labels,time_dim_adjustment,coarse_projections_input_path,lulc_src_label,lulc_simplification_label,lulc_correspondence_path,coarse_src_label,coarse_simplification_label,coarse_correspondence_path,lc_class_varname,dimensions,calibration_parameters_source,base_year_lulc_path,regional_projections_input_path,regions_vector_path,regions_column_label\nbaseline_luh2-message,baseline,RWA,baseline,rcp45,luh2-message,,2017,,2017,2017,,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\nssp2_rcp45_luh2-message_bau,bau,RWA,ssp2,rcp45,luh2-message,bau,2030 2050,baseline_luh2-message,2017,2017,,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\nssp2_rcp45_luh2-message_bau_shift,policy,RWA,ssp2,rcp45,luh2-message,bau_shift,2030 2050,baseline_luh2-message,2017,2017,ssp2_rcp45_luh2-message_bau,add2015,luh2/raw_data/rcp45_ssp2/multiple-states_input4MIPs_landState_ScenarioMIP_UofMD-MESSAGE-ssp245-2-1-f_gn_2015-2100.nc,esa,seals7,seals/default_inputs/esa_seals7_correspondence.csv,luh2-14,seals7,seals/default_inputs/luh2-14_seals7_correspondence.csv,all_variables,time,seals/default_inputs/default_global_coefficients.csv,lulc/esa/lulc_esa_2017.tif,seals/default_inputs/rwa_bdi_regional_changes.csv,cartographic/ee/ee_r264_correspondence.gpkg,ee_r264_label\n\nKnown wart: the shipped CSVs currently write base_year_lulc_path as lulc\\esa\\lulc_esa_2017.tif, with backslashes. The devstack rule is forward slashes everywhere, on every platform; these should be normalized.",
     "crumbs": [
-      "scenarios.csv Format (v1)"
+      "Scenario Iteration"
     ]
   },
   {
     "objectID": "seals/user_guide/scenarios_format.html#where-the-file-lives",
     "href": "seals/user_guide/scenarios_format.html#where-the-file-lives",
-    "title": "scenarios.csv Format (v1)",
+    "title": "Scenario Iteration",
     "section": "",
     "text": "Put your scenarios CSV in an input_template/ directory beside your run file. It is tracked in git; ProjectFlow copies anything missing into the project’s untracked input/ on first run and never overwrites the working copy. Name it in your run file’s __main__ block:\np.scenario_definitions_filename = 'my_project_scenarios.csv'\nIf the named file is absent from both input/ and base_data, SEALS generates a default one in the project’s input/ so a first run still works — edit that copy, or better, add your own to input_template/.",
     "crumbs": [
-      "scenarios.csv Format (v1)"
+      "Scenario Iteration"
     ]
   },
   {

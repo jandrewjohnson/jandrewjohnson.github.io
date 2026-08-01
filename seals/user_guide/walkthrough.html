@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -327,6 +327,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../seals/user_guide/kenya_worked_example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worked examples</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../seals/user_guide/kenya_worked_example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kenya DEMETRA-SEALS-InVEST (historical)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/walkthrough_marked.html" class="sidebar-item-text sidebar-link">
@@ -347,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://github.com/jandrewjohnson/seals_dev" class="sidebar-item-text sidebar-link">
+  <a href="https://github.com/jandrewjohnson/seals" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GitHub</span></a>
   </div>
 </li>
@@ -402,7 +419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Clone SEALS and Hazelbean into the devstack layout — each repo in its own project folder under <code>~/Files/</code>:
 <ul class="incremental">
 <li><code>~/Files/hazelbean/hazelbean_dev</code></li>
-<li><code>~/Files/seals/seals_dev</code></li>
+<li><code>~/Files/seals/seals</code></li>
 </ul></li>
 <li>The layout is not cosmetic: ProjectFlow reads it to decide where project directories go</li>
 <li>You know the install worked if this prints two paths inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
@@ -412,8 +429,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="explore-the-seals-code" class="level2">
 <h2 class="anchored" data-anchor-id="explore-the-seals-code">Explore the SEALS code</h2>
 <ul class="incremental">
-<li>The repo root <code>seals_dev/</code> holds more than the library — docs, tests, scripts</li>
-<li>The library itself is the <code>seals_dev/seals</code> subdirectory. The nesting looks redundant but is how Python packaging works</li>
+<li>The repo root <code>seals/</code> holds more than the library — docs, tests, scripts</li>
+<li>The library itself is the <code>seals/seals</code> subdirectory. The nesting looks redundant but is how Python packaging works</li>
 <li>Inside it, <code>__init__.py</code> is what makes the directory importable as a package</li>
 <li>The modules are split by what they hold:
 <ul class="incremental">
@@ -429,7 +446,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul class="incremental">
 <li>You do not run <code>seals_main.py</code> directly</li>
 <li>A <strong>run file</strong> configures a project and executes a task tree built from the library’s task functions</li>
-<li>Two ship with SEALS, both in <code>seals_dev/seals</code>:
+<li>Two ship with SEALS, both in <code>seals/seals</code>:
 <ul class="incremental">
 <li><code>run_seals_standard.py</code> — three scenarios, 2030 and 2050</li>
 <li><code>run_seals_standard_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
@@ -498,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="where-the-project-directory-goes">Where the project directory goes</h2>
 <ul class="incremental">
 <li>Not into the repo. Because the run file sits inside a cloned repo, ProjectFlow places the project dir just <em>outside</em> it, at <code>~/Files/seals/projects/&lt;project_name&gt;/</code></li>
-<li>You do not compute this path yourself, and you should not save data in <code>seals_dev</code></li>
+<li>You do not compute this path yourself, and you should not save data in <code>seals/seals</code></li>
 <li><code>run_mode</code> decides how much prior work is reused:
 <ul class="incremental">
 <li><code>'check'</code> — reuse the stable dir, recompute only what is missing (the default)</li>
@@ -546,7 +563,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="run-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="run-the-model">Run the model</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals_dev/seals</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul class="incremental">
 <li>On startup SEALS prints the <strong>task tree</strong> it is about to compute</li>

@@ -1067,7 +1067,7 @@ margin-right: 0; }
 <li class="fragment">Clone SEALS and Hazelbean into the devstack layout — each repo in its own project folder under <code>~/Files/</code>:
 <ul>
 <li class="fragment"><code>~/Files/hazelbean/hazelbean_dev</code></li>
-<li class="fragment"><code>~/Files/seals/seals_dev</code></li>
+<li class="fragment"><code>~/Files/seals/seals</code></li>
 </ul></li>
 <li class="fragment">The layout is not cosmetic: ProjectFlow reads it to decide where project directories go</li>
 <li class="fragment">You know the install worked if this prints two paths inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
@@ -1079,8 +1079,8 @@ margin-right: 0; }
 <h2>Explore the SEALS code</h2>
 <div class="r-fit-text">
 <ul>
-<li class="fragment">The repo root <code>seals_dev/</code> holds more than the library — docs, tests, scripts</li>
-<li class="fragment">The library itself is the <code>seals_dev/seals</code> subdirectory. The nesting looks redundant but is how Python packaging works</li>
+<li class="fragment">The repo root <code>seals/</code> holds more than the library — docs, tests, scripts</li>
+<li class="fragment">The library itself is the <code>seals/seals</code> subdirectory. The nesting looks redundant but is how Python packaging works</li>
 <li class="fragment">Inside it, <code>__init__.py</code> is what makes the directory importable as a package</li>
 <li class="fragment">The modules are split by what they hold:
 <ul>
@@ -1098,7 +1098,7 @@ margin-right: 0; }
 <ul>
 <li class="fragment">You do not run <code>seals_main.py</code> directly</li>
 <li class="fragment">A <strong>run file</strong> configures a project and executes a task tree built from the library’s task functions</li>
-<li class="fragment">Two ship with SEALS, both in <code>seals_dev/seals</code>:
+<li class="fragment">Two ship with SEALS, both in <code>seals/seals</code>:
 <ul>
 <li class="fragment"><code>run_seals_standard.py</code> — three scenarios, 2030 and 2050</li>
 <li class="fragment"><code>run_seals_standard_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
@@ -1177,7 +1177,7 @@ margin-right: 0; }
 <div class="r-fit-text">
 <ul>
 <li class="fragment">Not into the repo. Because the run file sits inside a cloned repo, ProjectFlow places the project dir just <em>outside</em> it, at <code>~/Files/seals/projects/&lt;project_name&gt;/</code></li>
-<li class="fragment">You do not compute this path yourself, and you should not save data in <code>seals_dev</code></li>
+<li class="fragment">You do not compute this path yourself, and you should not save data in <code>seals/seals</code></li>
 <li class="fragment"><code>run_mode</code> decides how much prior work is reused:
 <ul>
 <li class="fragment"><code>&#39;check&#39;</code> — reuse the stable dir, recompute only what is missing (the default)</li>
@@ -1237,7 +1237,7 @@ margin-right: 0; }
 <h2>Run the model</h2>
 <div class="r-fit-text">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
-<span id="cb7-2"><a></a><span class="bu">cd</span> seals_dev/seals</span>
+<span id="cb7-2"><a></a><span class="bu">cd</span> seals/seals</span>
 <span id="cb7-3"><a></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li class="fragment">On startup SEALS prints the <strong>task tree</strong> it is about to compute</li>
@@ -1262,11 +1262,13 @@ margin-right: 0; }
 </section>
 <section id="next" class="slide level2">
 <h2>Next</h2>
+<div class="r-fit-text">
 <ul>
 <li class="fragment"><a href="../../seals/user_guide/quickstart.html">Quickstart</a> — the condensed version of this page</li>
 <li class="fragment"><a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">Conventions</a> — the full run-file rules</li>
 <li class="fragment"><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_complexity.html">Project complexity</a> — why run files are shaped this way</li>
 </ul>
+</div>
 
 
 </section></section>

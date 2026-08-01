@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -375,29 +375,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy_overview.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy Overview</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/gtap_invest/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GTAP-InVEST</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
@@ -646,7 +623,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want to run SEALS with the run.py file in a different directory (ie in the project dir)</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then you need to add the path to the seals directory to the system path.</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    custom_seals_path <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> custom_seals_path <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># G:/My Drive/Files/Research/seals/seals_dev/seals</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> custom_seals_path <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># e.g. ~/Files/seals/seals/seals</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        sys.path.insert(<span class="dv">0</span>, custom_seals_path)</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SEALS will run based on the scenarios defined in a scenario_definitions.csv</span></span>
@@ -828,7 +805,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="images/2024-05-03-09-47-29.png" class="img-fluid"></p>
 <p>Our goal now is to clone the IUCN project into a new project we can modify. First, let us create the new project directory called <code>test_iucn_30by30</code>. In that folder, also create a new folder called <code>input</code>. Here, you will copy over the scenario_definitions file used in the IUCN project, which was named <code>scenario_definitions_iucn_all.csv</code>. After copying, rename it something sensible in the new location like <code>scenario_definitions_iucn_30by30.csv</code>, as shown below.</p>
 <p><img src="images/paste-51.png" class="img-fluid"></p>
-<p>Now create a new Python run file. Go back to the code directory (Files/seals/seals_dev) and copy <code>run_iucn.py</code> in the same directory and rename it <code>run_test_iucn_30by30.py</code>. Note the word test her which means it is going to be a non-global, fast running script to prove the new code works. Eventually a new run file <code>run_iucn_30by30.py</code> will be created when we know it works. In the new file, rename <code>project_name = 'test_iucn_30by30'</code>. Also in the code, edit the line below to match the name of your new scenario_definitions file.</p>
+<p>Now create a new Python run file. Go back to the code directory (Files/seals/seals) and copy <code>run_iucn.py</code> in the same directory and rename it <code>run_test_iucn_30by30.py</code>. Note the word test her which means it is going to be a non-global, fast running script to prove the new code works. Eventually a new run file <code>run_iucn_30by30.py</code> will be created when we know it works. In the new file, rename <code>project_name = 'test_iucn_30by30'</code>. Also in the code, edit the line below to match the name of your new scenario_definitions file.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, <span class="st">'scenario_defininitions_iucn_30by30.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By copying the <code>run_iucn.py</code> file, we have ensured that we load the set of tasks we built for that project, specifically:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>seals_initialize_project.build_iucn_task_tree(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

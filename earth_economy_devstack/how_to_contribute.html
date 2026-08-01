@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -375,29 +375,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy_overview.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy Overview</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/gtap_invest/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GTAP-InVEST</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
@@ -586,8 +563,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To clone the repository on your local machine via the command line, navigate to the local folder, in which you want to clone the repository, and type</p>
 <pre><code>git clone -b &lt;name-of-branch&gt;` &lt;url-to-github-repo&gt; &lt;name-of-local-clone-folder&gt;</code></pre>
 <p>For example, if you want to clone the develop branch of your SEALS fork type</p>
-<pre><code>git clone -b develop https://github.com/&lt;username/seals_dev seals_develop</code></pre>
-<p>Before making any changes, make sure that your fork and/or your local repository are up-to-date with the original SEALS repository. To pull changes from your fork use <code>git pull origin &lt;name-of-branch&gt;</code>. In order to pull the latest changes from the original SEALS repository you can set up a link to the original upstream repository with the command <code>git remote add upstream https://github.com/jandrewjohnson/seals_dev</code>. To pull the latest changes from the develop branch in the original upstream repository use <code>git pull upstream develop</code>.</p>
+<pre><code>git clone -b develop https://github.com/&lt;username&gt;/seals seals_develop</code></pre>
+<p>Before making any changes, make sure that your fork and/or your local repository are up-to-date with the original SEALS repository. To pull changes from your fork use <code>git pull origin &lt;name-of-branch&gt;</code>. In order to pull the latest changes from the original SEALS repository you can set up a link to the original upstream repository with the command <code>git remote add upstream https://github.com/jandrewjohnson/seals</code>. To pull the latest changes from the develop branch in the original upstream repository use <code>git pull upstream develop</code>.</p>
 <p>During code development, any changes or fixes that should go back to the fork and/or the original SEALS repository need to be <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘staged’</a> and then <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘commited’</a> with a commit message that succinctly describes the changes. By staging changes, <strong>git</strong> is informed that these changes should become part of the next ‘commit’, which essentially takes a snapshot of all staged changes thus far.</p>
 <p>To stage all changes in the current repository use the command <code>git add .</code>. If you only want to stage changes in a certain file use <code>git add &lt;(relative)-path-to-file-in-repo&gt;</code>.</p>
 <p>To commit all staged changes use the command <code>git commit -m "a short description of the code changes"</code>.</p>
@@ -628,7 +605,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Pull Requests</h1>
 <p>Regardless of if your contributing via branches or teams, we will use Pull Requests to incorporate your changes into the main branch.</p>
 <p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specified. Pull requests should be reviewed by at least one of the main code developers.</p>
-<p>Here is an example where you think some functions in <code>seals_process_coarse_timeseries.py</code> within the <code>seals_dev</code> project should be removed and relocated to a project-specific repository, rather than remaining in the core <code>seals_dev</code> repository. In your <strong>forked</strong> <code>seals_dev</code> repository:</p>
+<p>Here is an example where you think some functions in <code>seals_process_coarse_timeseries.py</code> within the <code>seals</code> project should be removed and relocated to a project-specific repository, rather than remaining in the core <code>seals</code> repository. In your <strong>forked</strong> <code>seals</code> repository:</p>
 <p><img src="images/pull_request_example_step1.png" class="img-fluid"></p>
 <p>This example shows that you have made changes in <code>seals_process_coarse_timeseries.py</code>. You need to “Stage Changes” (as indicated by the red circle) and “Commit Changes” before you can create a pull request.</p>
 <p><img src="images/pull_request_example_step2.png" class="img-fluid"></p>

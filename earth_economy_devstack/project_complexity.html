@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -375,29 +375,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy_overview.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy Overview</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/gtap_invest/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GTAP-InVEST</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
   </div>
 </li>
       </ul>
@@ -848,7 +825,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Every template below is described on the <a href="../earth_economy_devstack/run_templates.html">Run Templates</a> page, which is the place to start if you want to copy one.</p>
 <p>Each tool in the six stages was adopted only when the previous stage’s pain demanded it — and that lesson applies to ProjectFlow itself. If your problem is still a stage-1 problem, do not start at configuration level 4. The spec scales down.</p>
 <p><strong>The smallest run file — a function becomes a task when you add it.</strong> The minimal ProjectFlow script is one task function plus a guarded three-line main block: <code>p = hb.ProjectFlow()</code>, <code>p.add_task(your_function)</code>, <code>p.execute()</code>. Nothing is hidden — the <code>add_task</code> call <em>is</em> the moment a plain function becomes a task (and calling <code>execute()</code> with nothing added fails with a message telling you exactly that). See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_1_minimal.py"><code>examples/run_templates/run_template_1_minimal.py</code></a> — about 30 lines, and in exchange for roughly the effort of the stage-1 script you get an organized project directory, one folder per task, skip-if-already-computed re-runs, and logging.</p>
-<p><strong>The canonical form.</strong> When you want variants, graduate to configuration level 3: <code>build_task_tree(p)</code>, <code>run_project(p)</code>, and a <code>__main__</code> guard that builds and configures the ProjectFlow. The rule that replaces a signature full of defaults: <strong><code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a constant starts varying, it moves one line up, out of <code>run_project</code> and into the caller — no signature to edit and no default to keep in sync. See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_3_canonical.py"><code>run_template_3_canonical.py</code></a>, its annotated twin in <code>examples/run_templates_annotated/</code> for the reasoning, and the <a href="../earth_economy_devstack/conventions.html">conventions</a> page for the full rules. For a project of your own that imports a devstack library as a read-only dependency, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> into your repo as its <code>run_&lt;project&gt;.py</code>; for stock SEALS, copy <a href="https://github.com/jandrewjohnson/seals_dev/blob/main/seals/run_seals_standard.py"><code>run_seals_standard.py</code></a>. The full-scale reference implementation is <a href="https://github.com/jandrewjohnson/ngfs_pnas">ngfs_pnas</a>.</p>
+<p><strong>The canonical form.</strong> When you want variants, graduate to configuration level 3: <code>build_task_tree(p)</code>, <code>run_project(p)</code>, and a <code>__main__</code> guard that builds and configures the ProjectFlow. The rule that replaces a signature full of defaults: <strong><code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a constant starts varying, it moves one line up, out of <code>run_project</code> and into the caller — no signature to edit and no default to keep in sync. See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_3_canonical.py"><code>run_template_3_canonical.py</code></a>, its annotated twin in <code>examples/run_templates_annotated/</code> for the reasoning, and the <a href="../earth_economy_devstack/conventions.html">conventions</a> page for the full rules. For a project of your own that imports a devstack library as a read-only dependency, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> into your repo as its <code>run_&lt;project&gt;.py</code>; for stock SEALS, copy <a href="https://github.com/jandrewjohnson/seals/blob/main/seals/run_seals_standard.py"><code>run_seals_standard.py</code></a>. The full-scale reference implementation is <a href="https://github.com/jandrewjohnson/ngfs_pnas">ngfs_pnas</a>.</p>
 <p><strong>When to move along an axis.</strong> <em>Configuration:</em> add a scenarios CSV when you first have two variants of the same run (the CSV, not the code, is what varies); add a <code>parameters.csv</code> key the first time a machine-specific value — an ssh host, a credentials path — tries to enter your code; add a thin <code>run_&lt;project&gt;_test.py</code> wrapper when the full run gets long enough to want a pared smoke test. <em>Code layout:</em> split when a task module gets big enough to navigate, or when a second run file needs the same task. <em>Ownership:</em> you cross into downstream-user territory the moment the library you import is one you should not be editing.</p>
 <p>Every one of these is the stage-2 lesson in a new costume: the moment you are tempted to copy a block — or a whole file — and edit one line, the spec has a mechanism that varies the <em>data</em> instead of forking the <em>code</em>.</p>
 </section>

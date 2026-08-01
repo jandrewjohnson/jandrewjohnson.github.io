@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -381,29 +381,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/gtap_invest/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GTAP-InVEST</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Release Notes</span></a>
   </div>
@@ -512,6 +489,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#utf-8-encoding" id="toc-utf-8-encoding" class="nav-link" data-scroll-target="#utf-8-encoding">UTF-8 encoding</a></li>
   <li><a href="#projectflow-conventions" id="toc-projectflow-conventions" class="nav-link" data-scroll-target="#projectflow-conventions">ProjectFlow conventions</a></li>
   <li><a href="#slides-from-prose-_marked.qmd-and-revealjs" id="toc-slides-from-prose-_marked.qmd-and-revealjs" class="nav-link" data-scroll-target="#slides-from-prose-_marked.qmd-and-revealjs">Slides from prose: <code>*_marked.qmd</code> and revealjs</a></li>
+  <li><a href="#external_repos-is-out-of-scope" id="toc-external_repos-is-out-of-scope" class="nav-link" data-scroll-target="#external_repos-is-out-of-scope"><code>external_repos/</code> is out of scope</a></li>
   <li><a href="#git-workflow" id="toc-git-workflow" class="nav-link" data-scroll-target="#git-workflow">Git workflow</a></li>
   </ul></li>
   </ul>
@@ -888,6 +866,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Because the deck is generated, <strong>keep the source free of anything that only makes sense in one medium</strong>. Screenshots in particular age badly and are invisible to search; prefer text and fenced code blocks, which carry to both renderings and stay correct when the code changes.</p>
+</section>
+<section id="external_repos-is-out-of-scope" class="level2">
+<h2 class="anchored" data-anchor-id="external_repos-is-out-of-scope"><code>external_repos/</code> is out of scope</h2>
+<p>A directory named <code>external_repos/</code> holds checkouts that are <em>not ours to change</em>: someone else’s repository, a second clone of one of ours pinned to a collaborator’s branch, or a vendored dependency. <strong>Never edit anything under an <code>external_repos/</code> directory</strong>, and exclude it from every stack-wide sweep — renames, convention refactors, link fixes, grep-and-replace of any kind.</p>
+<ul class="incremental">
+<li>A hit inside <code>external_repos/</code> is not a finding. Do not report it as work remaining, and do not “fix” it for consistency with the canonical copy.</li>
+<li>If a file there genuinely needs to change, the change belongs upstream in the repo that owns it, applied through that repo’s own workflow.</li>
+<li>When a path appears in both a canonical repo and <code>external_repos/</code>, the canonical repo is the one to edit. The duplicate is a mirror, and editing it creates spurious diffs on whatever branch it happens to be sitting on.</li>
+</ul>
 </section>
 <section id="git-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="git-workflow">Git workflow</h2>

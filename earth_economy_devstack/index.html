@@ -176,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -346,29 +346,6 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://justinandrewjohnson.com/gtap_invest/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GTAP-InVEST</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="https://justinandrewjohnson.com/seals/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SEALS</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/kenya_seals_report.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Kenya DEMETRA-SEALS Tutorial (historical)</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/release_notes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Release Notes</span></a>
   </div>
@@ -442,7 +419,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#earth-economy-devstack" id="toc-earth-economy-devstack" class="nav-link active" data-scroll-target="#earth-economy-devstack">Earth-Economy Devstack</a></li>
+  <li><a href="#earth-economy-devstack" id="toc-earth-economy-devstack" class="nav-link active" data-scroll-target="#earth-economy-devstack">Earth-Economy Devstack</a>
+  <ul class="incremental collapse">
+  <li><a href="#seals-and-gtap-invest-are-documented-elsewhere" id="toc-seals-and-gtap-invest-are-documented-elsewhere" class="nav-link" data-scroll-target="#seals-and-gtap-invest-are-documented-elsewhere">SEALS and GTAP-InVEST are documented elsewhere</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -456,6 +436,14 @@ ul.task-list li input[type="checkbox"] {
 <h1>Earth-Economy Devstack</h1>
 <p>This is the documentation for the Earth-Economy Devstack, which is the set of repositories and code tools used by <a href="https://natcapteems.umn.edu/">NatCap TEEMs</a>. This documentation starts with installation instructions, overall organization of the Earth-Economy Devstack and discusses common coding practices used among the multiple related repositories. See my <a href="https://www.youtube.com/@justinandrewjohnson">YouTube channel</a> or specifically the most up-to-date <a href="https://www.youtube.com/playlist?list=PLir2vw2cQ_Nu8RWoNfH_-QUmxKnK4Bztf">Earth-Economy Devstack Training playlist</a>.</p>
 <p><img src="images/2024-03-05-03-50-26.png" class="img-fluid"></p>
+<section id="seals-and-gtap-invest-are-documented-elsewhere" class="level2">
+<h2 class="anchored" data-anchor-id="seals-and-gtap-invest-are-documented-elsewhere">SEALS and GTAP-InVEST are documented elsewhere</h2>
+<p>SEALS and GTAP-InVEST are part of the Earth-Economy Devstack, but because they are also standalone models with their own user guides, their documentation is not in this sidebar. It lives under each model’s own home page:</p>
+<ul class="incremental">
+<li><a href="https://justinandrewjohnson.com/seals/">SEALS</a> — home page, <a href="https://justinandrewjohnson.com/seals/user_guide/">user guide</a>, and <a href="https://github.com/jandrewjohnson/seals">GitHub</a></li>
+<li><a href="https://justinandrewjohnson.com/gtap_invest/">GTAP-InVEST</a> — home page, <a href="https://justinandrewjohnson.com/gtap_invest/user_guide/">user guide</a>, and <a href="https://github.com/jandrewjohnson/gtap_invest_dev">GitHub</a></li>
+</ul>
+<p>The pages that remain here — Hazelbean, Global InVEST, GTAPpy, and the Methods section — cover the shared libraries and conventions that all of the models build on.</p>
 <p>Most of my Youtube playlists are publicly available but unlisted, so to access the rest of my videos, see the following links:</p>
 <ul class="incremental">
 <li><p>Previous version of my Big Data class. <a href="https://www.youtube.com/playlist?list=PLir2vw2cQ_NsgumvBeIq_Cy9QrXsGHUKK">APEC 8222, Spring 2023</a></p></li>
@@ -463,6 +451,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

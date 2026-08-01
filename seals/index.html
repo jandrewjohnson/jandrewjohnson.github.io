@@ -176,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">User Guide PDF</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -261,7 +261,7 @@ ul.task-list li input[type="checkbox"] {
 <ul class="incremental">
 <li><p><strong>Speed.</strong> SEALS downscales to 300 meters globally — roughly 8.4 billion grid cells — in about an hour on a laptop. Performance-critical functions are written in C++ via Cython; everything else is Python.</p></li>
 <li><p><strong>Scalability.</strong> It is designed for parallel execution, so it scales from a laptop to high-performance, cloud, or distributed computing.</p></li>
-<li><p><strong>Source-agnostic inputs.</strong> It downscales from coarse gridded projections (LUH2, MAgPIE) or from regional totals (a CGE model such as GTAP-AEZ), or from both at once.</p></li>
+<li><p><strong>Source-agnostic inputs.</strong> It downscales from coarse gridded projections (LUH2, MAgPIE) or from regional totals (regional polygons from a CGE model such as GTAP-AEZ), or from both at once.</p></li>
 <li><p><strong>Reproducibility.</strong> Runs are driven by a scenarios CSV rather than by edited code, and every step is cached, so an interrupted run resumes instead of restarting.</p></li>
 </ul>
 <p>SEALS is a part of the Earth-Economy Devstack, a software platform supported by NatCap TEEMs (The Earth-Economy Modellers).</p>
@@ -269,16 +269,16 @@ ul.task-list li input[type="checkbox"] {
 <section id="where-it-fits" class="level2">
 <h2 class="anchored" data-anchor-id="where-it-fits">Where it fits</h2>
 <p>SEALS is the land-use step inside <a href="../gtap_invest/index.html">GTAP-InVEST</a>: GTAP-AEZ produces regional land-use change, SEALS downscales it to 300 m, and InVEST computes the resulting ecosystem service changes. It is equally usable on its own, or coupled to any other model that produces coarse land-use projections.</p>
-<p>It was introduced alongside GTAP-InVEST in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">Johnson et al.&nbsp;(2023), PNAS</a>.</p>
+<p>SEALS was first introduced in <a href="https://doi.org/10.1016/j.gloenvcha.2020.102100">Suh et al.&nbsp;(2020), Global Environmental Change</a>, which used it to downscale cropland expansion projections to ~300m resolution. It was later coupled to GTAP-AEZ in the Global Futures work (Johnson et al.&nbsp;2020, WWF; 2021, World Bank) and to MAgPIE in <a href="https://www.nature.com/articles/s41467-023-38043-1">von Jeetze et al.&nbsp;(2023), Nature Communications</a>. It became the downscaling component of GTAP-InVEST in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">Johnson et al.&nbsp;(2023), PNAS</a>, with the full model description in Johnson et al.&nbsp;(in review).</p>
 </section>
 <section id="documentation-and-code" class="level2">
 <h2 class="anchored" data-anchor-id="documentation-and-code">Documentation and code</h2>
 <ul class="incremental">
-<li><p><strong><a href="../seals/user_guide/index.html">SEALS User Guide</a></strong> — installation, a first run, the scenarios CSV reference, and coupling to other models. Also available as a <a href="user_guide/SEALS-User-Guide.pdf">single PDF</a>.</p></li>
-<li><p><strong><a href="https://github.com/jandrewjohnson/seals_dev">GitHub: jandrewjohnson/seals_dev</a></strong> — all code, under a permissive open-source license.</p></li>
-<li><p><strong><a href="../earth_economy_devstack/index.html">Earth-Economy Devstack</a></strong> — the shared platform SEALS is built on: hazelbean, ProjectFlow, and the conventions every model in the stack follows.</p></li>
+<li><p><a href="../seals/user_guide/index.html"><strong>SEALS User Guide</strong></a> — installation, a first run, the scenarios CSV reference, and coupling to other models. Also available as a <a href="user_guide/SEALS-User-Guide.pdf">single PDF</a>.</p></li>
+<li><p><a href="https://github.com/jandrewjohnson/seals"><strong>GitHub: jandrewjohnson/seals</strong></a> — all code, under a permissive open-source license.</p></li>
+<li><p><a href="../earth_economy_devstack/index.html"><strong>Earth-Economy Devstack</strong></a> — the shared platform SEALS is built on: hazelbean, ProjectFlow, and the conventions every model in the stack follows.</p></li>
 </ul>
-<p>SEALS is under active development and changes rapidly. Pull the latest <code>seals_dev</code> before reporting a problem.</p>
+<p>SEALS is under active development and changes rapidly. Pull the latest <code>seals</code> before reporting a problem.</p>
 
 
 </section>

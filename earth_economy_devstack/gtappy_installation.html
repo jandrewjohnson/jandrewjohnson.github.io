@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>installation_julia – Justin Andrew Johnson</title>
+<title>gtappy_installation – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -221,7 +256,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_installation.html">Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -243,11 +278,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
@@ -262,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link active">
+  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Julia Installation</span></a>
   </div>
 </li>
@@ -331,11 +366,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
@@ -344,7 +379,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/gtappy_installation.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/gtappy_installation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Installation</span></a>
   </div>
 </li>
@@ -443,69 +478,160 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#installation-of-hazelbean-in-julia" id="toc-installation-of-hazelbean-in-julia" class="nav-link active" data-scroll-target="#installation-of-hazelbean-in-julia">Installation of Hazelbean in Julia</a>
+  <li><a href="#installing-the-gtap-toolchain" id="toc-installing-the-gtap-toolchain" class="nav-link active" data-scroll-target="#installing-the-gtap-toolchain">Installing the GTAP toolchain</a>
   <ul class="incremental collapse">
-  <li><a href="#install-julia" id="toc-install-julia" class="nav-link" data-scroll-target="#install-julia">Install Julia</a></li>
-  <li><a href="#julia-environments" id="toc-julia-environments" class="nav-link" data-scroll-target="#julia-environments">Julia Environments</a></li>
-  <li><a href="#julias-project.toml-and-manifest.toml" id="toc-julias-project.toml-and-manifest.toml" class="nav-link" data-scroll-target="#julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</a></li>
-  <li><a href="#manual-adding-of-packages" id="toc-manual-adding-of-packages" class="nav-link" data-scroll-target="#manual-adding-of-packages">Manual adding of Packages</a></li>
+  <li><a href="#c-build-tools-for-cython" id="toc-c-build-tools-for-cython" class="nav-link" data-scroll-target="#c-build-tools-for-cython">1. C++ build tools (for Cython)</a></li>
+  <li><a href="#gempack" id="toc-gempack" class="nav-link" data-scroll-target="#gempack">2. GEMPACK</a></li>
+  <li><a href="#rungtap" id="toc-rungtap" class="nav-link" data-scroll-target="#rungtap">3. RunGTAP</a></li>
+  <li><a href="#gtapagg2-and-the-gtap-database" id="toc-gtapagg2-and-the-gtap-database" class="nav-link" data-scroll-target="#gtapagg2-and-the-gtap-database">4. GTAPAgg2 and the GTAP database</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_installation.html">Installation</a></li></ol></nav></header>
 
 
 
 
-<section id="installation-of-hazelbean-in-julia" class="level1">
-<h1>Installation of Hazelbean in Julia</h1>
-<section id="install-julia" class="level2">
-<h2 class="anchored" data-anchor-id="install-julia">Install Julia</h2>
-<ol class="incremental" type="1">
-<li>On windows, Install <strong>Julia</strong> (which includes juliaup, the official Julia installer/manager) from the Microsoft Store: <a href="https://www.microsoft.com/store/apps/9NJNWW8PVKMN" class="uri">https://www.microsoft.com/store/apps/9NJNWW8PVKMN</a>
-<ol class="incremental" type="1">
-<li>For full installation instructions here: <a href="https://julialang.org/install/" class="uri">https://julialang.org/install/</a></li>
-<li><img src="images/paste-73.png" class="img-fluid" width="329"></li>
-</ol></li>
-<li>Run the Julia application you just installed.
-<ol class="incremental" type="1">
-<li>An easy way is to do this is press the start button and type Julia.</li>
-<li>This will call <code>juliaup</code>, which is a nice tool that will get you the latest version of the actual Julia code.</li>
-<li><img src="images/paste-72.png" class="img-fluid" width="330"></li>
-</ol></li>
-<li>After <code>juliaup</code> is called, each subsequent time you call Julia, it will enter a Julia REPL (Read-Eval-Print-Loop, basically a command line instance of Julia)</li>
-</ol>
+<section id="installing-the-gtap-toolchain" class="level1">
+<h1>Installing the GTAP toolchain</h1>
+<p>GTAPpy is a thin Python layer over a stack of Windows programs from Purdue and CoPS. Installing GTAPpy itself is the easy part; the work is getting that stack in place and licensed. There are four pieces, and they have to be installed in roughly this order:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 33%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>piece</th>
+<th>what it is</th>
+<th>why you need it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Microsoft C++ Build Tools</td>
+<td>MSVC compiler</td>
+<td>builds the Cython extensions in Hazelbean, which GTAPpy imports</td>
+</tr>
+<tr class="even">
+<td>GEMPACK (<code>gpei</code>)</td>
+<td>the CGE solver</td>
+<td>actually solves the GTAP model</td>
+</tr>
+<tr class="odd">
+<td>RunGTAP</td>
+<td>GUI front end</td>
+<td>ships the compiled v7 model code and is how you produce a working version directory</td>
+</tr>
+<tr class="even">
+<td>GTAPAgg2</td>
+<td>database aggregator</td>
+<td>turns the licensed GTAP database into the aggregation you want to run</td>
+</tr>
+</tbody>
+</table>
+<p>GEMPACK, RunGTAP and GTAPAgg2 are Windows-only. On a Mac or Linux workstation the usual arrangement is a Windows VM holding the toolchain, driven over SSH — <code>gtappy_runner.py</code> has a <code>run_gtap_cmf_on_vm</code> path and a <code>mac_to_win</code> path translator for exactly this.</p>
+<section id="c-build-tools-for-cython" class="level2">
+<h2 class="anchored" data-anchor-id="c-build-tools-for-cython">1. C++ build tools (for Cython)</h2>
+<p>This step is not about GTAP at all. Hazelbean, which GTAPpy depends on, contains Cython extension modules, and <code>pip</code> has to compile them on install. On Windows that requires the MSVC compiler, and the error you get without it (“Microsoft Visual C++ 14.0 or greater is required”) is the most common first-run failure in the whole devstack.</p>
+<p>The Python packaging documentation’s <a href="https://wiki.python.org/moin/WindowsCompilers">Windows compilers</a> page is the authority on which compiler version pairs with which Python. It is worth checking rather than guessing, because the requirement moves with each CPython release:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_python_windows_compilers.png" class="img-fluid figure-img"></p>
+<figcaption>The Windows compilers page: which MSVC version current CPython is built with</figcaption>
+</figure>
+</div>
+<p>The same page is where the “you only need this if you are compiling a Cython or Pyrex file” caveat comes from — which is precisely our case:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_python_wheel_tag.png" class="img-fluid figure-img"></p>
+<figcaption>Compiling a Cython extension is what pulls in the compiler requirement</figcaption>
+</figure>
+</div>
+<p>You do not need full Visual Studio. The standalone <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Build Tools for Visual Studio</a> package is enough, and is a much smaller install:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_msvc_build_tools_download.png" class="img-fluid figure-img"></p>
+<figcaption>The Build Tools for Visual Studio download page</figcaption>
+</figure>
+</div>
+<p>If the current build tools do not match the compiler version your Python needs, older releases are reachable from the same site under “Still want an older version?”, though this requires a (free) Dev Essentials account:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_msvc_older_versions.png" class="img-fluid figure-img"></p>
+<figcaption>Older Visual Studio releases, if you need a specific MSVC version</figcaption>
+</figure>
+</div>
+<p>In the installer, the simple route is the <strong>Desktop development with C++</strong> workload, which pulls in the compiler, the CRT and the Windows SDK together:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_msvc_workloads.png" class="img-fluid figure-img"></p>
+<figcaption>Selecting the Desktop development with C++ workload</figcaption>
+</figure>
+</div>
+<p>If you would rather keep the install small, skip the workload and pick the components directly on the <strong>Individual components</strong> tab — the MSVC v143 x64/x86 build tools, the C++ build tools core features, the Windows Universal C Runtime, and a Windows SDK. That is roughly 100 MB more rather than the workload’s several GB:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_msvc_individual_components.png" class="img-fluid figure-img"></p>
+<figcaption>Picking the individual components instead of the whole workload</figcaption>
+</figure>
+</div>
+<p>Verify by opening a fresh shell and importing Hazelbean, which triggers compilation on first import:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="julia-environments" class="level2">
-<h2 class="anchored" data-anchor-id="julia-environments">Julia Environments</h2>
-<ol class="incremental" type="1">
-<li>Julia can have different environments (configurations of packages). Managing environments is notoriously challenging, but it is important.</li>
-<li>When you called <code>juliaup</code> above, it created a default system environment, stored in your Users directory
-<ol class="incremental" type="1">
-<li><img src="images/paste-76.png" class="img-fluid"></li>
-<li>This is the default system Julia installation. It’s tempting to use <em>only</em> this, but that can quickly get confusing and cause dependency nightmares.</li>
-<li>Better is to have specific environments tied to specific project and Git repo.</li>
-</ol></li>
-</ol>
+<section id="gempack" class="level2">
+<h2 class="anchored" data-anchor-id="gempack">2. GEMPACK</h2>
+<p>GEMPACK is the solver. Download the executable-image release from CoPS at <a href="https://www.copsmodels.com/gpeidl.htm" class="uri">https://www.copsmodels.com/gpeidl.htm</a> — for example <code>gpei-12.1.004-install.exe</code> (or the 12.0 build if you need to match an older model release).</p>
+<p>Install to the default location. GEMPACK expects to live at a short path with no spaces, and a lot of downstream configuration assumes <code>C:\GP</code>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_gempack_install_dir.png" class="img-fluid figure-img"></p>
+<figcaption>GEMPACK installs to C:\GP by default — keep it</figcaption>
+</figure>
+</div>
+<p>Proceed <strong>without</strong> selecting a licence file. That starts the six-month trial, which is enough to get a working setup before a licence is sorted out.</p>
+<p>The path you install to is the one GTAPpy needs to know about; in a run file it is set as the GEMPACK utilities directory (historically <code>p.gempack_utils_dir</code>).</p>
 </section>
-<section id="julias-project.toml-and-manifest.toml" class="level2">
-<h2 class="anchored" data-anchor-id="julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</h2>
-<p>A good Julia git repository will have two critical files at its project root: Project.toml and Manifest.toml. Together, these will tell your Julia how to install the exact versions of all packages needed. After you clone a repo with these files, navigate to that directory in the Command Prompt/Terminal and run:</p>
-<p><code>julia --project=. -e 'using Pkg; Pkg.instantiate()'</code></p>
-<p>This will launch Julia, set the project to the current directory, and then install all of the packages in Project.toml and Manifest.toml.</p>
+<section id="rungtap" class="level2">
+<h2 class="anchored" data-anchor-id="rungtap">3. RunGTAP</h2>
+<p>Install RunGTAP from <a href="https://www.gtap.agecon.purdue.edu/products/rungtap/default.asp" class="uri">https://www.gtap.agecon.purdue.edu/products/rungtap/default.asp</a>.</p>
+<p>RunGTAP is a GUI, and GTAPpy exists so you do not have to use it for production runs. You still need it installed, for two reasons: it ships with a compiled copy of the GTAP v7 model code, which is where the version directory GTAPpy runs against ultimately comes from; and it is the most convenient place to sanity-check a new database or a new shock before wiring it into a task tree. Both of those are covered in <a href="../earth_economy_devstack/gtappy_rungtap.html">Running GTAP by hand</a>.</p>
 </section>
-<section id="manual-adding-of-packages" class="level2">
-<h2 class="anchored" data-anchor-id="manual-adding-of-packages">Manual adding of Packages</h2>
-<p>If you’re making your own environment or need to add additional packages, you can add them via Julia’s package manager. To do so:</p>
-<ol class="incremental" type="1">
-<li>Launch Julia REPL for this project with <code>julia –project=.</code></li>
-<li>In Julia REPL, type <code>]</code> to enter the Package manager.</li>
-<li>Install additional packages by name with something like this:</li>
-</ol>
-<p><code>add ArchGDAL DataFrames JuMP CSV Plots Statistics GLM Optim JSON HTTP</code></p>
-<p>When run in a project folder, this Add command will write/update the Manifest and Project files.</p>
+<section id="gtapagg2-and-the-gtap-database" class="level2">
+<h2 class="anchored" data-anchor-id="gtapagg2-and-the-gtap-database">4. GTAPAgg2 and the GTAP database</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>This step needs a GTAP database licence
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Everything below requires access to the GTAP database, which is licensed from Purdue. Within our group you can instead reach an already-licensed copy through the <code>ee_internal</code> database — use <code>hb.get_path()</code> against the private bucket rather than downloading and aggregating yourself. The manual route is documented here because someone has to do it once per database release, and because it explains where the files GTAPpy consumes come from.</p>
+</div>
+</div>
+<p><strong>Get GTAPAgg2</strong> from <a href="https://www.gtap.agecon.purdue.edu/private/secured.asp?Sec_ID=1055" class="uri">https://www.gtap.agecon.purdue.edu/private/secured.asp?Sec_ID=1055</a>.</p>
+<p><strong>Get the licence file.</strong> Step 2 of <a href="https://www.gtap.agecon.purdue.edu/databases/download.asp" class="uri">https://www.gtap.agecon.purdue.edu/databases/download.asp</a> yields a <code>.lic</code> file. Put it in the <code>GTAPAgg2</code> directory — the aggregator reads it from there and the title bar shows the licence it found.</p>
+<p><strong>Get the database itself</strong>, from the same download page. Take the standard package <em>and</em> the AEZ (Land Use and Cover) version — the AEZ extension is what carries land by agro-ecological zone, which is the whole point of the land-use work the devstack does with GTAP:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_gtap_land_use_download.png" class="img-fluid figure-img"></p>
+<figcaption>Download the GTAP Land Use and Cover Data Base alongside the standard package</figcaption>
+</figure>
+</div>
+<p>Each download is a <code>.pkg</code> file; put both in the <code>GTAPAgg2</code> directory. When you launch GTAPAgg2, point it at both packages so the AEZ product is selectable under <strong>Choose source data</strong>. Getting this wrong is a quiet failure — you get a perfectly valid database that simply has no AEZ detail in it:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_gtapagg2_choose_source_data.png" class="img-fluid figure-img"></p>
+<figcaption>Choose source data: pick GTAP-AEZ, not plain GTAP, when you want land by AEZ</figcaption>
+</figure>
+</div>
+<p>With the toolchain installed, continue to <a href="../earth_economy_devstack/gtappy_aggregation.html">Building an aggregated database</a>.</p>
 
 
 </section>

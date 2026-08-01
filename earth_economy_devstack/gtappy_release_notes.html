@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>installation_julia – Justin Andrew Johnson</title>
+<title>gtappy_release_notes – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -221,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_release_notes.html">Development notes</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -243,11 +243,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
@@ -262,7 +262,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link active">
+  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Julia Installation</span></a>
   </div>
 </li>
@@ -331,11 +331,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
@@ -362,7 +362,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/gtappy_release_notes.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/gtappy_release_notes.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Development notes</span></a>
   </div>
 </li>
@@ -443,69 +443,110 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#installation-of-hazelbean-in-julia" id="toc-installation-of-hazelbean-in-julia" class="nav-link active" data-scroll-target="#installation-of-hazelbean-in-julia">Installation of Hazelbean in Julia</a>
+  <li><a href="#gtappy-development-notes" id="toc-gtappy-development-notes" class="nav-link active" data-scroll-target="#gtappy-development-notes">GTAPpy development notes</a>
   <ul class="incremental collapse">
-  <li><a href="#install-julia" id="toc-install-julia" class="nav-link" data-scroll-target="#install-julia">Install Julia</a></li>
-  <li><a href="#julia-environments" id="toc-julia-environments" class="nav-link" data-scroll-target="#julia-environments">Julia Environments</a></li>
-  <li><a href="#julias-project.toml-and-manifest.toml" id="toc-julias-project.toml-and-manifest.toml" class="nav-link" data-scroll-target="#julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</a></li>
-  <li><a href="#manual-adding-of-packages" id="toc-manual-adding-of-packages" class="nav-link" data-scroll-target="#manual-adding-of-packages">Manual adding of Packages</a></li>
+  <li><a href="#v2023-12-18-correspondence-files-into-ee-spec" id="toc-v2023-12-18-correspondence-files-into-ee-spec" class="nav-link" data-scroll-target="#v2023-12-18-correspondence-files-into-ee-spec">v2023-12-18 — correspondence files into EE spec</a></li>
+  <li><a href="#v2023-12-15-conventions-settled-with-erwin" id="toc-v2023-12-15-conventions-settled-with-erwin" class="nav-link" data-scroll-target="#v2023-12-15-conventions-settled-with-erwin">v2023-12-15 — conventions settled with Erwin</a></li>
+  <li><a href="#v2023-11-01-first-working-shocks" id="toc-v2023-11-01-first-working-shocks" class="nav-link" data-scroll-target="#v2023-11-01-first-working-shocks">v2023-11-01 — first working shocks</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_release_notes.html">Development notes</a></li></ol></nav></header>
 
 
 
 
-<section id="installation-of-hazelbean-in-julia" class="level1">
-<h1>Installation of Hazelbean in Julia</h1>
-<section id="install-julia" class="level2">
-<h2 class="anchored" data-anchor-id="install-julia">Install Julia</h2>
+<section id="gtappy-development-notes" class="level1">
+<h1>GTAPpy development notes</h1>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Historical record, not a guide
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These are dated notes from the 2022–2023 build-out of GTAPpy, kept because they record <em>why</em> several conventions are the way they are and what was still open at the time. The code shown has since moved to the <code>run_project(p)</code> run-file convention described in <a href="../earth_economy_devstack/conventions.html">Conventions</a>, so do not copy from it. For current usage start at <a href="../earth_economy_devstack/gtappy.html">GTAPpy</a>.</p>
+</div>
+</div>
+<section id="v2023-12-18-correspondence-files-into-ee-spec" class="level2">
+<h2 class="anchored" data-anchor-id="v2023-12-18-correspondence-files-into-ee-spec">v2023-12-18 — correspondence files into EE spec</h2>
+<p>The open question this entry records: how to get from an Erwin-style mapping workbook to the <a href="../earth_economy_devstack/conventions.html">EE spec</a> correspondence format.</p>
+<p>This is what a region correspondence looks like as it arrives:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_correspondence_from_erwin.png" class="img-fluid figure-img"></p>
+<figcaption>GTAP-ctry2reg as downloaded, before conversion</figcaption>
+</figure>
+</div>
+<p>Two problems with it as a machine-readable input. First, the file has to be renamed to say what it actually maps — <code>gtapv7_r251_r160_correspondence.xlsx</code> (and it has to stay <code>.xlsx</code> rather than CSV, because the mapping spans multiple worksheets). Second, <code>No.</code> is used twice in the same sheet, once numbering the r160 regions and once the r251 ones. Any parser reading it positionally gets this wrong, so the input format needs to disambiguate the two.</p>
+<p>Legend information is also carried inside the region correspondence sheet, which is the wrong home for it — it needs a deliberate place of its own rather than being attached to whichever correspondence happened to need it.</p>
+<p>The same pattern applies to sectors, which is the converted, EE-spec shape:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_correspondence_ee_spec.png" class="img-fluid figure-img"></p>
+<figcaption>The converted correspondence: regions, sectors, activities and commodities as parallel blocks</figcaption>
+</figure>
+</div>
+<p>A terminology note worth preserving: “sector” is used here specifically for the case where you are <em>not</em> distinguishing <code>COMM</code> (commodities) from <code>ACTS</code> (activities) — at the time these notes were written the distinction had not been pinned down.</p>
+</section>
+<section id="v2023-12-15-conventions-settled-with-erwin" class="level2">
+<h2 class="anchored" data-anchor-id="v2023-12-15-conventions-settled-with-erwin">v2023-12-15 — conventions settled with Erwin</h2>
+<p>Proposals raised against the model release layout, and how they resolved.</p>
+<p><strong>Naming.</strong></p>
 <ol class="incremental" type="1">
-<li>On windows, Install <strong>Julia</strong> (which includes juliaup, the official Julia installer/manager) from the Microsoft Store: <a href="https://www.microsoft.com/store/apps/9NJNWW8PVKMN" class="uri">https://www.microsoft.com/store/apps/9NJNWW8PVKMN</a>
-<ol class="incremental" type="1">
-<li>For full installation instructions here: <a href="https://julialang.org/install/" class="uri">https://julialang.org/install/</a></li>
-<li><img src="images/paste-73.png" class="img-fluid" width="329"></li>
-</ol></li>
-<li>Run the Julia application you just installed.
-<ol class="incremental" type="1">
-<li>An easy way is to do this is press the start button and type Julia.</li>
-<li>This will call <code>juliaup</code>, which is a nice tool that will get you the latest version of the actual Julia code.</li>
-<li><img src="images/paste-72.png" class="img-fluid" width="330"></li>
-</ol></li>
-<li>After <code>juliaup</code> is called, each subsequent time you call Julia, it will enter a Julia REPL (Read-Eval-Print-Loop, basically a command line instance of Julia)</li>
+<li>In the release’s <code>Data</code> folder, the aggregation label <code>gtapaez11-50</code> should be <code>v11-s26-r50</code> — database version, sector count, region count.</li>
+<li>The most recent release carries <strong>no</strong> timestamp; dated versions of a same-named model or aggregation take the timestamp of when they were first released.</li>
+<li>CMF files renamed from <code>cwon_bau.cmf</code> to <code>gtapv7-aez-rd_bau.cmf</code>, and <code>cwon_bau-es.cmf</code> to <code>gtapv7-aez-rd_bau-es.cmf</code> — hyphens join parts of one variable, underscores split the name into its list of fields.</li>
+<li><code>SIMRUN</code> becomes just the experiment name (<code>bau</code>) rather than project name plus experiment.</li>
+</ol>
+<p><strong>Project structure.</strong></p>
+<ol class="incremental" start="4" type="1">
+<li><p>Drop <code>set PROJ=cwon</code> from the CMF — the project is defined by the ProjectFlow object, not the command file.</p></li>
+<li><p>Separate data and output from the code release:</p>
+<pre class="text"><code>set MODd=..\mod      set CMFd=.\cmf
+set SOLd=..\out      set DATd=..\data%AGG%</code></pre>
+<p><code>SOLd</code> and <code>DATd</code> deliberately live <em>outside</em> the release.</p></li>
+<li><p>The goal is that a release can be run either by calling the batch file or by calling the Python run script, so the two are kept as close as possible. The asymmetry is intentional and one-directional: the batch file can only reproduce a resource-depletion run without ecosystem services, so the Python script can wrap the batch file but not the reverse.</p></li>
+<li><p>CMF command-line options renamed to match what they are: <code>gtap_base_data_dir</code>, <code>starting_data_file_path</code>, <code>output_dir</code>, <code>starting_year</code>, <code>ending_year</code> (previously positional <code>p1</code>–<code>p5</code>). <code>experiment_label</code> may not be renameable, as it appears to be fixed by the CMF filename.</p></li>
+</ol>
+<p><strong>Answers from Erwin.</strong></p>
+<ol class="incremental" start="9" type="1">
+<li><p><em>Can the raw GEMPACK output be read to estimate progress, for a progress bar?</em> Yes, when running with automatic accuracy — GEMPACK reports its position:</p>
+<pre class="text"><code>+++&gt; Beginning subinterval number 4.
+---&gt; Beginning pass number 1 of 2-pass calculation, subinterval 4.
+Beginning pass number 6 of 6-pass calculation, subinterval 6</code></pre></li>
+<li><p><em>Could years drop the <code>Y</code> prefix (<code>Y2018</code>), which breaks string→int conversion?</em> No — keep the <code>Y</code>. GEMPACK variable names cannot begin with a non-numeric… that is, cannot begin with a numeral.</p></li>
+<li><p><em>There is no <code>bau-SUM_Y2050</code>, though there is for <code>VOL</code> and <code>WEL</code> — is that intentional?</em> No: <code>SUM</code> describes the <em>starting</em> database, so a terminal-year SUM is meaningless. Relatedly, welfare cannot be produced in a resource-depletion run because there is no discount rate.</p></li>
+<li><p><em>Is everything stored in the <code>.sl4</code>, making the other files redundant?</em> No. Conversions such as results in volume terms are not in the <code>.sl4</code> and have to come from <code>sltoht</code> or <code>ViewSOL</code>.</p></li>
 </ol>
 </section>
-<section id="julia-environments" class="level2">
-<h2 class="anchored" data-anchor-id="julia-environments">Julia Environments</h2>
-<ol class="incremental" type="1">
-<li>Julia can have different environments (configurations of packages). Managing environments is notoriously challenging, but it is important.</li>
-<li>When you called <code>juliaup</code> above, it created a default system environment, stored in your Users directory
-<ol class="incremental" type="1">
-<li><img src="images/paste-76.png" class="img-fluid"></li>
-<li>This is the default system Julia installation. It’s tempting to use <em>only</em> this, but that can quickly get confusing and cause dependency nightmares.</li>
-<li>Better is to have specific environments tied to specific project and Git repo.</li>
-</ol></li>
-</ol>
-</section>
-<section id="julias-project.toml-and-manifest.toml" class="level2">
-<h2 class="anchored" data-anchor-id="julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</h2>
-<p>A good Julia git repository will have two critical files at its project root: Project.toml and Manifest.toml. Together, these will tell your Julia how to install the exact versions of all packages needed. After you clone a repo with these files, navigate to that directory in the Command Prompt/Terminal and run:</p>
-<p><code>julia --project=. -e 'using Pkg; Pkg.instantiate()'</code></p>
-<p>This will launch Julia, set the project to the current directory, and then install all of the packages in Project.toml and Manifest.toml.</p>
-</section>
-<section id="manual-adding-of-packages" class="level2">
-<h2 class="anchored" data-anchor-id="manual-adding-of-packages">Manual adding of Packages</h2>
-<p>If you’re making your own environment or need to add additional packages, you can add them via Julia’s package manager. To do so:</p>
-<ol class="incremental" type="1">
-<li>Launch Julia REPL for this project with <code>julia –project=.</code></li>
-<li>In Julia REPL, type <code>]</code> to enter the Package manager.</li>
-<li>Install additional packages by name with something like this:</li>
-</ol>
-<p><code>add ArchGDAL DataFrames JuMP CSV Plots Statistics GLM Optim JSON HTTP</code></p>
-<p>When run in a project folder, this Add command will write/update the Manifest and Project files.</p>
+<section id="v2023-11-01-first-working-shocks" class="level2">
+<h2 class="anchored" data-anchor-id="v2023-11-01-first-working-shocks">v2023-11-01 — first working shocks</h2>
+<p>Shocks implemented at this point: population file replacement, GDP change, and (tentatively) yield changes.</p>
+<p>The run file of the era created the ProjectFlow object at the top and added tasks to it — the ancestor of today’s task tree:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_example_run_script_2022.png" class="img-fluid figure-img"></p>
+<figcaption>The 2022-era run file: ProjectFlow object, aggregation and experiment labels, tasks added explicitly</figcaption>
+</figure>
+</div>
+<p>Note the shape already visible here: a list of aggregation labels (<code>'10x10'</code>, <code>'65x141'</code>) and a list of experiment labels (<code>'agpr20b'</code>, <code>'beef50'</code>, <code>'rtms5'</code>), iterated over as a cross product. That is the multi-aggregation philosophy described on the <a href="../earth_economy_devstack/gtappy.html">GTAPpy home page</a>, present from the start.</p>
+<p>And the task that generated a CMF and called the executable:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_run_gtap_v7_executable_2022.png" class="img-fluid figure-img"></p>
+<figcaption>run_gtap_v7_executable: per-aggregation, per-experiment CMF generation and invocation</figcaption>
+</figure>
+</div>
+<p>The interesting part is the <code>if not hb.path_exists(expected_sl4_path)</code> guard — skip-if-already-computed, done by hand before it was pushed down into ProjectFlow — and the per-aggregation override of <code>xSets</code>, <code>xSubsets</code> and <code>Shock</code>, since the 10×10 aggregation needs different set members than the 141×65 default.</p>
+<p><strong>What was hard.</strong> The open problem at this date was making shocks work generally: producing <code>xSets</code>, <code>xSubsets</code> and <code>Shock</code> statements per scenario, with <code>READFROMFILE</code> in the TABLO CMF as the mechanism for file-driven values. The taxonomy that came out of it is on <a href="../earth_economy_devstack/gtappy_rungtap.html#kinds-of-shocks">Running GTAP by hand</a>.</p>
+<p>A distinction from this entry worth restating, because it caused confusion: there are <strong>shocks</strong> and there are <strong>data updates</strong>, and replacing an elasticity file is the latter. If you swap in <code>basedata2</code> with a matching <code>default2.prm</code> and apply no shock, the model reproduces that database — the elasticities are, in that sense, calibrated to it. A supply-response elasticity behaves differently and will move the results.</p>
+<p>Population shocks needed one more preprocessing step: the value has to be a percentage change over the default <code>POP</code> in the base data, so an external population file is read in and processed against the base rather than used directly.</p>
 
 
 </section>

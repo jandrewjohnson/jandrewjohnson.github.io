@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>installation_julia – Justin Andrew Johnson</title>
+<title>gtappy_rungtap – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -221,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_rungtap.html">Running GTAP by hand</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -243,11 +243,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/installation.html" class="sidebar-item-text sidebar-link">
@@ -262,7 +262,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link active">
+  <a href="../earth_economy_devstack/installation_julia.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Julia Installation</span></a>
   </div>
 </li>
@@ -331,11 +331,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GTAPpy</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
@@ -356,7 +356,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/gtappy_rungtap.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/gtappy_rungtap.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Running GTAP by hand</span></a>
   </div>
 </li>
@@ -443,71 +443,132 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="incremental">
-  <li><a href="#installation-of-hazelbean-in-julia" id="toc-installation-of-hazelbean-in-julia" class="nav-link active" data-scroll-target="#installation-of-hazelbean-in-julia">Installation of Hazelbean in Julia</a>
+  <li><a href="#running-gtap-by-hand" id="toc-running-gtap-by-hand" class="nav-link active" data-scroll-target="#running-gtap-by-hand">Running GTAP by hand</a>
   <ul class="incremental collapse">
-  <li><a href="#install-julia" id="toc-install-julia" class="nav-link" data-scroll-target="#install-julia">Install Julia</a></li>
-  <li><a href="#julia-environments" id="toc-julia-environments" class="nav-link" data-scroll-target="#julia-environments">Julia Environments</a></li>
-  <li><a href="#julias-project.toml-and-manifest.toml" id="toc-julias-project.toml-and-manifest.toml" class="nav-link" data-scroll-target="#julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</a></li>
-  <li><a href="#manual-adding-of-packages" id="toc-manual-adding-of-packages" class="nav-link" data-scroll-target="#manual-adding-of-packages">Manual adding of Packages</a></li>
+  <li><a href="#getting-a-v7-version-directory" id="toc-getting-a-v7-version-directory" class="nav-link" data-scroll-target="#getting-a-v7-version-directory">Getting a v7 version directory</a>
+  <ul class="incremental collapse">
+  <li><a href="#rebuilding-the-shock-files" id="toc-rebuilding-the-shock-files" class="nav-link" data-scroll-target="#rebuilding-the-shock-files">Rebuilding the shock files</a></li>
+  </ul></li>
+  <li><a href="#defining-sets" id="toc-defining-sets" class="nav-link" data-scroll-target="#defining-sets">Defining sets</a></li>
+  <li><a href="#defining-and-running-shocks" id="toc-defining-and-running-shocks" class="nav-link" data-scroll-target="#defining-and-running-shocks">Defining and running shocks</a>
+  <ul class="incremental collapse">
+  <li><a href="#kinds-of-shocks" id="toc-kinds-of-shocks" class="nav-link" data-scroll-target="#kinds-of-shocks">Kinds of shocks</a></li>
+  </ul></li>
+  <li><a href="#the-command-line-chain" id="toc-the-command-line-chain" class="nav-link" data-scroll-target="#the-command-line-chain">The command-line chain</a>
+  <ul class="incremental collapse">
+  <li><a href="#composite-tax-shocks" id="toc-composite-tax-shocks" class="nav-link" data-scroll-target="#composite-tax-shocks">Composite tax shocks</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation.html">Installation</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/installation_julia.html">Julia Installation</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy.html">GTAPpy</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/gtappy_rungtap.html">Running GTAP by hand</a></li></ol></nav></header>
 
 
 
 
-<section id="installation-of-hazelbean-in-julia" class="level1">
-<h1>Installation of Hazelbean in Julia</h1>
-<section id="install-julia" class="level2">
-<h2 class="anchored" data-anchor-id="install-julia">Install Julia</h2>
+<section id="running-gtap-by-hand" class="level1">
+<h1>Running GTAP by hand</h1>
+<p>GTAPpy generates CMF files and calls GEMPACK so you do not have to do this manually. It is still worth doing once. The manual route is where the model version directory comes from in the first place, it is the fastest way to check that a new database or a new shock is sane before wiring it into a task tree, and when a GTAPpy run fails it fails at one of the steps below.</p>
+<section id="getting-a-v7-version-directory" class="level2">
+<h2 class="anchored" data-anchor-id="getting-a-v7-version-directory">Getting a v7 version directory</h2>
+<p>RunGTAP organises work into <em>versions</em> — a directory holding model code, data, shock files and experiment definitions. What we want is a v7 version containing our own aggregated database rather than the toy one RunGTAP ships with. The quickest way to get one is, somewhat inelegantly, to have RunGTAP build it and then swap the data underneath:</p>
 <ol class="incremental" type="1">
-<li>On windows, Install <strong>Julia</strong> (which includes juliaup, the official Julia installer/manager) from the Microsoft Store: <a href="https://www.microsoft.com/store/apps/9NJNWW8PVKMN" class="uri">https://www.microsoft.com/store/apps/9NJNWW8PVKMN</a>
-<ol class="incremental" type="1">
-<li>For full installation instructions here: <a href="https://julialang.org/install/" class="uri">https://julialang.org/install/</a></li>
-<li><img src="images/paste-73.png" class="img-fluid" width="329"></li>
-</ol></li>
-<li>Run the Julia application you just installed.
-<ol class="incremental" type="1">
-<li>An easy way is to do this is press the start button and type Julia.</li>
-<li>This will call <code>juliaup</code>, which is a nice tool that will get you the latest version of the actual Julia code.</li>
-<li><img src="images/paste-72.png" class="img-fluid" width="330"></li>
-</ol></li>
-<li>After <code>juliaup</code> is called, each subsequent time you call Julia, it will enter a Julia REPL (Read-Eval-Print-Loop, basically a command line instance of Julia)</li>
+<li><p>Under <strong>Version → Change</strong>, select <code>NCORS3x3</code> — the shipped 3×3 v7 version.</p></li>
+<li><p>Under <strong>Version → New</strong>, run the wizard with <strong>Same aggregation as current version</strong> and <strong>Simply copying everything</strong>, naming the result <code>v7all</code> (RunGTAP version names are capped at 8 characters):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_rungtap_new_version_wizard.png" class="img-fluid figure-img"></p>
+<figcaption>Creating v7all from NCORS3x3 by straight copy</figcaption>
+</figure>
+</div></li>
+<li><p>This creates <code>c:\runGTAP375\v7all</code>. Now replace the data files in it with the fully disaggregated database produced in <a href="../earth_economy_devstack/gtappy_aggregation.html">Building an aggregated database</a> — the contents of the <code>gtapv7</code> directory, not the outer zip.</p></li>
 </ol>
+<section id="rebuilding-the-shock-files" class="level3">
+<h3 class="anchored" data-anchor-id="rebuilding-the-shock-files">Rebuilding the shock files</h3>
+<p>The new version also inherits <code>.shk</code> files from the 3×3 original (<code>tinc.shk</code> and friends). Those are dimensioned for the old aggregation and are wrong for the database you just dropped in.</p>
+<p><strong>Tools → Run Test Simulation</strong> rewrites them to match the current aggregation. This is also the full end-to-end test that the version works at all — if the database, sets and model code are inconsistent, this is where you find out.</p>
+<p>To confirm it worked, look at <strong>Results → Macros</strong>, or open the solution in <code>ViewSOL</code> via <strong>View → Results Using ViewSOL</strong>. The distinction matters: RunGTAP’s own results view shows only the subset of variables in its mapping, whereas <code>ViewSOL</code> loads the whole <code>.sl4</code> file. Checking <code>pgdp</code> is a quick tell — under the default test shock, prices come out up about 10%. From <code>ViewSOL</code>, <strong>File → open in ViewHAR</strong> gives more still, including dimensional sorting.</p>
 </section>
-<section id="julia-environments" class="level2">
-<h2 class="anchored" data-anchor-id="julia-environments">Julia Environments</h2>
+</section>
+<section id="defining-sets" class="level2">
+<h2 class="anchored" data-anchor-id="defining-sets">Defining sets</h2>
+<p>A non-trivial shock usually needs sets the base model does not define — you rarely want to shock all commodities, you want to shock the agricultural ones.</p>
+<p>Sets live in the <code>CMFSTART</code> file, which is the version’s runtime configuration: it sets solver options and names the files to use, and it is where the closure’s sets get defined. Reach it through <strong>RunGTAP → View → Sets</strong>, enable advanced editing, then <strong>Sets → View Set Library</strong>.</p>
+<p>Clicking <code>COMM</code> and copying its elements in TABLO format gives you the full commodity set as text, which you then pare down to the ones you want:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_rungtap_cmfstart_sets.png" class="img-fluid figure-img"></p>
+<figcaption>Set definitions in CMFSTART, edited in TABmate</figcaption>
+</figure>
+</div>
+<p>The pattern in that file is worth reading carefully, because it is exactly what GTAPpy emits programmatically:</p>
+<pre class="text"><code>xset agcom #key_ag_comm# (pdr, wht, gro, v_f, osd, c_b, pfb, ocr, ctl, oap, rmk, wol);
+xset agcom_sm #smaller_set# (pdr, wht, gro);
+
+xsubset agcom is subset of acts;
+xsubset agcom_sm is subset of acts;
+xsubset agcom_sm is subset of agcom;
+
+xset xagcom_sm = agcom - agcom_sm;</code></pre>
+<p>Three things are going on. <code>xset</code> declares a set by listing its elements. <code>xsubset</code> asserts containment, which GEMPACK checks and which is what lets the set be used where a subset of <code>ACTS</code> or <code>COMM</code> is expected — omit these and the solve fails with a set-mismatch error rather than a helpful message. And the last line defines the <em>complement</em>, <code>xagcom_sm</code>, by set subtraction: having the complement available is what lets you shock one group while holding the rest fixed, or apply opposite shocks to the two halves.</p>
+<p>Here <code>agcom</code> is the full agricultural commodity list and <code>agcom_sm</code> a three-element subset used for quick tests.</p>
+</section>
+<section id="defining-and-running-shocks" class="level2">
+<h2 class="anchored" data-anchor-id="defining-and-running-shocks">Defining and running shocks</h2>
+<p>With the sets defined, the <strong>Shocks</strong> tab takes shock statements over them:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/gtappy_rungtap_shocks_tab.png" class="img-fluid figure-img"></p>
+<figcaption>A uniform 10% productivity shock over agcom_sm on the Shocks tab</figcaption>
+</figure>
+</div>
+<pre class="text"><code>Shock aoall(agcom_sm, reg) = uniform 10;</code></pre>
+<p>Then set the solution method to <strong>Gragg 2-4-6</strong>, save the experiment, and solve.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>When the solver will not converge
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From Tom: if Gragg does not work, use Euler with many steps — 20 to 50. It is slower but far more forgiving of a badly behaved database.</p>
+</div>
+</div>
+<section id="kinds-of-shocks" class="level3">
+<h3 class="anchored" data-anchor-id="kinds-of-shocks">Kinds of shocks</h3>
+<p>The shock statement above is the simplest of several forms:</p>
+<p><strong>Uniform.</strong> One value applied across the whole set:</p>
+<pre class="text"><code>Shock aoall(agcom_sm, reg) = uniform 20;</code></pre>
+<p><strong>From file.</strong> Values read per element, which is how any spatially or sectorally heterogeneous scenario is applied — a yield shock from a SEALS run, a population path, a GDP trajectory. Zero means no shock, so the file covers the full set:</p>
+<pre class="text"><code>Shock pop(REG) = SELECT FROM FILE &lt;filename&gt; HEADER "&lt;4-letter header&gt;";</code></pre>
+<p>Anything in the exogenous list can be shocked this way.</p>
+<p><strong>Swap.</strong> Exchange an exogenous variable for an endogenous one, which changes what the model is solving for rather than perturbing it. Swapping <code>aoreg</code> with GDP lets you drive the model with a GDP path and back out the productivity that implies — the standard move for calibrating to an exogenous growth scenario.</p>
+<p><strong>Parameter replacement — not a shock.</strong> Elasticities live in <code>gtapparm</code>, so changing one means writing a new <code>.prm</code> file. This is an input change, not a perturbation, and the difference has a real consequence: with a new base database and its matching <code>.prm</code> and no shock, the model reproduces that database exactly. A supply-response elasticity (as in the PNAS work) is the exception — that one does change the outcome.</p>
+</section>
+</section>
+<section id="the-command-line-chain" class="level2">
+<h2 class="anchored" data-anchor-id="the-command-line-chain">The command-line chain</h2>
+<p>For production, RunGTAP is replaced by a sequence of batch files. This is the sequence GTAPpy automates, and the names are worth knowing because they appear in logs:</p>
 <ol class="incremental" type="1">
-<li>Julia can have different environments (configurations of packages). Managing environments is notoriously challenging, but it is important.</li>
-<li>When you called <code>juliaup</code> above, it created a default system environment, stored in your Users directory
-<ol class="incremental" type="1">
-<li><img src="images/paste-76.png" class="img-fluid"></li>
-<li>This is the default system Julia installation. It’s tempting to use <em>only</em> this, but that can quickly get confusing and cause dependency nightmares.</li>
-<li>Better is to have specific environments tied to specific project and Git repo.</li>
-</ol></li>
+<li><strong><code>testsim.bat</code></strong> — the test simulation, as above, run first.</li>
+<li><strong><code>rungtapv7.bat</code></strong> — the actual simulations.</li>
+<li><strong><code>simresults.bat</code></strong> — post-processing. It takes the <code>.sl4</code> solution files, converts each to a <code>.sol</code> HAR file, combines them into one file, and splits that to CSV.</li>
 </ol>
-</section>
-<section id="julias-project.toml-and-manifest.toml" class="level2">
-<h2 class="anchored" data-anchor-id="julias-project.toml-and-manifest.toml">Julia’s Project.toml and Manifest.toml</h2>
-<p>A good Julia git repository will have two critical files at its project root: Project.toml and Manifest.toml. Together, these will tell your Julia how to install the exact versions of all packages needed. After you clone a repo with these files, navigate to that directory in the Command Prompt/Terminal and run:</p>
-<p><code>julia --project=. -e 'using Pkg; Pkg.instantiate()'</code></p>
-<p>This will launch Julia, set the project to the current directory, and then install all of the packages in Project.toml and Manifest.toml.</p>
-</section>
-<section id="manual-adding-of-packages" class="level2">
-<h2 class="anchored" data-anchor-id="manual-adding-of-packages">Manual adding of Packages</h2>
-<p>If you’re making your own environment or need to add additional packages, you can add them via Julia’s package manager. To do so:</p>
-<ol class="incremental" type="1">
-<li>Launch Julia REPL for this project with <code>julia –project=.</code></li>
-<li>In Julia REPL, type <code>]</code> to enter the Package manager.</li>
-<li>Install additional packages by name with something like this:</li>
-</ol>
-<p><code>add ArchGDAL DataFrames JuMP CSV Plots Statistics GLM Optim JSON HTTP</code></p>
-<p>When run in a project folder, this Add command will write/update the Manifest and Project files.</p>
+<p>Two levels of aggregation come out of the post-processing: <code>RMAC</code> is full dimension, <code>RMCA</code> is aggregated according to the chosen reporting simplification. <code>AggMap.har</code> defines that reporting aggregation; <code>Allres.cmf</code> runs it, calling <code>allres.tab</code> to clean the results.</p>
+<p>Adding a new scenario therefore means touching more than the shock file: <code>allres.tab</code> needs the new scenario added at the top, and <code>Allres.EXP</code> — along with the per-scenario <code>.EXP</code> files — needs the correct exogenous variables listed (e.g.&nbsp;<code>tpdall</code>). Forgetting the <code>.EXP</code> side is a common cause of a scenario that runs but produces nothing in the summary tables.</p>
+<section id="composite-tax-shocks" class="level3">
+<h3 class="anchored" data-anchor-id="composite-tax-shocks">Composite tax shocks</h3>
+<p>One idiom worth recording, from working through import taxes with Erwin. A tax applied to both domestic and imported goods needs an added equation that makes the components sum:</p>
+<pre class="text"><code>E_tpm (all, c, COMM)(all, r, REG) tmp(c, r) = tpmall + tpreg + tpall;</code></pre>
+<p>And mind the distinction between shocking a <em>rate</em> and shocking a <em>power</em>: “the beef tax rate increases 50%” is not the same statement as “the power of the tariff increases 50%”, and the two give materially different answers.</p>
 
 
+</section>
 </section>
 </section>
 

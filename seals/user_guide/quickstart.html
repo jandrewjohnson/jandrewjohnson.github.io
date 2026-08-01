@@ -368,10 +368,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#quickstart" id="toc-quickstart" class="nav-link active" data-scroll-target="#quickstart">Quickstart</a>
   <ul class="incremental collapse">
-  <li><a href="#install" id="toc-install" class="nav-link" data-scroll-target="#install">1. Install</a></li>
-  <li><a href="#run-it" id="toc-run-it" class="nav-link" data-scroll-target="#run-it">2. Run it</a></li>
-  <li><a href="#where-the-output-goes" id="toc-where-the-output-goes" class="nav-link" data-scroll-target="#where-the-output-goes">3. Where the output goes</a></li>
-  <li><a href="#make-it-your-own" id="toc-make-it-your-own" class="nav-link" data-scroll-target="#make-it-your-own">4. Make it your own</a></li>
+  <li><a href="#run-it" id="toc-run-it" class="nav-link" data-scroll-target="#run-it">1. Run it</a></li>
+  <li><a href="#where-the-output-goes" id="toc-where-the-output-goes" class="nav-link" data-scroll-target="#where-the-output-goes">2. Where the output goes</a></li>
+  <li><a href="#make-it-your-own" id="toc-make-it-your-own" class="nav-link" data-scroll-target="#make-it-your-own">3. Make it your own</a></li>
   <li><a href="#next" id="toc-next" class="nav-link" data-scroll-target="#next">Next</a></li>
   </ul></li>
   </ul>
@@ -385,17 +384,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="quickstart" class="level1">
 <h1>Quickstart</h1>
-<p>Get SEALS running, then make it your own. For the model itself see <a href="../../seals/user_guide/index.html">SEALS</a>; for the full install options see <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">Installation Steps</a>.</p>
-<section id="install" class="level2">
-<h2 class="anchored" data-anchor-id="install">1. Install</h2>
-<p>SEALS is distributed as <code>sealsmodel</code> and imported as <code>seals</code>. It needs <a href="https://github.com/jandrewjohnson/hazelbean_dev">hazelbean</a>, which supplies <code>ProjectFlow</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span> python=3.10</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install hazelbean sealsmodel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Pick your own environment name. If you intend to edit SEALS rather than just run it, do a developer install from a clone instead — see <a href="../../seals/user_guide/environment_setup.html">environment_setup.md</a> in the seals repo, which also covers the C/C++ compiler SEALS needs to build its Cython extension.</p>
-</section>
+<p>Get SEALS running, then make it your own. This picks up where <a href="../../seals/user_guide/environment_setup.html">Installation</a> leaves off — it assumes you have an environment with <code>hazelbean</code> and <code>sealsmodel</code> in it, activated. For what the model actually does, see <a href="../../seals/user_guide/index.html">Introduction</a>.</p>
 <section id="run-it" class="level2">
-<h2 class="anchored" data-anchor-id="run-it">2. Run it</h2>
+<h2 class="anchored" data-anchor-id="run-it">1. Run it</h2>
 <p>Two run files ship with SEALS, in <code>seals/seals/</code>:</p>
 <table class="caption-top table">
 <colgroup>
@@ -420,13 +411,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Start with the test:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Required base data is downloaded at runtime from a public bucket; no credentials are needed for the default configuration.</p>
 </section>
 <section id="where-the-output-goes" class="level2">
-<h2 class="anchored" data-anchor-id="where-the-output-goes">3. Where the output goes</h2>
+<h2 class="anchored" data-anchor-id="where-the-output-goes">2. Where the output goes</h2>
 <p>Not into the repo. Because the run file lives inside a cloned repo, ProjectFlow places the project directory just <em>outside</em> it:</p>
 <pre><code>~/Files/seals/projects/seals_standard_test/
 ├── input/          seeded from the repo's input_template/
@@ -435,13 +426,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Run the same command a second time and it finishes almost immediately — every task is behind an existence check, so completed work is skipped. That is the main thing ProjectFlow buys you: interrupt a long run, fix one input, re-run, and only what is missing recomputes.</p>
 </section>
 <section id="make-it-your-own" class="level2">
-<h2 class="anchored" data-anchor-id="make-it-your-own">4. Make it your own</h2>
+<h2 class="anchored" data-anchor-id="make-it-your-own">3. Make it your own</h2>
 <p>Copy the run file into your own project repo as <code>run_&lt;project&gt;.py</code> and change the two lines in its <code>__main__</code> block — that is the whole of the configuration:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'my_project'</span>, run_mode<span class="op">=</span><span class="st">'check'</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">'my_project_scenarios.csv'</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'my_project'</span>, run_mode<span class="op">=</span><span class="st">'check'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">'my_project_scenarios.csv'</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>run_mode</code> controls how much prior work is reused: <code>'check'</code> (the default) resumes in a stable project dir; <code>'full'</code> timestamps a fresh one.</p>
 <p>Put your scenarios CSV in an <code>input_template/</code> directory beside the run file. It is tracked in git, and ProjectFlow copies anything missing into the project’s untracked <code>input/</code> on first run without ever overwriting your working copy. The columns are documented in <a href="../../seals/user_guide/scenarios_format.html">scenarios_format.md</a>.</p>
 <p>To run the same pipeline a second way — a smoke test, a different AOI — write a <em>second run file</em> that imports the first rather than copying it. <code>run_seals_standard_test.py</code> is the worked example, and the pattern is explained in <a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">conventions</a>.</p>

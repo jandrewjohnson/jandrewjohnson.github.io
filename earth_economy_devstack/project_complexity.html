@@ -320,6 +320,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Levels of Complexity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/hazelbean_learning_path.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Learning Path</span></a>
   </div>
@@ -338,14 +344,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Levels of Complexity</span></a>
+  <a href="../earth_economy_devstack/project_flow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ProjectFlow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/project_flow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ProjectFlow</span></a>
+  <a href="../earth_economy_devstack/workflow_diagram.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workflow Diagrams</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -462,12 +468,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/skill_sessions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Skill Sessions</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -480,6 +480,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="incremental">
   <li><a href="#the-stages-of-project-complexity" id="toc-the-stages-of-project-complexity" class="nav-link active" data-scroll-target="#the-stages-of-project-complexity">The stages of project complexity</a>
   <ul class="incremental collapse">
+  <li><a href="#why-any-of-this-exists" id="toc-why-any-of-this-exists" class="nav-link" data-scroll-target="#why-any-of-this-exists">Why any of this exists</a></li>
+  <li><a href="#the-narrative" id="toc-the-narrative" class="nav-link" data-scroll-target="#the-narrative">The narrative</a></li>
   <li><a href="#stage-1-the-old-way-simple-question-answered-well" id="toc-stage-1-the-old-way-simple-question-answered-well" class="nav-link" data-scroll-target="#stage-1-the-old-way-simple-question-answered-well">Stage 1, the old way: Simple question answered well</a></li>
   <li><a href="#stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list." id="toc-stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list." class="nav-link" data-scroll-target="#stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list.">Stage 2, the old way: Many similar questions. Creates a very long list.</a></li>
   <li><a href="#stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts." id="toc-stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts." class="nav-link" data-scroll-target="#stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts.">Stage 3, the old way: Starting to deal with generalization, reusing code and shortening scripts.</a></li>
@@ -546,7 +548,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="the-stages-of-project-complexity" class="level1">
 <h1>The stages of project complexity</h1>
+<section id="why-any-of-this-exists" class="level2">
+<h2 class="anchored" data-anchor-id="why-any-of-this-exists">Why any of this exists</h2>
+<p>The short answer: <strong>research code fails at the seams between runs, not inside them.</strong> A script that computes the right number once is easy. What is hard is everything that happens afterwards — running it again with one input changed, running it four hundred times over scenarios, running it on someone else’s machine, running it on data too large to hold in memory, and still being able to say two years later exactly which code and which inputs produced figure 3.</p>
+<p>Almost every research codebase answers those by copying: copy the script and edit one line, copy the block and change the index, comment out the slow part with a boolean. That works until it doesn’t, and when it stops working it does so silently — a stale intermediate file, a copied block where one index was never updated, a hardcoded path that meant something different on the machine the results came from.</p>
+<p>The devstack’s answer is a single move applied over and over: <strong>make the thing that varies data rather than code.</strong> Scenarios become rows in a CSV instead of copied blocks. Machine-specific values become a parameters CSV instead of hardcoded paths. What has already been computed becomes files on disk instead of a commented-out boolean, so a re-run skips it automatically. What runs, and in what order, becomes a task tree instead of top-to-bottom statements — which is also what lets independent branches run in parallel. Hazelbean, and ProjectFlow inside it, are the machinery that makes that move cheap enough to be the default.</p>
+<p>None of this is adopted up front. Each piece exists because a specific pain demanded it, and the rest of this page is that history: the questions that got progressively harder, and the tool each one forced. If your problem is still a one-script problem, the honest advice is to write the one script — the point of the stages is to let you recognize the moment you have outgrown it.</p>
+</section>
+<section id="the-narrative" class="level2">
+<h2 class="anchored" data-anchor-id="the-narrative">The narrative</h2>
 <p>As an introduction and/or motivation for using the software in the EE Devstack, I would like to talk through the process that I went through as a PhD student, postdoc and staff researcher to answer progressively harder questions. I break these out into 6 stages below. Solving these challenges is what led to the creation of Hazelbean and many other software solutions.</p>
+</section>
 <section id="stage-1-the-old-way-simple-question-answered-well" class="level2">
 <h2 class="anchored" data-anchor-id="stage-1-the-old-way-simple-question-answered-well">Stage 1, the old way: Simple question answered well</h2>
 <p>Here is an example script that you might write as an Earth-economy researcher. Suppose your adviser asks you “what is the total caloric yield on earth per hectare?” You might write a script like this:</p>

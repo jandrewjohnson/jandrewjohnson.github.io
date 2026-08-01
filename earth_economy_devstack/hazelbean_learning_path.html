@@ -105,9 +105,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -323,6 +320,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Levels of Complexity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/hazelbean_learning_path.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Learning Path</span></a>
   </div>
@@ -341,14 +344,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/project_complexity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Levels of Complexity</span></a>
+  <a href="../earth_economy_devstack/project_flow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ProjectFlow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/project_flow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">ProjectFlow</span></a>
+  <a href="../earth_economy_devstack/workflow_diagram.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workflow Diagrams</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -465,12 +468,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/skill_sessions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Skill Sessions</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -484,7 +481,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#what-is-hazelbean" id="toc-what-is-hazelbean" class="nav-link active" data-scroll-target="#what-is-hazelbean">What is Hazelbean?</a>
   <ul class="incremental collapse">
   <li><a href="#core-workflow-pattern" id="toc-core-workflow-pattern" class="nav-link" data-scroll-target="#core-workflow-pattern">Core Workflow Pattern</a></li>
-  <li><a href="#detailed-projectflow-execution-model" id="toc-detailed-projectflow-execution-model" class="nav-link" data-scroll-target="#detailed-projectflow-execution-model">Detailed ProjectFlow Execution Model</a></li>
   </ul></li>
   <li><a href="#learning-journey-overview" id="toc-learning-journey-overview" class="nav-link" data-scroll-target="#learning-journey-overview">Learning Journey Overview</a>
   <ul class="incremental collapse">
@@ -560,108 +556,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="core-workflow-pattern" class="level3">
 <h3 class="anchored" data-anchor-id="core-workflow-pattern">Core Workflow Pattern</h3>
-<p>Hazelbean follows a consistent, organized workflow pattern that makes geospatial analysis predictable and reproducible:</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    A[Initialize ProjectFlow] --&gt; B[Create Directory Structure]
-    B --&gt; C[Discover and Load Data]
-    C --&gt; D[Process and Transform]
-    D --&gt; E[Analyze and Compute]
-    E --&gt; F[Export Results]
-    F --&gt; G[Document and Share]
-    
-    A1["p = hb.ProjectFlow(project_name=...)"] --&gt; A
-    B1["input/, intermediate/, output/"] --&gt; B
-    C1["p.get_path() intelligent search"] --&gt; C
-    D1["Array operations &amp; transformations"] --&gt; D
-    E1["Multi-raster analysis &amp; statistics"] --&gt; E
-    F1[Organized file structure] --&gt; F
-    G1[Automated documentation] --&gt; G
-    
-    classDef stepBox fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef codeBox fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
-    
-    class A,B,C,D,E,F,G stepBox
-    class A1,B1,C1,D1,E1,F1,G1 codeBox
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="detailed-projectflow-execution-model" class="level3">
-<h3 class="anchored" data-anchor-id="detailed-projectflow-execution-model">Detailed ProjectFlow Execution Model</h3>
-<p>Understanding how ProjectFlow coordinates complex geospatial workflows:</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    Start([p = hb.ProjectFlow]) --&gt; CreateDir{"Create project_dir?"}
-    CreateDir --&gt;|Fails| Error[NotADirectoryError]
-    CreateDir --&gt;|Success| SetupDirs["Set input_dir, intermediate_dir, output_dir"]
-
-    SetupDirs --&gt; InitTree["Initialize task_tree root"]
-    InitTree --&gt; UserTasks[User adds tasks via add_task]
-
-    UserTasks --&gt; Execute["p.execute()"]
-    Execute --&gt; RegisterDirs["Register search directories"]
-    RegisterDirs --&gt; ShowTasks["show_tasks() displays tree"]
-    ShowTasks --&gt; RunTask["run_task(task_tree)"]
-
-    RunTask --&gt; GetTask["Get next task from tree"]
-    GetTask --&gt; SetTaskDir["Set task_dir based on parent type"]
-    SetTaskDir --&gt; CheckSkip{"skip_existing and dir exists?"}
-
-    CheckSkip --&gt;|Yes| SkipRun["Set run_this = False"]
-    CheckSkip --&gt;|No| CreateTaskDir["Create task directory"]
-
-    SkipRun --&gt; RunFunc
-    CreateTaskDir --&gt; RunFunc["Run task.function(p)"]
-
-    RunFunc --&gt; IsIterator{"Task is iterator?"}
-    IsIterator --&gt;|Yes| CheckParallel{"run_in_parallel?"}
-    IsIterator --&gt;|No| HasChildren{"Has children?"}
-
-    CheckParallel --&gt;|Yes| ParallelExec["multiprocessing.Pool.starmap()"]
-    CheckParallel --&gt;|No| SeqExec["Sequential child execution"]
-
-    ParallelExec --&gt; HasChildren
-    SeqExec --&gt; HasChildren
-
-    HasChildren --&gt;|Yes| RunTask
-    HasChildren --&gt;|No| Complete([Script complete])
-
-    %% Styling
-    classDef process fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef error fill:#ffebee,stroke:#d32f2f,stroke-width:2px
-    classDef success fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-
-    class SetupDirs,InitTree,UserTasks,Execute,RegisterDirs,ShowTasks,RunTask,GetTask,SetTaskDir,CreateTaskDir,RunFunc,ParallelExec,SeqExec,SkipRun process
-    class CreateDir,CheckSkip,IsIterator,CheckParallel,HasChildren decision
-    class Error error
-    class Complete success
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p>This workflow ensures that every analysis is:</p>
-<ul class="incremental">
-<li><strong>Organized</strong>: Clear directory structure and file management</li>
-<li><strong>Reproducible</strong>: Consistent patterns and automated documentation<br>
-</li>
-<li><strong>Discoverable</strong>: Intelligent file location and path resolution</li>
-<li><strong>Scalable</strong>: Efficient processing suitable for large datasets</li>
-</ul>
+<p>Hazelbean follows a consistent, organized workflow pattern that makes geospatial analysis predictable and reproducible: initialize a ProjectFlow, let it create the directory structure, discover and load your data, process it, analyze it, and export organized results.</p>
+<p>That pattern — and the execution model ProjectFlow runs underneath it — are drawn out as flowcharts on the <a href="../earth_economy_devstack/workflow_diagram.html">workflow diagrams</a> page.</p>
 </section>
 </section>
 <section id="learning-journey-overview" class="level2">

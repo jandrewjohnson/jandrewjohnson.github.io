@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>environment_setup – Justin Andrew Johnson</title>
+<title>installation – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/environment_setup.html">Installation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/installation.html">Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -276,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/environment_setup.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../seals/user_guide/installation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Installation</span></a>
   </div>
 </li>
@@ -391,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="installation" class="level1">
 <h1>Installation</h1>
 <p>SEALS is installed one way: <strong>hazelbean and the geospatial stack from conda-forge, then SEALS itself as an editable install from a clone.</strong> Your edits to the clone take effect immediately, with no reinstall.</p>
-<p>SEALS is distributed as <strong><code>sealsmodel</code></strong> and imported as <code>seals</code>. It requires hazelbean 2.0.0 or later and Python 3.10 or later (hazelbean’s floor, set by NumPy 2).</p>
+<p>SEALS is distributed as <strong><code>sealsmodel</code></strong> and imported as <code>seals</code>. It requires hazelbean 2.0.0 or later. Do not pin a Python version — let conda pick one. On conda-forge, hazelbean 2.0.0 is built for Python 3.11, 3.12 and 3.13, and asking for an older Python makes the solver quietly fall back to hazelbean 1.x, which SEALS cannot run.</p>
 <p>Only SEALS is cloned. Hazelbean is a normal conda-forge dependency here — if you also want to <em>edit</em> hazelbean, that is the devstack developer install, covered in the <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">devstack installation guide</a>, which documents the full set of install paths across the stack.</p>
 <section id="install-git-and-miniforgeconda" class="level2">
 <h2 class="anchored" data-anchor-id="install-git-and-miniforgeconda">1. Install git and Miniforge/Conda</h2>
@@ -413,9 +413,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create-and-activate-an-environment" class="level2">
 <h2 class="anchored" data-anchor-id="create-and-activate-an-environment">3. Create and activate an environment</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span> python=3.10</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Pick your own environment name — the devstack does not require a particular one. Always activate it before running SEALS scripts.</p>
+<p>The environment starts empty; Python arrives in step 4 as a dependency of hazelbean, at a version conda knows hazelbean was built for.</p>
 </section>
 <section id="install-hazelbean-and-the-dependency-stack-from-conda-forge" class="level2">
 <h2 class="anchored" data-anchor-id="install-hazelbean-and-the-dependency-stack-from-conda-forge">4. Install hazelbean and the dependency stack from conda-forge</h2>

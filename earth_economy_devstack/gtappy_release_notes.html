@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -442,9 +442,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#gtappy-development-notes" id="toc-gtappy-development-notes" class="nav-link active" data-scroll-target="#gtappy-development-notes">GTAPpy development notes</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#v2023-12-18-correspondence-files-into-ee-spec" id="toc-v2023-12-18-correspondence-files-into-ee-spec" class="nav-link" data-scroll-target="#v2023-12-18-correspondence-files-into-ee-spec">v2023-12-18 — correspondence files into EE spec</a></li>
   <li><a href="#v2023-12-15-conventions-settled-with-erwin" id="toc-v2023-12-15-conventions-settled-with-erwin" class="nav-link" data-scroll-target="#v2023-12-15-conventions-settled-with-erwin">v2023-12-15 — conventions settled with Erwin</a></li>
   <li><a href="#v2023-11-01-first-working-shocks" id="toc-v2023-11-01-first-working-shocks" class="nav-link" data-scroll-target="#v2023-11-01-first-working-shocks">v2023-11-01 — first working shocks</a></li>
@@ -498,14 +498,14 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="v2023-12-15-conventions-settled-with-erwin">v2023-12-15 — conventions settled with Erwin</h2>
 <p>Proposals raised against the model release layout, and how they resolved.</p>
 <p><strong>Naming.</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>In the release’s <code>Data</code> folder, the aggregation label <code>gtapaez11-50</code> should be <code>v11-s26-r50</code> — database version, sector count, region count.</li>
 <li>The most recent release carries <strong>no</strong> timestamp; dated versions of a same-named model or aggregation take the timestamp of when they were first released.</li>
 <li>CMF files renamed from <code>cwon_bau.cmf</code> to <code>gtapv7-aez-rd_bau.cmf</code>, and <code>cwon_bau-es.cmf</code> to <code>gtapv7-aez-rd_bau-es.cmf</code> — hyphens join parts of one variable, underscores split the name into its list of fields.</li>
 <li><code>SIMRUN</code> becomes just the experiment name (<code>bau</code>) rather than project name plus experiment.</li>
 </ol>
 <p><strong>Project structure.</strong></p>
-<ol class="incremental" start="4" type="1">
+<ol start="4" type="1">
 <li><p>Drop <code>set PROJ=cwon</code> from the CMF — the project is defined by the ProjectFlow object, not the command file.</p></li>
 <li><p>Separate data and output from the code release:</p>
 <pre class="text"><code>set MODd=..\mod      set CMFd=.\cmf
@@ -515,7 +515,7 @@ set SOLd=..\out      set DATd=..\data%AGG%</code></pre>
 <li><p>CMF command-line options renamed to match what they are: <code>gtap_base_data_dir</code>, <code>starting_data_file_path</code>, <code>output_dir</code>, <code>starting_year</code>, <code>ending_year</code> (previously positional <code>p1</code>–<code>p5</code>). <code>experiment_label</code> may not be renameable, as it appears to be fixed by the CMF filename.</p></li>
 </ol>
 <p><strong>Answers from Erwin.</strong></p>
-<ol class="incremental" start="9" type="1">
+<ol start="9" type="1">
 <li><p><em>Can the raw GEMPACK output be read to estimate progress, for a progress bar?</em> Yes, when running with automatic accuracy — GEMPACK reports its position:</p>
 <pre class="text"><code>+++&gt; Beginning subinterval number 4.
 ---&gt; Beginning pass number 1 of 2-pass calculation, subinterval 4.

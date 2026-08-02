@@ -75,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -156,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -445,7 +445,7 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#core-workflow-pattern" id="toc-core-workflow-pattern" class="nav-link active" data-scroll-target="#core-workflow-pattern">Core workflow pattern</a></li>
   <li><a href="#detailed-projectflow-execution-model" id="toc-detailed-projectflow-execution-model" class="nav-link" data-scroll-target="#detailed-projectflow-execution-model">Detailed ProjectFlow execution model</a></li>
   </ul>
@@ -573,7 +573,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Note the two decision points that do most of the work in practice. <code>skip_existing and dir exists?</code> is the skip-if-already-computed re-run — the reason a finished run costs seconds the second time. <code>Task is iterator?</code> combined with <code>run_in_parallel?</code> is the fan-out: an iterator task’s children are dispatched across a process pool rather than run in sequence, which is how a model iterates over thousands of tiles or scenarios.</p>
 <p>This workflow ensures that every analysis is:</p>
-<ul class="incremental">
+<ul>
 <li><strong>Organized</strong>: Clear directory structure and file management</li>
 <li><strong>Reproducible</strong>: Consistent patterns and automated documentation</li>
 <li><strong>Discoverable</strong>: Intelligent file location and path resolution</li>

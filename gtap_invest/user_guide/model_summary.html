@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -353,7 +353,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="sidebar-item-text sidebar-link">
+  <a href="https://github.com/jandrewjohnson/gtap_invest" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GitHub</span></a>
   </div>
 </li>
@@ -366,9 +366,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#gtap-invest-model-summary" id="toc-gtap-invest-model-summary" class="nav-link active" data-scroll-target="#gtap-invest-model-summary">2. GTAP-InVEST Model Summary</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#overall-model-structure" id="toc-overall-model-structure" class="nav-link" data-scroll-target="#overall-model-structure">2.1. Overall model structure</a></li>
   <li><a href="#input-assumptions" id="toc-input-assumptions" class="nav-link" data-scroll-target="#input-assumptions">2.2. Input Assumptions</a></li>
   <li><a href="#gtap-aez-economic-methods" id="toc-gtap-aez-economic-methods" class="nav-link" data-scroll-target="#gtap-aez-economic-methods">2.3. GTAP-AEZ economic methods</a></li>
@@ -946,7 +946,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="calibration" class="level4">
 <h4 class="anchored" data-anchor-id="calibration">2.4.3. Calibration</h4>
 <p>A key component in SEALS is that it downscales according to observed relationships present in time-series input data. SEALS uses a spatial allocation approach that has been calibrated on the ESACCI 1992-2015 time series using an iterative Gaussian L1-loss function minimization approach. The approach is documented in Figure S.2.4.3.1. as per the following algorithm:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p>Define a baseline condition (Panel A, using the year 2000 for this example).</p></li>
 <li><p>Define a projection year in the set of observed years after the baseline year (2010), shown in Panel B, and calculate the net-change between the two years for each coarse resolution (30km) grid-cell. This defines the amount of change in each LULC class that our allocation algorithm will predict.</p></li>
 <li><p>Allocate the net change of each LULC class using only the baseline map and a spatial allocation algorithm, S(p1), where p1 is the parameter set used in the allocation and is initially set to an arbitrary value.</p></li>

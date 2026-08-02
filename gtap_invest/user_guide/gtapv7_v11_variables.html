@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -353,7 +353,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="sidebar-item-text sidebar-link">
+  <a href="https://github.com/jandrewjohnson/gtap_invest" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GitHub</span></a>
   </div>
 </li>
@@ -366,9 +366,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#variables-in-v11" id="toc-variables-in-v11" class="nav-link active" data-scroll-target="#variables-in-v11">Variables in v11</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#sets" id="toc-sets" class="nav-link" data-scroll-target="#sets">Sets</a></li>
   <li><a href="#subsets" id="toc-subsets" class="nav-link" data-scroll-target="#subsets">Subsets</a></li>
   <li><a href="#example-the-3x3-3-regions-x-3-sectors-economy" id="toc-example-the-3x3-3-regions-x-3-sectors-economy" class="nav-link" data-scroll-target="#example-the-3x3-3-regions-x-3-sectors-economy">Example: The 3x3 (3 regions x 3 sectors) economy</a></li>
@@ -569,102 +569,102 @@ ul.task-list li input[type="checkbox"] {
 <section id="value-flows-evaluated-at-agents-prices" class="level2">
 <h2 class="anchored" data-anchor-id="value-flows-evaluated-at-agents-prices">Value flows evaluated at agents’ Prices</h2>
 <p>EVOAir&nbsp;value of endowment commodity i output or supplied, in region r, evaluated at agent’s prices</p>
-<ul class="incremental">
+<ul>
 <li>EVOAi,r&nbsp;= PSi,r&nbsp;* QOi,r with i = ENDW_COMM and r</li>
 </ul>
 <p>EVFAijr&nbsp;value of purchases of demanded commodity i by firms in sector j, in region r, evaluated at agent’s prices</p>
-<ul class="incremental">
+<ul>
 <li>EVFAijr&nbsp;= PFEijr&nbsp;* QFEijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = ENDW_COMM; r = REG</li>
 </ul>
 <p>VDFAijr&nbsp;value of purchases of domestic tradeable commodity i by firms in sector j of region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li>VDFAijr&nbsp;= PFDijr&nbsp;* QFDijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = ENDW_COMM; r = REG</li>
 </ul>
 <p>VIFAijr&nbsp;value of purchases of imported tradeable commodity i by firms in sector j of region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li>VIFAijr&nbsp;= PFMijr&nbsp;* QFMijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = ENDW_COMM; r = REG</li>
 </ul>
 <p>VDPAir&nbsp;value of expenditure on domestic tradable commodity i, by private household in region r evaluated at agent’s prices</p>
-<ul class="incremental">
+<ul>
 <li>VDPAir&nbsp;= PPDir&nbsp;* QPDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VIPAir&nbsp;value of expenditure on imported tradeable commodity i by firms in sector j of region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li>VIPAir&nbsp;= PPMir&nbsp;* QPMir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VDGAi&nbsp;value of government’s expenditure on domestic tradable commodity i, in region r, evaluated at agent’s prices</p>
-<ul class="incremental">
+<ul>
 <li>VDGAir&nbsp;= PGDir&nbsp;* QGDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VIGAi&nbsp;value of government’s expenditure on imported tradable commodity i, in region r, evaluated at agent’s prices</p>
-<ul class="incremental">
+<ul>
 <li>VIGAir&nbsp;= PGMir&nbsp;* QGMir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>SAVEr&nbsp;value of (net) savings in region r</p>
-<ul class="incremental">
+<ul>
 <li>SAVEr&nbsp;= PSAVEr&nbsp;* QSAVEr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 <p>VKBr&nbsp;value of beginning-of-period capital stock in region r</p>
-<ul class="incremental">
+<ul>
 <li>VKBr&nbsp;= PCGDSr&nbsp;* KBr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 <p>VDEPr&nbsp;value of capital depreciation expenditure in region r</p>
-<ul class="incremental">
+<ul>
 <li>VDEPr&nbsp;= PCGDSr&nbsp;* KBr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 </section>
 <section id="value-flows-evaluated-at-market-prices" class="level2">
 <h2 class="anchored" data-anchor-id="value-flows-evaluated-at-market-prices">Value flows evaluated at market prices</h2>
 <p>VFMijr&nbsp;value of purchases of endowment commodity i by firms in sector j in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li><p>VFMijr&nbsp;= PMir&nbsp;* QFEijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = ENDWM_COMM; j = PROD_COMM; r = REG</p></li>
 <li><p>VFMijr&nbsp;= PMESijr&nbsp;* QFEijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = ENDWS_COMM; j = PROD_COMM; r = REG</p></li>
 </ul>
 <p>VDFMijr&nbsp;value of purchases of domestic tradable commodity i by firms in sector j in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VDFMijr&nbsp;= PMir&nbsp;* QFDijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = PROD_COMM</li>
 </ul>
 <p>VIFMijr&nbsp;value of purchases of imported tradable commodity i by firms in sector j in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VIFMijr&nbsp;= PIMir&nbsp;* QFMijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = PROD_COMM; r = REG</li>
 </ul>
 <p>VDPMir&nbsp;value of private household’s purchases of domestic tradable commodity i in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VDPMir&nbsp;= PMir&nbsp;* QPDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VIPMir&nbsp;value of private household’s purchases of imported tradable commodity i in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VIPMir&nbsp;= PIMir&nbsp;* QPMir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VDGMir&nbsp;value of government’s expenditure on domestic tradable commodity i, in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VDGMir&nbsp;= PMir&nbsp;* QGDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VIGMir&nbsp;value of government’s expenditure on imported tradable commodity i, in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VIGMir&nbsp;= PIMir&nbsp;* QGMir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VXMDirs&nbsp;value of exports of tradable commodity i from source r to destination s, evaluated at (exporter’s) market prices</p>
-<ul class="incremental">
+<ul>
 <li>VXMDirs&nbsp;= PMir&nbsp;* QXSirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG; s= REG</li>
 </ul>
 <p>VIMSirs&nbsp;value of imports of tradable commodity i from source r to destination s, evaluated at (importer’s) market prices</p>
-<ul class="incremental">
+<ul>
 <li>VIMSirs&nbsp;= PMSir&nbsp;* QXSirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG; s = REG</li>
 </ul>
 <p>VSTir&nbsp;value of sales of tradable commodity i to the international transport sector in region r, evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VSTir&nbsp;= PMir&nbsp;* QSTir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = MARG_COMM; r = REG</li>
 </ul>
 </section>
 <section id="value-flows-evaluated-at-world-prices" class="level2">
 <h2 class="anchored" data-anchor-id="value-flows-evaluated-at-world-prices">Value flows evaluated at world prices</h2>
 <p>VXWDirs&nbsp;value of exports of tradable commodity i from source r to destination s, evaluated at world (fob) prices</p>
-<ul class="incremental">
+<ul>
 <li>VXWDirs&nbsp;= PFOBirs&nbsp;* QXSirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG; s = REG</li>
 </ul>
 <p>VIWSirs&nbsp;value of imports of tradable commodity i from source r to destination s, evaluated at world (cif) prices</p>
-<ul class="incremental">
+<ul>
 <li>VIWSirs&nbsp;= PCIFirs&nbsp;* QXSirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG; s = REG</li>
 </ul>
 </section>
@@ -679,20 +679,20 @@ ul.task-list li input[type="checkbox"] {
 <p>SUBPARir&nbsp;&nbsp;&nbsp; with&nbsp;i = TRAD_COMM; r = REG substitution parameter for tradable commodity i in the CDE minimum expenditure function of region r</p>
 <p>INCPARir&nbsp;&nbsp;&nbsp; with&nbsp;i = TRAD_COMM; r = REG expansion parameter for tradable commodity i in the CDE minimum expenditure function of region r.</p>
 <p>ALPHAir&nbsp;1 - sub. parameter in the CDE minimum expenditure function</p>
-<ul class="incremental">
+<ul>
 <li>ALPHAir&nbsp;= 1 - SUBPARir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>APEikr&nbsp;Allen partial elst.of sub between composite i and k in r</p>
-<ul class="incremental">
+<ul>
 <li>APEikr&nbsp;= ALPHAir&nbsp;+ ALPHAkr- SnCONSHRnr*ALPHAnr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = k= n = TRAD_COMM; r = REG</li>
 </ul>
 <p>APEiir&nbsp;= 2.0*ALPHAir&nbsp;- SnCONSHRnr*ALPHAnr&nbsp;- ALPHAir&nbsp;/ CONSHRir</p>
 <p>EYir&nbsp;income elasticity of private household demand for i in r</p>
-<ul class="incremental">
+<ul>
 <li>EYir&nbsp;= (1/Sn&nbsp;CONSHRnr*INCPARnr) * (INCPARir&nbsp;* (1.0 - ALPHAir) + SnCONSHRnr*INCPARnr*ALPHAnr) + (ALPHAir&nbsp;- SnCONSHRnr*ALPHAnr) i = n = TRAD_COMM; r = REG</li>
 </ul>
 <p>EPikr&nbsp;uncompensated cross-price elasticity private household demand for i wrt k in r</p>
-<ul class="incremental">
+<ul>
 <li>EPikr&nbsp;= (APEikr&nbsp;- EYir)*CONSHRkr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = k = TRAD_COMM; r = REG</li>
 </ul>
 </section>
@@ -705,89 +705,89 @@ ul.task-list li input[type="checkbox"] {
 <section id="value-flows" class="level2">
 <h2 class="anchored" data-anchor-id="value-flows">Value Flows</h2>
 <p>VOAir&nbsp;value of non-saving commodity i output or supplied in region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li><p>VOAir&nbsp;= EVOAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = ENDW_COMM; r = REG</p></li>
 <li><p>VOAir&nbsp;= SjVFAjir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = PROD_COMM; j = DEMD_COMM; r = REG</p></li>
 </ul>
 <p>VFAijr&nbsp;value of purchases of demanded commodity i by firms in sector j of regin r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li><p>VFAijr&nbsp;= EVFAijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = ENDW_COMM; j = PROD_COMM; r = REG</p></li>
 <li><p>VFAijr&nbsp;= VDFAijr&nbsp;+ VIFAijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i =TRAD_COMM; j = PROD_COMM; r = REG</p></li>
 </ul>
 <p>VOMir&nbsp;value of non-saving commodity i output or supplied in region r evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li><p>VOMir&nbsp;= SjVFMijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = ENDW_COMM;j = PROD_COMM; r = REG</p></li>
 <li><p>VOMir&nbsp;= VDMir&nbsp;+ VSTir&nbsp;+ SsVXMDirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = MARG_COMM; r = REG; s = REG</p></li>
 <li><p>VOMir&nbsp;= VDMir&nbsp;+ SsVXMDirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = NMRG_COMM; r = REG; s = REG</p></li>
 <li><p>VOMir&nbsp;= VOAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = CGDS_COMM; r = REG</p></li>
 </ul>
 <p>VDMir&nbsp;value of domestic sales of tradable commodity i in region r evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VDMir&nbsp;= VDPMir&nbsp;+ VDGMir&nbsp;+ SjVDFMijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = PROD_COMM; r = REG</li>
 </ul>
 <p>VIMir&nbsp;value of aggregate imports of tradable commodity i in region r evaluated at market prices</p>
-<ul class="incremental">
+<ul>
 <li>VIMir&nbsp;= VIPMir&nbsp;+ VIGMir&nbsp;+ SjVIFMijr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; j = PROD_COMM; r = REG</li>
 </ul>
 <p>VPAir&nbsp;value of private household expenditure on tradable commodity i in region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li>VPAir&nbsp;= VDPAir&nbsp;+ VIPAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>PRIVEXPr&nbsp;total consumption expenditure by private household in regin r</p>
-<ul class="incremental">
+<ul>
 <li>PRIVEXPr&nbsp;= SiVPAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM</li>
 </ul>
 <p>VGAir&nbsp;value of government expenditure on tradable commodity i in region r evaluated at agents’ prices</p>
-<ul class="incremental">
+<ul>
 <li>VGAir&nbsp;= VDGAir&nbsp;+ VIGAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>GOVEXPr&nbsp;total consumption expenditure by government in region r</p>
-<ul class="incremental">
+<ul>
 <li>GOVEXPr&nbsp;= SiVGAir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>INCOMEr&nbsp;total expenditure equals net income in region r</p>
-<ul class="incremental">
+<ul>
 <li>INCOMEr&nbsp;= PRIVEXPr&nbsp;+ GOVEXPr&nbsp;+ SAVEr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 <p>REGINVr&nbsp;gross investment in region r that equals value of output of “capital goods” sector</p>
-<ul class="incremental">
+<ul>
 <li>REGINVr&nbsp;= SkVOAkr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k = CGDS_COMM</li>
 </ul>
 <p>NETINVr&nbsp;net investment in region r</p>
-<ul class="incremental">
+<ul>
 <li>NETINVr&nbsp;= SkVOAkr&nbsp;- VDEPr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k = CGDS_COMM</li>
 </ul>
 <p>GLOBINV&nbsp;global net investment</p>
-<ul class="incremental">
+<ul>
 <li>GLOBINV = SrNETINV = SrSAVEr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 <p>INVKERATIOr&nbsp;ratio of gross investment to end-of-period capital stock in region r</p>
-<ul class="incremental">
+<ul>
 <li>INVKERATIOr&nbsp;= REGINVr&nbsp;/ (VKBr&nbsp;+ NETINVr)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = REG</li>
 </ul>
 <p>GRNETRATIOr&nbsp;ratio of gross to net rate of return on capital in regin r (VOAcapital,r&nbsp;is gross return to capital)</p>
-<ul class="incremental">
+<ul>
 <li>GRNETRATIOr&nbsp;= SkVOAkr&nbsp;/ (SkVOAkr&nbsp;- VDEPr)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with k = ENDWC_COMM; r = REG</li>
 </ul>
 <p>GDPr&nbsp;gross domestic product in region r (trade is valued at worl prices)</p>
-<ul class="incremental">
+<ul>
 <li>GDPr&nbsp;= SiVPAir&nbsp;+ SiVGAir&nbsp;+ SkVOAkr&nbsp;+ SiSsVXWDirs+ SmVSTms&nbsp;- SiSsVIWSirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; k = CGDS_COMM; r = REG; s = REG</li>
 </ul>
 <p>VT&nbsp;international margin suply</p>
-<ul class="incremental">
+<ul>
 <li>VT = SiSrVSTir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VXWir&nbsp;value of exports of tradable commodity i from source r evaluated at world (fob) prices</p>
-<ul class="incremental">
+<ul>
 <li><p>VXWir&nbsp;= SsVXWDirs+VSTir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = MARG_COMM; r = REG</p></li>
 <li><p>VXWir&nbsp;= SsVXWDirs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = NMRG_COMM; r = REG</p></li>
 </ul>
 <p>VXWREGIONr&nbsp;value of exports from source r evaluated at world (fob) prices</p>
-<ul class="incremental">
+<ul>
 <li>VXWREGIONr&nbsp;= SiVXWir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VXWCOMMODi&nbsp;value of exports of tradable commodity i evaluated at world (fob) prices</p>
-<ul class="incremental">
+<ul>
 <li>VXWCOMMODi= SrVXWir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i = TRAD_COMM; r = REG</li>
 </ul>
 <p>VIWir&nbsp;value of imports of tradable commodity i into region r evaluated at world (cif) prices</p>

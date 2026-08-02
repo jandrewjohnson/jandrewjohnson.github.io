@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,26 +477,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#ee-spec-conventions" id="toc-ee-spec-conventions" class="nav-link active" data-scroll-target="#ee-spec-conventions">EE Spec Conventions</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#slashes-vs-backslashes" id="toc-slashes-vs-backslashes" class="nav-link" data-scroll-target="#slashes-vs-backslashes">Slashes vs backslashes</a></li>
   <li><a href="#identifiers-and-labels" id="toc-identifiers-and-labels" class="nav-link" data-scroll-target="#identifiers-and-labels">Identifiers and labels</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#idindex-in-vector-data" id="toc-idindex-in-vector-data" class="nav-link" data-scroll-target="#idindex-in-vector-data"><code>id</code>/<code>index</code> in vector data</a></li>
   </ul></li>
   <li><a href="#labels-files" id="toc-labels-files" class="nav-link" data-scroll-target="#labels-files">Labels files</a></li>
   <li><a href="#correspondences" id="toc-correspondences" class="nav-link" data-scroll-target="#correspondences">Correspondences</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#combined-ids" id="toc-combined-ids" class="nav-link" data-scroll-target="#combined-ids">Combined ids</a></li>
   <li><a href="#correspondences-with-geometries" id="toc-correspondences-with-geometries" class="nav-link" data-scroll-target="#correspondences-with-geometries">Correspondences with geometries</a></li>
   </ul></li>
   <li><a href="#project-level-variable-names" id="toc-project-level-variable-names" class="nav-link" data-scroll-target="#project-level-variable-names">Project-level variable names</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#srcdst-vs-inputoutput" id="toc-srcdst-vs-inputoutput" class="nav-link" data-scroll-target="#srcdst-vs-inputoutput">src/dst vs input/output</a></li>
   </ul></li>
   <li><a href="#scenario-naming" id="toc-scenario-naming" class="nav-link" data-scroll-target="#scenario-naming">Scenario naming</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#filename-conventions" id="toc-filename-conventions" class="nav-link" data-scroll-target="#filename-conventions">Filename conventions</a></li>
   <li><a href="#nested-variable-names" id="toc-nested-variable-names" class="nav-link" data-scroll-target="#nested-variable-names">Nested variable names</a></li>
   <li><a href="#year-typing" id="toc-year-typing" class="nav-link" data-scroll-target="#year-typing">Year typing</a></li>
@@ -535,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="identifiers-and-labels" class="level2">
 <h2 class="anchored" data-anchor-id="identifiers-and-labels">Identifiers and labels</h2>
 <p>These terms form a ladder from most-compact machine key to most-verbose human text. Use them consistently.</p>
-<ul class="incremental">
+<ul>
 <li><p><strong><code>id</code></strong> — the unique identifier of an object. In the devstack, an integer <strong>≥ 1</strong>, where <strong>0 denotes NDV</strong> (no-data value). This enables fast computation with e.g.&nbsp;id-rasters and <code>reclassify_raster</code>. In a many-to-one correspondence it is sorted by the “one” side, alphabetically at generation time (not guaranteed to stay sorted downstream). <strong><code>id</code> is the stable key we persist</strong> in data, files, and correspondences.</p></li>
 <li><p><strong><code>index</code></strong> — the <em>position</em> of an element in a sequence (list, string, or the row position in a spreadsheet). It is <strong>transient and not stable</strong>: never persist it, and never use it as the identifier column in a DataFrame or file, because the position can change. Use <code>id</code> for anything durable. Generally avoid index.</p></li>
 <li><p><strong><code>labelheader</code></strong> — an exactly-4-character, lowercase-alphanumeric string (no special symbols). Useful for the Header label in <code>.har</code> files. Technically case-insensitive; we assume lowercase.</p></li>
@@ -557,7 +557,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="correspondences" class="level2">
 <h2 class="anchored" data-anchor-id="correspondences">Correspondences</h2>
 <p>Model linkages often require mapping a many-to-one relationship consistently. Correspondence files define this via a src-to-dst (source → destination) mapping, named by a specific pattern. Using <code>gadm_r263_gtapv7_r251_r160_r50_correspondence</code> as the example:</p>
-<ul class="incremental">
+<ul>
 <li><code>gadm</code> is the domain label,</li>
 <li><code>r263</code> is a src dimension-size pair (<code>r</code> = region, <code>263</code> = number of unique entries),</li>
 <li>to be a correspondence there must be at least one dst dimension-size pair; here there are three (<code>r251</code>, <code>r160</code>, <code>r50</code>),</li>
@@ -627,7 +627,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="project-level-variable-names" class="level2">
 <h2 class="anchored" data-anchor-id="project-level-variable-names">Project-level variable names</h2>
 <p>Project-level variable names are carefully structured. In <code>gtapv7_r251_r160_correspondence_input_path</code>:</p>
-<ul class="incremental">
+<ul>
 <li><code>input</code> immediately before <code>path</code> means it is a <strong>raw asset</strong> obtained from an external source and not yet processed — so it may be a non-compliant XLSX.</li>
 <li><code>path</code> means it is a string that points to a location on a storage device (as opposed to the loaded object itself — see src/dst vs input/output below).</li>
 <li><code>gtapv7</code> is the domain of every dimension that follows until another domain label appears — here, 251 regions mapped to 160 regions within the <code>gtapv7</code> domain.</li>
@@ -639,7 +639,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p.gtap11_gtapaez11_region_correspondence_path <span class="op">=</span> os.path.join(p.base_data_dir, <span class="st">'gtappy'</span>, <span class="st">'aggregation_mappings'</span>, <span class="st">'gtap11_gtapaez11_region_correspondence.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="srcdst-vs-inputoutput" class="level3">
 <h3 class="anchored" data-anchor-id="srcdst-vs-inputoutput">src/dst vs input/output</h3>
-<ul class="incremental">
+<ul>
 <li><strong>src/dst</strong> is a pointer/reference to a thing; <strong>input/output</strong> is the thing itself. This is especially useful for paths: you often see <code>input_array = hb.as_array(src_path)</code>.</li>
 <li><code>_path</code> and <code>_dir</code> imply the string is a reference, so <code>src_path</code> and <code>src_dir</code> are common.</li>
 </ul>
@@ -648,12 +648,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="scenario-naming" class="level2">
 <h2 class="anchored" data-anchor-id="scenario-naming">Scenario naming</h2>
 <p>Scenarios are defined in a nested structure. Each level is a <code>label</code>:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><strong>Exogenous assumptions</strong> (no hyphens) — e.g.&nbsp;which SSP, GDP, population. Typically fully defined by the SSP.</li>
 <li><strong>Climate assumption</strong> (no hyphens) — which RCP.</li>
 <li><strong>Model</strong> (<strong>may</strong> have hyphens — the only level allowed to, because hyphens are used for multi-step scenario processing) — e.g.&nbsp;<code>magpie</code>, <code>luh2-message</code>.</li>
 <li><strong>Counterfactual</strong> — policy assumption/definition, including <code>bau</code> (a special counterfactual others are compared against). Different counterfactuals correspond to different shockfiles or LUC projection priorities.
-<ul class="incremental">
+<ul>
 <li>A counterfactual may have processing steps, appended as a hyphen + exactly 4 characters. For example, a run that <strong>excludes</strong> ecosystem services uses the <code>-noes</code> suffix; the run that <strong>includes</strong> ES appends nothing (it is the default that gets referenced).</li>
 </ul></li>
 <li><strong>Year</strong> — see the year typing rules below.</li>
@@ -663,7 +663,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="filename-conventions" class="level3">
 <h3 class="anchored" data-anchor-id="filename-conventions">Filename conventions</h3>
 <p>Two conventions are supported. In both, the variable name (e.g.&nbsp;<code>lulc</code>) stays at the <strong>front</strong> of the filename.</p>
-<ul class="incremental">
+<ul>
 <li><p><strong>Implied</strong> — the directory structure supplies all labels except year (which is appended to the filename):</p>
 <pre><code>project/intermediate/convert_netcdf/ssp2/rcp45/luh2-message/bau/lulc_2050.tif</code></pre></li>
 <li><p><strong>Explicit</strong> — every label is repeated in the filename even though the directory implies it:</p>
@@ -681,10 +681,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="year-typing" class="level3">
 <h3 class="anchored" data-anchor-id="year-typing">Year typing</h3>
-<ul class="incremental">
+<ul>
 <li>When a variable is <strong>singular</strong> it must be an <code>int</code>; when <strong>plural</strong> it is a list of ints. <code>base_years</code> is always a list even with a single entry (the name is plural). Always use <code>base_years</code>, <strong>never</strong> <code>baseline_years</code> (to avoid confusion between “baseline” and “bau”).</li>
 <li>When stored in a DataFrame, type-check on read:
-<ul class="incremental">
+<ul>
 <li>Singular: <code>str(value)</code>, <code>int(value)</code>, or <code>float(value)</code> as appropriate.</li>
 <li>Plural: the cell is a space-delimited string — <code>[int(i) for i in value.split(' ')]</code> on read, <code>' '.join(values)</code> on write. (Being updated to the JSON-style parsing used in <code>scenarios.csv</code> files.)</li>
 </ul></li>
@@ -693,14 +693,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="scenario-types" class="level3">
 <h3 class="anchored" data-anchor-id="scenario-types">Scenario types</h3>
 <p>Three <code>scenario_type</code>s are supported: <code>baseline</code>, <code>bau</code>, and <code>policy</code>.</p>
-<ul class="incremental">
+<ul>
 <li><strong>baseline</strong> — the year has observed (not modelled) data; these years are in <code>p.years</code> and identically in <code>p.base_years</code>. (Exception: when e.g.&nbsp;GTAP updates the base year from 2017 to 2023, policies are then applied on 2023.)</li>
 <li><strong>bau</strong> and <strong>policy</strong> — results are modelled; their years are in <code>p.years</code> but <em>not</em> in <code>p.base_years</code>.</li>
 </ul>
 </section>
 <section id="supported-filetypes" class="level3">
 <h3 class="anchored" data-anchor-id="supported-filetypes">Supported filetypes</h3>
-<ul class="incremental">
+<ul>
 <li>NetCDF with the dimensions above, in the same order.</li>
 <li>A set of geotiffs embedded in directories — each label gets a directory level except year, which is <strong>always</strong> the last 4 characters of the filename before the extension (preceded by an underscore).</li>
 <li>A spreadsheet linkable to a geographic representation (shapefile or geopackage) in vertical format.</li>
@@ -710,7 +710,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="get_path-and-ref_path" class="level2">
 <h2 class="anchored" data-anchor-id="get_path-and-ref_path">get_path and ref_path</h2>
 <p>Paths that are ready to use end in <code>_path</code> (last 5 characters). Before <code>get_path</code> is called, the root directory is not yet resolved; a <strong>reference path</strong> ends in <code>ref_path</code> (last 8 characters) and is relative to one of several possible root directories. <code>get_path</code> searches those roots in order and returns the most useful hit:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><code>cur_dir</code> — the current task’s directory (so a task can skip itself if its output already exists),</li>
 <li><code>input_dir</code> — project-specific inputs,</li>
 <li><code>base_data_dir</code> — cross-project data (also the default download location),</li>
@@ -729,7 +729,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="directory-and-file-naming" class="level2">
 <h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and file naming</h2>
-<ul class="incremental">
+<ul>
 <li><strong>Name a directory for its <em>kind</em> of content, in the singular.</strong> <code>input/</code>, <code>output/</code>, <code>intermediate/</code>, <code>input_template/</code> — never <code>inputs/</code>, <code>outputs/</code>, or <code>input_templates/</code>. The directory holds one <em>kind</em> of thing, and the plural adds nothing: <code>output/</code> already contains many outputs, exactly as <code>input/</code> contains many inputs. This matches the Python ecosystem’s dominant convention and keeps the directory name identical to the stem of the attribute that points at it, so <code>p.output_dir</code> → <code>output/</code> with no translation step. Reserve the plural for a directory holding many <em>heterogeneous</em> items that share no single kind.</li>
 <li><strong>Corollary: the <code>*_dir</code> attribute and its directory must agree.</strong> A singular attribute pointing at a plural directory (<code>p.output_dir</code> → <code>outputs/</code>) is the failure mode this rule exists to prevent; it was the actual state of <code>ProjectFlow</code> until 2026-07-31, alongside a vestigial <code>p.inputs_dir</code> → <code>inputs/</code> that nothing read. Both are now singular.</li>
 <li><strong>dir</strong> — avoid as a standalone noun (directory or direction?); <strong>use <code>directory</code></strong>. It <em>can</em> be a suffix (<code>temp_dir</code>), and is fine inside function names for brevity (<code>delete_dir()</code>, <code>create_dir()</code>), matching Unix heritage.</li>
@@ -764,14 +764,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="priority-and-debug-markers" class="level2">
 <h2 class="anchored" data-anchor-id="priority-and-debug-markers">Priority and debug markers</h2>
-<ul class="incremental">
+<ul>
 <li><strong>todo / todoo / todooo</strong> — increasing O’s mean <em>lower</em> priority (standard, lower, lowest). (The priority ordering is deliberately opposite to most coders’ convention, so it’s stated explicitly.)</li>
 <li><strong>print()</strong> with no space before the paren likely marks debug code to remove; <strong>print ()</strong> with a space marks intentional output to keep.</li>
 </ul>
 </section>
 <section id="file-type-specific" class="level2">
 <h2 class="anchored" data-anchor-id="file-type-specific">File-type-specific</h2>
-<ul class="incremental">
+<ul>
 <li><strong>shapefile</strong> — use only to specify an ESRI Shapefile explicitly (vs.&nbsp;e.g.&nbsp;a geopackage).</li>
 <li><strong>tiff</strong> — never use except in the GDAL driver name <code>GTiff</code>.</li>
 </ul>
@@ -779,7 +779,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="python-style" class="level2">
 <h2 class="anchored" data-anchor-id="python-style">Python style</h2>
 <p>We follow PEP 8 with a few departures:</p>
-<ul class="incremental">
+<ul>
 <li><strong>Line length</strong> — more than 80 characters is allowed; keep lines within <strong>160</strong> characters (except comments trailing a code line).</li>
 <li><strong>Blank lines</strong> — use a <strong>single</strong> blank line between functions, not two, so more functions are visible when folded.</li>
 <li><strong>Case</strong> — <code>snake_case</code> for variables and functions, <code>CamelCase</code> for classes.</li>
@@ -813,7 +813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="utf-8-encoding" class="level2">
 <h2 class="anchored" data-anchor-id="utf-8-encoding">UTF-8 encoding</h2>
 <p>International datasets frequently hit Byte Order Mark (BOM) / encoding mismatches — e.g.&nbsp;a first column read as <code>Ã¯Â»Â¿fao_country_id</code>, or “Åland” mangled to “Ã…land”. Excel assumes Windows-1252 for UTF-8 files that lack a BOM, splitting each multi-byte character into garbled pieces.</p>
-<ul class="incremental">
+<ul>
 <li><strong>Read</strong> CSVs with <code>pd.read_csv('file.csv', encoding='utf-8-sig')</code>.</li>
 <li><strong>Write</strong> CSVs with <code>df.to_csv('output.csv', encoding='utf-8-sig', index=False)</code>.</li>
 <li>The <code>-sig</code> adds the 3-byte BOM that tells Excel the file is UTF-8. For most data-analysis work, prefer <code>utf-8-sig</code> everywhere; use plain <code>utf-8</code> only when the consuming tool expects it (some Unix CLI tools).</li>
@@ -822,12 +822,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="projectflow-conventions" class="level2">
 <h2 class="anchored" data-anchor-id="projectflow-conventions">ProjectFlow conventions</h2>
-<ul class="incremental">
+<ul>
 <li><strong>A run file’s complexity is three independent axes, and only one is numbered.</strong> <em>Configuration</em> — how a run varies — has levels 1–4: one task with inline constants; a task tree; + a scenarios CSV; + a parameters CSV. <em>Code layout</em> — where the code lives — runs single file → split (<code>&lt;project&gt;_tasks.py</code>; <code>&lt;project&gt;_functions.py</code> for science helpers; <code>&lt;project&gt;_utils.py</code> for science-unaware helpers, which is a promotion queue into hazelbean rather than a filing category; <code>&lt;project&gt;_initialize_project.py</code> for tree builders) → library package. <em>Ownership</em> — who owns the code you run — runs self-contained → devstack developer → downstream user, where the library is a read-only dependency in your own repo. The axes are independent: moving along one never requires moving along another, so <strong>“level” unqualified always means the configuration axis</strong>. Copy-me templates are described on the <a href="../earth_economy_devstack/run_templates.html">Run Templates</a> page; the same code with the reasoning written out is in <code>examples/run_templates_annotated/</code>. The six numbered stages in project_complexity.qmd are a historical narrative, not these levels.</li>
 <li>A ProjectFlow project’s root is the directory holding its <code>run_&lt;project&gt;.py</code> entry file (ProjectFlow auto-detects this as <code>script_dir</code>; <code>input_template/</code> lives beside the run file). There is no separate markerfile.</li>
 <li><strong>Bare <code>hb.ProjectFlow()</code> is git-aware and never writes inside a repo.</strong> With no <code>project_dir</code> argument, the default is the script’s parent dir — unless the script lives inside a git repo, in which case ProjectFlow walks up to the repo root, steps one level above it, and uses <code>&lt;repo_parent&gt;/projects/&lt;name&gt;</code> (<code>&lt;name&gt;</code> = the run file’s stem minus any <code>run_</code> prefix), logging the choice. For a repo in the standard devstack layout (<code>~/Files/&lt;stack&gt;/&lt;repo&gt;</code>) this reproduces the house convention (<code>~/Files/&lt;stack&gt;/projects/&lt;name&gt;</code>) without the run file spelling it out. An explicit <code>project_dir</code> or <code>project_name</code> always overrides. Construction only <em>resolves</em> the paths — the dirs are created (and <code>input_template/</code> seeded) on the first call that needs them, so a bare constructor that is later re-pointed leaves no orphan project dir behind.</li>
 <li><strong><code>run_&lt;project&gt;.py</code> is the single entry point, and <code>run_project</code> takes only <code>p</code>.</strong> The canonical shape is four parts:
-<ul class="incremental">
+<ul>
 <li>a module-level <code>build_task_tree(p)</code> — named exactly that in every run file — containing nothing but <code>add_task</code> calls. Always build the FULL tree; variants disable tasks, they never omit them, so the tree’s structure (parents, dirs, iterators) is identical across every variant of a project.</li>
 <li><code>run_project(p)</code>, which reads its configuration off the <code>p</code> the caller handed it, calls <code>build_task_tree(p)</code> then <code>p.skip_tasks(p.tasks_to_skip)</code>, ends in <code>p.execute()</code> (unconditional — there is no <code>execute</code> flag; calling <code>run_project</code> means running the project) and <code>return p</code>. The ProjectFlow constructor initializes <code>tasks_to_skip</code> to <code>None</code>, so a run that sets nothing skips nothing and no guard is needed.</li>
 <li>an <code>if __name__ == '__main__':</code> guard that <strong>builds and configures the ProjectFlow</strong> — <code>p = hb.ProjectFlow(project_name=..., run_mode=...)</code>, then the attributes this run varies — and calls <code>run_project(p)</code>. The guard is mandatory: run files must never execute on import.</li>
@@ -853,7 +853,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="slides-from-prose-_marked.qmd-and-revealjs" class="level2">
 <h2 class="anchored" data-anchor-id="slides-from-prose-_marked.qmd-and-revealjs">Slides from prose: <code>*_marked.qmd</code> and revealjs</h2>
 <p>Some pages double as <strong>slide decks</strong>. Rather than maintaining a prose page and a deck separately, we write one ordinary <code>.qmd</code> and generate the deck from it.</p>
-<ul class="incremental">
+<ul>
 <li><p><strong><code>&lt;page&gt;.qmd</code> is the source and the only file you edit.</strong> It is plain prose with <code>#</code>/<code>##</code> headings, and renders normally as a website page.</p></li>
 <li><p><strong><code>&lt;page&gt;_marked.qmd</code> is GENERATED. Never edit it by hand</strong> — your edits are destroyed the next time the deck is built. The <code>_marked</code> suffix means exactly this: “auto-generated slide version of the file with the same stem.” Regenerate it after any change to the source.</p></li>
 <li><p>Generation is two hazelbean calls, usually wrapped in a small script (see <code>website_dev/scripts/create_seals_walkthrough_slides.py</code>):</p>
@@ -894,7 +894,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="external_repos-is-out-of-scope" class="level2">
 <h2 class="anchored" data-anchor-id="external_repos-is-out-of-scope"><code>external_repos/</code> is out of scope</h2>
 <p>A directory named <code>external_repos/</code> holds checkouts that are <em>not ours to change</em>: someone else’s repository, a second clone of one of ours pinned to a collaborator’s branch, or a vendored dependency. <strong>Never edit anything under an <code>external_repos/</code> directory</strong>, and exclude it from every stack-wide sweep — renames, convention refactors, link fixes, grep-and-replace of any kind.</p>
-<ul class="incremental">
+<ul>
 <li>A hit inside <code>external_repos/</code> is not a finding. Do not report it as work remaining, and do not “fix” it for consistency with the canonical copy.</li>
 <li>If a file there genuinely needs to change, the change belongs upstream in the repo that owns it, applied through that repo’s own workflow.</li>
 <li>When a path appears in both a canonical repo and <code>external_repos/</code>, the canonical repo is the one to edit. The duplicate is a mirror, and editing it creates spurious diffs on whatever branch it happens to be sitting on.</li>
@@ -903,7 +903,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="git-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="git-workflow">Git workflow</h2>
 <p>We use <strong>Git Flow</strong> (a <code>main</code> branch plus a <code>develop</code> branch):</p>
-<ul class="incremental">
+<ul>
 <li><code>main</code> holds working releases only.</li>
 <li><code>develop</code> is the integration branch. Branch features off <code>develop</code> as <code>feature_&lt;name&gt;</code> (or <code>develop_&lt;yourname&gt;</code>).</li>
 <li>Open pull requests <strong>into <code>develop</code></strong>, not <code>main</code>. <code>develop</code> is protected — only work that passes unit tests is merged. Releases are promoted from <code>develop</code> to <code>main</code> via pull request.</li>

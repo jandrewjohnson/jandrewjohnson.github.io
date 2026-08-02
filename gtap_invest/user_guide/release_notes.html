@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -225,11 +225,11 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#release-notes" id="toc-release-notes" class="nav-link active" data-scroll-target="#release-notes">Release Notes</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.7.0</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#added-method-to-modify-a-specific-variable-for-a-specific-country" id="toc-added-method-to-modify-a-specific-variable-for-a-specific-country" class="nav-link" data-scroll-target="#added-method-to-modify-a-specific-variable-for-a-specific-country">Added method to modify a specific variable for a specific country</a></li>
   </ul></li>
   </ul></li>
@@ -246,17 +246,17 @@ ul.task-list li input[type="checkbox"] {
 <h1>Release Notes</h1>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section">0.7.0</h2>
-<ul class="incremental">
+<ul>
 <li>Unzipped gtapv7-aez-rd_26Mar24.zip to <code>&lt;user_dir&gt;/Files/base_data/gtappy/cge_releases/gtapv7_aez_rd</code></li>
 <li>Considering changing hyphens to underscores in the file names
-<ul class="incremental">
+<ul>
 <li>REJECTED to follow the gtap model naming convention, so we are staying with gtapv7-aez-rd but everything else is underscore</li>
 </ul></li>
 <li>REQUIRES manually adding a new dir “out” in the “gtapv7_aez_rd” dir</li>
 <li>The first run did not find results.map, so I copied this manually from the last release into /mod dir</li>
 <li>Added a _just_mapping.bat file to run the mapping only but this required configuring the directory to not include cd ..</li>
 <li>There are now two time-modes for running:
-<ul class="incremental">
+<ul>
 <li><p>RD and Singleshot</p></li>
 <li><p>One can’t simply run the singleshot because then it will get the 2049-2050 percentage change for GDP POP etc.</p></li>
 <li><p>So, we prepared an additional set of projections that are not recursive. These are prepended with D.</p>
@@ -273,11 +273,11 @@ set LAB=LAB2</code></pre></li>
 </ul>
 <section id="added-method-to-modify-a-specific-variable-for-a-specific-country" class="level3">
 <h3 class="anchored" data-anchor-id="added-method-to-modify-a-specific-variable-for-a-specific-country">Added method to modify a specific variable for a specific country</h3>
-<ul class="incremental">
+<ul>
 <li>CMF files cannot change any values at run time, so instead we are going to create a new harfile with the new values
-<ul class="incremental">
+<ul>
 <li>To do this in ViewHAR with the example of MAXL, right click on MAXL and select “Clone”.
-<ul class="incremental">
+<ul>
 <li>It’s hard to edit in viewhar, so copy to clipboard, then excel, then edit the values, then paste back in for the modified har.</li>
 <li>In the CMF file, then call</li>
 </ul></li>

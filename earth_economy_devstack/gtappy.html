@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -442,9 +442,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#gtappy" id="toc-gtappy" class="nav-link active" data-scroll-target="#gtappy">GTAPpy</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#how-a-gtappy-run-works" id="toc-how-a-gtappy-run-works" class="nav-link" data-scroll-target="#how-a-gtappy-run-works">How a GTAPpy run works</a></li>
   <li><a href="#iterating-over-multiple-aggregations" id="toc-iterating-over-multiple-aggregations" class="nav-link" data-scroll-target="#iterating-over-multiple-aggregations">Iterating over multiple aggregations</a></li>
   <li><a href="#where-to-go-next" id="toc-where-to-go-next" class="nav-link" data-scroll-target="#where-to-go-next">Where to go next</a></li>
@@ -462,7 +462,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>GTAPpy</h1>
 <p>GTAPpy is the Python package that drives the <a href="https://www.gtap.agecon.purdue.edu/">Global Trade Analysis Project</a> (GTAP) computable general equilibrium model from a run file instead of from a GUI. GTAP itself is written in TABLO and solved by <a href="https://www.copsmodels.com/gempack.htm">GEMPACK</a>; the usual way to run it is by clicking through RunGTAP one experiment at a time. That does not scale to the kind of work the devstack does, where a single study sweeps many scenarios across several database aggregations and each run has to be reproducible from a script.</p>
 <p>GTAPpy sits on top of the GEMPACK executables and supplies the parts around them:</p>
-<ul class="incremental">
+<ul>
 <li><strong>A ProjectFlow task tree.</strong> Directory layout, skip-if-already-computed re-runs, automatic base-data download, and parallel iteration all come from <a href="../earth_economy_devstack/project_flow.html">ProjectFlow</a> in <a href="../earth_economy_devstack/hazelbean_overview.html">Hazelbean</a>, the same engine SEALS and GTAP-InVEST use.</li>
 <li><strong>CMF generation.</strong> GEMPACK is configured by a command file (<code>.cmf</code>) per experiment. GTAPpy writes those files from Python, so sets, subsets, shocks and closure swaps are defined once in code rather than typed into a dialog.</li>
 <li><strong>Parallel execution across aggregations and experiments.</strong> The same shock can be run against a 10×10 aggregation and a fully disaggregated 141×65 one in the same job.</li>

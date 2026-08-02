@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,9 +477,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#project-flow" id="toc-project-flow" class="nav-link active" data-scroll-target="#project-flow">Project Flow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#starter-code-the-before-picture" id="toc-starter-code-the-before-picture" class="nav-link" data-scroll-target="#starter-code-the-before-picture">Starter code (the before-picture)</a></li>
   <li><a href="#what-is-the-projectflow-and-the-task-tree" id="toc-what-is-the-projectflow-and-the-task-tree" class="nav-link" data-scroll-target="#what-is-the-projectflow-and-the-task-tree">What is the ProjectFlow and the Task Tree?</a></li>
   <li><a href="#step-1-substitute-in-a-few-pre-built-hazelbean-functions" id="toc-step-1-substitute-in-a-few-pre-built-hazelbean-functions" class="nav-link" data-scroll-target="#step-1-substitute-in-a-few-pre-built-hazelbean-functions">Step 1: Substitute in a few pre-built Hazelbean functions</a></li>
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#task-format" id="toc-task-format" class="nav-link" data-scroll-target="#task-format">Task Format</a></li>
   <li><a href="#automatic-directory-organization-via-tasks" id="toc-automatic-directory-organization-via-tasks" class="nav-link" data-scroll-target="#automatic-directory-organization-via-tasks">Automatic Directory Organization via Tasks</a></li>
   <li><a href="#validation-of-files" id="toc-validation-of-files" class="nav-link" data-scroll-target="#validation-of-files">Validation of files</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#eliminating-redundant-calculation-across-projects" id="toc-eliminating-redundant-calculation-across-projects" class="nav-link" data-scroll-target="#eliminating-redundant-calculation-across-projects">Eliminating redundant calculation across projects</a></li>
   <li><a href="#python-tips-and-conventions" id="toc-python-tips-and-conventions" class="nav-link" data-scroll-target="#python-tips-and-conventions">Python Tips and Conventions</a></li>
   <li><a href="#common-example-of-promoting-one-project-level-output-to-the-base_data" id="toc-common-example-of-promoting-one-project-level-output-to-the-base_data" class="nav-link" data-scroll-target="#common-example-of-promoting-one-project-level-output-to-the-base_data">Common example of promoting one project-level output to the base_data</a></li>
@@ -774,7 +774,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     ├── econ_time_series
     └── econ_lcovercom</code></pre>
 <p>Two notations are especially useful within this task tree.</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Within the function that defines a task, p.cur_dir points to the directory of that task. So for instance, the last task defined in the image above, in its code, you could reference p.cur_dir, and it would point to <code>&lt;project_root&gt;/econ_visualization/econ_lcovercom</code></li>
 <li>Outside of a given function’s code, you can still refer to paths that were defined from within the functions code, but now (because you are outside the function) it is given a new reference. Using the example above, you could reference the same directory with <code>p.econ_lcovercom_dir</code> where the p attribute is named exactly as &lt;function_name&gt;_dir</li>
 </ol>

@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,11 +477,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#contributing-code-to-the-earth-economy-devstack" id="toc-contributing-code-to-the-earth-economy-devstack" class="nav-link active" data-scroll-target="#contributing-code-to-the-earth-economy-devstack">Contributing code to the Earth Economy Devstack</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#contributing-via-branches-internal" id="toc-contributing-via-branches-internal" class="nav-link" data-scroll-target="#contributing-via-branches-internal">1. Contributing via Branches (internal)</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#command-line-contribution" id="toc-command-line-contribution" class="nav-link" data-scroll-target="#command-line-contribution">Command line contribution</a></li>
   <li><a href="#vs-code-gitgraph-based-contribution" id="toc-vs-code-gitgraph-based-contribution" class="nav-link" data-scroll-target="#vs-code-gitgraph-based-contribution">VS Code GitGraph based contribution</a></li>
   </ul></li>
@@ -489,7 +489,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#pull-requests" id="toc-pull-requests" class="nav-link" data-scroll-target="#pull-requests">Pull Requests</a></li>
   <li><a href="#contributing-to-devstacks-base-data" id="toc-contributing-to-devstacks-base-data" class="nav-link" data-scroll-target="#contributing-to-devstacks-base-data">Contributing to Devstack’s Base Data</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#option-1-contributing-input-data" id="toc-option-1-contributing-input-data" class="nav-link" data-scroll-target="#option-1-contributing-input-data">Option 1: Contributing Input data</a></li>
   <li><a href="#option-2-contributing-outputs-of-your-model" id="toc-option-2-contributing-outputs-of-your-model" class="nav-link" data-scroll-target="#option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</a></li>
   </ul></li>
@@ -506,7 +506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Contributing code to the Earth Economy Devstack</h1>
 <p>The Earth Economy Devstack and all of its published article code is available as open source software at GitHub, which not only allows users to download and run the code but also to develop it collaboratively. GitHub is based on the free and open source distributed version control system <strong>git</strong> (<a href="https://git-scm.com/)." class="uri">https://git-scm.com/).</a> <strong>git</strong> allows users to track changes in code development, to work on different code branches and to revert changes to previous code versions, if necessary. Workflows using the version control system <strong>git</strong> can vary and there generally is no ‘right’ or ‘wrong’ in collaborative software development. We also create and host a curated base_data. This data can be seamlessly downloaded using ProjectFlow within the devstack via the <code>get_path()</code> method. See the last section of this page for details on contributing data.</p>
 <p>There are two different ways to interact with a github repository:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p>Branching for internal collaborators. Needs to be a member of the NatCapTEEMs github organization. We use <strong>Git Flow</strong> (a <code>main</code> branch for releases plus a <code>develop</code> integration branch), documented below.</p></li>
 <li><p>Forking with pull requests. Works for external collaborators. Anyone can do it!</p></li>
 </ol>
@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Internal TEEMs members have push access to our repos. The repos themselves are already public, but unless you’re on the team, you can only push changes to your GitHub User Account repo (not the main repo). Below we describe the standard command-line method for contributing in this way and then summarize how to do it in VS Code with a UI via GitGraph.</p>
 <section id="command-line-contribution" class="level3">
 <h3 class="anchored" data-anchor-id="command-line-contribution">Command line contribution</h3>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Clone main repo. <code>git clone https://github.com/NatCapTEEMs/global_invest_dev</code></li>
 <li>Create feature branch: <code>git checkout -b feature/my-change</code></li>
 <li>Make changes, commit, push branch to main repo</li>
@@ -575,21 +575,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="contributing-via-forking-external">2. Contributing via Forking (external)</h2>
 <p>Using SEALS as an example, this section walks through how a new user could contribute a modification via a fork and pull request.</p>
 <p><img src="images/git_workflow.png" class="img-fluid"></p>
-<p>Before developing the code it is recommended to create a <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">fork</a> of the original SEALS repository. This will create a new code repository at your own GitHub profile, which includes the same code base and visibility settings as the original ‘upstream’ repository. The fork can now be used for</p>
-<ol class="incremental" type="1">
+<p>Before developing the code it is recommended to create a <a href="https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo">fork</a> of the original SEALS repository. This will create a new code repository at your own GitHub profile, which includes the same code base and visibility settings as the original ‘upstream’ repository. The fork can now be used for</p>
+<ol type="1">
 <li>code development or fixes</li>
 <li>submitting a pull request to the original SEALS repository.</li>
 </ol>
 <section id="clone-fork-to-your-local-machine" class="level4">
 <h4 class="anchored" data-anchor-id="clone-fork-to-your-local-machine">1. Clone fork to your local machine</h4>
-<p>Although GitHub allows for some basic code changes, it is recommended to <a href="https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository">clone</a> the forked repository at your local machine and do code developments using an integrated development environment (IDE), such as <a href="https://code.visualstudio.com/">VS Code</a>. The figure below illustrates the relationship of the original repo, your own user repo (made by forking) and then the local set of files cloned onto your machine.</p>
+<p>Although GitHub allows for some basic code changes, it is recommended to <a href="https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo">clone</a> the forked repository at your local machine and do code developments using an integrated development environment (IDE), such as <a href="https://code.visualstudio.com/">VS Code</a>. The figure below illustrates the relationship of the original repo, your own user repo (made by forking) and then the local set of files cloned onto your machine.</p>
 <p><img src="images/paste-68.png" class="img-fluid"></p>
 <p>To clone the repository on your local machine via the command line, navigate to the local folder, in which you want to clone the repository, and type</p>
 <pre><code>git clone -b &lt;name-of-branch&gt;` &lt;url-to-github-repo&gt; &lt;name-of-local-clone-folder&gt;</code></pre>
 <p>For example, if you want to clone the develop branch of your SEALS fork type</p>
 <pre><code>git clone -b develop https://github.com/&lt;username&gt;/seals seals_develop</code></pre>
 <p>Before making any changes, make sure that your fork and/or your local repository are up-to-date with the original SEALS repository. To pull changes from your fork use <code>git pull origin &lt;name-of-branch&gt;</code>. In order to pull the latest changes from the original SEALS repository you can set up a link to the original upstream repository with the command <code>git remote add upstream https://github.com/jandrewjohnson/seals</code>. To pull the latest changes from the develop branch in the original upstream repository use <code>git pull upstream develop</code>.</p>
-<p>During code development, any changes or fixes that should go back to the fork and/or the original SEALS repository need to be <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘staged’</a> and then <a href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes">‘commited’</a> with a commit message that succinctly describes the changes. By staging changes, <strong>git</strong> is informed that these changes should become part of the next ‘commit’, which essentially takes a snapshot of all staged changes thus far.</p>
+<p>During code development, any changes or fixes that should go back to the fork and/or the original SEALS repository need to be <a href="https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project">‘staged’</a> and then <a href="https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project">‘commited’</a> with a commit message that succinctly describes the changes. By staging changes, <strong>git</strong> is informed that these changes should become part of the next ‘commit’, which essentially takes a snapshot of all staged changes thus far.</p>
 <p>To stage all changes in the current repository use the command <code>git add .</code>. If you only want to stage changes in a certain file use <code>git add &lt;(relative)-path-to-file-in-repo&gt;</code>.</p>
 <p>To commit all staged changes use the command <code>git commit -m "a short description of the code changes"</code>.</p>
 <p>After committing the changes, they can be pushed to your fork by using <code>git push origin &lt;name-of-branch&gt;</code>, illustrated in the bottom two rows of the figure below. Eventually, your code can be incorporated back into the upstream repository via pull requests, discussed below.</p>
@@ -605,7 +605,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Fetch the branches and their respective commits from the <code>upstream</code> repository. Commits to <code>main</code> will be stored in the local branch <code>upstream/main</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>3. Merge (or Rebase) the Changes</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p>Switch to your local <code>main</code> branch (or the branch you want to update).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Merge the changes from <code>upstream/main</code> into your local <code>main</code> branch.</p>
@@ -628,7 +628,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="pull-requests" class="level1">
 <h1>Pull Requests</h1>
 <p>Regardless of if your contributing via branches or teams, we will use Pull Requests to incorporate your changes into the main branch.</p>
-<p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specified. Pull requests should be reviewed by at least one of the main code developers.</p>
+<p>In order to propose changes to the original SEALS repository, it is recommended to use <a href="https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request-from-a-fork">pull requests</a>. Pull requests inform other users about your code changes and allow them to review these changes by comparing and highlighting the parts of the code that have have been altered. They also highlight potential <a href="https://docs.github.com/en/pull-requests/reference/merge-conflicts">merge conflicts</a>, which occur when git is trying to merge branches with competing commits within the same parts of the code. Pull requests can be done directly at GitHub by navigating to either the forked repository or the original SEALS repository and by clicking on ‘Pull requests’ and then ‘New pull request’. This will open a new pull request page where changes can be described in more detail and code reviewers can be specified. Pull requests should be reviewed by at least one of the main code developers.</p>
 <p>Here is an example where you think some functions in <code>seals_process_coarse_timeseries.py</code> within the <code>seals</code> project should be removed and relocated to a project-specific repository, rather than remaining in the core <code>seals</code> repository. In your <strong>forked</strong> <code>seals</code> repository:</p>
 <p><img src="images/pull_request_example_step1.png" class="img-fluid"></p>
 <p>This example shows that you have made changes in <code>seals_process_coarse_timeseries.py</code>. You need to “Stage Changes” (as indicated by the red circle) and “Commit Changes” before you can create a pull request.</p>
@@ -668,7 +668,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="option-2-contributing-outputs-of-your-model" class="level3">
 <h3 class="anchored" data-anchor-id="option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</h3>
 <p>In more advanced circumstances, or in large lab projects, you may want <strong>outputs</strong> rather than inputs as described above brought into the base_data. The best example of this would be the GEP project where eventually, even the extremely large filesize outputs will be hosted in a consistent and accessible manner. Follow these steps to do this.</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Ensure you are using ProjectFlow, which will create a set of directories to use for intermediate and final outputs based on your TaskTree.</li>
 <li>As a final task in your TaskTree, include a <code>p.distribute_outputs_task</code> that simply copies and pastes your key outputs, as defined in the ProjectFlow outputs typology in the proper subdirectory of your ProjectFlow output_dir.</li>
 <li>The results of this task must also be copied, along with a zip archive of the contents of the distribute_outputs_task verbatim, to the outputs directory with a structure defined in the project outputs typology.</li>

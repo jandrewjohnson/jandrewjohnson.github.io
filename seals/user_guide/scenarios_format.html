@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -365,11 +365,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#scenario-iteration" id="toc-scenario-iteration" class="nav-link active" data-scroll-target="#scenario-iteration">Scenario Iteration</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#column-reference" id="toc-column-reference" class="nav-link" data-scroll-target="#column-reference">Column reference</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#a-note-on-scenario_type" id="toc-a-note-on-scenario_type" class="nav-link" data-scroll-target="#a-note-on-scenario_type">A note on <code>scenario_type</code></a></li>
   </ul></li>
   <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
@@ -386,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="scenario-iteration" class="level1">
 <h1>Scenario Iteration</h1>
-<p>The scenarios CSV defines your SEALS scenarios. Each row is one scenario. The tracked copies that ship with SEALS are <a href="../seals/input_template/standard_scenarios.csv"><code>seals/input_template/standard_scenarios.csv</code></a> (three scenarios) and <code>standard_scenarios_test.csv</code> (a pared two-row version); this page documents their columns.</p>
+<p>The scenarios CSV defines your SEALS scenarios. Each row is one scenario. The tracked copies that ship with SEALS are <a href="https://github.com/jandrewjohnson/seals/blob/main/seals/input_template/standard_scenarios.csv"><code>seals/input_template/standard_scenarios.csv</code></a> (three scenarios) and <code>standard_scenarios_test.csv</code> (a pared two-row version); this page documents their columns.</p>
 <blockquote class="blockquote">
 <p><strong>This is the v1 schema — the one the code reads today.</strong> A <strong>v2 schema</strong> is specified in <a href="https://justinandrewjohnson.com/earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a> and no code implements it yet. v2 fixes several structural problems in v1: it replaces <code>baseline_reference_label</code> / <code>comparison_counterfactual_labels</code> / per-model time columns with a <code>observed_reference_label</code> / <code>compared_to</code> / <code>depends_on</code> split and a single canonical clock, and it allows hindcasting. Write v1 for now; expect a migration when the hazelbean parser lands.</p>
 </blockquote>
@@ -548,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="a-note-on-scenario_type" class="level3">
 <h3 class="anchored" data-anchor-id="a-note-on-scenario_type">A note on <code>scenario_type</code></h3>
 <p>Three values appear in current files:</p>
-<ul class="incremental">
+<ul>
 <li><code>baseline</code> — the observed anchor. Not downscaled; it supplies base-year LULC and calibration inputs.</li>
 <li><code>bau</code> — a business-as-usual trajectory. <strong>Deprecated in favour of <code>baseline</code>.</strong> The migration is in progress and unevenly applied, so <code>bau</code> still appears in shipped CSVs and is still read by the code. Do not rely on it for new work, but do not be surprised to see it.</li>
 <li><code>policy</code> — a policy trajectory, downscaled and typically compared against a BAU row via <code>comparison_counterfactual_labels</code>.</li>

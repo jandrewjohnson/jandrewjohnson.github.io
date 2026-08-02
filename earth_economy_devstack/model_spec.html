@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,10 +477,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#the-three-layers" id="toc-the-three-layers" class="nav-link active" data-scroll-target="#the-three-layers">The three layers</a></li>
   <li><a href="#what-a-model-spec-is" id="toc-what-a-model-spec-is" class="nav-link" data-scroll-target="#what-a-model-spec-is">What a model spec is</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#fields" id="toc-fields" class="nav-link" data-scroll-target="#fields">Fields</a></li>
   <li><a href="#typed-inputs-replacing-suffix-typing-for-known-columns" id="toc-typed-inputs-replacing-suffix-typing-for-known-columns" class="nav-link" data-scroll-target="#typed-inputs-replacing-suffix-typing-for-known-columns">Typed inputs (replacing suffix typing for known columns)</a></li>
   <li><a href="#typed-outputs-the-cross-stage-exchange-registry" id="toc-typed-outputs-the-cross-stage-exchange-registry" class="nav-link" data-scroll-target="#typed-outputs-the-cross-stage-exchange-registry">Typed outputs (the cross-stage exchange registry)</a></li>
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-iteration-spec-how-a-model-becomes-iterator-levels" id="toc-the-iteration-spec-how-a-model-becomes-iterator-levels" class="nav-link" data-scroll-target="#the-iteration-spec-how-a-model-becomes-iterator-levels">The iteration spec — how a model becomes iterator levels</a></li>
   </ul></li>
   <li><a href="#how-the-task-tree-is-built-from-specs" id="toc-how-the-task-tree-is-built-from-specs" class="nav-link" data-scroll-target="#how-the-task-tree-is-built-from-specs">How the task tree is built from specs</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#case-1-one-way-couplingpipeline-gtap-annual-to-2050-then-seals-every-5-years" id="toc-case-1-one-way-couplingpipeline-gtap-annual-to-2050-then-seals-every-5-years" class="nav-link" data-scroll-target="#case-1-one-way-couplingpipeline-gtap-annual-to-2050-then-seals-every-5-years">Case 1 — one-way (<code>coupling='pipeline'</code>): GTAP annual to 2050, then SEALS every 5 years</a></li>
   <li><a href="#case-2-coupled-feedback-couplingcoupled-gtap-5-yrs-sealsinvest-make-shocks-back-to-gtap" id="toc-case-2-coupled-feedback-couplingcoupled-gtap-5-yrs-sealsinvest-make-shocks-back-to-gtap" class="nav-link" data-scroll-target="#case-2-coupled-feedback-couplingcoupled-gtap-5-yrs-sealsinvest-make-shocks-back-to-gtap">Case 2 — coupled feedback (<code>coupling='coupled'</code>): GTAP 5 yrs → SEALS+InVEST make shocks → back to GTAP</a></li>
   </ul></li>
@@ -585,7 +585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="typed-inputs-replacing-suffix-typing-for-known-columns" class="level3">
 <h3 class="anchored" data-anchor-id="typed-inputs-replacing-suffix-typing-for-known-columns">Typed inputs (replacing suffix typing for known columns)</h3>
 <p>v2’s suffix rules (<code>*_path</code>, <code>*_years</code>) stay as the fallback for <em>unknown</em> columns — the extensibility valve. But a model’s <em>known</em> columns are declared with types, which is strictly better: it removes the reason the v1 <code>calibration_parameters_source</code> had to be renamed to <code>_path</code> just so the suffix rule could see it. The type hierarchy is small and domain-specific (the InVEST hierarchy adapted — we need years and correspondences, not pint units):</p>
-<ul class="incremental">
+<ul>
 <li><code>PathInput(required, must_exist, templatable)</code> — resolves through <code>get_path()</code>; <code>must_exist</code> may be deferred (see Deferred inputs).</li>
 <li><code>YearInput</code> — a single int (a base year). Always scalar; the v1 <code>key_base_year</code> scalar/list asymmetry is gone.</li>
 <li><code>YearListInput</code> — a space-delimited int list (<code>years</code>, <code>observed_years</code>).</li>
@@ -659,7 +659,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     ├── gtap_segment   (child 1)      (gtap_year sub-iterator: the 5 annual steps to this canonical year; sets p.year)
     ├── seals          (child 2)      (downscales this canonical year; + allocation_zones parallel)
     └── invest_es      (child 3)      (scores ES; writes next segment's shock har)</code></pre>
-<ul class="incremental">
+<ul>
 <li><strong>The barrier is the outer iteration boundary</strong> — <code>canonical_year</code> cannot advance to 2030 until all three children of the 2025 iteration finish. Free from the existing engine (children run to completion within an iteration).</li>
 <li><strong>The feedback is execution order + a file on disk</strong> — <code>invest_es</code> writes the shock har during the 2025 iteration; <code>gtap_segment</code> reads it during the 2030 iteration because children run in tree order (the non-parallel path is literally <code>for child in task.children: run_task(child)</code>). No new cross-scenario <code>depends_on</code> granularity is needed, because the coupling is <em>within</em> one scenario’s iterator subtree.</li>
 <li><strong>Feedback flows through disk, never through <code>p</code></strong> — the engine’s own comment warns that parallel <code>project_copy</code> mutations “can’t be rejoined.” The shock har is the handoff, which is already how these models communicate. Consequently the coupled inner levels are serial; only the scenario level parallelizes.</li>
@@ -670,7 +670,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="clock-resolution-harmonization-deferred-validation" class="level2">
 <h2 class="anchored" data-anchor-id="clock-resolution-harmonization-deferred-validation">Clock resolution, harmonization, deferred validation</h2>
 <p>These come from the companion doc, now anchored to the spec:</p>
-<ul class="incremental">
+<ul>
 <li><strong>Resolution</strong> — for each stage the builder computes <code>(base_year, years)</code> from its <code>ClockSpec</code> (canonical unless it declares <code>own</code>/<code>timestep</code>/<code>explicit</code>) and materializes <code>previous_years</code> per level. The iterator gets a flattened parallel <code>previous_year</code> list built from that dict — exactly what <code>seals_main</code> already assembles by hand.</li>
 <li><strong>Harmonization</strong> — all cross-clock resampling goes through one utility, <code>hb.resample_years(values_by_year, target_years, method, extrapolation)</code>, semantics-aware: levels interpolate, rates <code>compound</code> (geometric root to split, product to aggregate), differences scale. This replaces the three duplicated interpolation blocks in <code>gtappy_tasks.py</code>, the hardcoded decadal BtC interpolation, and the silent year-skip in <code>extract_global_netcdf</code>.</li>
 <li><strong>Load-time validation</strong> — the spec makes coverage checkable: every canonical year must be obtainable from every registered model under its declared policy, and every resolved stage year from its declared exogenous sources. A gap is a named load-time error, not a mid-run KeyError or a frozen GEMPACK solve.</li>
@@ -683,7 +683,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Reuse (exists today):</strong> the iterator engine, nested iterators (proven at depth 2), <code>iterator_replacements</code>, per-iteration <code>project_copy</code> freezing, serial-vs-parallel per level, the <code>assign_to_object</code> value parser, and <code>initialize_definitions_csv</code>.</p>
 <p><strong>New, but pure data (no engine changes):</strong> the <code>ModelSpec</code>/<code>ClockSpec</code>/ <code>IterationSpec</code> dataclasses; the registry (<code>p.register_model</code>); clock resolution and <code>previous_years</code> materialization; the coverage validator.</p>
 <p><strong>New engine-adjacent work, to prototype and test:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><code>p.build_stage_tree(coupling)</code> — the generic builder that nests specs into iterators. The depth-3–4 nesting is an extension of a working depth-2 pattern, but must be tested: attribute-name collisions across levels, and the global <code>iterator_replacements</code> rebuilt correctly at each level.</li>
 <li><code>hb.resample_years</code> — hazelbean has spatial interpolation only; this temporal, semantics-aware utility is genuinely new.</li>
 <li>Deferred <code>must_exist</code> validation — checking a templated input at producer-completion instead of at load.</li>

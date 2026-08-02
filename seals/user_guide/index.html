@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -330,9 +330,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#how-to-read-this-guide" id="toc-how-to-read-this-guide" class="nav-link" data-scroll-target="#how-to-read-this-guide">How to read this guide</a></li>
   <li><a href="#where-seals-ends-and-the-platform-begins" id="toc-where-seals-ends-and-the-platform-begins" class="nav-link" data-scroll-target="#where-seals-ends-and-the-platform-begins">Where SEALS ends and the platform begins</a></li>
   <li><a href="#status-and-citation" id="toc-status-and-citation" class="nav-link" data-scroll-target="#status-and-citation">Status and citation</a></li>
@@ -380,7 +380,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="how-to-read-this-guide" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-read-this-guide">How to read this guide</h2>
 <p>Start at <a href="../../seals/user_guide/environment_setup.html">Installation</a> and <a href="../../seals/user_guide/quickstart.html">Quickstart</a> — together they take you from nothing to a downscaled map. Then:</p>
-<ul class="incremental">
+<ul>
 <li><strong><a href="../../seals/user_guide/walkthrough.html">Walkthrough</a></strong> — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.</li>
 <li><strong><a href="../../seals/user_guide/scenarios_format.html">Scenario iteration</a></strong> — the column reference for the scenarios CSV that defines what SEALS runs.</li>
 <li><strong><a href="../../seals/user_guide/magpie.html">MAgPIE</a></strong> and the <strong><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></strong> — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.</li>
@@ -391,11 +391,11 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="where-seals-ends-and-the-platform-begins">Where SEALS ends and the platform begins</h2>
 <p>SEALS is a model. The machinery that runs it — project directories, task trees, skip-if-already-computed re-runs, automatic base-data download — is <strong>ProjectFlow</strong>, which lives in hazelbean and is shared across all three products. This guide covers SEALS and says only as much about ProjectFlow as you need to run it.</p>
 <p>For the platform itself, see the Earth-Economy Devstack documentation:</p>
-<ul class="incremental">
+<ul>
 <li><a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">Conventions</a> — the run-file spec, naming rules, and directory layout</li>
 <li><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_complexity.html">Project complexity</a> — the three axes that describe how a run file is organized, and why</li>
 <li><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_flow.html">ProjectFlow</a> — the task-tree engine</li>
-<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">Installation</a> — devstack-wide install options, including the developer install</li>
+<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">Installation</a> — devstack-wide install options, for editing more of the stack than SEALS</li>
 </ul>
 </section>
 <section id="status-and-citation" class="level2">

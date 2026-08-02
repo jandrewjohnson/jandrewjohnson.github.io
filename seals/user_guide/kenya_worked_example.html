@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -190,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -367,32 +367,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#seals-repository-installation" id="toc-seals-repository-installation" class="nav-link" data-scroll-target="#seals-repository-installation">SEALS Repository Installation</a></li>
   </ul></li>
   <li><a href="#data-setup" id="toc-data-setup" class="nav-link" data-scroll-target="#data-setup">Data Setup</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#file-organization-structure" id="toc-file-organization-structure" class="nav-link" data-scroll-target="#file-organization-structure">File Organization Structure</a></li>
   </ul></li>
   <li><a href="#testing-seals" id="toc-testing-seals" class="nav-link" data-scroll-target="#testing-seals">Testing SEALS</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#standard-test-run" id="toc-standard-test-run" class="nav-link" data-scroll-target="#standard-test-run">Standard Test Run</a></li>
   <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues">Common Issues</a></li>
   </ul></li>
   <li><a href="#kenya-demetra-scenario" id="toc-kenya-demetra-scenario" class="nav-link" data-scroll-target="#kenya-demetra-scenario">Kenya DEMETRA Scenario</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#key-input-files" id="toc-key-input-files" class="nav-link" data-scroll-target="#key-input-files">Key Input Files</a></li>
   <li><a href="#running-the-kenya-scenario" id="toc-running-the-kenya-scenario" class="nav-link" data-scroll-target="#running-the-kenya-scenario">Running the Kenya Scenario</a></li>
   </ul></li>
   <li><a href="#understanding-the-task-tree" id="toc-understanding-the-task-tree" class="nav-link" data-scroll-target="#understanding-the-task-tree">Understanding the Task Tree</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#task-hierarchy" id="toc-task-hierarchy" class="nav-link" data-scroll-target="#task-hierarchy">Task Hierarchy</a></li>
   </ul></li>
   <li><a href="#task-by-task-walkthrough" id="toc-task-by-task-walkthrough" class="nav-link" data-scroll-target="#task-by-task-walkthrough">Task-by-Task Walkthrough</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#project-aoi-area-of-interest" id="toc-project-aoi-area-of-interest" class="nav-link" data-scroll-target="#project-aoi-area-of-interest">1. Project AOI (Area of Interest)</a></li>
   <li><a href="#fine-processed-inputs" id="toc-fine-processed-inputs" class="nav-link" data-scroll-target="#fine-processed-inputs">2. Fine Processed Inputs</a></li>
   <li><a href="#coarse-change" id="toc-coarse-change" class="nav-link" data-scroll-target="#coarse-change">3. Coarse Change</a></li>
@@ -471,7 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>For complete details, see Justin Johnson’s <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">installation guide</a>.</p>
+<p>The steps below are the SEALS install applied to this example. For the canonical version, see <a href="../../seals/user_guide/environment_setup.html">Installation</a>; for the devstack-wide options, see the <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">devstack installation guide</a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Before beginning, ensure you have:</p>
-<ul class="incremental">
+<ul>
 <li><strong>Git</strong> - <a href="https://git-scm.com/downloads">Download here</a></li>
 <li><strong>Miniforge3</strong> (Python distribution) - <a href="https://conda-forge.org/download/">Download here</a></li>
 </ul>
@@ -508,15 +508,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize conda (may not be needed depending on your shell configuration)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new environment (replace 'seals_env' with your preferred name)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> seals_env</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new environment (pick your own name in place of &lt;your_env&gt;)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span> python=3.10</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate the environment</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Hazelbean</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install hazelbean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Note:</strong> The <code>mamba install hazelbean</code> command may take 5-10 minutes to complete.</p>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install hazelbean and the geospatial stack from conda-forge</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install hazelbean cython libgdal-hdf5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Note:</strong> The <code>mamba install</code> command may take 5-10 minutes to complete.</p>
 </div>
 </div>
 </div>
@@ -536,7 +536,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Windows Users - Choose One Option:</strong></p>
-<ul class="incremental">
+<ul>
 <li><p><strong>Option 1:</strong> Download from <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Visual Studio Build Tools</a> and select “Download Build Tools”</p></li>
 <li><p><strong>Option 2:</strong> Use winget command:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">winget</span> install Microsoft.VisualStudio.2022.BuildTools <span class="at">--force</span> <span class="at">--override</span> <span class="st">"--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
@@ -580,7 +580,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate your conda environment</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Navigate to the cloned repository</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> C:/Users/<span class="op">&lt;</span>username<span class="op">&gt;</span>/Files/seals/seals</span>
@@ -619,7 +619,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="additional-country-data">Additional country data</h4>
 <pre><code>&lt;home&gt;/Files/seals/projects/run_ken_demetra/</code></pre>
 <p>This includes:</p>
-<ul class="incremental">
+<ul>
 <li>Region border files (shapefiles and raster GeoTIFFs)</li>
 <li>DEMETRA shock files (CSV)</li>
 <li>Downscaling coefficient files (CSV and global rasters)</li>
@@ -635,10 +635,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="standard-test-run">Standard Test Run</h3>
 <p>This basic test verifies your installation is working correctly.</p>
 <p><strong>Steps:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p>Locate <code>run_seals_standard.py</code> in <code>seals/seals/</code></p></li>
 <li><p>Ensure your conda environment is activated:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Run the script:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Check for output in:</p>
@@ -665,7 +665,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="key-input-files" class="level3">
 <h3 class="anchored" data-anchor-id="key-input-files">Key Input Files</h3>
 <p><strong>Scripts:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Main execution script: <code>run_ken_demetra.py</code></li>
 </ul>
 <p><strong>Data Files:</strong></p>
@@ -714,7 +714,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="running-the-kenya-scenario" class="level3">
 <h3 class="anchored" data-anchor-id="running-the-kenya-scenario">Running the Kenya Scenario</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate seals_env</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals/</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_ken_demetra.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
@@ -762,17 +762,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="project-aoi-area-of-interest">1. Project AOI (Area of Interest)</h3>
 <p><strong>Significance:</strong> Defines the geographic boundary for the analysis and creates resolution pyramids for efficient processing at multiple scales.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Loads the area of interest boundary for Kenya from the input shapefile</li>
 <li>Creates a vector geopackage (<code>.gpkg</code>) file for the AOI</li>
 <li>Generates raster “pyramids” at different resolutions:
-<ul class="incremental">
+<ul>
 <li>Fine resolution: Matches the base LULC data (typically 300m)</li>
 <li>Coarse resolution: Matches the coarse projection data (typically 0.25°)</li>
 </ul></li>
 </ol>
 <p><strong>Input files:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Region shapefile from <code>projects/run_ken_demetra/inputs/borders</code></li>
 </ul>
 <p><strong>Output files:</strong></p>
@@ -782,9 +782,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     ├── aoi_ha_per_cell_coarse.tif           # Coarse resolution (hectares per cell)
     └── aoi_ha_per_cell_fine.tif             # Fine resolution (hectares per cell)</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>The AOI defines the study region
-<ul class="incremental">
+<ul>
 <li>Can use default global country shapefile or project-specific</li>
 </ul></li>
 <li>Pyramids allow multi-scale analysis</li>
@@ -803,11 +803,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="fine-processed-inputs">2. Fine Processed Inputs</h3>
 <p><strong>Significance:</strong> Prepares the baseline land-use/land-cover (LULC) data for allocation by simplifying classifications, creating binary masks, and generating spatial convolutions.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Generated Kernels: Creates Gaussian kernels for spatial smoothing</li>
 <li>LULC Clip: Clips global LULC data to the Kenya AOI</li>
 <li>LULC Simplifications: Reclassifies detailed ESA categories into 7 SEALS classes:
-<ul class="incremental">
+<ul>
 <li>Cropland</li>
 <li>Forest</li>
 <li>Grassland</li>
@@ -837,7 +837,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 │           ├── convolution_esa_seals7_2020_cropland_gaussian_5.tif
 │           └── ...</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Simplification reduces complexity while preserving key land-use patterns</li>
 <li>Binary masks enable class-specific analysis</li>
 <li>Convolutions capture spatial context</li>
@@ -855,7 +855,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="coarse-change">3. Coarse Change</h3>
 <p><strong>Significance:</strong> Extracts and processes land-use change projections from global coarse-resolution models (e.g., LUH2) for the Kenya region.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Coarse Extraction: Clips global projection data to Kenya’s bounding box and selected year</li>
 <li>Coarse Simplified Proportion: Calculates proportions of each SEALS7 class</li>
 <li>Coarse Simplified Ha: Converts proportions to hectares</li>
@@ -868,7 +868,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     ├── forest_2050_2035_ha_diff_ssp2_rcp45_luh2-message_bau.tif
     └── ...</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Links exogenous global scenarios (SSP2, RCP4.5) to local allocation</li>
 <li>Tracks changes over time (2035 baseline → 2050 projection)</li>
 </ul>
@@ -884,7 +884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="regional-change">4. Regional Change</h3>
 <p><strong>Significance:</strong> Adjusts coarse-resolution changes using regional covariates to account for local constraints and opportunities.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Creates a region ID map dividing AOI into separately shocked zones</li>
 <li>Applies various algorithms (e.g., proportional, covariate sum shift) to downscale from regional to coarse</li>
 </ol>
@@ -894,7 +894,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 └── ssp2/rcp45/luh2-message/LP/2050/
     └── cropland_2050_2035_ha_diff_ssp2_rcp45_luh2-message_LP_covariate_sum_shift.tif</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Accounts for local factors (infrastructure, topography, current land use)</li>
 <li>Bridges the gap between coarse change and regional change</li>
 </ul>
@@ -910,10 +910,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="allocations">5. Allocations</h3>
 <p><strong>Significance:</strong> Performs the core SEALS allocation, distributing coarse-resolution changes to fine-resolution pixels based on suitability.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Divides Kenya into allocation zones (e.g., zone 213_84)</li>
 <li>For each zone, runs an allocation algorithm that:
-<ul class="incremental">
+<ul>
 <li>Considers spatial covariates (convolutions, distance, etc.)</li>
 <li>Respects constraints (protected areas, water bodies)</li>
 <li>Tracks cumulative change</li>
@@ -927,7 +927,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     ├── cumulative_change_happened.tif            # Tracking allocated changes
     └── lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2050.tif  # New LULC</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>This is the core of SEALS, where changes actually get placed on the landscape</li>
 <li>Allocation uses machine learning and optimization to find the “best” locations</li>
 <li>Results are spatially explicit: you can see exactly where cropland expanded</li>
@@ -944,7 +944,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="stitched-lulc-scenarios">6. Stitched LULC Scenarios</h3>
 <p><strong>Significance:</strong> Combines all allocation zones back into complete Kenya-wide LULC maps for each scenario.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Stitches together individual allocation blocks</li>
 <li>Clips to exact Kenya boundary</li>
 <li>Generates outputs for all scenario combinations (bau, enablers, es_index, LP, FP, LP+FP)</li>
@@ -957,7 +957,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ├── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050.tif
 └── lulc_esa_seals7_ssp2_rcp45_luh2-message_LP+FP_2050_clipped.tif</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Provides complete LULC projections</li>
 <li>Enables comparison across scenarios</li>
 <li>Serves as input to ecosystem service models (InVEST)</li>
@@ -974,7 +974,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="visualization">7. Visualization</h3>
 <p><strong>Significance:</strong> Creates publication-quality PNG images of LULC projections for easy viewing and sharing.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Renders each stitched LULC raster as a PNG</li>
 <li>Applies consistent color schemes</li>
 <li>Adds appropriate labels and legends</li>
@@ -1033,12 +1033,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="crop-value-and-pollination-shocks">8.4 Crop Value and Pollination Shocks</h4>
 <p>Calculates agricultural value and applies DEMETRA economic shocks based on pollination changes.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Baseline crop value: Combines production data from all crops weighted by pollination dependency</li>
 <li>Maximum potential loss: Calculates loss if pollination disappeared completely</li>
 <li>Pollination sufficiency threshold: Uses 0.3 as the critical threshold</li>
 <li>Adjusted crop value: For each scenario:
-<ul class="incremental">
+<ul>
 <li>If below threshold → apply proportional loss</li>
 <li>If at or above threshold → maintain baseline value</li>
 </ul></li>
@@ -1060,7 +1060,7 @@ else:
 ├── pollination_shocks_seals7_ssp2_rcp45_luh2-message.csv         # Regional shock values
 └── pollination_shocks_alt_seals7_ssp2_rcp45_luh2-message.csv     # Alternative regions</code></pre>
 <p><strong>Significance:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Translates ecological changes (pollination) into economic impacts</li>
 <li>Provides spatially explicit economic loss estimates</li>
 <li>Generates shock values for DEMETRA CGE model integration</li>
@@ -1144,7 +1144,7 @@ else:
 <h3 class="anchored" data-anchor-id="summary-and-visualization">9. Summary and Visualization</h3>
 <p><strong>Significance:</strong> Creates multi-panel comparison figures showing results across all scenarios and ecosystem services.</p>
 <p><strong>What it does:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Compiles results from all InVEST modules</li>
 <li>Generates comparison figures across scenarios (bau, LP, FP, LP+FP, enablers, es_index)</li>
 <li>Creates summary visualizations for reports and presentations</li>
@@ -1176,20 +1176,20 @@ else:
 <pre><code>&lt;home&gt;/Files/seals/projects/run_ken_demetra/</code></pre>
 <p><strong>Primary outputs include:</strong></p>
 <p><strong>SEALS outputs:</strong></p>
-<ul class="incremental">
+<ul>
 <li>LULC geotiff files: <code>intermediate/stitched_lulc_simplified_scenarios/</code>
-<ul class="incremental">
+<ul>
 <li>Land-use/land-cover predictions for each scenario year</li>
 </ul></li>
 <li>LULC png files: <code>intermediate/visualization/lulc_pngs/</code>
-<ul class="incremental">
+<ul>
 <li>Spatial representation of land-use transitions</li>
 </ul></li>
 </ul>
 <p><strong>Project outputs:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Figures: <code>intermediate/summarize_and_visualize_multi_vector/</code>
-<ul class="incremental">
+<ul>
 <li><code>biodiversity_combined</code></li>
 <li><code>carbon_combined</code></li>
 <li><code>carbon_total_combined</code></li>
@@ -1202,9 +1202,9 @@ else:
 </section>
 <section id="additional-resources" class="level2">
 <h2 class="anchored" data-anchor-id="additional-resources">Additional Resources</h2>
-<ul class="incremental">
+<ul>
 <li>SEALS Repository: <a href="https://github.com/jandrewjohnson/seals" class="uri">https://github.com/jandrewjohnson/seals</a></li>
-<li>InVEST Documentation: <a href="https://naturalcapitalproject.stanford.edu/software/invest" class="uri">https://naturalcapitalproject.stanford.edu/software/invest</a></li>
+<li>InVEST Documentation: <a href="https://naturalcapitalalliance.stanford.edu/software/invest" class="uri">https://naturalcapitalalliance.stanford.edu/software/invest</a></li>
 <li>InVEST Python Documentation: <a href="https://invest.readthedocs.io/en/latest/index.html" class="uri">https://invest.readthedocs.io/en/latest/index.html</a></li>
 </ul>
 

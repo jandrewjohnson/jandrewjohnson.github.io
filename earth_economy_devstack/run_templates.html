@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,13 +477,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#where-the-files-are" id="toc-where-the-files-are" class="nav-link active" data-scroll-target="#where-the-files-are">Where the files are</a></li>
   <li><a href="#start-here" id="toc-start-here" class="nav-link" data-scroll-target="#start-here">Start here</a></li>
   <li><a href="#three-axes-and-the-one-that-is-numbered" id="toc-three-axes-and-the-one-that-is-numbered" class="nav-link" data-scroll-target="#three-axes-and-the-one-that-is-numbered">Three axes, and the one that is numbered</a></li>
   <li><a href="#the-four-configuration-levels" id="toc-the-four-configuration-levels" class="nav-link" data-scroll-target="#the-four-configuration-levels">The four configuration levels</a></li>
   <li><a href="#the-other-two-axes" id="toc-the-other-two-axes" class="nav-link" data-scroll-target="#the-other-two-axes">The other two axes</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#the-rule-that-runs-through-rungs-3-and-4" id="toc-the-rule-that-runs-through-rungs-3-and-4" class="nav-link" data-scroll-target="#the-rule-that-runs-through-rungs-3-and-4">The rule that runs through rungs 3 and 4</a></li>
   <li><a href="#a-variant-run-is-its-own-file-never-a-fork" id="toc-a-variant-run-is-its-own-file-never-a-fork" class="nav-link" data-scroll-target="#a-variant-run-is-its-own-file-never-a-fork">A variant run is its own file, never a fork</a></li>
   <li><a href="#run_mode" id="toc-run_mode" class="nav-link" data-scroll-target="#run_mode">run_mode</a></li>
@@ -559,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="where-the-files-are" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-files-are">Where the files are</h2>
 <p>The templates are Python files in the devstack repository, not on this site. Browse or copy them here:</p>
-<ul class="incremental">
+<ul>
 <li><a href="https://github.com/jandrewjohnson/earth_economy_devstack/tree/main/examples/run_templates"><code>examples/run_templates/</code></a> — the copy-me set</li>
 <li><a href="https://github.com/jandrewjohnson/earth_economy_devstack/tree/main/examples/run_templates_annotated"><code>examples/run_templates_annotated/</code></a> — the same code with the reasoning written out</li>
 <li><a href="https://github.com/jandrewjohnson/earth_economy_devstack/tree/main/examples/input_research_scripts"><code>examples/input_research_scripts/</code></a> — real run files and the raw scripts they replace</li>
@@ -578,7 +578,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="three-axes-and-the-one-that-is-numbered" class="level2">
 <h2 class="anchored" data-anchor-id="three-axes-and-the-one-that-is-numbered">Three axes, and the one that is numbered</h2>
 <p>A run file’s complexity is three independent questions, and a project sits somewhere on each:</p>
-<ul class="incremental">
+<ul>
 <li><strong>Configuration</strong> — how a run varies. Levels <strong>1–4</strong>, the four templates below.</li>
 <li><strong>Code layout</strong> — where the code lives: single file → split (<code>&lt;project&gt;_tasks.py</code>, <code>_functions.py</code>, <code>_utils.py</code>, <code>_initialize_project.py</code>) → library package.</li>
 <li><strong>Ownership</strong> — who owns the code you run: self-contained → devstack developer → downstream user, where the library is a read-only dependency in your own repo.</li>
@@ -653,7 +653,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>_utils</code> / <code>_functions</code> split is the rule worth internalising: <code>&lt;project&gt;_utils.py</code> is science-unaware and therefore a <strong>promotion queue</strong> — when a second project needs one of those helpers, it belongs in hazelbean. <code>&lt;project&gt;_functions.py</code> encodes the model’s domain knowledge and is terminal. If nothing ever leaves your <code>_utils</code>, you are not applying the rule.</p>
 <p><code>run_template_downstream_user.py</code> also states the one thing the ownership axis has <em>not</em> solved: attaching a task to a specific library task (<code>parent=p.yield_analysis_task</code>) works only because builders assign <code>p.&lt;name&gt;_task</code> as a side effect, and no contract says which of those names are public API. Until one exists, attach at the top level and depend on published paths rather than on task objects.</p>
 <p>Rung 3 is the canonical anatomy, and all four of its parts are required at that level:</p>
-<ul class="incremental">
+<ul>
 <li><code>build_task_tree(p)</code> — <em>what</em> the pipeline is. Nothing but <code>add_task</code> calls.</li>
 <li><code>run_project(p)</code> — <em>how</em> it is executed. Returns <code>p</code>.</li>
 <li>the <code>__main__</code> guard — importing a run file must never start a run. It is also where this project’s own configuration lives.</li>
@@ -683,7 +683,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="run_mode" class="level3">
 <h3 class="anchored" data-anchor-id="run_mode">run_mode</h3>
 <p>Templates 3 and 4 pass <code>run_mode</code> to the constructor:</p>
-<ul class="incremental">
+<ul>
 <li><code>'check'</code> — reuse the stable project dir; recompute only what is missing. The default working mode.</li>
 <li><code>'fresh_intermediate'</code> — redo all computation but keep <code>input/</code>. Test projects only.</li>
 <li><code>'full'</code> — a fresh, timestamped project dir; everything re-runs.</li>
@@ -728,7 +728,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-two-template-sets" class="level2">
 <h2 class="anchored" data-anchor-id="the-two-template-sets">The two template sets</h2>
 <p><code>run_templates/</code> and <code>run_templates_annotated/</code> are the same four rungs computing the same toy project (sum caloric yield across scenarios). They differ only in how much they say:</p>
-<ul class="incremental">
+<ul>
 <li><strong><code>run_templates/</code></strong> — concise. Comments only where a line is non-obvious. This is the set to copy into a new project.</li>
 <li><strong><code>run_templates_annotated/</code></strong> — the same code with long docstrings covering what each level is for, what it deliberately does <em>not</em> have, why the conventions are what they are, and when to move along an axis. Read these once; copy from the other directory.</li>
 </ul>
@@ -739,18 +739,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="input_research_scripts">input_research_scripts/</h2>
 <p>Real scripts collected as source material: the <em>input</em> to conversion work, and the reference implementations that conversion produces. Read these; copy from <code>run_templates/</code>. Three groups:</p>
 <p><strong>Reference implementations</strong> — the conventions at full scale:</p>
-<ul class="incremental">
+<ul>
 <li><code>run_invest_carbon_in_projectflow.py</code> — the <code>run_project(p)</code> convention on the <code>global_invest</code> InVEST carbon task tree. The variant knob is <code>p.aoi</code> (an ISO3 code or <code>'global'</code>); paths resolve through <code>p.get_path()</code>, which searches the project input dir, then base data, then the cloud.</li>
 <li><code>ngfs_pnas.py</code> — the largest reference implementation of the canonical anatomy: a two-pass GTAP+SEALS pipeline whose <code>build_task_tree</code> is driven by a <code>shock_config</code> column in the scenarios CSV. Configured through a <code>run_project(...)</code> signature.</li>
 <li><code>ngfs_pnas_test.py</code> — its pared test run: same task tree, a minimal scenarios CSV, one policy scenario, one year, one region. The variant-is-a-file habit at full scale.</li>
 <li><code>seals_standard.py</code> — a standard SEALS run, identical to <code>run_templates/run_template_seals_example.py</code>.</li>
 </ul>
 <p><strong>Converted, but not exemplary</strong> — useful for what they get wrong:</p>
-<ul class="incremental">
+<ul>
 <li><code>yanxu_carbon.py</code>, <code>cc_carbon.py</code> — GEP carbon runs on ProjectFlow, with hardcoded absolute <code>base_data_dir</code> paths pointing at somebody else’s machine. <code>cc_carbon.py</code> also has no <code>__main__</code> guard, so importing it starts a run.</li>
 </ul>
 <p><strong>Not on ProjectFlow at all</strong> — the before-pictures:</p>
-<ul class="incremental">
+<ul>
 <li><code>research_script.py</code> — a working pollination analysis with hardcoded <code>D:\Shared drives\...</code> paths throughout. The canonical example of a script that cannot run on any other machine.</li>
 <li><code>research_script_relative_paths.py</code> — the same script after one improvement: paths built from a single <code>base_data_dir</code>. Still not a ProjectFlow run file; a useful intermediate step.</li>
 <li><code>invest_carbon_script.py</code> — an InVEST-generated standalone script, the form the InVEST UI exports. Compare with <code>run_invest_carbon_in_projectflow.py</code> to see what wrapping it in a task tree buys.</li>
@@ -759,7 +759,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-examples" class="level2">
 <h2 class="anchored" data-anchor-id="data-examples">Data examples</h2>
 <p><code>scenario_definitions_examples/</code> holds instances of the <strong>v2</strong> scenario definitions schema specified in <a href="../earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a>:</p>
-<ul class="incremental">
+<ul>
 <li><code>single_stage_seals.csv</code> — a SEALS-only project, including a hindcast year.</li>
 <li><code>multi_stage_ngfs.csv</code> — GTAP + SEALS: a 2020-anchored canonical clock with a <code>gtap</code> stage clock.</li>
 <li><code>hindcast_example.csv</code> — a minimal demonstration of backward years.</li>
@@ -767,7 +767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="where-to-go-next" class="level2">
 <h2 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h2>
-<ul class="incremental">
+<ul>
 <li><a href="../earth_economy_devstack/project_complexity.html">project_complexity.qmd</a> — the ladder from a one-off script to a systematic project, and why each rung is earned.</li>
 <li><a href="../earth_economy_devstack/project_flow.html">project_flow.qmd</a> — the ProjectFlow engine itself: tasks, iterators, project dirs, <code>get_path</code>.</li>
 <li><a href="../earth_economy_devstack/conventions.html">conventions.qmd</a> — the full EE Spec naming and structure rules.</li>

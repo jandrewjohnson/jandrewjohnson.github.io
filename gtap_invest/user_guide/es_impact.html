@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -353,7 +353,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="sidebar-item-text sidebar-link">
+  <a href="https://github.com/jandrewjohnson/gtap_invest" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GitHub</span></a>
   </div>
 </li>
@@ -366,9 +366,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#connecting-invest-outputs-to-gtap-inputs" id="toc-connecting-invest-outputs-to-gtap-inputs" class="nav-link active" data-scroll-target="#connecting-invest-outputs-to-gtap-inputs">6. Connecting InVEST outputs to GTAP inputs</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#how-region-aez-aggregated-shocks-are-inputted-into-gtap" id="toc-how-region-aez-aggregated-shocks-are-inputted-into-gtap" class="nav-link" data-scroll-target="#how-region-aez-aggregated-shocks-are-inputted-into-gtap">6.1. How Region-AEZ aggregated shocks are inputted into GTAP</a></li>
   <li><a href="#carbon-storage-and-timber-provision" id="toc-carbon-storage-and-timber-provision" class="nav-link" data-scroll-target="#carbon-storage-and-timber-provision">6.2. Carbon Storage and Timber provision</a></li>
   <li><a href="#marine-fisheries" id="toc-marine-fisheries" class="nav-link" data-scroll-target="#marine-fisheries">6.3. Marine Fisheries</a></li>
@@ -392,11 +392,11 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="images/paste-20.png" class="img-fluid"></p>
 <p>We solve the system of equations in the GTAP model (documented extensively in the GTAP user resources) for equilibrium values of prices and quantities where supply equals demand in all markets and all other regions and sectors can be affected by the change. This interconnection of markets shows one of the important advances captured by using a general equilibrium approach: changes in one component of the model will change equilibrium production and input usage, leading to different overall levels of change in the economy depending on exactly which sector in which region is affected.</p>
 <p>For the pollination shock, the key parameter then is . To identify this parameter, we applied the following algorithm to process outputs from the InVEST Pollinator Sufficiency model</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>Calculate the total value in 2014 USD of crop production on each 10 arcsecond grid-cell.
-<ol class="incremental" type="1">
+<ol type="1">
 <li>For each grid-cell and for each agricultural production activity , multiply the production tonnage (Monfreda et al.&nbsp;2008) by the price per ton of that crop, specific to the country the in which the grid-cell is located. These prices are produced from the FAOSTAT database, on which we applied the following missing-data procedure:
-<ol class="incremental" type="1">
+<ol type="1">
 <li>If a price was not available for a crop in a given country for the year 2000, use the 10-year moving average.</li>
 <li>If 1.b.i cannot be calculated because of missing data, use the continental average price (or its moving average if needed).</li>
 <li>If 1.b.ii cannot be calculated due to missing data, use the global average price.</li>

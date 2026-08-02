@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,45 +477,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#troubleshooting-guide" id="toc-troubleshooting-guide" class="nav-link active" data-scroll-target="#troubleshooting-guide">Troubleshooting Guide</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#quarto-documentation-server-issues" id="toc-quarto-documentation-server-issues" class="nav-link" data-scroll-target="#quarto-documentation-server-issues">Quarto Documentation Server Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#server-wont-start" id="toc-server-wont-start" class="nav-link" data-scroll-target="#server-wont-start">Server Won’t Start</a></li>
   <li><a href="#infinite-loop-during-preview" id="toc-infinite-loop-during-preview" class="nav-link" data-scroll-target="#infinite-loop-during-preview">Infinite Loop During Preview</a></li>
   <li><a href="#rendering-failures" id="toc-rendering-failures" class="nav-link" data-scroll-target="#rendering-failures">Rendering Failures</a></li>
   </ul></li>
   <li><a href="#environment-issues" id="toc-environment-issues" class="nav-link" data-scroll-target="#environment-issues">Environment Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#conda-environment-activation" id="toc-conda-environment-activation" class="nav-link" data-scroll-target="#conda-environment-activation">Conda Environment Activation</a></li>
   <li><a href="#import-errors" id="toc-import-errors" class="nav-link" data-scroll-target="#import-errors">Import Errors</a></li>
   </ul></li>
   <li><a href="#cython-compilation-issues-windows" id="toc-cython-compilation-issues-windows" class="nav-link" data-scroll-target="#cython-compilation-issues-windows">Cython Compilation Issues (Windows)</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#missing-compiler" id="toc-missing-compiler" class="nav-link" data-scroll-target="#missing-compiler">Missing Compiler</a></li>
   <li><a href="#import-error-after-installation" id="toc-import-error-after-installation" class="nav-link" data-scroll-target="#import-error-after-installation">Import Error After Installation</a></li>
   </ul></li>
   <li><a href="#testing-and-coverage-issues" id="toc-testing-and-coverage-issues" class="nav-link" data-scroll-target="#testing-and-coverage-issues">Testing and Coverage Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#coverage-report-shows-0" id="toc-coverage-report-shows-0" class="nav-link" data-scroll-target="#coverage-report-shows-0">Coverage Report Shows 0%</a></li>
   <li><a href="#tests-failing" id="toc-tests-failing" class="nav-link" data-scroll-target="#tests-failing">Tests Failing</a></li>
   </ul></li>
   <li><a href="#report-generation-issues" id="toc-report-generation-issues" class="nav-link" data-scroll-target="#report-generation-issues">Report Generation Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#reports-not-updating" id="toc-reports-not-updating" class="nav-link" data-scroll-target="#reports-not-updating">Reports Not Updating</a></li>
   <li><a href="#missing-test-results" id="toc-missing-test-results" class="nav-link" data-scroll-target="#missing-test-results">Missing Test Results</a></li>
   </ul></li>
   <li><a href="#port-conflicts" id="toc-port-conflicts" class="nav-link" data-scroll-target="#port-conflicts">Port Conflicts</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#multiple-servers-running" id="toc-multiple-servers-running" class="nav-link" data-scroll-target="#multiple-servers-running">Multiple Servers Running</a></li>
   </ul></li>
   <li><a href="#documentation-not-found-issues" id="toc-documentation-not-found-issues" class="nav-link" data-scroll-target="#documentation-not-found-issues">Documentation Not Found Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#errors-on-documentation-pages" id="toc-errors-on-documentation-pages" class="nav-link" data-scroll-target="#errors-on-documentation-pages">404 Errors on Documentation Pages</a></li>
   </ul></li>
   <li><a href="#search-functionality-issues" id="toc-search-functionality-issues" class="nav-link" data-scroll-target="#search-functionality-issues">Search Functionality Issues</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#search-not-working" id="toc-search-not-working" class="nav-link" data-scroll-target="#search-not-working">Search Not Working</a></li>
   </ul></li>
   <li><a href="#getting-additional-help" id="toc-getting-additional-help" class="nav-link" data-scroll-target="#getting-additional-help">Getting Additional Help</a></li>
@@ -555,7 +555,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="server-wont-start">Server Won’t Start</h3>
 <p><strong>Symptom:</strong> <code>quarto preview</code> command fails or hangs</p>
 <p><strong>Solutions:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Check if Quarto is installed:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If not installed, follow <a href="https://quarto.org/docs/get-started/">Quarto installation guide</a></p></li>
@@ -581,7 +581,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Symptom:</strong> <code>quarto preview</code> keeps rebuilding endlessly, never stabilizing</p>
 <p><strong>Cause:</strong> A <code>pre-render</code> hook in <code>_quarto.yml</code> generates <code>.qmd</code> files, which triggers Quarto’s file watcher, which re-runs the pre-render hook, creating an infinite loop.</p>
 <p><strong>Solution:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Check for pre-render hooks that generate files:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> <span class="st">"pre-render"</span> docs-site/quarto-docs/_quarto.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Run report generation manually instead:</strong></p>
@@ -600,18 +600,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="rendering-failures">Rendering Failures</h3>
 <p><strong>Symptom:</strong> <code>quarto render</code> produces errors</p>
 <p><strong>Common causes and fixes:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Missing dependencies:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> conda-forge quarto</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Broken links in QMD files:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Check error messages for specific file paths</li>
 <li>Verify all referenced files exist</li>
 <li>Use relative paths consistently</li>
 </ul></li>
 <li><p><strong>Malformed markdown:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Check fenced code blocks are properly closed</li>
 <li>Verify YAML front matter is valid</li>
 <li>Ensure callout blocks have proper syntax: <code>::: {.callout-note}</code></li>
@@ -625,7 +625,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="conda-environment-activation">Conda Environment Activation</h3>
 <p><strong>Symptom:</strong> <code>conda: command not found</code> or environment won’t activate</p>
 <p><strong>Solutions:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Initialize conda:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For bash</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init bash</span>
@@ -645,7 +645,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="import-errors">Import Errors</h3>
 <p><strong>Symptom:</strong> <code>ModuleNotFoundError: No module named 'hazelbean'</code></p>
 <p><strong>Solutions:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Ensure environment is activated:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import sys; print(sys.prefix)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
@@ -664,13 +664,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Symptom:</strong></p>
 <pre><code>error: Microsoft Visual C++ 14.0 or greater is required</code></pre>
 <p><strong>Solutions:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Install conda compiler (recommended):</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> conda-forge m2w64-toolchain libpython</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> . <span class="at">--no-deps</span> <span class="at">--force-reinstall</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Install Visual Studio Build Tools:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Download from https://visualstudio.microsoft.com/downloads/</li>
 <li>Select “Build Tools for Visual Studio 2022”</li>
 <li>Check “Desktop development with C++”</li>
@@ -693,7 +693,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="coverage-report-shows-0">Coverage Report Shows 0%</h3>
 <p><strong>Symptom:</strong> Coverage reports show 0.0% coverage or no data</p>
 <p><strong>Solution:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Run tests with coverage:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hazelbean_tests</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
@@ -709,20 +709,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tests-failing" class="level3">
 <h3 class="anchored" data-anchor-id="tests-failing">Tests Failing</h3>
 <p><strong>Common issues:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><strong>Missing test data:</strong>
-<ul class="incremental">
+<ul>
 <li>Check <code>data/</code> directories exist</li>
 <li>Verify test fixtures are properly set up</li>
 <li>Some tests auto-generate synthetic data if real data is missing</li>
 </ul></li>
 <li><strong>Environment issues:</strong>
-<ul class="incremental">
+<ul>
 <li>Always activate <code>&lt;your_env&gt;</code> before running tests</li>
 <li>Verify all dependencies are installed: <code>conda list</code></li>
 </ul></li>
 <li><strong>Path issues:</strong>
-<ul class="incremental">
+<ul>
 <li>Run tests from <code>hazelbean_tests/</code> directory</li>
 <li>Use relative paths in test configurations</li>
 </ul></li>
@@ -735,7 +735,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="reports-not-updating">Reports Not Updating</h3>
 <p><strong>Symptom:</strong> Documentation shows old or stale data</p>
 <p><strong>Solution:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Regenerate all reports:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> tools</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./generate_reports.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
@@ -783,19 +783,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="errors-on-documentation-pages">404 Errors on Documentation Pages</h3>
 <p><strong>Symptom:</strong> Links to documentation pages return 404</p>
 <p><strong>Solutions:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Ensure site is rendered:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> docs-site/quarto-docs</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> _site/  <span class="co"># Should contain HTML files</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Check link paths:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Use relative paths (e.g., <code>../reports/test-results.html</code>)</li>
 <li>Don’t include <code>.qmd</code> extension in links</li>
 <li>Quarto converts <code>page.qmd</code> to <code>page.html</code></li>
 </ul></li>
 <li><p><strong>Verify navigation configuration:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Check <code>_quarto.yml</code> for proper page structure</li>
 <li>Ensure all referenced files exist</li>
 </ul></li>
@@ -808,12 +808,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="search-not-working">Search Not Working</h3>
 <p><strong>Symptom:</strong> Search bar doesn’t return results</p>
 <p><strong>Solution:</strong></p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Rebuild search index:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> docs-site/quarto-docs</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>Check browser console:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Open browser dev tools (F12)</li>
 <li>Look for JavaScript errors</li>
 <li>Check if <code>search.json</code> was generated in <code>_site/</code></li>
@@ -824,9 +824,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="getting-additional-help" class="level2">
 <h2 class="anchored" data-anchor-id="getting-additional-help">Getting Additional Help</h2>
 <p>If you’re still experiencing issues:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><p><strong>Check logs:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Review terminal output for error messages</li>
 <li>Check browser console for JavaScript errors</li>
 <li>Look for <code>.log</code> files in the project</li>
@@ -834,10 +834,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>Verify installation:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/verify_installation.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><strong>GitHub Issues:</strong></p>
-<ul class="incremental">
+<ul>
 <li>Search existing issues: https://github.com/jandrewjohnson/hazelbean_dev/issues</li>
 <li>Create a new issue with:
-<ul class="incremental">
+<ul>
 <li>OS and Python version</li>
 <li>Complete error message</li>
 <li>Steps to reproduce</li>
@@ -845,10 +845,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul></li>
 <li><p><strong>Documentation:</strong></p>
-<ul class="incremental">
+<ul>
 <li><a href="../earth_economy_devstack/installation.html">Getting Started Guide</a></li>
-<li><a href="../earth_economy_devstack/installation.html">Windows Setup Guide</a></li>
-<li><a href="../../.github/workflows/">GitHub Workflows</a></li>
+<li><a href="https://github.com/jandrewjohnson/hazelbean_dev/blob/main/docs/windows-setup.md">Windows Setup Guide</a></li>
+<li><a href="https://github.com/jandrewjohnson/hazelbean_dev/tree/main/.github/workflows">GitHub Workflows</a></li>
 </ul></li>
 </ol>
 </section>

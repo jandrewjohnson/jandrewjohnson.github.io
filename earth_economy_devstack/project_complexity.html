@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,62 +477,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#the-stages-of-project-complexity" id="toc-the-stages-of-project-complexity" class="nav-link active" data-scroll-target="#the-stages-of-project-complexity">The stages of project complexity</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#why-any-of-this-exists" id="toc-why-any-of-this-exists" class="nav-link" data-scroll-target="#why-any-of-this-exists">Why any of this exists</a></li>
   <li><a href="#the-narrative" id="toc-the-narrative" class="nav-link" data-scroll-target="#the-narrative">The narrative</a></li>
   <li><a href="#stage-1-the-old-way-simple-question-answered-well" id="toc-stage-1-the-old-way-simple-question-answered-well" class="nav-link" data-scroll-target="#stage-1-the-old-way-simple-question-answered-well">Stage 1, the old way: Simple question answered well</a></li>
   <li><a href="#stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list." id="toc-stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list." class="nav-link" data-scroll-target="#stage-2-the-old-way-many-similar-questions.-creates-a-very-long-list.">Stage 2, the old way: Many similar questions. Creates a very long list.</a></li>
   <li><a href="#stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts." id="toc-stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts." class="nav-link" data-scroll-target="#stage-3-the-old-way-starting-to-deal-with-generalization-reusing-code-and-shortening-scripts.">Stage 3, the old way: Starting to deal with generalization, reusing code and shortening scripts.</a></li>
   <li><a href="#stage-4-the-old-way-starting-to-deal-with-performance-and-generalization." id="toc-stage-4-the-old-way-starting-to-deal-with-performance-and-generalization." class="nav-link" data-scroll-target="#stage-4-the-old-way-starting-to-deal-with-performance-and-generalization.">Stage 4, the old way: Starting to deal with performance and generalization.</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#bad-code-dont-run." id="toc-bad-code-dont-run." class="nav-link" data-scroll-target="#bad-code-dont-run.">BAD CODE; DONT RUN.</a></li>
   <li><a href="#good-version-do-run" id="toc-good-version-do-run" class="nav-link" data-scroll-target="#good-version-do-run">Good version; do run</a></li>
   </ul></li>
   <li><a href="#stage-5-the-old-way-dealing-with-larger-than-memory-data" id="toc-stage-5-the-old-way-dealing-with-larger-than-memory-data" class="nav-link" data-scroll-target="#stage-5-the-old-way-dealing-with-larger-than-memory-data">Stage 5, the old way: Dealing with larger-than-memory data</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#bad-code-dont-run" id="toc-bad-code-dont-run" class="nav-link" data-scroll-target="#bad-code-dont-run">BAD CODE; DON’T RUN</a></li>
   <li><a href="#better-code-do-run" id="toc-better-code-do-run" class="nav-link" data-scroll-target="#better-code-do-run">Better code, do run</a></li>
   </ul></li>
   <li><a href="#stage-6-the-old-way-systematic-file-management." id="toc-stage-6-the-old-way-systematic-file-management." class="nav-link" data-scroll-target="#stage-6-the-old-way-systematic-file-management.">Stage 6, the old way: Systematic file management.</a></li>
   </ul></li>
   <li><a href="#three-axes-not-one-ladder" id="toc-three-axes-not-one-ladder" class="nav-link" data-scroll-target="#three-axes-not-one-ladder">Three axes, not one ladder</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#configuration-how-a-run-varies" id="toc-configuration-how-a-run-varies" class="nav-link" data-scroll-target="#configuration-how-a-run-varies">Configuration — how a run varies</a></li>
   <li><a href="#code-layout-where-the-code-lives" id="toc-code-layout-where-the-code-lives" class="nav-link" data-scroll-target="#code-layout-where-the-code-lives">Code layout — where the code lives</a></li>
   <li><a href="#ownership-who-owns-the-code-you-run" id="toc-ownership-who-owns-the-code-you-run" class="nav-link" data-scroll-target="#ownership-who-owns-the-code-you-run">Ownership — who owns the code you run</a></li>
   <li><a href="#where-to-start-earning-complexity-rather-than-adopting-it" id="toc-where-to-start-earning-complexity-rather-than-adopting-it" class="nav-link" data-scroll-target="#where-to-start-earning-complexity-rather-than-adopting-it">Where to start: earning complexity rather than adopting it</a></li>
   </ul></li>
   <li><a href="#starting-to-walk-the-steps-with-projectflow" id="toc-starting-to-walk-the-steps-with-projectflow" class="nav-link" data-scroll-target="#starting-to-walk-the-steps-with-projectflow">Starting to walk the steps with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#stage-1-redone-with-projectflow" id="toc-stage-1-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-1-redone-with-projectflow">Stage 1, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old" id="toc-old" class="nav-link" data-scroll-target="#old">Old</a></li>
   <li><a href="#new-p-object-organizes-attributes" id="toc-new-p-object-organizes-attributes" class="nav-link" data-scroll-target="#new-p-object-organizes-attributes">New: P object organizes attributes</a></li>
   </ul></li>
   <li><a href="#stage-2-redone-with-projectflow" id="toc-stage-2-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-2-redone-with-projectflow">Stage 2, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old-1" id="toc-old-1" class="nav-link" data-scroll-target="#old-1">Old</a></li>
   <li><a href="#new-make-it-iterate-over-a-list" id="toc-new-make-it-iterate-over-a-list" class="nav-link" data-scroll-target="#new-make-it-iterate-over-a-list">New: Make it Iterate Over a list</a></li>
   </ul></li>
   <li><a href="#stage-3-redone-with-projectflow" id="toc-stage-3-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-3-redone-with-projectflow">Stage 3, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old-2" id="toc-old-2" class="nav-link" data-scroll-target="#old-2">Old</a></li>
   <li><a href="#new-the-loop-becomes-a-task" id="toc-new-the-loop-becomes-a-task" class="nav-link" data-scroll-target="#new-the-loop-becomes-a-task">New: The loop becomes a task</a></li>
   </ul></li>
   <li><a href="#stage-4-redone-with-projectflow" id="toc-stage-4-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-4-redone-with-projectflow">Stage 4, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old-3" id="toc-old-3" class="nav-link" data-scroll-target="#old-3">Old</a></li>
   <li><a href="#new-paths-that-find-themselves-and-switches-that-live-in-the-tree" id="toc-new-paths-that-find-themselves-and-switches-that-live-in-the-tree" class="nav-link" data-scroll-target="#new-paths-that-find-themselves-and-switches-that-live-in-the-tree">New: Paths that find themselves, and switches that live in the tree</a></li>
   </ul></li>
   <li><a href="#stage-5-redone-with-projectflow" id="toc-stage-5-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-5-redone-with-projectflow">Stage 5, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old-4" id="toc-old-4" class="nav-link" data-scroll-target="#old-4">Old</a></li>
   <li><a href="#new-one-call-streams-the-chunks" id="toc-new-one-call-streams-the-chunks" class="nav-link" data-scroll-target="#new-one-call-streams-the-chunks">New: One call streams the chunks</a></li>
   </ul></li>
   <li><a href="#stage-6-redone-with-projectflow" id="toc-stage-6-redone-with-projectflow" class="nav-link" data-scroll-target="#stage-6-redone-with-projectflow">Stage 6, redone with ProjectFlow</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#old-5" id="toc-old-5" class="nav-link" data-scroll-target="#old-5">Old</a></li>
   <li><a href="#new-the-run-is-driven-by-data-scenarios-parameters-and-a-thin-test-wrapper" id="toc-new-the-run-is-driven-by-data-scenarios-parameters-and-a-thin-test-wrapper" class="nav-link" data-scroll-target="#new-the-run-is-driven-by-data-scenarios-parameters-and-a-thin-test-wrapper">New: The run is driven by data — scenarios, parameters, and a thin test wrapper</a></li>
   </ul></li>
@@ -861,7 +861,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Every template below is described on the <a href="../earth_economy_devstack/run_templates.html">Run Templates</a> page, which is the place to start if you want to copy one.</p>
 <p>Each tool in the six stages was adopted only when the previous stage’s pain demanded it — and that lesson applies to ProjectFlow itself. If your problem is still a stage-1 problem, do not start at configuration level 4. The spec scales down.</p>
 <p><strong>The smallest run file — a function becomes a task when you add it.</strong> The minimal ProjectFlow script is one task function plus a guarded three-line main block: <code>p = hb.ProjectFlow()</code>, <code>p.add_task(your_function)</code>, <code>p.execute()</code>. Nothing is hidden — the <code>add_task</code> call <em>is</em> the moment a plain function becomes a task (and calling <code>execute()</code> with nothing added fails with a message telling you exactly that). See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_1_minimal.py"><code>examples/run_templates/run_template_1_minimal.py</code></a> — about 30 lines, and in exchange for roughly the effort of the stage-1 script you get an organized project directory, one folder per task, skip-if-already-computed re-runs, and logging.</p>
-<p><strong>The canonical form.</strong> When you want variants, graduate to configuration level 3: <code>build_task_tree(p)</code>, <code>run_project(p)</code>, and a <code>__main__</code> guard that builds and configures the ProjectFlow. The rule that replaces a signature full of defaults: <strong><code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a constant starts varying, it moves one line up, out of <code>run_project</code> and into the caller — no signature to edit and no default to keep in sync. See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_3_canonical.py"><code>run_template_3_canonical.py</code></a>, its annotated twin in <code>examples/run_templates_annotated/</code> for the reasoning, and the <a href="../earth_economy_devstack/conventions.html">conventions</a> page for the full rules. For a project of your own that imports a devstack library as a read-only dependency, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> into your repo as its <code>run_&lt;project&gt;.py</code>; for stock SEALS, copy <a href="https://github.com/jandrewjohnson/seals/blob/main/seals/run_seals_standard.py"><code>run_seals_standard.py</code></a>. The full-scale reference implementation is <a href="https://github.com/jandrewjohnson/ngfs_pnas">ngfs_pnas</a>.</p>
+<p><strong>The canonical form.</strong> When you want variants, graduate to configuration level 3: <code>build_task_tree(p)</code>, <code>run_project(p)</code>, and a <code>__main__</code> guard that builds and configures the ProjectFlow. The rule that replaces a signature full of defaults: <strong><code>run_project(p)</code> sets what no variant ever changes; the caller sets what a variant might.</strong> When a constant starts varying, it moves one line up, out of <code>run_project</code> and into the caller — no signature to edit and no default to keep in sync. See <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_3_canonical.py"><code>run_template_3_canonical.py</code></a>, its annotated twin in <code>examples/run_templates_annotated/</code> for the reasoning, and the <a href="../earth_economy_devstack/conventions.html">conventions</a> page for the full rules. For a project of your own that imports a devstack library as a read-only dependency, copy <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a> into your repo as its <code>run_&lt;project&gt;.py</code>; for stock SEALS, copy <a href="https://github.com/jandrewjohnson/seals/blob/main/seals/run_seals_standard.py"><code>run_seals_standard.py</code></a>. The full-scale reference implementation is <code>ngfs_pnas</code> (a private repository — ask for access).</p>
 <p><strong>When to move along an axis.</strong> <em>Configuration:</em> add a scenarios CSV when you first have two variants of the same run (the CSV, not the code, is what varies); add a <code>parameters.csv</code> key the first time a machine-specific value — an ssh host, a credentials path — tries to enter your code; add a thin <code>run_&lt;project&gt;_test.py</code> wrapper when the full run gets long enough to want a pared smoke test. <em>Code layout:</em> split when a task module gets big enough to navigate, or when a second run file needs the same task. <em>Ownership:</em> you cross into downstream-user territory the moment the library you import is one you should not be editing.</p>
 <p>Every one of these is the stage-2 lesson in a new costume: the moment you are tempted to copy a block — or a whole file — and edit one line, the spec has a mechanism that varies the <em>data</em> instead of forking the <em>code</em>.</p>
 </section>
@@ -1293,7 +1293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    run_project(scenario_definitions_filename<span class="op">=</span><span class="st">'yield_scenarios_test.csv'</span>,</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                project_name<span class="op">=</span><span class="st">'yield_test'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Run <code>run_yield.py</code> twice: the second run loads the CSVs, checks four existence checks, and exits — everything finished is skipped, which is what makes a stable project dir the default (the test project resumes in place the same way). Add a fifth row to <code>yield_scenarios.csv</code> and re-run: only the new scenario computes. Change a machine value (a credentials path, an ssh host) in <code>input/yield_parameters.csv</code> and no code changes anywhere. That is the whole canon in miniature: <em>code defines the pipeline once; scenarios say what to run over; parameters say what is constant; the filesystem remembers what is done.</em></p>
-<p>This is where the walkthrough ends and the spec begins. The full rules — variant runs via <code>tasks_to_skip</code>, shared library builders, ref_paths in scenario CSVs, the <code>run_&lt;project&gt;_test.py</code> conventions — live on the <a href="../earth_economy_devstack/conventions.html">conventions</a> page; a copy-me seed for a project that imports a devstack library is <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a>; and the full-scale reference implementation, running a two-pass global economy-environment pipeline with exactly this anatomy, is <a href="https://github.com/jandrewjohnson/ngfs_pnas">ngfs_pnas</a>. What was deliberately <em>not</em> shown here: the libraries’ richer scenario hydration (rows assigned onto <code>p</code> and iterated through the tree), parallel iterators, and the machine-config registry — each is the same idea you just saw, grown up.</p>
+<p>This is where the walkthrough ends and the spec begins. The full rules — variant runs via <code>tasks_to_skip</code>, shared library builders, ref_paths in scenario CSVs, the <code>run_&lt;project&gt;_test.py</code> conventions — live on the <a href="../earth_economy_devstack/conventions.html">conventions</a> page; a copy-me seed for a project that imports a devstack library is <a href="https://github.com/jandrewjohnson/earth_economy_devstack/blob/main/examples/run_templates/run_template_downstream_user.py"><code>run_template_downstream_user.py</code></a>; and the full-scale reference implementation, running a two-pass global economy-environment pipeline with exactly this anatomy, is <code>ngfs_pnas</code> (a private repository — ask for access). What was deliberately <em>not</em> shown here: the libraries’ richer scenario hydration (rows assigned onto <code>p</code> and iterated through the tree), parallel iterators, and the machine-config registry — each is the same idea you just saw, grown up.</p>
 
 
 </section>

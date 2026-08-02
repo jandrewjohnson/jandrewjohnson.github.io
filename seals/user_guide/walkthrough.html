@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -365,9 +365,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#first-seals-run-walkthrough" id="toc-first-seals-run-walkthrough" class="nav-link active" data-scroll-target="#first-seals-run-walkthrough">First SEALS run walkthrough</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#getting-set-up" id="toc-getting-set-up" class="nav-link" data-scroll-target="#getting-set-up">Getting set up</a></li>
   <li><a href="#explore-the-seals-code" id="toc-explore-the-seals-code" class="nav-link" data-scroll-target="#explore-the-seals-code">Explore the SEALS code</a></li>
   <li><a href="#run-files" id="toc-run-files" class="nav-link" data-scroll-target="#run-files">Run files</a></li>
@@ -378,13 +378,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#where-the-project-directory-goes" id="toc-where-the-project-directory-goes" class="nav-link" data-scroll-target="#where-the-project-directory-goes">Where the project directory goes</a></li>
   </ul></li>
   <li><a href="#scenario-definitions" id="toc-scenario-definitions" class="nav-link" data-scroll-target="#scenario-definitions">Scenario definitions</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#the-scenarios-csv" id="toc-the-scenarios-csv" class="nav-link" data-scroll-target="#the-scenarios-csv">The scenarios CSV</a></li>
   <li><a href="#scenario-types" id="toc-scenario-types" class="nav-link" data-scroll-target="#scenario-types">Scenario types</a></li>
   <li><a href="#automatically-downloading-data" id="toc-automatically-downloading-data" class="nav-link" data-scroll-target="#automatically-downloading-data">Automatically downloading data</a></li>
   </ul></li>
   <li><a href="#running-it" id="toc-running-it" class="nav-link" data-scroll-target="#running-it">Running it</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the model</a></li>
   <li><a href="#find-the-output" id="toc-find-the-output" class="nav-link" data-scroll-target="#find-the-output">Find the output</a></li>
   <li><a href="#next" id="toc-next" class="nav-link" data-scroll-target="#next">Next</a></li>
@@ -402,26 +402,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>First SEALS run walkthrough</h1>
 <section id="getting-set-up" class="level2">
 <h2 class="anchored" data-anchor-id="getting-set-up">Getting set up</h2>
-<ul class="incremental">
-<li>Follow the <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">installation</a> page first, or the shorter <a href="../../seals/user_guide/quickstart.html">quickstart</a> if you just want to run the model</li>
-<li>Clone SEALS and Hazelbean into the devstack layout — each repo in its own project folder under <code>~/Files/</code>:
-<ul class="incremental">
-<li><code>~/Files/hazelbean/hazelbean_dev</code></li>
-<li><code>~/Files/seals/seals</code></li>
-</ul></li>
+<ul>
+<li>Follow the <a href="../../seals/user_guide/environment_setup.html">installation</a> page first, or the shorter <a href="../../seals/user_guide/quickstart.html">quickstart</a> if you just want to run the model</li>
+<li>Clone SEALS into the devstack layout — its own project folder under <code>~/Files/</code>, at <code>~/Files/seals/seals</code>. Hazelbean is not cloned; it comes from conda-forge</li>
 <li>The layout is not cosmetic: ProjectFlow reads it to decide where project directories go</li>
-<li>You know the install worked if this prints two paths inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
+<li>You know the install worked if this prints a path inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import hazelbean, seals; print(hazelbean.__file__); print(seals.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import seals; print(seals.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="explore-the-seals-code" class="level2">
 <h2 class="anchored" data-anchor-id="explore-the-seals-code">Explore the SEALS code</h2>
-<ul class="incremental">
+<ul>
 <li>The repo root <code>seals/</code> holds more than the library — docs, tests, scripts</li>
 <li>The library itself is the <code>seals/seals</code> subdirectory. The nesting looks redundant but is how Python packaging works</li>
 <li>Inside it, <code>__init__.py</code> is what makes the directory importable as a package</li>
 <li>The modules are split by what they hold:
-<ul class="incremental">
+<ul>
 <li><code>seals_main.py</code>, <code>seals_tasks.py</code>, <code>seals_generate_base_data.py</code> — task functions, the actual model logic</li>
 <li><code>seals_initialize_project.py</code> — the task-tree builders</li>
 <li><code>seals_utils.py</code> — helpers</li>
@@ -431,11 +427,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="run-files" class="level2">
 <h2 class="anchored" data-anchor-id="run-files">Run files</h2>
-<ul class="incremental">
+<ul>
 <li>You do not run <code>seals_main.py</code> directly</li>
 <li>A <strong>run file</strong> configures a project and executes a task tree built from the library’s task functions</li>
 <li>Two ship with SEALS, both in <code>seals/seals</code>:
-<ul class="incremental">
+<ul>
 <li><code>run_seals_standard.py</code> — three scenarios, 2030 and 2050</li>
 <li><code>run_seals_standard_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
 </ul></li>
@@ -444,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-1-the-task-tree" class="level2">
 <h2 class="anchored" data-anchor-id="part-1-the-task-tree">Part 1: the task tree</h2>
-<ul class="incremental">
+<ul>
 <li><code>build_task_tree(p)</code> answers one question: <em>what is this pipeline?</em></li>
 <li>It contains nothing but tree construction. For stock SEALS it is one line, delegating to the shared library builder</li>
 <li>Compose extra library subtrees or your own tasks here if your project diverges</li>
@@ -454,10 +450,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-2-run_project" class="level2">
 <h2 class="anchored" data-anchor-id="part-2-run_project">Part 2: run_project</h2>
-<ul class="incremental">
+<ul>
 <li><code>run_project(p)</code> answers <em>how is it executed?</em> It takes only <code>p</code></li>
 <li>The rule that decides what goes where:
-<ul class="incremental">
+<ul>
 <li><strong><code>run_project(p)</code> sets what no variant ever changes</strong> — base data location, processing resolution</li>
 <li><strong>the caller sets what a variant might</strong> — project name, run mode, scenarios CSV</li>
 </ul></li>
@@ -480,7 +476,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-3-the-__main__-guard" class="level2">
 <h2 class="anchored" data-anchor-id="part-3-the-__main__-guard">Part 3: the __main__ guard</h2>
-<ul class="incremental">
+<ul>
 <li>This is where the project is configured — two lines of actual choice</li>
 <li>The guard is mandatory: importing a run file must never start a run. That is what lets a second run file import this pipeline instead of copying it</li>
 </ul>
@@ -492,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-p-object" class="level2">
 <h2 class="anchored" data-anchor-id="the-p-object">The p object</h2>
-<ul class="incremental">
+<ul>
 <li><code>hb.ProjectFlow()</code> is a class — a recipe for an object. Calling it produces an object, which we assign to <code>p</code></li>
 <li><code>p</code> carries the project’s <strong>attributes</strong>: <code>p.base_data_dir</code>, <code>p.scenario_definitions_filename</code>, and so on</li>
 <li>It also has <strong>methods</strong> that act on it: <code>p.add_task()</code>, <code>p.skip_tasks()</code>, <code>p.get_path()</code>, <code>p.execute()</code></li>
@@ -501,11 +497,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="where-the-project-directory-goes" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-project-directory-goes">Where the project directory goes</h2>
-<ul class="incremental">
+<ul>
 <li>Not into the repo. Because the run file sits inside a cloned repo, ProjectFlow places the project dir just <em>outside</em> it, at <code>~/Files/seals/projects/&lt;project_name&gt;/</code></li>
 <li>You do not compute this path yourself, and you should not save data in <code>seals/seals</code></li>
 <li><code>run_mode</code> decides how much prior work is reused:
-<ul class="incremental">
+<ul>
 <li><code>'check'</code> — reuse the stable dir, recompute only what is missing (the default)</li>
 <li><code>'fresh_intermediate'</code> — redo all computation, keep <code>input/</code> (test projects only)</li>
 <li><code>'full'</code> — a fresh timestamped dir; everything re-runs</li>
@@ -517,7 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Scenario definitions</h1>
 <section id="the-scenarios-csv" class="level2">
 <h2 class="anchored" data-anchor-id="the-scenarios-csv">The scenarios CSV</h2>
-<ul class="incremental">
+<ul>
 <li>The scenarios CSV specifies the runs you want. <strong>Each row is one scenario</strong></li>
 <li>As the model iterates, it re-hydrates <code>p</code> from the row it is on — which is why scenario-varying values belong in the CSV and not in the run file</li>
 <li>The tracked copy lives in <code>input_template/</code> beside the run file. ProjectFlow copies anything missing into the project’s <code>input/</code> on first run and never overwrites your working copy</li>
@@ -527,7 +523,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="scenario-types" class="level2">
 <h2 class="anchored" data-anchor-id="scenario-types">Scenario types</h2>
-<ul class="incremental">
+<ul>
 <li><code>scenario_type</code> is a <strong>column in the CSV</strong>, not something a run file sets</li>
 <li><code>baseline</code> — the observed anchor; not downscaled, supplies base-year LULC</li>
 <li><code>policy</code> — a trajectory to downscale, compared against a counterfactual</li>
@@ -537,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="automatically-downloading-data" class="level2">
 <h2 class="anchored" data-anchor-id="automatically-downloading-data">Automatically downloading data</h2>
-<ul class="incremental">
+<ul>
 <li>Paths in the CSV are <strong>ref_paths</strong> — relative locations resolved by <code>p.get_path()</code>, which searches the project <code>input/</code> dir, then <code>base_data</code>, then a cloud bucket, downloading what is missing</li>
 <li><code>p.base_data_dir</code> is where those downloads land. Point it somewhere with room for very large files; the same base data serves every project</li>
 <li>The directory must be named <code>base_data</code> to match the bucket convention</li>
@@ -553,7 +549,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<ul class="incremental">
+<ul>
 <li>On startup SEALS prints the <strong>task tree</strong> it is about to compute</li>
 <li>To understand the model in depth, read the task functions behind those names</li>
 <li>Run the same command a second time: it finishes almost immediately, because every task is behind an existence check and completed work is skipped</li>
@@ -561,19 +557,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="find-the-output" class="level2">
 <h2 class="anchored" data-anchor-id="find-the-output">Find the output</h2>
-<ul class="incremental">
+<ul>
 <li>Go to <code>~/Files/seals/projects/seals_standard_test/intermediate/</code></li>
 <li>There is one directory per task in the tree</li>
 <li>The downscaled maps are in <code>stitched_lulc_simplified_scenarios/</code>, for example:</li>
 </ul>
 <pre><code>lulc_esa_seals7_ssp2_rcp45_luh2-message_bau_2030.tif</code></pre>
-<ul class="incremental">
+<ul>
 <li>Open it in QGIS alongside the base-year LULC and compare — that is your high-resolution land-use change projection</li>
 </ul>
 </section>
 <section id="next" class="level2">
 <h2 class="anchored" data-anchor-id="next">Next</h2>
-<ul class="incremental">
+<ul>
 <li><a href="../../seals/user_guide/quickstart.html">Quickstart</a> — the condensed version of this page</li>
 <li><a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">Conventions</a> — the full run-file rules</li>
 <li><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_complexity.html">Project complexity</a> — why run files are shaped this way</li>

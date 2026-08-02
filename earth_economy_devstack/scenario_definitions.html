@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -477,11 +477,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#why-v2" id="toc-why-v2" class="nav-link active" data-scroll-target="#why-v2">Why v2</a></li>
   <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts">Core concepts</a></li>
   <li><a href="#column-reference" id="toc-column-reference" class="nav-link" data-scroll-target="#column-reference">Column reference</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#identity" id="toc-identity" class="nav-link" data-scroll-target="#identity">Identity</a></li>
   <li><a href="#comparison-and-dependency-dag" id="toc-comparison-and-dependency-dag" class="nav-link" data-scroll-target="#comparison-and-dependency-dag">Comparison and dependency DAG</a></li>
   <li><a href="#time" id="toc-time" class="nav-link" data-scroll-target="#time">Time</a></li>
@@ -496,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#unknown-columns" id="toc-unknown-columns" class="nav-link" data-scroll-target="#unknown-columns">Unknown columns</a></li>
   </ul></li>
   <li><a href="#the-canonical-clock-and-model-clock-harmonization" id="toc-the-canonical-clock-and-model-clock-harmonization" class="nav-link" data-scroll-target="#the-canonical-clock-and-model-clock-harmonization">The canonical clock and model-clock harmonization</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#the-exchange-rule" id="toc-the-exchange-rule" class="nav-link" data-scroll-target="#the-exchange-rule">The exchange rule</a></li>
   <li><a href="#exogenous-shocks-gtap-baseline-drivers" id="toc-exogenous-shocks-gtap-baseline-drivers" class="nav-link" data-scroll-target="#exogenous-shocks-gtap-baseline-drivers">Exogenous shocks (GTAP baseline drivers)</a></li>
   <li><a href="#coupled-stages-canonical-years-are-the-barriers" id="toc-coupled-stages-canonical-years-are-the-barriers" class="nav-link" data-scroll-target="#coupled-stages-canonical-years-are-the-barriers">Coupled stages: canonical years are the barriers</a></li>
@@ -507,7 +507,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#hindcasting-backward-years" id="toc-hindcasting-backward-years" class="nav-link" data-scroll-target="#hindcasting-backward-years">Hindcasting (backward years)</a></li>
   <li><a href="#parsing-rules-implementation-contract" id="toc-parsing-rules-implementation-contract" class="nav-link" data-scroll-target="#parsing-rules-implementation-contract">Parsing rules (implementation contract)</a></li>
   <li><a href="#migration-from-v1" id="toc-migration-from-v1" class="nav-link" data-scroll-target="#migration-from-v1">Migration from v1</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#seals-standard_scenarios.csv-27-columns" id="toc-seals-standard_scenarios.csv-27-columns" class="nav-link" data-scroll-target="#seals-standard_scenarios.csv-27-columns">SEALS <code>standard_scenarios.csv</code> (27 columns)</a></li>
   <li><a href="#ngfspnas-variant-35-columns" id="toc-ngfspnas-variant-35-columns" class="nav-link" data-scroll-target="#ngfspnas-variant-35-columns">NGFS/PNAS variant (35 columns)</a></li>
   <li><a href="#gtappy-template-variant" id="toc-gtappy-template-variant" class="nav-link" data-scroll-target="#gtappy-template-variant">gtappy template variant</a></li>
@@ -542,7 +542,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Status:</strong> design specification. No code implements this yet. The canonical parser and run-step iterator will live in hazelbean (next to <code>project_flow.py</code>); seals, gtappy, gtap_invest and global_invest will import it and delete their local copies of <code>assign_df_row_to_object_attributes</code>.</p>
 <p>This document specifies version 2 of the scenario definitions CSV that drives SEALS and the models built around it (gtap_invest, global_invest, gtappy, ngfs_pnas). It replaces the v1 <code>standard_scenarios.csv</code> schema and its per-project variants.</p>
 <p>Example files live in <code>examples/scenario_definitions_examples/</code>:</p>
-<ul class="incremental">
+<ul>
 <li><code>single_stage_seals.csv</code> — a SEALS-only project (migrated from the v1 SEALS template), including a hindcast year.</li>
 <li><code>multi_stage_ngfs.csv</code> — a GTAP+SEALS project (migrated from the NGFS/PNAS variant): a 2020-anchored canonical clock with a <code>gtap</code> stage clock (2023 base, annual via <code>gtap_timestep=1</code>).</li>
 <li><code>hindcast_example.csv</code> — minimal demonstration of backward years.</li>
@@ -550,7 +550,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="why-v2" class="level2">
 <h2 class="anchored" data-anchor-id="why-v2">Why v2</h2>
 <p>The v1 schema accumulated five structural problems as projects grew:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><strong>Per-model time columns multiplied ad hoc.</strong> The NGFS variant needed <code>key_base_year</code>/<code>years</code> for the CGE model (2023→2050) and <code>seals_key_base_year</code>/<code>seals_years</code> for SEALS (2020→2050). Every new model stage added more one-off columns.</li>
 <li><strong>“baseline” conflated two different things</strong>: the observed historical anchor (base-year LULC data, calibration inputs) and the business-as-usual counterfactual trajectory. One is data; the other is a scenario.</li>
 <li><strong><code>scenario_type</code> was overloaded with workflow control.</strong> Values like <code>baseline_ignore_dependencies</code> smuggled a label and a dependency flag into the type field, and pseudo-baseline rows were wired together through <code>comparison_counterfactual_labels</code>.</li>
@@ -562,7 +562,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="core-concepts" class="level2">
 <h2 class="anchored" data-anchor-id="core-concepts">Core concepts</h2>
 <p>A v2 file is a table where <strong>every row is either an observed anchor or a runnable scenario</strong>:</p>
-<ul class="incremental">
+<ul>
 <li>An <strong>observed</strong> row defines the historical anchor: the base year, the base-year LULC map, calibration inputs, and any additional observed years. It runs no projection years. It is data preparation, not a counterfactual.</li>
 <li>A <strong>bau</strong> or <strong>policy</strong> row is a trajectory to simulate. It points at its anchor (<code>observed_reference_label</code>), optionally at scenarios that must run first (<code>depends_on</code>), and at scenarios it is compared against in reporting (<code>compared_to</code>).</li>
 </ul>
@@ -850,7 +850,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="the-exchange-rule">The exchange rule</h3>
 <p><strong>Cross-stage artifacts live on the canonical clock.</strong> A stage runs internally on its native clock — GTAP’s annual year-on-year <code>.upd</code> chain is untouched — and anything it publishes for consumption by another stage or by reporting is resampled to canonical years using its declared policy, through one shared hazelbean utility (planned <code>hb.resample_years(values_by_year, target_years, method, extrapolation)</code>). Symmetrically, a stage that needs an input at a native year the canonical grid skips resamples the canonical artifact the same way. The same machinery runs at <strong>every clock boundary, in both directions</strong>: stage outputs → canonical (publishing), canonical inputs → stage-native (consumption), and exogenous sources → stage-native (shock files, coarse NetCDFs — see below). Task code never hand-rolls year interpolation: the three duplicated linear-interpolation blocks in <code>gtappy_tasks.py</code> (~2898, ~3313, ~3825) and the hardcoded decadal interpolation in the BtC extraction path collapse into this utility. Native-clock artifacts stay in the stage’s own output tree — canonical resampling adds files, it never deletes the annual detail.</p>
 <p>How the awkward anchors resolve:</p>
-<ul class="incremental">
+<ul>
 <li><strong>GTAP 2023 vs canonical 2020.</strong> GTAP’s base year is a stage fact, not the project’s. Canonical years above 2023 are sampled directly from its annual grid (a validated superset). If a task requests GTAP values at canonical years at or below 2023, the default <code>gtap_extrapolation=hold</code> supplies the 2023 base values — an explicit, declared assumption of no change over 2020→2023, instead of a silent one.</li>
 <li><strong>MAgPIE 2020 / LUH2 2015.</strong> Calendar alignment of the NetCDF time axis stays with the existing <code>time_dim_adjustment</code> mechanism (orthogonal to harmonization). <em>Missing years</em> on the aligned axis are filled per <code>coarse_interpolation</code> — default linear between the neighboring bands. This also fixes <code>extract_global_netcdf</code>, which today silently skips requested years the source lacks.</li>
 <li><strong>ESACCI ends 2022.</strong> Not hardcoded anywhere: the canonical <code>base_year</code> must be a year the anchoring <code>observed</code> row can supply (<code>base_year_lulc_path</code> must exist), which is where the ≤ 2022 constraint enforces itself. A future ESA release moves the anchor by editing one CSV cell — or the project constructs a later anchor and makes it canonical (see Constructed anchors).</li>
@@ -859,7 +859,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exogenous-shocks-gtap-baseline-drivers" class="level3">
 <h3 class="anchored" data-anchor-id="exogenous-shocks-gtap-baseline-drivers">Exogenous shocks (GTAP baseline drivers)</h3>
 <p>The GTAP baseline requires exogenous driver shocks (GDP, population, labor) supplied in a <code>.har</code> whose headers come in distinct time families — annual growth rates (<code>OGP</code>/<code>POP</code>/<code>LAB</code>), decadal (<code>DGP</code>/<code>DYP</code>/<code>DYL</code>), cumulative-from-base, and duplicates. Today a run year missing from the shocks file freezes the solve mid-run, and single-step runs flip between header families by special case (<code>gtappy_tasks.py:988</code>, enabled only for <code>len(years)==1</code> and year ∈ {2030, 2040, 2050}). Under v2 the shocks file is treated like any other clocked source:</p>
-<ul class="incremental">
+<ul>
 <li>A <strong>shock-preparation step</strong>, part of the stage’s base-year preparation, resamples the source shocks onto the stage’s resolved chain and writes a derived <code>.har</code> that matches <code>gtap_years</code> exactly. After that, the CGE loop can never request a year the file lacks.</li>
 <li>Growth rates <strong>compound; they never interpolate linearly</strong>. Splitting a decadal shock into annual steps takes the geometric root <code>(1+G)^(1/10) − 1</code>; aggregating annual shocks into a multi-year step (including a singleshot 2023→2050 jump) takes the running product of <code>(1+g_t)</code> minus one. This is the <code>compound</code> method in the interpolation vocabulary.</li>
 <li>The method is <strong>per header, not per file</strong>: most drivers are ratio growth rates, some are levels, and at least one (<code>gdppc</code>) is a difference rather than a ratio. <code>gtap_shock_config</code> maps header → semantics (<code>rate</code> / <code>level</code> / <code>difference</code>), and the resampler picks compound, linear, or difference-scaling accordingly.</li>
@@ -875,7 +875,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="constructed-anchors" class="level3">
 <h3 class="anchored" data-anchor-id="constructed-anchors">Constructed anchors</h3>
 <p>The canonical anchor does not have to be a directly observed year — it can be <strong>produced by an upstream row</strong>. The motivating case: GTAP’s database year is 2023, GTAP data is hard to move, but ESACCI ends at 2022 and ESA is easy to extend. Rather than carrying a permanent <code>gtap</code> stage clock, the project can construct a 2023 LULC anchor and make 2023 canonical:</p>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><code>observed_esa_2022</code> — a true <code>observed</code> row (base 2022, real ESA map, <code>observed_years=2020 2022</code>). Calibration and validation reference only these genuinely observed years.</li>
 <li><code>extend_anchor_to_2023</code> — an ordinary <code>bau</code> row anchored on it with <code>years=2023</code>: a mini-SEALS run downscaling the assumed-baseline coarse trajectory’s 2022→2023 change onto ESA (the 2023 slice of 2020/2025 bands comes from <code>coarse_interpolation</code>).</li>
 <li><code>anchor_2023</code> — an <code>observed</code> row with <code>base_year=2023</code>, <code>depends_on=extend_anchor_to_2023</code>, and <code>base_year_lulc_path</code> templated (cat-ears) onto row 2’s output.</li>
@@ -931,7 +931,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="load-time-clock-validation" class="level3">
 <h3 class="anchored" data-anchor-id="load-time-clock-validation">Load-time clock validation</h3>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><code>&lt;stage&gt;_years</code> never contains the stage’s resolved base year; <code>&lt;stage&gt;_years</code> and <code>&lt;stage&gt;_timestep</code> are mutually exclusive.</li>
 <li><strong>Coverage:</strong> every canonical year must be obtainable from every enabled stage under that stage’s declared <code>interpolation</code>/<code>extrapolation</code> policy, and every resolved stage year must be obtainable from the stage’s declared exogenous sources (e.g.&nbsp;every <code>gtap</code> year from <code>gtap_shocks_path</code> under its per-header semantics). With <code>none</code>/<code>error</code> policies an uncoverable year is a hard load-time failure naming the stage (or header) and the year — instead of a mid-run KeyError, a silently missing band, or a frozen GEMPACK solve.</li>
 <li><code>interpolation</code>/<code>extrapolation</code>/<code>coarse_interpolation</code> values are a closed vocabulary; unknown methods are a load-time error (new methods get added to hazelbean, not to project task code).</li>
@@ -943,7 +943,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="hindcasting-backward-years" class="level2">
 <h2 class="anchored" data-anchor-id="hindcasting-backward-years">Hindcasting (backward years)</h2>
 <p><code>years</code> may contain any integers other than <code>base_year</code> (listing <code>base_year</code> itself is a load-time error — it is the anchor, never a simulated step). The parser splits <code>years</code> into two chains:</p>
-<ul class="incremental">
+<ul>
 <li><strong>forward chain</strong>: years greater than <code>base_year</code>, ascending;</li>
 <li><strong>backward chain</strong>: years less than <code>base_year</code>, <strong>descending</strong> (closest-to-base first).</li>
 </ul>
@@ -967,12 +967,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="parsing-rules-implementation-contract" class="level2">
 <h2 class="anchored" data-anchor-id="parsing-rules-implementation-contract">Parsing rules (implementation contract)</h2>
-<ol class="incremental" type="1">
+<ol type="1">
 <li><strong>Read</strong> with <code>pd.read_csv(path, encoding='utf-8-sig', dtype=str, keep_default_na=False)</code>. An empty string means None; the empty cell is the <em>only</em> null representation (no <code>none</code>/<code>NA</code>/<code>nan</code> literals — this kills the <code>'nan'</code>-string checks in the v1 parsers).</li>
 <li><strong>Comment rows</strong>: a <code>scenario_label</code> starting with <code>#</code> skips the whole row.</li>
 <li><strong>Lists</strong> are single-space-separated within a cell (Excel-safe, never commas). Repeated spaces collapse; leading/trailing whitespace is stripped.</li>
 <li><strong>Typing is by column-name suffix, never value sniffing</strong> (applied after stripping a registered stage prefix):
-<ul class="incremental">
+<ul>
 <li><code>*_path</code> → path; <code>*_paths</code> → path list</li>
 <li><code>years</code>, <code>*_years</code> → int list; <code>*_year</code> → int (always a bare scalar — the v1 <code>key_base_year</code> scalar/list asymmetry is gone)</li>
 <li><code>*_timestep</code> → int</li>
@@ -1089,7 +1089,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Row surgery:</p>
-<ul class="incremental">
+<ul>
 <li>Add one <code>observed</code> row (anchor 2020, ESA LULC) — v1 had no row representing the actual observed anchor.</li>
 <li><code>baseline_ignore_dependencies_initial</code> (type <code>baseline</code>) → ordinary <code>bau</code> row <code>gtap_initial</code> — it is a real CGE run, not data. It carries empty <code>years</code> and an empty <code>gtap</code> clock: a base-year-only equilibrium anchored at <code>gtap_base_year</code>.</li>
 <li><code>baseline_ignore_dependencies</code> (type <code>baseline_ignore_dependencies</code>) → <code>bau</code> row with <code>depends_on=gtap_initial</code>, <code>ignore_dependencies=1</code>.</li>
@@ -1132,7 +1132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="breaking-changes" class="level3">
 <h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
-<ol class="incremental" type="1">
+<ol type="1">
 <li>The <code>p.key_base_year</code> attribute disappears (→ <code>p.base_year</code>); task code reading it must rename (mechanical: e.g.&nbsp;<code>seals_main.py:109, 540, 562, 592</code>).</li>
 <li><code>scenario_type</code> outside <code>{observed, bau, policy}</code> is rejected.</li>
 <li>Stage-override columns require stage registration (<code>p.scenario_stages</code>).</li>

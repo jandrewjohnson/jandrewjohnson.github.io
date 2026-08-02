@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Results</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest_dev">
+    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
  <span class="dropdown-text">GitHub</span></a>
   </li>  
     </ul>
@@ -442,9 +442,9 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="incremental">
+  <ul>
   <li><a href="#release-notes" id="toc-release-notes" class="nav-link active" data-scroll-target="#release-notes">Release Notes</a>
-  <ul class="incremental collapse">
+  <ul class="collapse">
   <li><a href="#update-v4.0.0" id="toc-update-v4.0.0" class="nav-link" data-scroll-target="#update-v4.0.0">Update v4.0.0</a></li>
   <li><a href="#update-v0.4.0" id="toc-update-v0.4.0" class="nav-link" data-scroll-target="#update-v0.4.0">Update v0.4.0</a></li>
   </ul></li>
@@ -463,9 +463,9 @@ ul.task-list li input[type="checkbox"] {
 <p>Each product keeps its own release notes: <a href="https://justinandrewjohnson.com/seals/user_guide/release_notes.html">SEALS</a> · <a href="https://justinandrewjohnson.com/gtap_invest/user_guide/release_notes.html">GTAP-InVEST</a> · hazelbean’s per-version detail is in <a href="https://github.com/jandrewjohnson/hazelbean_dev/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>
 <section id="update-v4.0.0" class="level2">
 <h2 class="anchored" data-anchor-id="update-v4.0.0">Update v4.0.0</h2>
-<ul class="incremental">
+<ul>
 <li><p>Changed versioning to match the GTAP-InVEST project to which its development was associated. In this, we had:</p>
-<ul class="incremental">
+<ul>
 <li>1.0 WWF, 141 regions, no AEZs</li>
 <li>2.0 ECN, 36 regions, 18 aez, endogenous LUC</li>
 <li>3.0 PNAS, 36 regions, 18 aez, endogenous LUC, new policies</li>
@@ -473,10 +473,10 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 <li><p>New feature: 2-stage downscaling is now default (rather than implemented in the GTAP-InVEST code). Users can optionally give either (but at least one) coarse_projections_input_path or regional_projections input path. The two different downscaling scales are referred to as regional, where we assume a vector-file of regions that have corresponding LUC for different classes, or coarse, where we assume a raster file of LUC classes.</p></li>
 <li><p>Added documentation of different sceanrio_definition.csv paramters:</p>
-<ul class="incremental">
+<ul>
 <li>scenario_label: User-defined string to identify the scenario. Will be referenced (NYI) by automatic plotting calls according to baseline_reference_label or comparison_counterfactual_labels</li>
 <li>scenario_type: One of [‘baseline’, ‘bau’, ‘policy’].
-<ul class="incremental">
+<ul>
 <li>Baseline scenarios aren’t downscaled (because they have been observed), but they still need a line in the scenarios file to define which model defined them and in what year they have data.</li>
 <li>BAU scenarios are downscaled, relative either to the baseline sceanrio or the previous year if not the first year. Technically bau scenarios are no different than policy scenarios except insofar as they have different interpretation about if e.g.&nbsp;a policy is effective relative to BAU.</li>
 <li>Policy scenarios are downscaled, relative to the baseline scenario or the previous year if not the first year and might be compared to BAU (NYI)</li>
@@ -486,7 +486,7 @@ ul.task-list li input[type="checkbox"] {
 <li>climate_label: String representing the RCP in use. Format as e.g.&nbsp;rcp45</li>
 <li>model_label: String representing the model used to generate the scenario. Format as e.g.&nbsp;luh2-message.</li>
 <li>counterfactual_label: String representing some counterfactual. For example, in the latest release, we have a new test file that has 3 counterfactuals:
-<ul class="incremental">
+<ul>
 <li>bau: defined just by the luh2 results</li>
 <li>bau_shift: shift the luh2 results by the values in regional_projections_path</li>
 <li>just_shift: downscale only the shift using a proportional coarse downscaling</li>
@@ -511,7 +511,7 @@ ul.task-list li input[type="checkbox"] {
 <li>regional_projections_input_path: path to a region_id and region_label mapped to different class changes.</li>
 </ul></li>
 <li><p>In simplifying lulc_src_label etc, we have clarified a few terms:</p>
-<ul class="incremental">
+<ul>
 <li>correspondence: a one to many mapping with no extra information. Contains src_id, dst_id, src_label, dst_label at minimum No additional information is stored in this file. The src and dst labels are defined in the file columns. So for instance in esa_seals7_correspondnece.csv, the file name could have been anything, but the actual src_label and dst_label strings themselves are defined in the columns esa_id and seals7_id.</li>
 <li>structured_mapping: contains multiple one to many relationships, but also requires that the first src listed is unique. Note that if you groupby, you have to drop the previously disaggregate label (or perhaps nyi list it in a curled-up dimension with cat-ears?).</li>
 <li>unstructured_mapping: like structured_mapping but doesn’t require that the first src listed is unique. If you take a structured_mapping and groupby on it, it will necessarily result in an unstructured_mapping.</li>

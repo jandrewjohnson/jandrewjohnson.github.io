@@ -254,25 +254,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">First SEALS run walkthrough</span></a>
+ <span class="menu-text">Walkthrough</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/scenarios_format.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Iteration</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Release Notes</span></a>
+  <a href="../../seals/user_guide/custom_scenarios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Custom Scenarios</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../seals/user_guide/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coupling SEALS to other models</span></a>
+ <span class="menu-text">Model Coupling</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -311,6 +305,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/SEALS-User-Guide.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">User Guide PDF</span></a>
   </div>
@@ -334,8 +334,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#how-to-read-this-guide" id="toc-how-to-read-this-guide" class="nav-link" data-scroll-target="#how-to-read-this-guide">How to read this guide</a></li>
-  <li><a href="#where-seals-ends-and-the-platform-begins" id="toc-where-seals-ends-and-the-platform-begins" class="nav-link" data-scroll-target="#where-seals-ends-and-the-platform-begins">Where SEALS ends and the platform begins</a></li>
-  <li><a href="#status-and-citation" id="toc-status-and-citation" class="nav-link" data-scroll-target="#status-and-citation">Status and citation</a></li>
+  <li><a href="#integration-with-the-earth-economy-devstack" id="toc-integration-with-the-earth-economy-devstack" class="nav-link" data-scroll-target="#integration-with-the-earth-economy-devstack">Integration with the Earth-Economy Devstack</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -348,8 +347,20 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>SEALS, the Spatial Economic Allocation Landscape Simulator, is a land-use change model that downscales predictions of land-use change from aggregate (regional or coarse-gridded) inputs to a finer resolution, typically 10–300 meters.</p>
-<p>Its primary comparative advantage is fast computation. It downscales to 300 meters globally — roughly 8.4 billion grid cells — in about an hour on a laptop. It is designed with parallelization in mind and so scales well to high-performance, cloud, or distributed computing. Performance-critical functions are written in C++ (via Cython); everything else is Python.</p>
+<p>SEALS, the Spatial Economic Allocation Landscape Simulator, is a land-use change model that downscales predictions of land-use change from aggregate (regional or coarse-gridded) inputs to a finer resolution, typically 10–300 meters. See the <a href="https://justinandrewjohnson.com/seals/user_guide">User Guide</a> for the full documentation.</p>
+<p>SEALS’ primary comparative advantage is fast computation. It downscales to 300 meters globally — roughly 8.4 billion grid cells — in about an hour on a laptop. It is designed with parallelization in mind and so scales well to high-performance, cloud, or distributed computing. Performance-critical functions are written in C++ (via Cython); everything else is Python.</p>
+<section id="how-to-read-this-guide" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-read-this-guide">How to read this guide</h2>
+<p>Start at <a href="../../seals/user_guide/installation.html">Installation</a> and <a href="../../seals/user_guide/quickstart.html">Quickstart</a> — together they take you from nothing to a downscaled map. Then:</p>
+<ul>
+<li><strong><a href="../../seals/user_guide/walkthrough.html">Walkthrough</a></strong> — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.</li>
+<li><strong><a href="../../seals/user_guide/custom_scenarios.html">Custom scenarios</a></strong> — the column reference for the scenarios CSV that defines what SEALS runs.</li>
+<li><strong><a href="../../seals/user_guide/magpie.html">MAgPIE</a></strong> and the <strong><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></strong> — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.</li>
+</ul>
+<p>This guide is rendered both as a website and as a single PDF (<a href="SEALS-User-Guide.pdf">download</a>). If you are reading the PDF, links to the other two products point at the published site.</p>
+</section>
+<section id="integration-with-the-earth-economy-devstack" class="level2">
+<h2 class="anchored" data-anchor-id="integration-with-the-earth-economy-devstack">Integration with the Earth-Economy Devstack</h2>
 <p>SEALS is one of three software products maintained by NatCap TEEMs (The Earth-Economy Modellers):</p>
 <table class="caption-top table">
 <colgroup>
@@ -377,31 +388,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<section id="how-to-read-this-guide" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-read-this-guide">How to read this guide</h2>
-<p>Start at <a href="../../seals/user_guide/installation.html">Installation</a> and <a href="../../seals/user_guide/quickstart.html">Quickstart</a> — together they take you from nothing to a downscaled map. Then:</p>
-<ul>
-<li><strong><a href="../../seals/user_guide/walkthrough.html">Walkthrough</a></strong> — a guided first run, and the anatomy of a run file. Read this before you start a project of your own.</li>
-<li><strong><a href="../../seals/user_guide/scenarios_format.html">Scenario iteration</a></strong> — the column reference for the scenarios CSV that defines what SEALS runs.</li>
-<li><strong><a href="../../seals/user_guide/magpie.html">MAgPIE</a></strong> and the <strong><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></strong> — coupling SEALS to an external land-use model, which is also the general pattern for coupling it to any coarse projection source.</li>
-</ul>
-<p>This guide is rendered both as a website and as a single PDF (<a href="SEALS-User-Guide.pdf">download</a>). If you are reading the PDF, links to the other two products point at the published site.</p>
-</section>
-<section id="where-seals-ends-and-the-platform-begins" class="level2">
-<h2 class="anchored" data-anchor-id="where-seals-ends-and-the-platform-begins">Where SEALS ends and the platform begins</h2>
-<p>SEALS is a model. The machinery that runs it — project directories, task trees, skip-if-already-computed re-runs, automatic base-data download — is <strong>ProjectFlow</strong>, which lives in hazelbean and is shared across all three products. This guide covers SEALS and says only as much about ProjectFlow as you need to run it.</p>
-<p>For the platform itself, see the Earth-Economy Devstack documentation:</p>
-<ul>
-<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">Conventions</a> — the run-file spec, naming rules, and directory layout</li>
-<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_complexity.html">Project complexity</a> — the three axes that describe how a run file is organized, and why</li>
-<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/project_flow.html">ProjectFlow</a> — the task-tree engine</li>
-<li><a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html">Installation</a> — devstack-wide install options, for editing more of the stack than SEALS</li>
-</ul>
-</section>
-<section id="status-and-citation" class="level2">
-<h2 class="anchored" data-anchor-id="status-and-citation">Status and citation</h2>
-<p>SEALS is under active development and changes rapidly. Pull the latest <a href="https://github.com/jandrewjohnson/seals"><code>seals</code></a> before reporting a problem.</p>
-<p>The model was introduced alongside GTAP-InVEST in <a href="https://www.pnas.org/doi/10.1073/pnas.2220401120">Johnson et al.&nbsp;2023, PNAS</a>. All code is available under a permissive open-source license.</p>
+<p>To learn about the rest of the Devstack, see its documentation at <a href="https://justinandrewjohnson.com/earth_economy_devstack/" class="uri">https://justinandrewjohnson.com/earth_economy_devstack/</a>.</p>
 
 
 </section>

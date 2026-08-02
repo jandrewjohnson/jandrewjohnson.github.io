@@ -221,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie.html">Coupling SEALS to other models</a></li><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie.html">Model Coupling</a></li><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -254,25 +254,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">First SEALS run walkthrough</span></a>
+ <span class="menu-text">Walkthrough</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/scenarios_format.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Iteration</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Release Notes</span></a>
+  <a href="../../seals/user_guide/custom_scenarios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Custom Scenarios</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../seals/user_guide/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coupling SEALS to other models</span></a>
+ <span class="menu-text">Model Coupling</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -311,6 +305,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/SEALS-User-Guide.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">User Guide PDF</span></a>
   </div>
@@ -344,7 +344,7 @@ ul.task-list li input[type="checkbox"] {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie.html">Coupling SEALS to other models</a></li><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie.html">Model Coupling</a></li><li class="breadcrumb-item"><a href="../../seals/user_guide/magpie_tutorial.html">MAgPIE tutorial</a></li></ol></nav></header>
 
 
 
@@ -393,7 +393,7 @@ ul.task-list li input[type="checkbox"] {
 4,4,secdforest,forest,secondary forest,
 5,4,forestry,forest,forestry,
 7,5,other,othernat,non-forest vegetation,</code></pre>
-<p>Copy and paste this mapping into a CSV file and save it, e.g.&nbsp;under <code>base_data/seals/default_inputs/magpie_seals7_correspondence.csv</code>. The folder <code>base_data/seals/default_inputs</code> also contains other mappings such as a mapping betweehn LUH2v2 land types and SEALS. This mapping can now be used to set up the <strong>scenarios CSV</strong>. The scenarios CSV provides SEALS with all necessary information on the input data (or MAgPIE outputs), including the path to the MAgPIE outputs. It also allows the user to set up multiple SEALS runs (e.g.&nbsp;in the case of different scenario runs) in one go. The file is named per project — the one shipped with SEALS is <code>standard_scenarios.csv</code> — and your run file points at it with <code>p.scenario_definitions_filename</code>. One way to better understand it is to run SEALS on the test data without further modification, which generates a default in the project folder that you can then tailor to your needs. The columns are documented in <a href="../../seals/user_guide/scenarios_format.html">scenarios_format.md</a>.</p>
+<p>Copy and paste this mapping into a CSV file and save it, e.g.&nbsp;under <code>base_data/seals/default_inputs/magpie_seals7_correspondence.csv</code>. The folder <code>base_data/seals/default_inputs</code> also contains other mappings such as a mapping betweehn LUH2v2 land types and SEALS. This mapping can now be used to set up the <strong>scenarios CSV</strong>. The scenarios CSV provides SEALS with all necessary information on the input data (or MAgPIE outputs), including the path to the MAgPIE outputs. It also allows the user to set up multiple SEALS runs (e.g.&nbsp;in the case of different scenario runs) in one go. The file is named per project — the one shipped with SEALS is <code>standard_scenarios.csv</code> — and your run file points at it with <code>p.scenario_definitions_filename</code>. One way to better understand it is to run SEALS on the test data without further modification, which generates a default in the project folder that you can then tailor to your needs. The columns are documented in <a href="../../seals/user_guide/custom_scenarios.html">Custom scenarios</a>.</p>
 <p>The following shows how an example <code>scenario_definitions_tutorial.csv</code> is created that provides relevant information for a set of different MAgPIE test runs. Assume we have created land use projections for three different test scenarios: a reference ‘business-as-usual’ scenario (<code>weeklyTests_SSP2EU-Ref</code>), a low ambition mitigation scenario, in which current nationally determined contributions (NDCs) under the Paris agreement for the land sector are fulfilled (<code>weeklyTests_SSP2EU-NDC</code>) and a highly ambitious mitigation scenario in line with the 1.5 degree target (<code>weeklyTests_SSP2EU-PkBudg650</code>). For each of the scenarios, we have created gridded land-use projections in a format that can be read by SEALS using the output script <code>extra/reportMAgPIE2SEALS.R</code> (see above).</p>
 <p>Here, the <code>scenario_definitions_tutorial.csv</code> contains a line for each scenario specified under <code>scenario_label</code>. Note that the <code>Baseline</code> always needs to be defined as well. In the years column you can specify the years for which SEALS should do a downscaling. Multiple years can be separated by a space.</p>
 <p><img src="images/magpie_scenario_definitions1.png" class="img-fluid"></p>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>scenarios_format – Justin Andrew Johnson</title>
+<title>custom_scenarios – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/scenarios_format.html">Scenario Iteration</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../seals/user_guide/custom_scenarios.html">Custom Scenarios</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -289,25 +289,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">First SEALS run walkthrough</span></a>
+ <span class="menu-text">Walkthrough</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/scenarios_format.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Scenario Iteration</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Release Notes</span></a>
+  <a href="../../seals/user_guide/custom_scenarios.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Custom Scenarios</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../seals/user_guide/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coupling SEALS to other models</span></a>
+ <span class="menu-text">Model Coupling</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -346,6 +340,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/SEALS-User-Guide.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">User Guide PDF</span></a>
   </div>
@@ -366,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#scenario-iteration" id="toc-scenario-iteration" class="nav-link active" data-scroll-target="#scenario-iteration">Scenario Iteration</a>
+  <li><a href="#custom-scenarios" id="toc-custom-scenarios" class="nav-link active" data-scroll-target="#custom-scenarios">Custom Scenarios</a>
   <ul class="collapse">
   <li><a href="#column-reference" id="toc-column-reference" class="nav-link" data-scroll-target="#column-reference">Column reference</a>
   <ul class="collapse">
@@ -384,8 +384,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="scenario-iteration" class="level1">
-<h1>Scenario Iteration</h1>
+<section id="custom-scenarios" class="level1">
+<h1>Custom Scenarios</h1>
 <p>The scenarios CSV defines your SEALS scenarios. Each row is one scenario. The tracked copies that ship with SEALS are <a href="https://github.com/jandrewjohnson/seals/blob/main/seals/input_template/standard_scenarios.csv"><code>seals/input_template/standard_scenarios.csv</code></a> (three scenarios) and <code>standard_scenarios_test.csv</code> (a pared two-row version); this page documents their columns.</p>
 <blockquote class="blockquote">
 <p><strong>This is the v1 schema — the one the code reads today.</strong> A <strong>v2 schema</strong> is specified in <a href="https://justinandrewjohnson.com/earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a> and no code implements it yet. v2 fixes several structural problems in v1: it replaces <code>baseline_reference_label</code> / <code>comparison_counterfactual_labels</code> / per-model time columns with a <code>observed_reference_label</code> / <code>compared_to</code> / <code>depends_on</code> split and a single canonical clock, and it allows hindcasting. Write v1 for now; expect a migration when the hazelbean parser lands.</p>

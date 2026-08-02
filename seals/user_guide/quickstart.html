@@ -289,25 +289,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/walkthrough.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">First SEALS run walkthrough</span></a>
+ <span class="menu-text">Walkthrough</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/scenarios_format.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Iteration</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Release Notes</span></a>
+  <a href="../../seals/user_guide/custom_scenarios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Custom Scenarios</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../seals/user_guide/magpie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coupling SEALS to other models</span></a>
+ <span class="menu-text">Model Coupling</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -344,6 +338,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../seals/user_guide/release_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../seals/user_guide/SEALS-User-Guide.pdf" class="sidebar-item-text sidebar-link">
@@ -434,7 +434,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>run_mode</code> controls how much prior work is reused: <code>'check'</code> (the default) resumes in a stable project dir; <code>'full'</code> timestamps a fresh one.</p>
-<p>Put your scenarios CSV in an <code>input_template/</code> directory beside the run file. It is tracked in git, and ProjectFlow copies anything missing into the project’s untracked <code>input/</code> on first run without ever overwriting your working copy. The columns are documented in <a href="../../seals/user_guide/scenarios_format.html">scenarios_format.md</a>.</p>
+<p>Put your scenarios CSV in an <code>input_template/</code> directory beside the run file. It is tracked in git, and ProjectFlow copies anything missing into the project’s untracked <code>input/</code> on first run without ever overwriting your working copy. The columns are documented in <a href="../../seals/user_guide/custom_scenarios.html">Custom scenarios</a>.</p>
 <p>To run the same pipeline a second way — a smoke test, a different AOI — write a <em>second run file</em> that imports the first rather than copying it. <code>run_seals_standard_test.py</code> is the worked example, and the pattern is explained in <a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">conventions</a>.</p>
 </section>
 <section id="next" class="level2">

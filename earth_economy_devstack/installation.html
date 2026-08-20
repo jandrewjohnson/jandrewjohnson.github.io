@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -96,10 +131,29 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../publications/index.html"> 
-<span class="menu-text">Publications</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-research" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Research</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-research">    
+        <li>
+    <a class="dropdown-item" href="../research/index.html">
+ <span class="dropdown-text">Overview</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../publications/index.html">
+ <span class="dropdown-text">Publications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../books/index.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data/index.html">
+ <span class="dropdown-text">Data</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teaching" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Teaching</span>
@@ -123,61 +177,26 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="../research/index.html"> 
-<span class="menu-text">Research</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../books/index.html"> 
-<span class="menu-text">Books</span></a>
-  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gtap-invest" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">GTAP-InVEST</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-gtap-invest">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="../gtap_invest/index.html">
- <span class="dropdown-text">GTAP-InVEST Home</span></a>
+ <span class="dropdown-text">GTAP-InVEST</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../gtap_invest/user_guide/index.html">
- <span class="dropdown-text">User Guide</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../gtap_invest/user_guide/GTAP-InVEST-User-Guide.pdf">
- <span class="dropdown-text">User Guide PDF</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../gtap_invest/results/index.html">
- <span class="dropdown-text">Results</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/gtap_invest">
- <span class="dropdown-text">GitHub</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seals" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">SEALS</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-seals">    
         <li>
     <a class="dropdown-item" href="../seals/index.html">
- <span class="dropdown-text">SEALS Home</span></a>
+ <span class="dropdown-text">SEALS</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../seals/user_guide/index.html">
- <span class="dropdown-text">User Guide</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../seals/user_guide/SEALS-User-Guide.pdf">
- <span class="dropdown-text">User Guide PDF</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/jandrewjohnson/seals">
- <span class="dropdown-text">GitHub</span></a>
+    <a class="dropdown-item" href="../global_invest/index.html">
+ <span class="dropdown-text">Global InVEST</span></a>
   </li>  
     </ul>
   </li>
@@ -191,15 +210,27 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Earth-Economy Devstack</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/hazelbean_overview.html">
+ <span class="dropdown-text">Hazelbean</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/gtappy.html">
+ <span class="dropdown-text">GTAPpy</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/release_notes.html">
+ <span class="dropdown-text">Release Notes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/organization.html">
+ <span class="dropdown-text">Methods and Conventions</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../mesh/index.html">
  <span class="dropdown-text">MESH</span></a>
   </li>  
     </ul>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="../data/index.html"> 
-<span class="menu-text">Data</span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../cv-bio/index.html"> 
 <span class="menu-text">CV/Bio</span></a>
@@ -327,12 +358,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/global_invest.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Global InVEST</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../earth_economy_devstack/gtappy.html" class="sidebar-item-text sidebar-link">
@@ -451,6 +476,13 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#add-additional-devstack-repositories-as-desired" id="toc-add-additional-devstack-repositories-as-desired" class="nav-link" data-scroll-target="#add-additional-devstack-repositories-as-desired">Add Additional Devstack Repositories as Desired</a></li>
   </ul></li>
+  <li><a href="#per-machine-configuration" id="toc-per-machine-configuration" class="nav-link" data-scroll-target="#per-machine-configuration">4. Per-machine configuration</a>
+  <ul class="collapse">
+  <li><a href="#the-keys-that-exist" id="toc-the-keys-that-exist" class="nav-link" data-scroll-target="#the-keys-that-exist">The keys that exist</a></li>
+  <li><a href="#machine.env-or-parameters.csv" id="toc-machine.env-or-parameters.csv" class="nav-link" data-scroll-target="#machine.env-or-parameters.csv">machine.env or parameters.csv?</a></li>
+  <li><a href="#setting-up-a-shared-data-root" id="toc-setting-up-a-shared-data-root" class="nav-link" data-scroll-target="#setting-up-a-shared-data-root">Setting up a shared data root</a></li>
+  <li><a href="#check-it-worked" id="toc-check-it-worked" class="nav-link" data-scroll-target="#check-it-worked">Check it worked</a></li>
+  </ul></li>
   <li><a href="#compiling-cc-code" id="toc-compiling-cc-code" class="nav-link" data-scroll-target="#compiling-cc-code">Compiling C/C++ Code</a></li>
   <li><a href="#common-problems" id="toc-common-problems" class="nav-link" data-scroll-target="#common-problems">Common problems</a></li>
   </ul></li>
@@ -497,7 +529,11 @@ ul.task-list li input[type="checkbox"] {
 <p>The Developer Installation installs all (or a subset) of our full devstack. This requires you to have a C/C++ compiler installed (see below). It also specifies canonical file names and structures for where to put the various repositories.</p>
 <ol type="1">
 <li>Create a new environment and follow the basic installation steps above.</li>
-<li>Remove hazelbean from the new environment with <code>conda remove hazelbean --force</code>. This gets rid of the condaforge version of Hazelbean but keeps its dependencies (NOTE: simple pip uninstalling leaves behind Zombie Folders).</li>
+<li>Remove the packaged hazelbean from the new environment, keeping its dependencies. Which command you need depends on how it got there, so check first with <code>conda list hazelbean</code> and read the <strong>Channel</strong> column:
+<ul>
+<li>a conda channel (<code>conda-forge</code>) — <code>conda remove hazelbean --force</code> (NOTE: simple pip uninstalling leaves behind Zombie Folders)</li>
+<li><code>pypi</code> — <code>pip uninstall hazelbean</code>. Conda has no record of a pip-installed package, so <code>conda remove</code> fails with <code>PackagesNotFoundError</code> and leaves it in place.</li>
+</ul></li>
 <li>Create the hazelbean Project Folder at <code>C:/Users/&lt;YOUR_USERNAME&gt;/Files/hazelbean/</code> (PC) or <code>/Users/&lt;YOUR_USERNAME&gt;/Files/hazelbean/</code> (Mac/Linux)</li>
 <li>Clone the desired branch from the hazelbean GitHub repository into your hazelbean Project Folder.
 <ul>
@@ -522,6 +558,88 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 <li>Step 1 can be repeated for any of the repositories below (presuming you have read access) - <a href="https://github.com/jandrewjohnson/seals" class="uri">https://github.com/jandrewjohnson/seals</a> - <a href="https://github.com/jandrewjohnson/gtap_invest_dev" class="uri">https://github.com/jandrewjohnson/gtap_invest_dev</a> - <a href="https://github.com/NatCapTEEMs/global_invest_dev" class="uri">https://github.com/NatCapTEEMs/global_invest_dev</a> - <a href="https://github.com/jandrewjohnson/gtappy_dev" class="uri">https://github.com/jandrewjohnson/gtappy_dev</a> - <a href="https://github.com/jandrewjohnson/gep_dev" class="uri">https://github.com/jandrewjohnson/gep_dev</a></li>
 </ol>
+<section id="no-deps-is-not-optional-here" class="level4">
+<h4 class="anchored" data-anchor-id="no-deps-is-not-optional-here"><code>--no-deps</code> is not optional here</h4>
+<p>Some devstack repositories declare a hazelbean floor — SEALS, for instance, requires <code>hazelbean&gt;=2.0.0</code>. Omit <code>--no-deps</code> and pip will try to satisfy that from PyPI: it <strong>uninstalls your editable hazelbean and replaces it with a released wheel</strong>. Nothing appears to go wrong at the time. You find out weeks later, when a change you know you made to hazelbean has no effect.</p>
+<p>Two things guard against this, and it is worth knowing both:</p>
+<ul>
+<li>Always pass <code>--no-deps</code>. Install dependencies deliberately, never as a side effect of installing a devstack repo.</li>
+<li>Keep your hazelbean clone on a branch whose derived version is at or above the floor. Versions come from git tags via <code>setuptools_scm</code>, so a branch that cannot <em>reach</em> the release tag derives a lower version — a clone on <code>develop</code> after a release tagged only on <code>main</code> reports something like <code>1.8.1.dev59</code>, which does not satisfy <code>&gt;=2.0.0</code>, and pip replaces it even though your code is newer than the release. Back-merging <code>main</code> into <code>develop</code> after each release keeps release tags reachable and closes this off.</li>
+</ul>
+</section>
+<section id="check-you-are-running-the-code-you-think-you-are" class="level4">
+<h4 class="anchored" data-anchor-id="check-you-are-running-the-code-you-think-you-are">Check you are running the code you think you are</h4>
+<p>After adding each repository, confirm the imports still resolve to your clones rather than to a packaged copy:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hb.<span class="va">__file__</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This must print a path inside your clone (<code>.../Files/hazelbean/hazelbean_dev/hazelbean/__init__.py</code>). If it prints something under <code>site-packages</code>, a packaged copy is shadowing your clone: uninstall it as in step 2 above and redo the editable install. Check here rather than only after installing hazelbean itself — the shadowing is caused by installing the <em>other</em> repositories, so it cannot show up until this point.</p>
+</section>
+</section>
+</section>
+<section id="per-machine-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="per-machine-configuration">4. Per-machine configuration</h2>
+<p>Installing the code is not quite the whole setup. A few settings differ on every machine — where your lab drive is mounted, which SLURM account to charge — and none of them can be committed, because they are true only of your computer. They live in a single never-committed file:</p>
+<pre><code>~/.config/hazelbean/machine.env</code></pre>
+<p>Hazelbean loads it the moment you <code>import hazelbean</code>. The format is plain <code>KEY=value</code> lines; a leading <code>export</code> and a trailing <code># comment</code> are both tolerated, so the same file can also be sourced from a shell. Values are applied with <em>setdefault</em> semantics — a real environment variable always wins — so you can override any of it for one run without editing the file.</p>
+<p><strong>Nothing here is required.</strong> A machine with no <code>machine.env</code> at all works; you just lose the conveniences below.</p>
+<section id="the-keys-that-exist" class="level3">
+<h3 class="anchored" data-anchor-id="the-keys-that-exist">The keys that exist</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>key</th>
+<th>what it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>HB_SHARED_DATA_DIRS</code></td>
+<td>Directories that mirror <code>base_data</code>’s layout and can be read directly — usually a mounted lab drive. <code>get_path</code> searches them after your local <code>base_data</code> and before the cloud bucket, and copies anything it finds into <code>base_data</code> so later runs resolve locally. <code>os.pathsep</code>-separated for more than one.</td>
+</tr>
+<tr class="even">
+<td><code>GTAP_SC_SLURM_ACCOUNT</code>, <code>GTAP_SC_SLURM_PARTITION</code>, <code>GTAP_SC_SLURM_TIME</code>, <code>GTAP_SC_SLURM_CPUS</code>, <code>GTAP_SC_SLURM_MEM</code></td>
+<td>How gtappy sizes and charges the <code>sbatch</code> jobs it submits when solving GTAP on a SLURM cluster.</td>
+</tr>
+<tr class="odd">
+<td><code>GTAP_SC_WINE_SIF</code></td>
+<td>Path to the Apptainer image that runs GEMPACK under Wine on the cluster.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="machine.env-or-parameters.csv" class="level3">
+<h3 class="anchored" data-anchor-id="machine.env-or-parameters.csv">machine.env or parameters.csv?</h3>
+<p>Both hold per-machine values, and the rule for which is which is simple:</p>
+<ul>
+<li>If a project’s <code>input_template/</code> ships the key with a blank value, it belongs in <strong>that project’s <code>input/</code> copy of <code>parameters.csv</code></strong>. The GTAP solve-backend connection settings work this way — <code>vm_ssh_host</code>, <code>vm_disk_prefix</code>, <code>gempack_dir</code>, <code>sc_ssh_host</code>, <code>sc_scratch</code>. They used to be environment variables and deliberately are not any more.</li>
+<li>Everything else — settings no project varies, that are simply true of the machine — belongs in <strong><code>machine.env</code></strong>.</li>
+</ul>
+<p>Many projects need neither. <code>global_invest</code>, for example, has no <code>parameters.csv</code> at all, so running one of its services needs nothing beyond an optional <code>HB_SHARED_DATA_DIRS</code>.</p>
+</section>
+<section id="setting-up-a-shared-data-root" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-a-shared-data-root">Setting up a shared data root</h3>
+<p>If you have been given access to a lab drive and mounted it (Google Drive for Desktop, Dropbox), let hazelbean find it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span>            <span class="co"># scan, show what was found, confirm, write</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span> <span class="at">--print</span>    <span class="co"># show the line without writing anything</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It checks the handful of places such a mount can live on your OS, accepts a directory only if it really contains <code>base_data</code>’s top-level folders, and appends the <code>HB_SHARED_DATA_DIRS</code> line for you. Run it once, whenever your situation changes — it is not an install step, and it never overwrites a value you set by hand.</p>
+<p>Finding nothing is a normal outcome, not a failure. Without a shared root, <code>get_path</code> falls through to the public cloud bucket, which needs no credentials and works everywhere. That is also the only option on Linux, since Google Drive for Desktop has no Linux client — so cluster machines are expected to have no shared root configured, and pipelines must never depend on one being present.</p>
+</section>
+<section id="check-it-worked" class="level3">
+<h3 class="anchored" data-anchor-id="check-it-worked">Check it worked</h3>
+<p>On a Developer Installation, first confirm you are running your clones rather than a packaged copy — see <a href="#check-you-are-running-the-code-you-think-you-are">Check you are running the code you think you are</a> above. That check is worth repeating any time a change you know you made appears to have no effect.</p>
+<p>Then confirm data resolution is wired up, without starting a real run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow(project_dir<span class="op">=</span>os.path.expanduser(<span class="st">'~/onboarding_check'</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.shared_data_dirs)   <span class="co"># [] if no shared root is configured -- that is fine</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.get_path(<span class="st">'cartographic'</span>, <span class="st">'ee'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A path printed under your local <code>base_data</code> means it worked, whether the file came from the drive or was downloaded from the bucket. If instead it raises, the error lists every root it searched, marks each shared root available or not, and tells you what to do next — so a missing mount is never confused with a missing file.</p>
+<p>(The explicit <code>project_dir</code> keeps this snippet runnable from anywhere. Real run files pass <code>project_name</code> instead and let ProjectFlow infer the location from the repo they live in, which needs the script to be inside a git repo — see <a href="../earth_economy_devstack/run_templates.html">Run Templates</a>.)</p>
 </section>
 </section>
 <section id="compiling-cc-code" class="level2">

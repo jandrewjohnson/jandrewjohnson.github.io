@@ -343,7 +343,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p><strong>Difference.</strong> Scenario value minus paired-baseline value, on the 5 km grid.</p></li>
 <li><p><strong>Regional shock.</strong> Area-weighted zonal aggregation to GTAP r50 × AEZ18 zones: <code>(Σ difference × area) / (Σ baseline value × area) × 100</code>, i.e.&nbsp;the percentage change in supported pollination value per zone.</p></li>
 <li><p><strong>Nature effect.</strong> Subtract the corresponding value for the <code>baseline_ignore_dependencies</code> scenario, so the shock isolates the nature signal rather than the shared climate/land trend.</p></li>
-<li><p><strong>Annual series.</strong> The per-anchor-year shocks are interpolated piecewise-linearly (<code>numpy.interp</code>) to annual values, anchored at 0 in the base year (all scenarios share the base-year land, so the shock is zero there by construction). Computing at every SEALS anchor year — rather than only at the horizon — lets the series follow non-linear land trajectories instead of assuming a single straight ramp.</p></li>
+<li><p><strong>Annual series.</strong> The per-anchor-year shocks are interpolated piecewise-linearly (<code>numpy.interp</code>) to annual values, anchored at 0 in the base year (all scenarios share the base-year land, so the shock is zero there by construction). Computing at every SEALS anchor year (rather than only at the horizon) lets the series follow non-linear land trajectories instead of assuming a single straight ramp.</p></li>
 </ol>
 </section>
 <section id="output" class="level2">

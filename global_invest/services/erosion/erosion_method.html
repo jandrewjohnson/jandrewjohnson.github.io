@@ -330,8 +330,8 @@ window.Quarto = {
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
   <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a>
   <ul class="collapse">
-  <li><a href="#a-damage-the-conservative-reading" id="toc-a-damage-the-conservative-reading" class="nav-link" data-scroll-target="#a-damage-the-conservative-reading">A — “damage” (the conservative reading)</a></li>
-  <li><a href="#b-service-the-comprehensive-reading" id="toc-b-service-the-comprehensive-reading" class="nav-link" data-scroll-target="#b-service-the-comprehensive-reading">B — “service” (the comprehensive reading)</a></li>
+  <li><a href="#a-damage-the-conservative-reading" id="toc-a-damage-the-conservative-reading" class="nav-link" data-scroll-target="#a-damage-the-conservative-reading">A, “damage” (the conservative reading)</a></li>
+  <li><a href="#b-service-the-comprehensive-reading" id="toc-b-service-the-comprehensive-reading" class="nav-link" data-scroll-target="#b-service-the-comprehensive-reading">B, “service” (the comprehensive reading)</a></li>
   <li><a href="#sign-conventions" id="toc-sign-conventions" class="nav-link" data-scroll-target="#sign-conventions">Sign conventions</a></li>
   </ul></li>
   <li><a href="#from-level-to-shock" id="toc-from-level-to-shock" class="nav-link" data-scroll-target="#from-level-to-shock">From level to shock</a></li>
@@ -374,13 +374,13 @@ window.Quarto = {
 <p>Turning that into an economic shock needs a coefficient linking erosion to yield. No method avoids this, so it is the key calibration for erosion regardless of which variant is used.</p>
 <p>We report <strong>two</strong> formulations side by side, because they answer different questions and neither is strictly better.</p>
 <section id="a-damage-the-conservative-reading" class="level3">
-<h3 class="anchored" data-anchor-id="a-damage-the-conservative-reading">A — “damage” (the conservative reading)</h3>
+<h3 class="anchored" data-anchor-id="a-damage-the-conservative-reading">A, “damage” (the conservative reading)</h3>
 <p>Only <em>severe</em> erosion is assumed to harm yield. A pixel is severe where USLE exceeds a per-country soil-loss tolerance: 2 t/ha/yr for small or low-lying countries, 11 otherwise. Cropland is SEALS7 class 2. For each zone,</p>
 <p><span class="math display">\[\text{level}_A = -100 \, \alpha \, p_{crop}, \qquad p_{crop} = \frac{\text{severe cropland area}}{\text{total cropland area}}\]</span></p>
-<p>with a single flat <span class="math inline">\(\alpha\)</span>. This is thresholded, binary, on-farm only, and weighted by cropland <em>area</em>. Because land cover carries no crop detail, method A is necessarily <strong>uniform across sectors</strong> — it cannot tell wheat land from vegetable land.</p>
+<p>with a single flat <span class="math inline">\(\alpha\)</span>. This is thresholded, binary, on-farm only, and weighted by cropland <em>area</em>. Because land cover carries no crop detail, method A is necessarily <strong>uniform across sectors</strong> , it cannot tell wheat land from vegetable land.</p>
 </section>
 <section id="b-service-the-comprehensive-reading" class="level3">
-<h3 class="anchored" data-anchor-id="b-service-the-comprehensive-reading">B — “service” (the comprehensive reading)</h3>
+<h3 class="anchored" data-anchor-id="b-service-the-comprehensive-reading">B, “service” (the comprehensive reading)</h3>
 <p>All erosion prevention counts, everywhere on cropland, and off-site protection is included. The prevention share combines the on-farm fraction <span class="math inline">\(1 - \text{USLE}/\text{RKLS}\)</span> with an upstream term obtained by D8 flow-accumulating prevented and potential mass, so vegetation upslope is credited for the sediment it stops reaching land below.</p>
 <p>Two properties matter. The zone average is <strong>magnitude-weighted</strong>: it aggregates tonnes, not percentages, as prevented over potential production-weighted mass. Without this, a pixel preventing 90 % of almost no erosion would count as much as one preventing 40 % of a great deal. And the coefficient is <strong>per crop</strong>, so a crop’s own erosion sensitivity is applied to its own prevention share before production-weighting across crops.</p>
 <p><span class="math display">\[\text{level}_B = 100 \sum_c w_c \, \alpha_c \, \frac{\text{prevented}_c}{\text{potential}_c} \Big/ \sum_c w_c\]</span></p>
@@ -393,7 +393,7 @@ window.Quarto = {
 </section>
 <section id="from-level-to-shock" class="level2">
 <h2 class="anchored" data-anchor-id="from-level-to-shock">From level to shock</h2>
-<p>Each level is already a percentage of crop productivity, so the shock is the <strong>absolute</strong> difference against the contemporaneous baseline — the nature-off counterfactual in the same year — not a relative change. That difference is zero at the base year and interpolated linearly between the 5-year anchors, then applied as a factor-productivity term (<code>afeall</code>).</p>
+<p>Each level is already a percentage of crop productivity, so the shock is the <strong>absolute</strong> difference against the contemporaneous baseline (the nature-off counterfactual in the same year) not a relative change. That difference is zero at the base year and interpolated linearly between the 5-year anchors, then applied as a factor-productivity term (<code>afeall</code>).</p>
 <p>A third level is also emitted for comparison and never fed to the economic model: the same prevention share kept behind A’s severe-pixel gate and weighted by production alone. It differs from B only in how exposure is measured, which makes it a useful check on how much the threshold and the weighting matter.</p>
 </section>
 <section id="crop-coefficients" class="level2">
@@ -402,11 +402,11 @@ window.Quarto = {
 </section>
 <section id="static-fallback" class="level2">
 <h2 class="anchored" data-anchor-id="static-fallback">Static fallback</h2>
-<p>When a service is not listed in <code>dynamic_es</code>, the same seam grafts a static task that reads the frozen per-scenario dependency table instead. That table carries a single 2050 endpoint computed on older land cover, so intermediate years are a synthetic ramp rather than real per-year values — which is why the dynamic path exists.</p>
+<p>When a service is not listed in <code>dynamic_es</code>, the same seam grafts a static task that reads the frozen per-scenario dependency table instead. That table carries a single 2050 endpoint computed on older land cover, so intermediate years are a synthetic ramp rather than real per-year values, which is why the dynamic path exists.</p>
 </section>
 <section id="compute" class="level2">
 <h2 class="anchored" data-anchor-id="compute">Compute</h2>
-<p>The SDR model is multi-hour and memory-heavy per global map, so resolution follows the run modality: a 6.45 km analysis grid locally, native SEALS resolution on a cluster. <code>run_erosion.py</code> runs the chain standalone, which is the practical way to iterate on it without invoking the economic model.</p>
+<p>The SDR model is multi-hour and memory-heavy per global map, so resolution follows the run modality: a 6.45 km analysis grid locally, native SEALS resolution on a cluster. <code>run_erosion.py</code> runs the calculation standalone, which is the practical way to iterate on it without invoking the economic model.</p>
 
 
 </section>

@@ -1084,7 +1084,7 @@ margin-right: 0; }
 <li class="fragment"><code>seals_main.py</code>, <code>seals_tasks.py</code>, <code>seals_generate_base_data.py</code> — task functions, the actual model logic</li>
 <li class="fragment"><code>seals_initialize_project.py</code> — the task-tree builders</li>
 <li class="fragment"><code>seals_utils.py</code> — helpers</li>
-<li class="fragment"><code>run_seals_standard.py</code> — the run file</li>
+<li class="fragment"><code>run_seals.py</code> — the run file</li>
 </ul></li>
 </ul>
 </div>
@@ -1097,10 +1097,10 @@ margin-right: 0; }
 <li class="fragment">A <strong>run file</strong> configures a project and executes a task tree built from the library’s task functions</li>
 <li class="fragment">Two ship with SEALS, both in <code>seals/seals</code>:
 <ul>
-<li class="fragment"><code>run_seals_standard.py</code> — three scenarios, 2030 and 2050</li>
-<li class="fragment"><code>run_seals_standard_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
+<li class="fragment"><code>run_seals.py</code> — three scenarios, 2030 and 2050</li>
+<li class="fragment"><code>run_seals_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
 </ul></li>
-<li class="fragment">Open <code>run_seals_standard.py</code>. It is about 60 lines and has three parts</li>
+<li class="fragment">Open <code>run_seals.py</code>. It is about 60 lines and has three parts</li>
 </ul>
 </div>
 </section>
@@ -1152,7 +1152,7 @@ margin-right: 0; }
 <li class="fragment">The guard is mandatory: importing a run file must never start a run. That is what lets a second run file import this pipeline instead of copying it</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
-<span id="cb4-2"><a></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">&#39;seals_standard&#39;</span>, run_mode<span class="op">=</span><span class="st">&#39;check&#39;</span>)</span>
+<span id="cb4-2"><a></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">&#39;seals&#39;</span>, run_mode<span class="op">=</span><span class="st">&#39;check&#39;</span>)</span>
 <span id="cb4-3"><a></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">&#39;standard_scenarios.csv&#39;</span></span>
 <span id="cb4-4"><a></a></span>
 <span id="cb4-5"><a></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1235,7 +1235,7 @@ margin-right: 0; }
 <div class="r-fit-text">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb7-2"><a></a><span class="bu">cd</span> seals/seals</span>
-<span id="cb7-3"><a></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-3"><a></a><span class="ex">python</span> run_seals_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li class="fragment">On startup SEALS prints the <strong>task tree</strong> it is about to compute</li>
 <li class="fragment">To understand the model in depth, read the task functions behind those names</li>
@@ -1247,7 +1247,7 @@ margin-right: 0; }
 <h2>Find the output</h2>
 <div class="r-fit-text">
 <ul>
-<li class="fragment">Go to <code>~/Files/seals/projects/seals_standard_test/intermediate/</code></li>
+<li class="fragment">Go to <code>~/Files/seals/projects/seals_test/intermediate/</code></li>
 <li class="fragment">There is one directory per task in the tree</li>
 <li class="fragment">The downscaled maps are in <code>stitched_lulc_simplified_scenarios/</code>, for example:</li>
 </ul>

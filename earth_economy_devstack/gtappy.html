@@ -434,8 +434,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/scenario_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Definitions</span></a>
+  <a href="../earth_economy_devstack/proposed_changes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Proposed Changes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -495,7 +495,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <section id="how-a-gtappy-run-works" class="level2">
 <h2 class="anchored" data-anchor-id="how-a-gtappy-run-works">How a GTAPpy run works</h2>
-<p><strong>1. The user writes a run file.</strong> A run file (e.g.&nbsp;<code>run_standard.py</code>, <code>run_process_aez_results.py</code>) follows the devstack <a href="../earth_economy_devstack/conventions.html">run-file convention</a>: a <code>run_project(p)</code> entry point that creates a <code>ProjectFlow</code> object, sets <code>run_mode</code>, points at the base data directory, and builds a task tree. Machine-specific configuration lives in a <code>*_parameters.csv</code> and the scenarios in a <code>*_scenarios.csv</code> (templates ship in <code>gtappy/input_template/</code>), so changing what is run does not mean editing Python.</p>
+<p><strong>1. The user writes a run file.</strong> A run file (e.g.&nbsp;<code>run_gtappy.py</code>, <code>run_process_aez_results.py</code>) follows the devstack <a href="../earth_economy_devstack/conventions.html">run-file convention</a>: a <code>run_project(p)</code> entry point that creates a <code>ProjectFlow</code> object, sets <code>run_mode</code>, points at the base data directory, and builds a task tree. Machine-specific configuration lives in a <code>*_parameters.csv</code> and the scenarios in a <code>*_scenarios.csv</code> (templates ship in <code>gtappy/input_template/</code>), so changing what is run does not mean editing Python.</p>
 <p><strong>2. The user runs it</strong>, preferably in VS Code’s debugger with the Earth-Economy Devstack workspace open, so a failure inside a task drops you at the frame that raised it.</p>
 <p><strong>3. GTAPpy builds the task tree.</strong> Functions in <code>gtappy_initialize_project.py</code> (<code>build_standard_task_tree</code>, <code>build_extract_and_run_aez_task_tree</code>, and so on) assemble tasks from <code>gtappy_tasks.py</code> and register the dependencies between them, which is what lets independent branches run in parallel.</p>
 <p><strong>4. GTAPpy generates the CMF files.</strong> <code>gtappy_cmf_generation.py</code> fills a template command file per experiment — <code>generate_cmf_file_for_scenario</code> — with that experiment’s sets, shocks, closure and input/output paths.</p>

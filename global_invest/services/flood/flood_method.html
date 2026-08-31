@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Coastal blue carbon – Justin Andrew Johnson</title>
+<title>Riverine flood-control ecosystem service – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,26 +23,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -308,17 +289,21 @@ window.Quarto = {
   <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
   <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a>
   <ul class="collapse">
-  <li><a href="#extent" id="toc-extent" class="nav-link" data-scroll-target="#extent">Extent</a></li>
-  <li><a href="#aggregation-surface" id="toc-aggregation-surface" class="nav-link" data-scroll-target="#aggregation-surface">Aggregation surface</a></li>
-  <li><a href="#carbon-density" id="toc-carbon-density" class="nav-link" data-scroll-target="#carbon-density">Carbon density</a></li>
-  <li><a href="#stock" id="toc-stock" class="nav-link" data-scroll-target="#stock">Stock</a></li>
-  <li><a href="#price-and-valuation" id="toc-price-and-valuation" class="nav-link" data-scroll-target="#price-and-valuation">Price and valuation</a></li>
-  <li><a href="#collapse-to-one-row-per-country" id="toc-collapse-to-one-row-per-country" class="nav-link" data-scroll-target="#collapse-to-one-row-per-country">Collapse to one row per country</a></li>
+  <li><a href="#step-1-how-absorbent-each-piece-of-land-is" id="toc-step-1-how-absorbent-each-piece-of-land-is" class="nav-link" data-scroll-target="#step-1-how-absorbent-each-piece-of-land-is">Step 1, how absorbent each piece of land is</a></li>
+  <li><a href="#step-2-how-much-extra-water-runs-off" id="toc-step-2-how-much-extra-water-runs-off" class="nav-link" data-scroll-target="#step-2-how-much-extra-water-runs-off">Step 2, how much extra water runs off</a></li>
+  <li><a href="#step-3-following-the-water-downhill" id="toc-step-3-following-the-water-downhill" class="nav-link" data-scroll-target="#step-3-following-the-water-downhill">Step 3, following the water downhill</a></li>
+  <li><a href="#step-4-turning-more-water-into-deeper-water" id="toc-step-4-turning-more-water-into-deeper-water" class="nav-link" data-scroll-target="#step-4-turning-more-water-into-deeper-water">Step 4, turning more water into deeper water</a></li>
   </ul></li>
-  <li><a href="#open-question-eez-only-versus-all-rows" id="toc-open-question-eez-only-versus-all-rows" class="nav-link" data-scroll-target="#open-question-eez-only-versus-all-rows">Open question: EEZ-only versus all rows</a></li>
-  <li><a href="#sensitivity-worth-naming" id="toc-sensitivity-worth-naming" class="nav-link" data-scroll-target="#sensitivity-worth-naming">Sensitivity worth naming</a></li>
-  <li><a href="#outputs" id="toc-outputs" class="nav-link" data-scroll-target="#outputs">Outputs</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#two-counterfactuals" id="toc-two-counterfactuals" class="nav-link" data-scroll-target="#two-counterfactuals">Two counterfactuals</a></li>
+  <li><a href="#lambda" id="toc-lambda" class="nav-link" data-scroll-target="#lambda">Lambda</a></li>
+  <li><a href="#sign-conventions" id="toc-sign-conventions" class="nav-link" data-scroll-target="#sign-conventions">Sign conventions</a></li>
+  <li><a href="#compute" id="toc-compute" class="nav-link" data-scroll-target="#compute">Compute</a></li>
+  <li><a href="#before-trusting-any-rerun-of-the-pipeline" id="toc-before-trusting-any-rerun-of-the-pipeline" class="nav-link" data-scroll-target="#before-trusting-any-rerun-of-the-pipeline">Before trusting any rerun of the pipeline</a>
+  <ul class="collapse">
+  <li><a href="#the-failure-that-made-this-account-wrong-twice" id="toc-the-failure-that-made-this-account-wrong-twice" class="nav-link" data-scroll-target="#the-failure-that-made-this-account-wrong-twice">The failure that made this account wrong twice</a></li>
+  <li><a href="#the-account-should-compute-this-itself" id="toc-the-account-should-compute-this-itself" class="nav-link" data-scroll-target="#the-account-should-compute-this-itself">The account should compute this itself</a></li>
+  <li><a href="#what-running-it-needs" id="toc-what-running-it-needs" class="nav-link" data-scroll-target="#what-running-it-needs">What running it needs</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -327,7 +312,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Coastal blue carbon</h1>
+<h1 class="title">Riverine flood-control ecosystem service</h1>
 </div>
 
 
@@ -346,148 +331,88 @@ window.Quarto = {
 
 <section id="purpose" class="level2">
 <h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
-<p>Value the carbon held in the world’s three mapped coastal blue-carbon habitats (mangrove, salt marsh and seagrass) as part of Gross Ecosystem Product. The quantity is mapped habitat area multiplied by a per-habitat carbon density; the price is the same annual rental social cost of carbon that terrestrial carbon storage is valued at <span class="citation" data-cites="parisa2022">(<a href="#ref-parisa2022" role="doc-biblioref">Parisa et al. 2022</a>)</span>. The service values storage only. The figure it reports is the carbon standing in the base year, not a flow between years.</p>
+<p>Vegetated landscapes intercept rainfall, slow its passage into rivers and store part of it in the soil. Where they do so upstream of towns and farmland, floods downstream are shallower than they would otherwise be, and the damage those floods cause is smaller. That reduction in damage is what this account values.</p>
+<p>The scope is river flooding only. Coastal flooding, storm surge and pluvial flooding lie outside it, following the hazard product the account uses. Coverage is 250 countries at 537 m, reported in USD 2019.</p>
 </section>
 <section id="method" class="level2">
 <h2 class="anchored" data-anchor-id="method">Method</h2>
-<section id="extent" class="level3">
-<h3 class="anchored" data-anchor-id="extent">Extent</h3>
-<p>Each habitat comes from its own published extent map, read as polygons:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Habitat</th>
-<th>Extent</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Mangrove</td>
-<td>Global Mangrove Watch v3, 2019 <span class="citation" data-cites="bunting2018 bunting2022">(<a href="#ref-bunting2018" role="doc-biblioref">Bunting et al. 2018</a>, <a href="#ref-bunting2022" role="doc-biblioref">2022</a>)</span></td>
-</tr>
-<tr class="even">
-<td>Salt marsh</td>
-<td>GLC_FCS30D 2019, a 30 m land-cover product; the marsh class extracted to <code>global_salt_marsh2019.gpkg</code> <span class="citation" data-cites="zhang2024">(<a href="#ref-zhang2024" role="doc-biblioref">Zhang et al. 2024</a>)</span></td>
-</tr>
-<tr class="odd">
-<td>Seagrass</td>
-<td>UNEP-WCMC013-014 SeagrassPtPy v7.1 <span class="citation" data-cites="unepwcmc2021">(<a href="#ref-unepwcmc2021" role="doc-biblioref">UNEP-WCMC and Short 2021</a>)</span></td>
-</tr>
-</tbody>
-</table>
-<p>Seagrass is optional at the tree level (<code>include_seagrass</code>). A tree built with seagrass but no extent file raises rather than running, so a data gap cannot quietly understate the coastal total; a tree built without seagrass writes every seagrass column at zero, so the combined table has the same shape either way.</p>
+<p>Valuing this service requires answering a question that cannot be observed: how much flood damage would occur if landscapes stopped absorbing rain. The account simulates a counterfactual world in which ecosystems no longer retain water, routes the same storms through it, and takes the difference.</p>
+<p>Everything turns on one number per location, the <strong>depth amplification</strong>: the ratio of flood depth in the degraded world to flood depth in the current one. Hydrology has no standard name for it, because it has not previously been needed – it exists here only because there is a paired counterfactual world to run.</p>
+<section id="step-1-how-absorbent-each-piece-of-land-is" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-how-absorbent-each-piece-of-land-is">Step 1, how absorbent each piece of land is</h3>
+<p>A curve number between 30 and 100 is assigned to every cell by crossing land cover with soil hydrologic group, from USDA field measurements:</p>
+<p><span class="math display">\[S = 25400 / \text{CN} - 254\]</span></p>
+<p><span class="math inline">\(S\)</span> is the potential maximum retention in millimetres. Forest on loam holds 208 mm; the same soil stripped bare holds 41 mm. This is the only point in the account where vegetation enters the physics.</p>
 </section>
-<section id="aggregation-surface" class="level3">
-<h3 class="anchored" data-anchor-id="aggregation-surface">Aggregation surface</h3>
-<p>Coastal habitat is aggregated on the <strong>marine</strong> surface, <code>eemarine_r566</code> (one row per exclusive economic zone and coastal region) rather than on the land country surface the other services use. Each habitat layer is clipped to every marine region in turn, and the clipped pieces are measured in the equal-area projection EPSG:6933 (NSIDC EASE-Grid 2.0 Global), which is what turns polygon geometry into hectares.</p>
-<p>Salt marsh additionally runs a zonal pass over the hectares-per-cell pyramid, written out as <code>salt_marsh_with_area.gpkg</code> for inspection. The area that reaches the country table is the equal-area geometric area, the same measure the other two habitats use.</p>
+<section id="step-2-how-much-extra-water-runs-off" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-how-much-extra-water-runs-off">Step 2, how much extra water runs off</h3>
+<p><span class="math display">\[I_a = 0.2S, \qquad Q = (P - I_a)^2 / (P - I_a + S) \text{ for } P &gt; I_a\]</span></p>
+<p>The relation saturates. As <span class="math inline">\(P\)</span> grows large relative to <span class="math inline">\(S\)</span>, runoff approaches total rainfall regardless of land cover, so the service is concentrated in frequent events and the largest proportional effects appear where storms are small relative to what the soil can hold.</p>
 </section>
-<section id="carbon-density" class="level3">
-<h3 class="anchored" data-anchor-id="carbon-density">Carbon density</h3>
-<p>Density is resolved per pixel for mangrove and salt marsh, and per polygon for seagrass. Every pool is reported in Mg C per hectare, and soil carbon throughout is the stock in the <strong>top 20 cm</strong>. The external soil products report the top 1 m, and are taken as a linear share of that profile.</p>
-<p><strong>Mangrove.</strong> Above-ground biomass follows the Hamilton &amp; Friess latitude regression <span class="citation" data-cites="hamilton2018">(<a href="#ref-hamilton2018" role="doc-biblioref">Hamilton and Friess 2018</a>)</span>, AGB (t/ha) = −6.4305 × |lat| + 271.747, floored at zero (the line crosses zero at roughly 42°, and the floor is what stops it going negative beyond that). Below-ground biomass is AGB times the IPCC zone-specific root-to-shoot ratio <span class="citation" data-cites="ipcc2014">(<a href="#ref-ipcc2014" role="doc-biblioref">IPCC 2014</a>)</span>: 0.49 in the wet tropics, 0.29 in the dry tropics, 0.96 subtropical, with the tropical boundary at |lat| = 23.5° and the wet/dry split at 2000 mm mean annual precipitation. Biomass converts to carbon at 0.48 for AGB <span class="citation" data-cites="hamilton2018">(<a href="#ref-hamilton2018" role="doc-biblioref">Hamilton and Friess 2018</a>)</span> and 0.39 for BGB <span class="citation" data-cites="howard2014">(<a href="#ref-howard2014" role="doc-biblioref">Howard et al. 2014</a>)</span>. Soil carbon is read from the Sanderman 30 m mangrove soil map <span class="citation" data-cites="sanderman2018">(<a href="#ref-sanderman2018" role="doc-biblioref"><span class="nocase">Sanderman et al.</span> 2018</a>)</span>. Where no precipitation raster is supplied the whole tropics take the wet ratio; where no soil raster is supplied, soil falls back to a latitude step function running from 80 Mg C/ha at the equator down to 50 Mg C/ha poleward of 25°.</p>
-<p><strong>Salt marsh.</strong> Above-ground biomass is the Chmura median of 5 t/ha <span class="citation" data-cites="chmura2003">(<a href="#ref-chmura2003" role="doc-biblioref">Chmura et al. 2003</a>)</span>, raised by a factor of 1.2 below |lat| = 25° for tropical productivity. Below-ground biomass is 2.5 times AGB, for the extensive root systems of tidal marsh. Carbon fractions are 0.45 for AGB and 0.41 for BGB. Soil carbon is read from the Maxwell MarSOC map of tidal marsh soils <span class="citation" data-cites="maxwell2024">(<a href="#ref-maxwell2024" role="doc-biblioref"><span class="nocase">Maxwell et al.</span> 2024</a>)</span>; the fallback step function runs the other way from mangrove, 36 Mg C/ha in the tropics up to 70 Mg C/ha poleward of 45°.</p>
-<p><strong>Seagrass.</strong> Biomass carbon is genus-specific, from the Gomis global synthesis <span class="citation" data-cites="gomis2025">(<a href="#ref-gomis2025" role="doc-biblioref"><span class="nocase">Gomis et al.</span> 2025</a>)</span>, and is the one density that is an attribute of the polygon rather than of the pixel, the extent map carries a <code>GENUS</code> field. Genera group by life-history strategy: persistent (<em>Posidonia</em> at 9.78 Mg C/ha, the other persistent genera at 3.70), opportunistic (<em>Zostera</em>, <em>Syringodium</em>, <em>Halodule</em> at 0.94) and colonising (<em>Ruppia</em> 0.33, <em>Halophila</em> 0.19). A polygon whose genus is unknown, unreported or absent from the table takes the global mean, 1.55 Mg C/ha. Biomass splits 30% above ground and 70% below. Soil carbon is a constant 22 Mg C/ha, the Fourqurean global mean for the top 20 cm <span class="citation" data-cites="fourqurean2012">(<a href="#ref-fourqurean2012" role="doc-biblioref">Fourqurean et al. 2012</a>)</span>. Freshwater genera present in the extent map (<em>Trapa</em>, <em>Myriophyllum</em>, <em>Valisneria</em>, <em>Najas</em> and the rest) are zeroed across every pool, soil included, so they contribute nothing to a country’s stock.</p>
+<section id="step-3-following-the-water-downhill" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-following-the-water-downhill">Step 3, following the water downhill</h3>
+<p><span class="math display">\[\text{ratio}(i) = \text{accum}(Q_\text{degraded})(i) / \text{accum}(Q_\text{current})(i)\]</span></p>
+<p>Routing uses MERIT Hydro. On the Upper Mississippi, seven per cent more runoff at the point of rainfall becomes twenty-two per cent more discharge in the river: routing roughly triples the local effect, and that is what makes flood regulation a landscape service rather than a local one.</p>
 </section>
-<section id="stock" class="level3">
-<h3 class="anchored" data-anchor-id="stock">Stock</h3>
-<p>For mangrove and salt marsh, stock is accumulated pixel by pixel on the 10 arc-second grid. Each pixel’s density is evaluated at its latitude, multiplied by the hectares in that cell, and added to the marine region it falls in. A pixel counts only where the habitat mask is set, a region id is present and the cell has area. A no-data pixel inside a soil raster contributes zero soil rather than a missing value, and its biomass still counts. The pass runs in row blocks and skips any block the habitat does not reach.</p>
-<p>For seagrass, stock is each clipped polygon’s genus density multiplied by its hectares, summed to the region.</p>
-<p>Every habitat therefore reports four columns per region: above-ground, below-ground and soil carbon, and their sum. The total is always the three pools added, never a separately computed figure, so it cannot drift away from the parts it is printed beside.</p>
-</section>
-<section id="price-and-valuation" class="level3">
-<h3 class="anchored" data-anchor-id="price-and-valuation">Price and valuation</h3>
-<p>The price is the annual rental social cost of carbon for the base year, read from the carbon price series (<code>carbon_prices.xlsx</code>) under the run’s price convention, the same series and convention terrestrial carbon uses, so the two carbon services are priced identically. GEP is then</p>
-<p><span class="math display">\[
-\text{GEP}_{\text{coastal carbon}} = \text{carbon stock (Mg C)} \times \text{rental SCC (\$ per Mg C)}
-\]</span></p>
-<p>applied pool by pool, so the written table carries a value for above-ground, below-ground and soil carbon as well as the habitat total. The year and the price used travel in the table beside the values.</p>
-</section>
-<section id="collapse-to-one-row-per-country" class="level3">
-<h3 class="anchored" data-anchor-id="collapse-to-one-row-per-country">Collapse to one row per country</h3>
-<p>The service produces two tables. The first, <code>gep_by_country_base_year_r566</code>, is the full marine surface: per-habitat area, stock pools and storage values for each of the r566 marine regions, with a matching GeoPackage for mapping. Regions with no coastal habitat at all are dropped from it, they are ocean rows, not zero-value countries.</p>
-<p>The second, <code>gep_by_country_base_year</code>, is the country table. Building it takes two steps that each guard against counting the same coast twice:</p>
-<ol type="1">
-<li><strong>Keep the <code>_EEZ</code> rows.</strong> The marine surface carries a country’s coast more than once, as an EEZ row plus land and territorial rows over the same habitat. Only the <code>_EEZ</code> rows are valued.</li>
-<li><strong>Collapse through the canonical r264 row.</strong> The r264 correspondence splits large countries into sub-regions (China ×6, India ×6, and four two-way splits), so it is filtered to <code>ee_r264_label == iso3_r250_label</code> before the join. Without that filter the join repeats a split country once per sub-region and the sum multiplies its value. Countries with no coastal habitat report zero rather than dropping out.</li>
-</ol>
+<section id="step-4-turning-more-water-into-deeper-water" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-turning-more-water-into-deeper-water">Step 4, turning more water into deeper water</h3>
+<p><span class="math display">\[A(i) = [\text{ratio}(i)]^{f}, \qquad f \approx 0.4\]</span></p>
+<p>At-a-station hydraulic geometry gives the split between width, depth and velocity. So 21.5% more discharge produces 8% more depth. The exponent is the least constrained element of the chain and is swept over 0.3 to 0.5.</p>
 </section>
 </section>
-<section id="open-question-eez-only-versus-all-rows" class="level2">
-<h2 class="anchored" data-anchor-id="open-question-eez-only-versus-all-rows">Open question: EEZ-only versus all rows</h2>
-<p>Step 1 above is a choice, not a cleanup. Valuing every r566 row instead of the <code>_EEZ</code> rows returns a strictly larger total, and the gap is exactly the non-EEZ rows, the same coastal habitat counted again under a land or territorial label. The two totals answer different questions. What the module writes is the EEZ-only figure; the all-rows figure is what summing the r566 table gives, and the module does not compute it. The arithmetic of the distinction is pinned in <code>test_eez_only_is_a_strict_subset_of_all_rows</code>.</p>
+<section id="two-counterfactuals" class="level2">
+<h2 class="anchored" data-anchor-id="two-counterfactuals">Two counterfactuals</h2>
+<p><strong>Bare soil</strong> removes land cover entirely, setting curve numbers to the fallow values of the reference tables. This is the world a gross product asks about, and it is the reference the erosion account uses, so the two services are measured against one hypothetical landscape and can be summed.</p>
+<p><strong>In-situ degradation</strong> raises curve numbers less: soils compacted and canopy thinned, the land still present. Closer to what realistic degradation would produce, and reported alongside rather than as a sensitivity.</p>
+<p>Bare soil exceeds in-situ by about 2.5, and that ratio is stable to within four per cent across both hazard products and both treatments of permanent water.</p>
 </section>
-<section id="sensitivity-worth-naming" class="level2">
-<h2 class="anchored" data-anchor-id="sensitivity-worth-naming">Sensitivity worth naming</h2>
-<p>The latitude fallbacks, mangrove soil without the Sanderman raster, salt marsh soil without MarSOC, and the mangrove root ratio without a precipitation raster, change the number a run produces. Which source each run used is written to the log at the point the raster is aligned.</p>
+<section id="lambda" class="level2">
+<h2 class="anchored" data-anchor-id="lambda">Lambda</h2>
+<p>Lambda is 1 for this service. The counterfactual already isolates the ecosystem contribution: it is a difference between two worlds identical in every respect except the ecosystem, so whatever remains in the difference is the ecosystem’s doing by construction.</p>
+<p>The <strong>prevention share</strong> reported throughout is a different quantity and not an attribution coefficient:</p>
+<p><span class="math display">\[\text{prevention share} = (\text{EAD}_\text{degraded} - \text{EAD}_\text{current}) / \text{EAD}_\text{degraded}\]</span></p>
+<p>An attribution share near 1 and a prevention share near 0.01 are not two estimates of one thing.</p>
 </section>
-<section id="outputs" class="level2">
-<h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
-<p>Per habitat, in the habitat’s own task directory:</p>
-<ul>
-<li><code>&lt;habitat&gt;_area_by_countries2019.{gpkg,csv}</code> (hectares per marine region.</li>
-<li><code>&lt;habitat&gt;_carbon_stock_by_countries2019.csv</code>) the four stock pools per marine region (Mg C).</li>
-<li><code>&lt;habitat&gt;_storage_value_by_countries2019.csv</code>, the stock pools priced (USD), with the year and the rental SCC used.</li>
-</ul>
-<p>Then, across habitats:</p>
-<ul>
-<li><code>combined_ecosystem_areas.csv</code>, every habitat’s area and stock on one row per marine region, plus total coastal area and total carbon stock.</li>
-<li><code>gep_by_country_base_year_r566.{csv,gpkg}</code> (the marine-surface GEP detail.</li>
-<li><code>gep_by_country_base_year.csv</code>) one row per country, the service’s GEP result.</li>
-</ul>
+<section id="sign-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="sign-conventions">Sign conventions</h2>
+<p>GEP is positive: it is damage that does not occur. Degradation raises expected annual damage, so the difference is non-negative by construction and a negative value indicates a routing or alignment fault rather than a result.</p>
 </section>
-<section id="references" class="level2">
-
-
+<section id="compute" class="level2">
+<h2 class="anchored" data-anchor-id="compute">Compute</h2>
+<p>The amplification field is built from rainfall and flow direction rather than from the hazard maps, so it survives a change of hazard product. Building it is two weeks of single-threaded flow accumulation over 75 billion cells; everything downstream of it is hours. <code>RUN.md</code> documents both paths.</p>
+</section>
+<section id="before-trusting-any-rerun-of-the-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="before-trusting-any-rerun-of-the-pipeline">Before trusting any rerun of the pipeline</h2>
+<p>The account as it stands does <strong>not</strong> rerun the pipeline: <code>gep_calculation</code> reads the author’s own per-country export, so the number here is his verified one. This section matters only if that changes.</p>
+<section id="the-failure-that-made-this-account-wrong-twice" class="level3">
+<h3 class="anchored" data-anchor-id="the-failure-that-made-this-account-wrong-twice">The failure that made this account wrong twice</h3>
+<p>The author’s <code>RUN.md</code> is explicit, and it is the most important thing in it:</p>
+<blockquote class="blockquote">
+<p>Check flow-direction coverage. This is not optional, and it is the reason this account was wrong twice.</p>
+</blockquote>
+<p>Seven MERIT flow-direction packages were missing at various points, and <strong>every absence was silent</strong>. Accumulation over a missing network writes nodata, the amplification clips to a minimum of 1.0, and the valuation reads 1.0 as <em>no change here</em> rather than <em>no data here</em>. Japan, Korea, Portugal and Kazakhstan returned zero service against <strong>49 bn USD of exposure</strong>; Nigeria, Chad, Cameroon, Niger and the Central African Republic another <strong>4 bn</strong>. Nothing in any log recorded a problem. Both were found because a country looked implausible. Recovering them raised GEP by <strong>18.5 per cent and then a further 16</strong>.</p>
+<pre><code>python prep_merit_dir.py --check-tiles</code></pre>
+<p>⚠ <strong>The check has a limit the author states plainly.</strong> Its reference list was generated from a tile set believed complete, so it detects regressions — a lost file, a partial copy, an interrupted extraction — <strong>but not a package that was never downloaded</strong>, which was the original failure.</p>
+<p>A missing amplification raster behaves the same way: the pipeline warns, falls back to current depths and returns a GEP of zero, so the job completes and the number is wrong. <code>RUN.md</code> carries a three-line check that the mosaic resolves, and <code>msi/final_run.sbatch</code> verifies the totals itself and prints ALL MATCH or the quantity that differs.</p>
+</section>
+<section id="the-account-should-compute-this-itself" class="level3">
+<h3 class="anchored" data-anchor-id="the-account-should-compute-this-itself">The account should compute this itself</h3>
+<p>⚠ <strong>Reading the author’s per-country export is an interim, not the destination.</strong></p>
+<p>Not because every service computes its own — about a third do not, and for some that is right: the account does not recompute the World Bank’s CWON resource rents for extractive materials or energy, because the published rent <em>is</em> the source. The distinction is whether we hold a model we could run.</p>
+<p>Flood’s peers are stormwater and air filtration, both recorded as “not yet”: a model that exists, that we have, and that has not been run here. Erosion is the case to follow — it has no scenario shock either, and it still runs the sediment model here and reports $13.96bn against the author’s $14.59bn.</p>
+<p>The distinction worth keeping: <strong>producing our own number</strong> is what the library is for, and it is what makes the figure reproducible, auditable and rerunnable here. <strong>Comparing it to the author’s</strong> is a fidelity check and not a correctness one. The second does not argue against the first.</p>
+<p>Until then, <code>gep_calculation</code> reads <code>flood_gep_for_merge_v2_2024hazard.csv</code> and the account carries his $11.40bn. That is honest and it is not finished.</p>
+</section>
+<section id="what-running-it-needs" class="level3">
+<h3 class="anchored" data-anchor-id="what-running-it-needs">What running it needs</h3>
+<p>The inputs are on MSI at <code>/projects/standard/jajohns/shared/flood_gep</code>, read-only, so a run needs a writable root with those inputs linked in and the Sections B and C rasters copied across — about 1 GB, without which a run rebuilds them and takes eleven hours rather than three. In this library the root is <code>flood_root_dir</code> in <code>es_parameters.csv</code> rather than the source repo’s <code>GEP_FLOOD_ROOT</code> environment variable, so only the linking and copying carry over.</p>
+<p>⚠ <strong>Not done as of 2026-08-28.</strong> Nothing here has been run; the account reads his export.</p>
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-bunting2022" class="csl-entry" role="listitem">
-Bunting, P., A. Rosenqvist, L. Hilarides, et al. 2022. <span>“Global Mangrove Watch (1996–2020) Version 3.0.”</span> <em>Remote Sensing</em> 14: 3657. <a href="https://doi.org/10.3390/rs14153657">https://doi.org/10.3390/rs14153657</a>.
-</div>
-<div id="ref-bunting2018" class="csl-entry" role="listitem">
-Bunting, P., A. Rosenqvist, R. M. Lucas, et al. 2018. <span>“The Global Mangrove Watch — a New 2010 Global Baseline of Mangrove Extent.”</span> <em>Remote Sensing</em> 10: 1669. <a href="https://doi.org/10.3390/rs10101669">https://doi.org/10.3390/rs10101669</a>.
-</div>
-<div id="ref-chmura2003" class="csl-entry" role="listitem">
-Chmura, G. L., S. C. Anisfeld, D. R. Cahoon, and J. C. Lynch. 2003. <span>“Global Carbon Sequestration in Tidal, Saline Wetland Soils.”</span> <em>Global Biogeochemical Cycles</em> 17: 1111. <a href="https://doi.org/10.1029/2002GB001917">https://doi.org/10.1029/2002GB001917</a>.
-</div>
-<div id="ref-fourqurean2012" class="csl-entry" role="listitem">
-Fourqurean, J. W., C. M. Duarte, H. Kennedy, et al. 2012. <span>“Seagrass Ecosystems as a Globally Significant Carbon Stock.”</span> <em>Nature Geoscience</em> 5: 505–9. <a href="https://doi.org/10.1038/ngeo1477">https://doi.org/10.1038/ngeo1477</a>.
-</div>
-<div id="ref-gomis2025" class="csl-entry" role="listitem">
-<span class="nocase">Gomis, E., S. Strydom, N. R. Foster, et al.</span> 2025. <span>“Global Estimates of Seagrass Blue Carbon Stocks in Biomass and Net Primary Production.”</span> <em>Nature Communications</em> 16: 9530. <a href="https://doi.org/10.1038/s41467-025-64667-6">https://doi.org/10.1038/s41467-025-64667-6</a>.
-</div>
-<div id="ref-hamilton2018" class="csl-entry" role="listitem">
-Hamilton, S. E., and D. A. Friess. 2018. <span>“Global Carbon Stocks and Potential Emissions Due to Mangrove Deforestation from 2000 to 2012.”</span> <em>Nature Climate Change</em> 8: 240–44. <a href="https://doi.org/10.1038/s41558-018-0090-4">https://doi.org/10.1038/s41558-018-0090-4</a>.
-</div>
-<div id="ref-howard2014" class="csl-entry" role="listitem">
-Howard, J., S. Hoyt, K. Isensee, E. Pidgeon, and M. Telszewski. 2014. <em>Coastal Blue Carbon: Methods for Assessing Carbon Stocks and Emissions Factors in Mangroves, Tidal Salt Marshes, and Seagrasses</em>. Conservation International, IOC-UNESCO, IUCN.
-</div>
-<div id="ref-ipcc2014" class="csl-entry" role="listitem">
-IPCC. 2014. <em>2013 Supplement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories: Wetlands</em>. IPCC.
-</div>
-<div id="ref-maxwell2024" class="csl-entry" role="listitem">
-<span class="nocase">Maxwell, T. L., M. D. Spalding, D. A. Friess, et al.</span> 2024. <span>“Soil Carbon in the World’s Tidal Marshes.”</span> <em>Nature Communications</em> 15: 10265. <a href="https://doi.org/10.1038/s41467-024-54572-9">https://doi.org/10.1038/s41467-024-54572-9</a>.
-</div>
-<div id="ref-parisa2022" class="csl-entry" role="listitem">
-Parisa, Z., E. Marland, B. Sohngen, G. Marland, and J. Jenkins. 2022. <span>“The Time Value of Carbon Storage.”</span> <em>Forest Policy and Economics</em> 144: 102840. <a href="https://doi.org/10.1016/j.forpol.2022.102840">https://doi.org/10.1016/j.forpol.2022.102840</a>.
-</div>
-<div id="ref-sanderman2018" class="csl-entry" role="listitem">
-<span class="nocase">Sanderman, J., T. Hengl, G. Fiske, et al.</span> 2018. <span>“A Global Map of Mangrove Forest Soil Carbon at 30 m Spatial Resolution.”</span> <em>Environmental Research Letters</em> 13: 055002. <a href="https://doi.org/10.1088/1748-9326/aabe1c">https://doi.org/10.1088/1748-9326/aabe1c</a>.
-</div>
-<div id="ref-unepwcmc2021" class="csl-entry" role="listitem">
-UNEP-WCMC, and F. T. Short. 2021. <em>Global Distribution of Seagrasses (Version 7.1)</em>. UNEP World Conservation Monitoring Centre.
-</div>
-<div id="ref-zhang2024" class="csl-entry" role="listitem">
-Zhang, X., L. Liu, T. Zhao, et al. 2024. <span>“GLC_FCS30D: The First Global 30 m Land-Cover Dynamics Monitoring Product with a Fine Classification System from 1985 to 2022.”</span> <em>Earth System Science Data</em> 16: 1353–83. <a href="https://doi.org/10.5194/essd-16-1353-2024">https://doi.org/10.5194/essd-16-1353-2024</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

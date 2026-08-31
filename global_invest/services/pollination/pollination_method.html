@@ -417,7 +417,16 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The FAO / CropGrids / Monfreda tabular stages of <code>crop_benefits</code> are <strong>not</strong> run here: they exist to build the baseline value raster, which is fixed across scenarios, so the finished raster is used directly.</p>
+<p>The FAO / CropGrids / Monfreda stages are not run on the <strong>shock</strong> side: they build the baseline value raster, which is fixed across scenarios, so the finished raster is used directly here.</p>
+<p>They are run on the <strong>GEP</strong> side, where the account needs the value raster for a base year rather than a scenario. That chain is ours, in <code>pollination_tasks.py</code>, and it is the author’s method rather than a second one:</p>
+<ol type="1">
+<li><strong>FAO panel.</strong> Filter the FAOSTAT production bulk to <code>Yield</code> and <code>Production</code> over 1993–2024 for the crop items in the FAO classification (<code>run_fao_production</code>).</li>
+<li><strong>Yield-change ratios.</strong> Median FAO yield in a window at the base year over a window at 2000, per country and crop, with subregion, region and world medians alongside for the countries FAO does not report (<code>fao_yield_change</code>).</li>
+<li><strong>Yield rasters.</strong> Monfreda’s 2000 yields aligned to the CropGrids grid, gaps filled from the nearest valid cell in the same country, then each country rescaled so its area-weighted mean matches the FAO number for the base year (<code>pollination_yield_rasters</code>).</li>
+<li><strong>Production rasters.</strong> Yield times CropGrids harvested area, written as tonnes per square kilometre (<code>pollination_production_rasters</code>).</li>
+<li><strong>Value raster.</strong> Production times the world producer price we build ourselves times each crop’s dependence on animal pollination, with coffee blended per country from what it grows.</li>
+</ol>
+<p>Checked against the author’s own 2019 rasters on 2026-08-30: the FAO panel matches his row for row, and global production over 157 crops is 9,008.3 million tonnes on both sides.</p>
 
 
 </section>

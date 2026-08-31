@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>seals_main.py</code>, <code>seals_tasks.py</code>, <code>seals_generate_base_data.py</code> — task functions, the actual model logic</li>
 <li><code>seals_initialize_project.py</code> — the task-tree builders</li>
 <li><code>seals_utils.py</code> — helpers</li>
-<li><code>run_seals_standard.py</code> — the run file</li>
+<li><code>run_seals.py</code> — the run file</li>
 </ul></li>
 </ul>
 </section>
@@ -460,10 +460,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>A <strong>run file</strong> configures a project and executes a task tree built from the library’s task functions</li>
 <li>Two ship with SEALS, both in <code>seals/seals</code>:
 <ul>
-<li><code>run_seals_standard.py</code> — three scenarios, 2030 and 2050</li>
-<li><code>run_seals_standard_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
+<li><code>run_seals.py</code> — three scenarios, 2030 and 2050</li>
+<li><code>run_seals_test.py</code> — the same pipeline pared to a baseline, one BAU scenario, one year, Rwanda. Start here</li>
 </ul></li>
-<li>Open <code>run_seals_standard.py</code>. It is about 60 lines and has three parts</li>
+<li>Open <code>run_seals.py</code>. It is about 60 lines and has three parts</li>
 </ul>
 </section>
 <section id="part-1-the-task-tree" class="level2">
@@ -495,9 +495,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    p.base_data_dir <span class="op">=</span> os.path.join(p.user_dir, <span class="st">'Files'</span>, <span class="st">'base_data'</span>)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    p.processing_resolution <span class="op">=</span> <span class="fl">1.0</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_path <span class="op">=</span> os.path.join(p.input_dir, p.scenario_definitions_filename)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    seals_initialize_project.initialize_scenario_definitions(p)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    seals_initialize_project.set_advanced_options(p)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    hb.initialize_scenarios(p, p.scenario_definitions_filename)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    seals_initialize_project.initialize_project(p)   <span class="co"># seals' model initializer:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># advanced options + derived attributes; must come AFTER the scenarios load</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    p.execute()</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -509,7 +509,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The guard is mandatory: importing a run file must never start a run. That is what lets a second run file import this pipeline instead of copying it</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'seals_standard'</span>, run_mode<span class="op">=</span><span class="st">'check'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'seals'</span>, run_mode<span class="op">=</span><span class="st">'check'</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">'standard_scenarios.csv'</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -577,7 +577,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="run-the-model">Run the model</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> seals/seals</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_standard_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_seals_test.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>On startup SEALS prints the <strong>task tree</strong> it is about to compute</li>
 <li>To understand the model in depth, read the task functions behind those names</li>
@@ -587,7 +587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="find-the-output" class="level2">
 <h2 class="anchored" data-anchor-id="find-the-output">Find the output</h2>
 <ul>
-<li>Go to <code>~/Files/seals/projects/seals_standard_test/intermediate/</code></li>
+<li>Go to <code>~/Files/seals/projects/seals_test/intermediate/</code></li>
 <li>There is one directory per task in the tree</li>
 <li>The downscaled maps are in <code>stitched_lulc_simplified_scenarios/</code>, for example:</li>
 </ul>

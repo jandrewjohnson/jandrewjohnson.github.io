@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scenario definitions (v2 schema) – Justin Andrew Johnson</title>
+<title>Proposed changes – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -287,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/organization.html">Methods</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/scenario_definitions.html">Scenario Definitions</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/organization.html">Methods</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/proposed_changes.html">Proposed Changes</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -469,8 +469,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/scenario_definitions.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Scenario Definitions</span></a>
+  <a href="../earth_economy_devstack/proposed_changes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Proposed Changes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -539,15 +539,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
   </ul></li>
   <li><a href="#future-implementation" id="toc-future-implementation" class="nav-link" data-scroll-target="#future-implementation">Future implementation</a></li>
+  <li><a href="#additional-ideas" id="toc-additional-ideas" class="nav-link" data-scroll-target="#additional-ideas">Additional ideas</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/organization.html">Methods</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/scenario_definitions.html">Scenario Definitions</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../earth_economy_devstack/organization.html">Methods</a></li><li class="breadcrumb-item"><a href="../earth_economy_devstack/proposed_changes.html">Proposed Changes</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Scenario definitions (v2 schema)</h1>
+<h1 class="title">Proposed changes</h1>
 </div>
 
 
@@ -1172,6 +1173,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="future-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="future-implementation">Future implementation</h2>
 <p>The canonical parser, validator, migrator and <code>RunStep</code> iterator belong in hazelbean next to <code>project_flow.py</code>, reusing <code>cat_ears.py</code> for templating, plus three harmonization pieces: a semantics-aware <code>hb.resample_years</code> (the single temporal resampling utility — levels interpolate, rates compound, differences scale; hazelbean currently has spatial interpolation only, nothing temporal), a <code>coarse_interpolation</code>-aware <code>extract_global_netcdf</code> (which today silently skips requested years the source lacks), and the shock-preparation step that writes a stage-chain-aligned <code>.har</code> from Erwin-style driver files. Key v1 code to replace when implementing: <code>seals/seals_utils.py:586-724</code> (row→attributes parsing, including the <code>seals_years</code> override tail), <code>seals/seals_main.py:1400-1560</code> (scenario/year iteration), the gtappy/gtap_invest copies, and the interpolation blocks in <code>gtappy_tasks.py</code>.</p>
+</section>
+<section id="additional-ideas" class="level1">
+<h1>Additional ideas</h1>
+<p><strong>1. One row per solved counterfactual (retire <code>shock_config</code>)</strong></p>
+<blockquote class="blockquote">
+<p>Every counterfactual the CGE model solves is an explicit row in scenarios.csv — no mechanism may graft, suffix, or otherwise synthesize counterfactuals at run time. Decomposition variants of a policy (<code>below_2c</code>, <code>below_2c-noes</code>) are sibling rows sharing the same exogenous/climate/model labels, distinguished by the counterfactual processing-step suffix (hyphen + 4 chars, already in the scenario-naming rules). Pass ordering is expressed with <code>depends_on</code>, not loop order in task code. Rationale: v1’s <code>shock_config</code> produced counterfactuals (<code>*_cc_es</code>) that existed in results but not in the CSV, breaking the “scenarios.csv is authoritative” contract and forcing downstream consumers to discover scenarios by disk-scanning and suffix-matching — a documented source of silent-empty-figure bugs.</p>
+</blockquote>
+<p><strong>2. A first-class static clock</strong></p>
+<blockquote class="blockquote">
+<p><code>clock_type</code> (or an empty <code>years</code> with a defined meaning): <code>static</code> declares a comparative-static solve — base data plus shocks, no elapsed time. A static scenario has no year dimension: no year path segment in outputs, no year column joins across projects, and appending years to it is a load-time error. Rationale: v1 forces a fake bookkeeping year (e.g.&nbsp;2024) into every path and figure; the number is economically inert but invites temporal misreading, permits silent shock-compounding if someone extends <code>years</code>, and creates meaningless joins against projects where the same year is real. Note the closure caveat: whether a solve is truly static or one recursive-dynamic period is a property of the CMF/closure (<code>cmf_template</code>), which the clock declaration does not override — the spec should require the two to agree.</p>
+</blockquote>
+<p><strong>3. Shock composition is data, not code</strong></p>
+<blockquote class="blockquote">
+<p>Which shocks a row applies is expressed in columns — a <code>*_path</code> column per shock channel (hydration is name-driven) and a shocks-snippet path for the CMF statement — never as tokens interpreted by task code, in-code label-to-file correspondence dicts, or derived filename conventions. The two path kinds are distinct and both required: <code>shocks_path</code> names a <strong>CMF text fragment</strong> (appended verbatim, written in final cat-ear form); <code>&lt;channel&gt;_shock_path</code> names the <strong>data</strong> a project task converts to the HAR the fragment references.</p>
+</blockquote>
+<p><strong>4. Stage ownership of scenario columns (the layering rule)</strong></p>
+<blockquote class="blockquote">
+<p>A model stage’s initializer may hydrate and validate only its own column group, and no stage’s initializer may hard-wire another stage’s post-processing (the standing violation: gtappy’s scenario init unconditionally running seals’ <code>set_derived_attributes</code>, which forces LULC-raster and correspondence-file dependencies onto pure GTAP projects). What a project <em>includes</em> is declared by its task tree — <code>build_task_tree</code> is already the canonical answer to “what is this pipeline” — and each stage present validates its required columns at load time via its <code>MODEL_SPEC</code>, failing with a named column list rather than a downstream <code>AttributeError</code>. Machinery (registry, validator, template generation) lives in hazelbean; content (each stage’s spec and hooks) lives in each model’s repo. Corollary: a scenarios CSV carries only the column groups of stages its project uses — ballast columns for absent stages are a v1 compatibility artifact, not a convention.</p>
+</blockquote>
+<p><strong>5. Downstream consumers read the CSV, not the disk</strong></p>
+<blockquote class="blockquote">
+<p>Reporting and visualization derive the scenario/counterfactual universe from scenarios.csv (labels + <code>comparison_counterfactual_labels</code>), never by globbing result directories or pattern-matching label suffixes. Suffix conventions are for humans and filenames; they are not an API.</p>
+</blockquote>
+<p><strong>6. Solve steps are explicit tasks</strong> <em>(small, run-file anatomy bullet)</em></p>
+<blockquote class="blockquote">
+<p>A pipeline whose generation step defers execution to a dispatch (CMF generation vs GEMPACK solve) must carry the solve as its own named task in the tree — the tree should read as the complete causal chain, and a missing solve step should be visible in <code>build_task_tree</code>, not discovered as a missing-results crash three tasks downstream.</p>
+</blockquote>
 
 
 </section>

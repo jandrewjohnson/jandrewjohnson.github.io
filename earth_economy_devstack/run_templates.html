@@ -469,8 +469,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/scenario_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Definitions</span></a>
+  <a href="../earth_economy_devstack/proposed_changes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Proposed Changes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -649,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Alongside the four rungs, <code>run_templates/run_template_seals_example.py</code> is the same anatomy applied to a <strong>real model</strong>: <code>build_task_tree</code> delegates unchanged to <code>seals_initialize_project.build_standard_task_tree(p)</code>, and <code>run_project</code> sets the base data dir, the processing resolution, and the scenarios CSV that SEALS generates in <code>input/</code> on first run. Copy this one to start a standalone SEALS project. It is the one template that moves along the <em>other two</em> axes while staying at configuration level 3: its code layout is a <strong>library package</strong> (nothing in the file defines a task) and its ownership is <strong>devstack developer</strong> (seals is imported, and you could edit it). Moving along code layout changed exactly one function — <code>build_task_tree</code>, which now delegates instead of containing. One practical difference from templates 3 and 4: it needs <code>seals</code> installed and will download base data on its first run, so it is not a five-second toy like the others. For ownership one step further — seals as a read-only dependency in your own repo — copy <code>run_template_downstream_user.py</code> instead.</p>
+<p>Alongside the four rungs, <code>run_templates/run_template_seals_example.py</code> is the same anatomy applied to a <strong>real model</strong>: <code>build_task_tree</code> delegates unchanged to <code>seals_initialize_project.build_standard_task_tree(p)</code>, and <code>run_project</code> sets the base data dir and the processing resolution and loads the scenarios CSV, which ships in seals’ tracked <code>input_template/</code> and is seeded into <code>input/</code> on first run (runtime CSV generation was retired 2026-08; it returns typed as <code>generate_scenarios_csv_from_model_spec</code>). Copy this one to start a standalone SEALS project. It is the one template that moves along the <em>other two</em> axes while staying at configuration level 3: its code layout is a <strong>library package</strong> (nothing in the file defines a task) and its ownership is <strong>devstack developer</strong> (seals is imported, and you could edit it). Moving along code layout changed exactly one function — <code>build_task_tree</code>, which now delegates instead of containing. One practical difference from templates 3 and 4: it needs <code>seals</code> installed and will download base data on its first run, so it is not a five-second toy like the others. For ownership one step further — seals as a read-only dependency in your own repo — copy <code>run_template_downstream_user.py</code> instead.</p>
 </section>
 <section id="the-other-two-axes" class="level2">
 <h2 class="anchored" data-anchor-id="the-other-two-axes">The other two axes</h2>
@@ -689,7 +689,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><code>run_project(p)</code> sets what no variant ever changes. The caller sets what a variant might.</p>
 </blockquote>
-<p>The caller builds the <code>ProjectFlow</code> and hangs configuration on it; <code>run_project</code> only runs it. When a constant starts varying, it moves one line up — out of <code>run_project</code>, into the caller. There is no signature to edit, no keyword to add, and no default that can drift out of sync. Template 4 shows the split working: <code>p.scenario_definitions_filename</code> is set by the caller (variants change it), <code>p.parameter_definitions_filename</code> is set inside <code>run_project</code> (no variant does).</p>
+<p>The caller builds the <code>ProjectFlow</code> and hangs configuration on it; <code>run_project</code> only runs it. When a constant starts varying, it moves one line up — out of <code>run_project</code>, into the caller. There is no signature to edit, no keyword to add, and no default that can drift out of sync. One deliberate exception (2026-08 amendment): the <strong>full definitions-filename block</strong> (parameters, scenarios, outputs, figures, sections, descriptions) is set by the caller even though most members never vary — it is the project’s interface manifest, and variants copy the block and override only the member that differs. Template 4 shows it working: the block sits in <code>__main__</code>, and <code>run_project</code> only loads it via <code>hb.initialize_parameters</code> / <code>hb.initialize_scenarios</code>. The split, downstream and seals templates additionally end their init with the model’s <code>initialize_project(p)</code> — the model-initializer anatomy.</p>
 <p>The cost, stated honestly: bare <code>run_project()</code> no longer works — the caller must hand it a ProjectFlow, and a variant wrapper is four lines instead of three. In exchange every knob a run uses is visible at the call site, and forgetting one raises a named <code>AttributeError</code> instead of silently using somebody else’s default.</p>
 </section>
 <section id="a-variant-run-is-its-own-file-never-a-fork" class="level3">
@@ -747,7 +747,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>The three-column scenarios CSV in these templates is <strong>illustrative only</strong>. The real schema is specified in <a href="../earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a>; worked instances of it are in <code>scenario_definitions_examples/</code>.</p>
+<p>The three-column scenarios CSV in these templates is <strong>illustrative only</strong>. The real schema is specified in <a href="../earth_economy_devstack/proposed_changes.html">proposed_changes.qmd</a>; worked instances of it are in <code>scenario_definitions_examples/</code>.</p>
 </section>
 </section>
 <section id="the-two-template-sets" class="level2">
@@ -783,7 +783,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-examples" class="level2">
 <h2 class="anchored" data-anchor-id="data-examples">Data examples</h2>
-<p><code>scenario_definitions_examples/</code> holds instances of the <strong>v2</strong> scenario definitions schema specified in <a href="../earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a>:</p>
+<p><code>scenario_definitions_examples/</code> holds instances of the <strong>v2</strong> scenario definitions schema specified in <a href="../earth_economy_devstack/proposed_changes.html">proposed_changes.qmd</a>:</p>
 <ul>
 <li><code>single_stage_seals.csv</code> — a SEALS-only project, including a hindcast year.</li>
 <li><code>multi_stage_ngfs.csv</code> — GTAP + SEALS: a 2020-anchored canonical clock with a <code>gtap</code> stage clock.</li>
@@ -796,7 +796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="../earth_economy_devstack/project_complexity.html">project_complexity.qmd</a> — the ladder from a one-off script to a systematic project, and why each rung is earned.</li>
 <li><a href="../earth_economy_devstack/project_flow.html">project_flow.qmd</a> — the ProjectFlow engine itself: tasks, iterators, project dirs, <code>get_path</code>.</li>
 <li><a href="../earth_economy_devstack/conventions.html">conventions.qmd</a> — the full EE Spec naming and structure rules.</li>
-<li><a href="../earth_economy_devstack/scenario_definitions.html">scenario_definitions.qmd</a> — the scenarios CSV schema.</li>
+<li><a href="../earth_economy_devstack/proposed_changes.html">proposed_changes.qmd</a> — the scenarios CSV schema.</li>
 </ul>
 
 

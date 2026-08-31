@@ -469,8 +469,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/scenario_definitions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scenario Definitions</span></a>
+  <a href="../earth_economy_devstack/proposed_changes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Proposed Changes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -545,7 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Status:</strong> design specification. No code implements this yet. It builds on the <a href="../earth_economy_devstack/scenario_definitions.html">scenario definitions v2 schema</a> (the CSV <em>instance</em> layer) and specifies the <em>model-schema</em> and <em>execution</em> layers above it. The canonical parser, the model-spec registry, and the iterator builder will live in hazelbean next to <code>project_flow.py</code>.</p>
+<p><strong>Status:</strong> design specification. No code implements this yet. It builds on the <a href="../earth_economy_devstack/proposed_changes.html">scenario definitions v2 schema</a> (the CSV <em>instance</em> layer) and specifies the <em>model-schema</em> and <em>execution</em> layers above it. The canonical parser, the model-spec registry, and the iterator builder will live in hazelbean next to <code>project_flow.py</code>.</p>
 <section id="the-three-layers" class="level2">
 <h2 class="anchored" data-anchor-id="the-three-layers">The three layers</h2>
 <p>The devstack has been carrying three concerns in one place (per-project CSV parsers plus scattered task code). v2 separates them:</p>
@@ -718,7 +718,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="ownership-and-migration" class="level2">
 <h2 class="anchored" data-anchor-id="ownership-and-migration">Ownership and migration</h2>
-<p>Spec <em>machinery</em> (dataclasses, registry, builder, resampler, validator) lives in hazelbean next to <code>project_flow.py</code>. Spec <em>content</em> lives in each model’s repo: <code>seals.MODEL_SPEC</code>, <code>gtappy.MODEL_SPEC</code>, <code>global_invest.ES_MODEL_SPEC</code> — the same ownership split as the rest of the devstack. <code>seals_api_input.md</code> becomes the rendered view of <code>seals.MODEL_SPEC</code>; the stub parser in <code>seals_api_parsing.py</code> (and its <code>generate_scenarios_csv_and_put_in_input_dir</code> inverse) is superseded rather than revived. A first useful deliverable is “generate a valid v2 template CSV from the registered specs,” which replaces the hand-maintained template writer and gives new users the runnable example the SEALS input doc already promises.</p>
+<p>Spec <em>machinery</em> (dataclasses, registry, builder, resampler, validator) lives in hazelbean next to <code>project_flow.py</code>. Spec <em>content</em> lives in each model’s repo: <code>seals.MODEL_SPEC</code>, <code>gtappy.MODEL_SPEC</code>, <code>global_invest.ES_MODEL_SPEC</code> — the same ownership split as the rest of the devstack. <code>seals_api_input.md</code> becomes the rendered view of <code>seals.MODEL_SPEC</code>; the stub parser in <code>seals_api_parsing.py</code> (and its <code>generate_scenarios_csv_and_put_in_input_dir</code> inverse) is superseded rather than revived. A first useful deliverable is “generate a valid v2 template CSV from the registered specs” (<code>generate_scenarios_csv_from_model_spec</code>), which replaces the hand-maintained template writer and gives new users the runnable example the SEALS input doc already promises. Note: seals’ runtime generate-if-missing branch was retired in 2026-08 in favor of tracked <code>input_template/</code> CSVs, so this deliverable is a restoration of that capability with a schema guarantee, not a new idea.</p>
 
 
 </section>

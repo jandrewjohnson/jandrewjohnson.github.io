@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>making_a_pog – Justin Andrew Johnson</title>
+<title>base_data – Justin Andrew Johnson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,41 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -292,12 +257,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#pyramidal-cloud-optimized-geotiffs-pogs" id="toc-pyramidal-cloud-optimized-geotiffs-pogs" class="nav-link active" data-scroll-target="#pyramidal-cloud-optimized-geotiffs-pogs">Pyramidal Cloud-Optimized Geotiffs (POGs)</a>
+  <li><a href="#ontributing-to-devstacks-base-data" id="toc-ontributing-to-devstacks-base-data" class="nav-link active" data-scroll-target="#ontributing-to-devstacks-base-data">ontributing to Devstack’s Base Data</a>
   <ul class="collapse">
-  <li><a href="#why-pogs" id="toc-why-pogs" class="nav-link" data-scroll-target="#why-pogs">Why POGs?</a></li>
-  <li><a href="#choosing-the-output-resolution-with-output_arcseconds" id="toc-choosing-the-output-resolution-with-output_arcseconds" class="nav-link" data-scroll-target="#choosing-the-output-resolution-with-output_arcseconds">Choosing the output resolution with <code>output_arcseconds</code></a></li>
-  <li><a href="#the-pog-spec-in-summary" id="toc-the-pog-spec-in-summary" class="nav-link" data-scroll-target="#the-pog-spec-in-summary">The POG spec, in summary</a></li>
-  <li><a href="#handy-extras" id="toc-handy-extras" class="nav-link" data-scroll-target="#handy-extras">Handy extras</a></li>
+  <li><a href="#option-1-contributing-input-data" id="toc-option-1-contributing-input-data" class="nav-link" data-scroll-target="#option-1-contributing-input-data">Option 1: Contributing Input data</a></li>
+  <li><a href="#option-2-contributing-outputs-of-your-model" id="toc-option-2-contributing-outputs-of-your-model" class="nav-link" data-scroll-target="#option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -308,147 +271,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="pyramidal-cloud-optimized-geotiffs-pogs" class="level1">
-<h1>Pyramidal Cloud-Optimized Geotiffs (POGs)</h1>
-<p>Pogs are Pyramidal COGs. COGs are Cloud-Optimized Geotiffs which are super awesome and allow for, among other things, downloading only a small subset of a huge file. A COG is still a regular GeoTIFF that any GIS can open, but its internal layout (tiling, internal overviews, header placement) is arranged so that a remote reader can grab just the tiles and zoom level it needs via HTTP range requests.</p>
-<p>Pogs extend the concept to guarantee <em>global pyramidal alignment</em>: every POG covers the whole globe on one of a fixed set of supported resolutions, with a geotransform that is bit-for-bit identical across all files at that resolution. Because the grids nest exactly, any two POGs can be combined across resolutions with pure array indexing — no reprojection, no resampling, no half-pixel shifts — which is what makes fast exact zonal statistics and cross-resolution modeling in the devstack possible.</p>
-<section id="why-pogs" class="level2">
-<h2 class="anchored" data-anchor-id="why-pogs">Why POGs?</h2>
+<section id="ontributing-to-devstacks-base-data" class="level1">
+<h1>ontributing to Devstack’s Base Data</h1>
+<p>Our base data is becoming a valuable asset that accelerates our shared work. Towards that, I wanted to document how <strong>you</strong> could contribute (if you want) your project’s data so that it works seamlessly&nbsp;with the rest of the devstack</p>
+<p>To make one’s project fully replicable, it obviously needs to have an open git repo. The challenge, though, is that git is not good for managing data, so if someone clones your code, it will fail because it doesn’t (and shouldn’t if the data is &gt; 5MB), include the data in the repo. The way our Devstack manages base_data is that it is automatically downloaded via p.get_path() when it is needed. Thus, if you want your project to “just work”, we need to figure out how to create a good system for proposing new contributions to the base data and then cleaning/curating them so they work well.&nbsp;</p>
+<section id="option-1-contributing-input-data" class="level3">
+<h3 class="anchored" data-anchor-id="option-1-contributing-input-data">Option 1: Contributing Input data</h3>
+<p>If you have code that you want to contribute to the devstack but it uses data not in the existing base_data, you can contribute it via this process so your code works for everyone else (in the lab, be with options for literally everyone else).</p>
+<p>1. Move your data into our TEEMs drive in the base_data submissions folder in a single folder. I’ve populated this already with the 4 projects that I think we could incorporate right now, pictured below, for air_quality, natures_frontiers, manage_invest , urban_cooling.</p>
+<p><img src="images/paste-60.png" class="img-fluid"></p>
+<p>2. Change your git repo so that that ALL (ABSOLUTELY&nbsp;ALL) data are referenced via a relative path into this submissions base_data folder. So, for instance, if sumil had a file “emissions_factors.csv”, his code would reference it as</p>
+<p><code>base_data_dir = "G:/Shared drives/NatCapTEEMs/Files/base_data/submissions"</code></p>
+<p><code>data_filename = "emissions_factors.csv"</code></p>
+<p><code>data_path = os.path.join(base_data_dir, data_filename)</code></p>
+<p>3. Ensure that your repo has a readme.md in the base of the repo (this is automatically visualized in github when someone visits your repo. Additionally, copy/paste readme doc to a google doc in the your projects’ base_data root, as pictured:</p>
+<p><img src="images/paste-61.png" class="img-fluid"></p>
+<p>4. I then test your repo and code by cloning the repo, modifying ONLY the base_data_dir, and then check that everything runs. I will then further clean the data (to be compliant with the conventions defined here&nbsp;<a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html" class="uri">https://justinandrewjohnson.com/earth_economy_devstack/conventions.html</a></p>
+<p>I’m happy to do the cleaning, but if you want, you might want to consider following the conventions earlier in your project rather than later.&nbsp;</p>
+<p>5. I’ll write “unittests” that ensure your code and data work, which will be automatically run when there’s a new release of the devstack repo.</p>
+<p>6. If everything passes, the data get “promoted” to base_data by eliminating the word “submissions” in their file path (e.g.,&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\submissions\emissions_factors.csv becomes&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\emissions_factors.csv)</p>
+<p>7. You make a new repo commit to your repository that&nbsp; changes the&nbsp; <code>base_data_dir</code> &nbsp; reference.</p>
+<p>8. Profit! Now your code can be run seamlessly by anyone with access to our TEEMs drive. This also means it is a small task to make accessible to anyone (done by me putting it on our google cloud bucket for fast and public download).</p>
+</section>
+<section id="option-2-contributing-outputs-of-your-model" class="level3">
+<h3 class="anchored" data-anchor-id="option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</h3>
+<p>In more advanced circumstances, or in large lab projects, you may want <strong>outputs</strong> rather than inputs as described above brought into the base_data. The best example of this would be the GEP project where eventually, even the extremely large filesize outputs will be hosted in a consistent and accessible manner. Follow these steps to do this.</p>
 <ol type="1">
-<li>Solves zonal statistics inaccuracy once and for all (and is about 10-100x faster than QGIS/ArcGIS)</li>
-<li>Solves the hectare at different latitudes problem once and for all and greatly enhances accuracy (Never, never, NERVER use projected data again!)</li>
+<li>Ensure you are using ProjectFlow, which will create a set of directories to use for intermediate and final outputs based on your TaskTree.</li>
+<li>As a final task in your TaskTree, include a <code>p.distribute_outputs_task</code> that simply copies and pastes your key outputs, as defined in the ProjectFlow outputs typology in the proper subdirectory of your ProjectFlow output_dir.</li>
+<li>The results of this task must also be copied, along with a zip archive of the contents of the distribute_outputs_task verbatim, to the outputs directory with a structure defined in the project outputs typology.</li>
+<li>Upload this zip archive to our TEEMs shared drive at:</li>
 </ol>
-<p>The function for making a pog is in Hazelbean at <code>make_path_pog</code>. Here you can use this by pointing it at any GeoTIFF:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rewrite the file in place as a POG</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'my_raster.tif'</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Or write to a new file and control the details</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'my_raster.tif'</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    output_raster_path<span class="op">=</span><span class="st">'my_raster_pog.tif'</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    output_data_type<span class="op">=</span><span class="dv">6</span>,        <span class="co"># optional; defaults to the input's data type</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    output_arcseconds<span class="op">=</span><span class="va">None</span>,    <span class="co"># optional; see below</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    compression<span class="op">=</span><span class="st">'DEFLATE'</span>,     <span class="co"># default</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    blocksize<span class="op">=</span><span class="dv">512</span>,             <span class="co"># default</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If the input is not already on a global pyramidal grid, <code>make_path_pog</code> resamples it onto the matching global grid for its resolution (nearest-neighbor for integer/categorical data, bilinear for floats), then computes exact statistics, builds the prescribed internal overviews, and writes the result through GDAL’s COG driver. If the input already validates as a POG, it does nothing.</p>
-</section>
-<section id="choosing-the-output-resolution-with-output_arcseconds" class="level2">
-<h2 class="anchored" data-anchor-id="choosing-the-output-resolution-with-output_arcseconds">Choosing the output resolution with <code>output_arcseconds</code></h2>
-<p>The match raster that the input is resampled against is chosen automatically: <code>make_path_pog</code> detects the input’s resolution, snaps it to the nearest supported pyramid resolution (within a tight tolerance), and resolves the canonical <code>ha_per_cell_&lt;res&gt;sec.tif</code> for that resolution through the <code>get_path</code> ladder — your project dirs, <code>base_data</code>, any shared data roots configured on the machine, and finally a cloud download.</p>
-<p>That automatic detection only works when the input is already <em>close</em> to a supported resolution. When it isn’t (say, 0.3-degree cells), or when you deliberately want a different resolution than the input’s, pass <code>output_arcseconds</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An input far from any supported resolution: choose the target explicitly</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'weird_resolution.tif'</span>, <span class="st">'now_a_pog.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">1800</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Deliberate cross-resolution conversion: a 10sec POG becomes a 900sec POG</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'lulc_10sec.tif'</span>, <span class="st">'lulc_900sec.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">900</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>output_arcseconds</code> simply declares the resolution of the output POG, whatever the input is. Without it, an input that isn’t close to any supported resolution raises an error telling you to pass it. When the requested grid is genuinely coarser than the input (a true aggregation, not just snapping), the resampling method switches from point-sampling to aggregation — <code>mode</code> for integer types and <code>average</code> for floats, the same logic used for overview levels.</p>
-<p>Beware what aggregation means for your data’s semantics, though: averaging a <em>quantity</em> raster (hectares, tonnes) changes its global sum. The EE Spec convention is to compute and resample in <strong>proportions</strong> and only multiply by the canonical <code>ha_per_cell</code> of the target resolution as a last step, which makes aggregation sum-preserving. See the pyramid resolutions section of the <a href="../earth_economy_devstack/conventions.html">EE Spec conventions</a>.</p>
-<p>You can verify the result (and see exactly which criterion fails, if one does) with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hb.is_path_pog(<span class="st">'my_raster_pog.tif'</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The canonical match rasters live in our base data under <code>pyramids/</code>, one per supported resolution. The example for 300 meter (10 arcsecond) data would be the ref_path <code>os.path.join('pyramids', 'ha_per_cell_10sec.tif')</code> — in a ProjectFlow project, <code>p.get_path()</code> on that ref_path resolves it against your data roots (and downloads it into <code>base_data</code> if you don’t have it yet). You rarely need to touch these directly for pog-making: <code>make_path_pog</code> finds the right one itself, as described next.</p>
-</section>
-<section id="the-pog-spec-in-summary" class="level2">
-<h2 class="anchored" data-anchor-id="the-pog-spec-in-summary">The POG spec, in summary</h2>
-<p>Other sources, including an in-prep manuscript, define fully the pog spec, but for now, the summary is: a POG is a GeoTIFF that passes <strong>both</strong> checks below (this is literally what <code>hb.is_path_pog</code> tests — <code>is_path_global_pyramid</code> and <code>is_path_cog</code>).</p>
-<p><strong>1. It is a global pyramid:</strong></p>
-<ul>
-<li><p><strong>Global extent, exact geotransform.</strong> The raster spans the whole globe, <code>(-180, res, 0, 90, 0, -res)</code>, matching the canonical geotransform for its resolution exactly (not approximately).</p></li>
-<li><p><strong>A supported resolution.</strong> Cell size is one of the pyramid-compatible resolutions, named by arcseconds:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: right;">Arcseconds</th>
-<th style="text-align: right;">Degrees</th>
-<th style="text-align: right;">Approx. at equator</th>
-<th style="text-align: right;">Shape (rows × cols)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1/3600</td>
-<td style="text-align: right;">~30 m</td>
-<td style="text-align: right;">648,000 × 1,296,000</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">1/360</td>
-<td style="text-align: right;">~300 m</td>
-<td style="text-align: right;">64,800 × 129,600</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">1/120</td>
-<td style="text-align: right;">~1 km</td>
-<td style="text-align: right;">21,600 × 43,200</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">150</td>
-<td style="text-align: right;">1/24</td>
-<td style="text-align: right;">~5 km</td>
-<td style="text-align: right;">4,320 × 8,640</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">300</td>
-<td style="text-align: right;">1/12</td>
-<td style="text-align: right;">~10 km</td>
-<td style="text-align: right;">2,160 × 4,320</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">900</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">~25 km</td>
-<td style="text-align: right;">720 × 1,440</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1800</td>
-<td style="text-align: right;">0.5</td>
-<td style="text-align: right;">~50 km</td>
-<td style="text-align: right;">360 × 720</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3600</td>
-<td style="text-align: right;">1.0</td>
-<td style="text-align: right;">~110 km</td>
-<td style="text-align: right;">180 × 360</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">7200</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">90 × 180</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">14400</td>
-<td style="text-align: right;">4.0</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">45 × 90</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">36000</td>
-<td style="text-align: right;">10.0</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">18 × 36</td>
-</tr>
-</tbody>
-</table></li>
-<li><p><strong>The standard no-data value for its data type.</strong> NDV is not a free choice: signed integers and floats use <code>-9999</code>; unsigned integers use the maximum value of the type (e.g., 255 for Byte, 65535 for UInt16). <code>make_path_pog</code> sets this for you (it will override whatever NDV the input had).</p></li>
-<li><p><strong>Compressed</strong> with DEFLATE. This is a choice we made and in most tests deflate performs better than the more common LZW. We have also tried out ZSTD which is way better than DEFLATE but is not universally supported (yet), so we don’t use it in the definition.</p></li>
-<li><p><strong>Internal overviews at exactly the prescribed levels</strong> for its resolution (e.g., 10 arcseconds requires levels <code>[3, 15, 30, 90, 180, 360]</code>, so its overviews land exactly on the coarser supported resolutions). The full mapping is <code>hb.pyramid_compatible_overview_levels</code>. Overview resampling is <code>mode</code> for integer types and <code>average</code> for floats.</p></li>
-<li><p><strong>Exact statistics stored internally.</strong> Band statistics must be present and computed exactly (<code>STATISTICS_APPROXIMATE=NO</code>), with no stale <code>.aux.xml</code> sidecar shadowing them.</p></li>
-</ul>
-<p><strong>2. It is a valid COG:</strong> it passes GDAL’s COG validation — tiled layout, properly ordered internal overviews, cloud-readable header structure. <code>make_path_pog</code> writes through the GDAL COG driver (BIGTIFF, 512-pixel blocks by default), so this comes for free.</p>
-</section>
-<section id="handy-extras" class="level2">
-<h2 class="anchored" data-anchor-id="handy-extras">Handy extras</h2>
-<ul>
-<li><code>hb.make_paths_pogs_in_parallel(...)</code> converts a list of rasters across multiple processes.</li>
-<li><code>hb.write_pog_of_value_from_scratch(output_path, value, arcsecond_resolution, output_data_type)</code> and <code>hb.write_pog_of_value_from_match(output_path, match_path, value)</code> create constant-valued POGs, useful as templates or masks.</li>
-<li><code>make_path_pog</code> also accepts <code>ndv_above</code> / <code>ndv_below</code> (censor out-of-range values to NDV) and <code>value_reclassification_dict</code> (reclassify while converting) so you can clean a raster in the same pass that pog-ifies it.</li>
-</ul>
+<p>Using commercial agriculture as an example, we see the build_standard_task_tree() method.</p>
+<p><img src="images/paste-62.png" class="img-fluid" width="988"></p>
+<p>Go into this function to see the logic of the code (Ctrl-Leftclick in Windows VS Code). It defines a bunch of tasks (labeled as nouns because they will be interpreted as directories). Notice that the first task <code>commercial_agriculture</code> is the parent task to the other four tasks. This is critical for organization, data-caching, and namespace management, set with <code>parent=p.commercial_agriculture_task</code>.</p>
+<p><img src="images/paste-65.png" class="img-fluid"></p>
+<p>When we run the run.py function, we’ll see output that summarizes the TaskTree, as below.</p>
+<p><img src="images/paste-63.png" class="img-fluid"></p>
+<p>This corresponds to the task directories in the Project directory:</p>
+<p><img src="images/paste-64.png" class="img-fluid"></p>
+<p>The results distribution folder is organized according to the structure defined in the output typology, which is defined in the parent task for the service.</p>
+<p><img src="images/paste-67.png" class="img-fluid"></p>
+<p>The results_distribution_task should organize the results so that they organize well into <code>base_data/gep/commercial_agriculture/&lt;contents_of_zip&gt;</code></p>
 
 
 </section>

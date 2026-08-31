@@ -513,11 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#contributing-via-forking-external" id="toc-contributing-via-forking-external" class="nav-link" data-scroll-target="#contributing-via-forking-external">2. Contributing via Forking (external)</a></li>
   </ul></li>
   <li><a href="#pull-requests" id="toc-pull-requests" class="nav-link" data-scroll-target="#pull-requests">Pull Requests</a></li>
-  <li><a href="#contributing-to-devstacks-base-data" id="toc-contributing-to-devstacks-base-data" class="nav-link" data-scroll-target="#contributing-to-devstacks-base-data">Contributing to Devstack’s Base Data</a>
-  <ul class="collapse">
-  <li><a href="#option-1-contributing-input-data" id="toc-option-1-contributing-input-data" class="nav-link" data-scroll-target="#option-1-contributing-input-data">Option 1: Contributing Input data</a></li>
-  <li><a href="#option-2-contributing-outputs-of-your-model" id="toc-option-2-contributing-outputs-of-your-model" class="nav-link" data-scroll-target="#option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</a></li>
-  </ul></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul>
 </nav>
     </div>
@@ -668,51 +664,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="images/pull_request_example_step6.png" class="img-fluid"></p>
 <p>Finally, the pull request will appear in the <code>upstream</code> repository. The main developers will review your changes and, if approved, will merge them into the <code>upstream</code> repository.</p>
 </section>
-<section id="contributing-to-devstacks-base-data" class="level1">
-<h1>Contributing to Devstack’s Base Data</h1>
-<p>Our base data is becoming a valuable asset that accelerates our shared work. Towards that, I wanted to document how <strong>you</strong> could contribute (if you want) your project’s data so that it works seamlessly&nbsp;with the rest of the devstack</p>
-<p>To make one’s project fully replicable, it obviously needs to have an open git repo. The challenge, though, is that git is not good for managing data, so if someone clones your code, it will fail because it doesn’t (and shouldn’t if the data is &gt; 5MB), include the data in the repo. The way our Devstack manages base_data is that it is automatically downloaded via p.get_path() when it is needed. Thus, if you want your project to “just work”, we need to figure out how to create a good system for proposing new contributions to the base data and then cleaning/curating them so they work well.&nbsp;</p>
-<section id="option-1-contributing-input-data" class="level3">
-<h3 class="anchored" data-anchor-id="option-1-contributing-input-data">Option 1: Contributing Input data</h3>
-<p>If you have code that you want to contribute to the devstack but it uses data not in the existing base_data, you can contribute it via this process so your code works for everyone else (in the lab, be with options for literally everyone else).</p>
-<p>1. Move your data into our TEEMs drive in the base_data submissions folder in a single folder. I’ve populated this already with the 4 projects that I think we could incorporate right now, pictured below, for air_quality, natures_frontiers, manage_invest , urban_cooling.</p>
-<p><img src="images/paste-60.png" class="img-fluid"></p>
-<p>2. Change your git repo so that that ALL (ABSOLUTELY&nbsp;ALL) data are referenced via a relative path into this submissions base_data folder. So, for instance, if sumil had a file “emissions_factors.csv”, his code would reference it as</p>
-<p><code>base_data_dir = "G:/Shared drives/NatCapTEEMs/Files/base_data/submissions"</code></p>
-<p><code>data_filename = "emissions_factors.csv"</code></p>
-<p><code>data_path = os.path.join(base_data_dir, data_filename)</code></p>
-<p>3. Ensure that your repo has a readme.md in the base of the repo (this is automatically visualized in github when someone visits your repo. Additionally, copy/paste readme doc to a google doc in the your projects’ base_data root, as pictured:</p>
-<p><img src="images/paste-61.png" class="img-fluid"></p>
-<p>4. I then test your repo and code by cloning the repo, modifying ONLY the base_data_dir, and then check that everything runs. I will then further clean the data (to be compliant with the conventions defined here&nbsp;<a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html" class="uri">https://justinandrewjohnson.com/earth_economy_devstack/conventions.html</a></p>
-<p>I’m happy to do the cleaning, but if you want, you might want to consider following the conventions earlier in your project rather than later.&nbsp;</p>
-<p>5. I’ll write “unittests” that ensure your code and data work, which will be automatically run when there’s a new release of the devstack repo.</p>
-<p>6. If everything passes, the data get “promoted” to base_data by eliminating the word “submissions” in their file path (e.g.,&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\submissions\emissions_factors.csv becomes&nbsp;G:\Shared drives\NatCapTEEMs\Files\base_data\emissions_factors.csv)</p>
-<p>7. You make a new repo commit to your repository that&nbsp; changes the&nbsp; <code>base_data_dir</code> &nbsp; reference.</p>
-<p>8. Profit! Now your code can be run seamlessly by anyone with access to our TEEMs drive. This also means it is a small task to make accessible to anyone (done by me putting it on our google cloud bucket for fast and public download).</p>
-</section>
-<section id="option-2-contributing-outputs-of-your-model" class="level3">
-<h3 class="anchored" data-anchor-id="option-2-contributing-outputs-of-your-model">Option 2: Contributing outputs of your model</h3>
-<p>In more advanced circumstances, or in large lab projects, you may want <strong>outputs</strong> rather than inputs as described above brought into the base_data. The best example of this would be the GEP project where eventually, even the extremely large filesize outputs will be hosted in a consistent and accessible manner. Follow these steps to do this.</p>
-<ol type="1">
-<li>Ensure you are using ProjectFlow, which will create a set of directories to use for intermediate and final outputs based on your TaskTree.</li>
-<li>As a final task in your TaskTree, include a <code>p.distribute_outputs_task</code> that simply copies and pastes your key outputs, as defined in the ProjectFlow outputs typology in the proper subdirectory of your ProjectFlow output_dir.</li>
-<li>The results of this task must also be copied, along with a zip archive of the contents of the distribute_outputs_task verbatim, to the outputs directory with a structure defined in the project outputs typology.</li>
-<li>Upload this zip archive to our TEEMs shared drive at:</li>
-</ol>
-<p>Using commercial agriculture as an example, we see the build_standard_task_tree() method.</p>
-<p><img src="images/paste-62.png" class="img-fluid" width="988"></p>
-<p>Go into this function to see the logic of the code (Ctrl-Leftclick in Windows VS Code). It defines a bunch of tasks (labeled as nouns because they will be interpreted as directories). Notice that the first task <code>commercial_agriculture</code> is the parent task to the other four tasks. This is critical for organization, data-caching, and namespace management, set with <code>parent=p.commercial_agriculture_task</code>.</p>
-<p><img src="images/paste-65.png" class="img-fluid"></p>
-<p>When we run the run.py function, we’ll see output that summarizes the TaskTree, as below.</p>
-<p><img src="images/paste-63.png" class="img-fluid"></p>
-<p>This corresponds to the task directories in the Project directory:</p>
-<p><img src="images/paste-64.png" class="img-fluid"></p>
-<p>The results distribution folder is organized according to the structure defined in the output typology, which is defined in the parent task for the service.</p>
-<p><img src="images/paste-67.png" class="img-fluid"></p>
-<p>The results_distribution_task should organize the results so that they organize well into <code>base_data/gep/commercial_agriculture/&lt;contents_of_zip&gt;</code></p>
+<section id="section" class="level1">
+<h1></h1>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

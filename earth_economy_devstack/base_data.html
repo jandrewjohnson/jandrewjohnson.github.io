@@ -440,7 +440,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../earth_economy_devstack/how_to_contribute.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to Contribute</span></a>
+ <span class="menu-text">Contributing Code</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -532,7 +532,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Change your git repo so that that ALL (ABSOLUTELY&nbsp;ALL) data are referenced via a relative path into this submissions base_data folder. So, for instance, if you had a file “emissions_factors.csv” in the air_quality project, the code would reference it as</li>
 </ol>
 <p><code>data_ref_path = os.path.join("submissions", "air_quality", "emissions_factors.csv"</code></p>
-<p>The <code>data_ref_path</code> is what we call a Reference Path (or Ref Path). This means it is a relative path relative to where we store our base_data (and can easily be found and downloaded by the <code>get_path(data_ref_path)</code> function.</p>
+<p>The <code>data_ref_path</code> is what we call a Reference Path (or Ref Path), which <code>get_path(data_ref_path)</code> can find and download; the canonical definition, including the full order of directories <code>get_path</code> searches, is in <a href="../earth_economy_devstack/conventions.html#get_path-and-ref_path">Conventions</a>.</p>
 <ol start="3" type="1">
 <li>Put a Readme.md in your submission folder. It should reference the code used to produce it and basic information on units, interpretation, and how it should be used.</li>
 <li>After you complete 1-3, email me! I will then test your repo and code by cloning the repo, modifying ONLY the base_data_dir, and then check that everything runs.</li>

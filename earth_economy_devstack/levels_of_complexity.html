@@ -1323,9 +1323,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># One call does the whole directory setup: it places the project, creates it,</span></span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and copies input_template/ -&gt; input/ (skip-existing). A stable project_name</span></span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># with run_mode='check' means repeated runs resume in place.</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># One call does the whole directory setup: it places the project and creates</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># it; input_template/ is read in place (input/ holds only your overrides). A</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># stable project_name with run_mode='check' means repeated runs resume in place.</span></span>
 <span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> hb.ProjectFlow(project_name<span class="op">=</span><span class="st">'yield'</span>, run_mode<span class="op">=</span><span class="st">'check'</span>)</span>
 <span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    p.parameter_definitions_filename <span class="op">=</span> <span class="st">'yield_parameters.csv'</span></span>
 <span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    p.scenario_definitions_filename <span class="op">=</span> <span class="st">'yield_scenarios.csv'</span></span>

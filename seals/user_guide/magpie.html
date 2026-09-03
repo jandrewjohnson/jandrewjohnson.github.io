@@ -462,7 +462,7 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="images/magpie_regressors_30by30.png" class="img-fluid"></p>
 <p>Finally, the path to the regressor used during the downscaling must also be added to the scenarios CSV, while the base land-cover data <code>base_year_lulc_path</code> must refer to the same year as defined in the <code>Baseline</code> case.</p>
 <p><img src="images/magpie_scenario_definitions5.png" class="img-fluid"></p>
-<p>Save <code>scenario_definitions_tutorial.csv</code> in the <code>input_template/</code> directory beside your run file — it is tracked in git, and ProjectFlow copies it into the project’s <code>input/</code> on first run. Then name it in the run file’s <code>__main__</code> block with <code>p.scenario_definitions_filename = 'scenario_definitions_tutorial.csv'</code> and you are good to go.</p>
+<p>Save <code>scenario_definitions_tutorial.csv</code> in the <code>input_template/</code> directory beside your run file — it is tracked in git, and ProjectFlow reads it there in place (a copy in the project’s <code>input/</code> would shadow it). Then name it in the run file’s <code>__main__</code> block with <code>p.scenario_definitions_filename = 'scenario_definitions_tutorial.csv'</code> and you are good to go.</p>
 <p><img src="images/magpie_scenario_definitions6.png" class="img-fluid"></p>
 
 

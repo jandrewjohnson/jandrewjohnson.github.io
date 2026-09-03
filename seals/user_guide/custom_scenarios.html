@@ -599,7 +599,7 @@ ssp2_rcp45_luh2-message_bau_shift,policy,RWA,ssp2,rcp45,luh2-message,bau_shift,2
 </section>
 <section id="where-the-file-lives" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-file-lives">Where the file lives</h2>
-<p>Put your scenarios CSV in an <strong><code>input_template/</code></strong> directory beside your run file. It is tracked in git; ProjectFlow copies anything missing into the project’s untracked <code>input/</code> on first run and never overwrites the working copy. Name it in your run file’s <code>__main__</code> block:</p>
+<p>Put your scenarios CSV in an <strong><code>input_template/</code></strong> directory beside your run file. It is tracked in git and ProjectFlow reads it there in place; a copy you put in the project’s untracked <code>input/</code> shadows it, and a run warns if the template later changes underneath that copy. Name it in your run file’s <code>__main__</code> block:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p.scenario_definitions_filename <span class="op">=</span> <span class="st">'my_project_scenarios.csv'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If the named file is absent from both <code>input/</code> and <code>base_data</code>, SEALS generates a default one in the project’s <code>input/</code> so a first run still works — edit that copy, or better, add your own to <code>input_template/</code>.</p>
 

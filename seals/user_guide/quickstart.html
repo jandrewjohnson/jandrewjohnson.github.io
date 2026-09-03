@@ -451,7 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="where-the-output-goes">2. Where the output goes</h2>
 <p>Not into the repo. Because the run file lives inside a cloned repo, ProjectFlow places the project directory just <em>outside</em> it:</p>
 <pre><code>~/Files/seals/projects/seals_test/
-├── input/          seeded from the repo's input_template/
+├── input/          your override copies only (the repo's input_template/ is read in place)
 ├── intermediate/   one folder per task
 └── output/</code></pre>
 <p>Run the same command a second time and it finishes almost immediately — every task is behind an existence check, so completed work is skipped. That is the main thing ProjectFlow buys you: interrupt a long run, fix one input, re-run, and only what is missing recomputes.</p>
@@ -465,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    run_project(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>run_mode</code> controls how much prior work is reused: <code>'check'</code> (the default) resumes in a stable project dir; <code>'full'</code> timestamps a fresh one.</p>
-<p>Put your scenarios CSV in an <code>input_template/</code> directory beside the run file. It is tracked in git, and ProjectFlow copies anything missing into the project’s untracked <code>input/</code> on first run without ever overwriting your working copy. The columns are documented in <a href="../../seals/user_guide/custom_scenarios.html">Custom scenarios</a>.</p>
+<p>Put your scenarios CSV in an <code>input_template/</code> directory beside the run file. It is tracked in git and ProjectFlow reads it there in place; a copy you place in the project’s untracked <code>input/</code> shadows it. The columns are documented in <a href="../../seals/user_guide/custom_scenarios.html">Custom scenarios</a>.</p>
 <p>To run the same pipeline a second way — a smoke test, a different AOI — write a <em>second run file</em> that imports the first rather than copying it. <code>run_seals_test.py</code> is the worked example, and the pattern is explained in <a href="https://justinandrewjohnson.com/earth_economy_devstack/conventions.html">conventions</a>.</p>
 </section>
 <section id="next" class="level2">

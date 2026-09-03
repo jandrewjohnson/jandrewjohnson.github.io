@@ -544,7 +544,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The scenarios CSV specifies the runs you want. <strong>Each row is one scenario</strong></li>
 <li>As the model iterates, it re-hydrates <code>p</code> from the row it is on — which is why scenario-varying values belong in the CSV and not in the run file</li>
-<li>The tracked copy lives in <code>input_template/</code> beside the run file. ProjectFlow copies anything missing into the project’s <code>input/</code> on first run and never overwrites your working copy</li>
+<li>The tracked copy lives in <code>input_template/</code> beside the run file. ProjectFlow reads it there in place; a copy you put in the project’s <code>input/</code> shadows it, and a run warns if the template later changes underneath that copy</li>
 <li>If the named file is nowhere to be found, SEALS generates a default so a first run still works</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p.scenario_definitions_filename <span class="op">=</span> <span class="st">'standard_scenarios.csv'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

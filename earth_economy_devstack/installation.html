@@ -536,6 +536,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#per-machine-configuration" id="toc-per-machine-configuration" class="nav-link" data-scroll-target="#per-machine-configuration">4. Per-machine configuration</a>
   <ul class="collapse">
+  <li><a href="#where-the-file-comes-from" id="toc-where-the-file-comes-from" class="nav-link" data-scroll-target="#where-the-file-comes-from">Where the file comes from</a></li>
   <li><a href="#the-keys-that-exist" id="toc-the-keys-that-exist" class="nav-link" data-scroll-target="#the-keys-that-exist">The keys that exist</a></li>
   <li><a href="#machine.env-or-parameters.csv" id="toc-machine.env-or-parameters.csv" class="nav-link" data-scroll-target="#machine.env-or-parameters.csv">machine.env or parameters.csv?</a></li>
   <li><a href="#setting-up-a-shared-data-root" id="toc-setting-up-a-shared-data-root" class="nav-link" data-scroll-target="#setting-up-a-shared-data-root">Setting up a shared data root</a></li>
@@ -639,7 +640,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Installing the code is not quite the whole setup. A few settings differ on every machine — where your lab drive is mounted, which SLURM account to charge — and none of them can be committed, because they are true only of your computer. They live in a single never-committed file:</p>
 <pre><code>~/.config/hazelbean/machine.env</code></pre>
 <p>Hazelbean loads it the moment you <code>import hazelbean</code>. The format is plain <code>KEY=value</code> lines; a leading <code>export</code> and a trailing <code># comment</code> are both tolerated, so the same file can also be sourced from a shell. Values are applied with <em>setdefault</em> semantics — a real environment variable always wins — so you can override any of it for one run without editing the file.</p>
-<p><strong>Nothing here is required.</strong> A machine with no <code>machine.env</code> at all works; you just lose the conveniences below.</p>
+<p><strong>Nothing here is required.</strong> A machine with no <code>machine.env</code> at all works; you just lose the conveniences below. It is also the <em>only</em> per-machine file: the older <code>config.txt</code> (under <code>Application Support</code> or <code>AppData</code>) was retired on 2026-09-03 and is no longer read, so delete it if you still have one.</p>
+<section id="where-the-file-comes-from" class="level3">
+<h3 class="anchored" data-anchor-id="where-the-file-comes-from">Where the file comes from</h3>
+<p>Nothing creates <code>machine.env</code> at install time — not pip, not conda, not <code>import hazelbean</code>. It exists only once something writes it:</p>
+<ul>
+<li><code>hb-setup-machine-env</code> (next section) creates the <code>~/.config/hazelbean/</code> directory and the file when it records a shared data root. It only ever <em>appends</em> a line and never overwrites a key you set by hand.</li>
+<li>Every other key you add yourself. Create the directory and file if they are not there yet, then add <code>KEY=value</code> lines:</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.config/hazelbean</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'GTAP_SC_SLURM_ACCOUNT=my_account'</span> <span class="op">&gt;&gt;</span> ~/.config/hazelbean/machine.env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The path is the same on every OS: <code>~</code> is your home directory, so on Windows it is <code>C:\Users\you\.config\hazelbean\machine.env</code>. To see which file, if any, a run actually read, look at the first lines a <code>ProjectFlow</code> logs when it is constructed — it reports its <code>base_data_dir</code> and shared data roots, and whether <code>HB_SHARED_DATA_DIRS</code> came from <code>machine.env</code> (naming the file), from a real environment variable that overrode it, or is unset.</p>
+</section>
 <section id="the-keys-that-exist" class="level3">
 <h3 class="anchored" data-anchor-id="the-keys-that-exist">The keys that exist</h3>
 <table class="caption-top table">
@@ -655,16 +667,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>HB_TEMP_DIR</code></td>
+<td>Root for every temporary file hazelbean writes (<code>hb.temp()</code>, <code>hb.temporary_dir()</code>, and each run’s <code>p.temporary_dir</code>, a per-run subfolder named for the project and run time, removed at exit). Unset, the OS temp dir gets a per-user <code>hazelbean_temp_&lt;user&gt;</code> subfolder, so nothing hazelbean writes mixes with other programs’ files. Set it to point cluster runs at scratch space.</td>
+</tr>
+<tr class="even">
 <td><code>HB_SHARED_DATA_DIRS</code></td>
 <td>Directories that mirror <code>base_data</code>’s layout and can be read directly — usually a mounted lab drive. <code>get_path</code> searches them after your local <code>base_data</code> and before the cloud bucket, and copies anything it finds into <code>base_data</code> so later runs resolve locally. <code>os.pathsep</code>-separated for more than one.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>GTAP_SC_SLURM_ACCOUNT</code>, <code>GTAP_SC_SLURM_PARTITION</code>, <code>GTAP_SC_SLURM_TIME</code>, <code>GTAP_SC_SLURM_CPUS</code>, <code>GTAP_SC_SLURM_MEM</code></td>
 <td>How gtappy sizes and charges the <code>sbatch</code> jobs it submits when solving GTAP on a SLURM cluster.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>GTAP_SC_WINE_SIF</code></td>
 <td>Path to the Apptainer image that runs GEMPACK under Wine on the cluster.</td>
+</tr>
+<tr class="odd">
+<td><code>GTAP_VM_SSH_HOST</code>, <code>GTAP_VM_DISK_PREFIX</code>, <code>GTAP_GEMPACK_DIR</code>, <code>GTAP_SC_SSH_HOST</code>, <code>GTAP_SC_SCRATCH</code></td>
+<td>Fallbacks for the GTAP solve-backend connection keys (<code>vm_ssh_host</code>, <code>vm_disk_prefix</code>, <code>gempack_dir</code>, <code>sc_ssh_host</code>, <code>sc_scratch</code>). Read only when the matching cell in a project’s <code>parameters.csv</code> is blank.</td>
 </tr>
 </tbody>
 </table>
@@ -673,16 +693,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="machine.env-or-parameters.csv">machine.env or parameters.csv?</h3>
 <p>Both hold per-machine values, and the rule for which is which is simple:</p>
 <ul>
-<li>If a project’s <code>input_template/</code> ships the key with a blank value, it belongs in <strong>that project’s <code>input/</code> copy of <code>parameters.csv</code></strong>. The GTAP solve-backend connection settings work this way — <code>vm_ssh_host</code>, <code>vm_disk_prefix</code>, <code>gempack_dir</code>, <code>sc_ssh_host</code>, <code>sc_scratch</code>. They used to be environment variables and deliberately are not any more.</li>
-<li>Everything else — settings no project varies, that are simply true of the machine — belongs in <strong><code>machine.env</code></strong>.</li>
+<li>If a project’s <code>input_template/</code> ships the key with a blank value, it belongs in <strong>that project’s <code>input/</code> copy of <code>parameters.csv</code></strong> (copy the file there from <code>input_template/</code> by hand; <code>input/</code> is never seeded automatically). The GTAP solve-backend connection settings work this way — <code>vm_ssh_host</code>, <code>vm_disk_prefix</code>, <code>gempack_dir</code>, <code>sc_ssh_host</code>, <code>sc_scratch</code>. <strong><code>parameters.csv</code> wins, <code>machine.env</code> fills a blank cell</strong>: a cell you leave blank falls back to the <code>GTAP_</code>-prefixed, upper-cased key in <code>machine.env</code> (<code>GTAP_VM_SSH_HOST</code> for <code>vm_ssh_host</code>), so an <code>input/</code> reproduced verbatim from its template still connects on a machine that has the key set.</li>
+<li>Everything else — settings no project varies, that are simply true of the machine — belongs in <strong><code>machine.env</code></strong> only.</li>
 </ul>
 <p>Many projects need neither. <code>global_invest</code>, for example, has no <code>parameters.csv</code> at all, so running one of its services needs nothing beyond an optional <code>HB_SHARED_DATA_DIRS</code>.</p>
 </section>
 <section id="setting-up-a-shared-data-root" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up-a-shared-data-root">Setting up a shared data root</h3>
 <p>If you have been given access to a lab drive and mounted it (Google Drive for Desktop, Dropbox), let hazelbean find it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span>            <span class="co"># scan, show what was found, confirm, write</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span> <span class="at">--print</span>    <span class="co"># show the line without writing anything</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span>            <span class="co"># scan, show what was found, confirm, write</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hb-setup-machine-env</span> <span class="at">--print</span>    <span class="co"># show the line without writing anything</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>It checks the handful of places such a mount can live on your OS, accepts a directory only if it really contains <code>base_data</code>’s top-level folders, and appends the <code>HB_SHARED_DATA_DIRS</code> line for you. Run it once, whenever your situation changes — it is not an install step, and it never overwrites a value you set by hand.</p>
 <p>Finding nothing is a normal outcome, not a failure. Without a shared root, <code>get_path</code> falls through to the public cloud bucket, which needs no credentials and works everywhere. That is also the only option on Linux, since Google Drive for Desktop has no Linux client — so cluster machines are expected to have no shared root configured, and pipelines must never depend on one being present.</p>
 </section>
@@ -690,12 +710,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="check-it-worked">Check it worked</h3>
 <p>On a Developer Installation, first confirm you are running your clones rather than a packaged copy — see <a href="#check-you-are-running-the-code-you-think-you-are">Check you are running the code you think you are</a> above. That check is worth repeating any time a change you know you made appears to have no effect.</p>
 <p>Then confirm data resolution is wired up, without starting a real run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow(project_dir<span class="op">=</span>os.path.expanduser(<span class="st">'~/onboarding_check'</span>))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.shared_data_dirs)   <span class="co"># [] if no shared root is configured -- that is fine</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.get_path(<span class="st">'cartographic'</span>, <span class="st">'ee'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> hb.ProjectFlow(project_dir<span class="op">=</span>os.path.expanduser(<span class="st">'~/onboarding_check'</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.shared_data_dirs)   <span class="co"># [] if no shared root is configured -- that is fine</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.get_path(<span class="st">'cartographic'</span>, <span class="st">'ee'</span>, <span class="st">'ee_r264_correspondence.gpkg'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A path printed under your local <code>base_data</code> means it worked, whether the file came from the drive or was downloaded from the bucket. If instead it raises, the error lists every root it searched, marks each shared root available or not, and tells you what to do next — so a missing mount is never confused with a missing file.</p>
 <p>(The explicit <code>project_dir</code> keeps this snippet runnable from anywhere. Real run files pass <code>project_name</code> instead and let ProjectFlow infer the location from the repo they live in, which needs the script to be inside a git repo — see <a href="../earth_economy_devstack/run_templates.html">Run Templates</a>.)</p>
 </section>

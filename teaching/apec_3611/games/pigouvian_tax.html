@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏭 Correcting Externalities with a Tax</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="econ_viz_textbook.css">
+    <script src="econ_viz_textbook.js"></script>
     <style>
-        :root { --primary:#2563eb;--private:#059669;--social:#dc2626;--demand:#2563eb;--tax:#f59e0b;--dwl:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
+        :root { --primary:#2563eb;--private:#059669;--social:#dc2626;--demand:#2563eb;--tax:#f59e0b;--dwl:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,0.1);
+            --wa-card:var(--card);--wa-border:var(--border);--wa-text:var(--text);
+            --wa-muted:var(--text-light);--wa-accent:var(--primary);--wa-danger:var(--dwl);
+            --wa-font:'Source Sans Pro',sans-serif}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Source Sans Pro',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
         .header{background:linear-gradient(135deg,var(--primary),#1d4ed8);color:#fff;padding:1.5rem;text-align:center}
@@ -79,41 +84,41 @@
     </style>
 </head>
 <body>
-    <header class="header">
+    <header class="header wa-chrome">
         <h1>🏭 Correcting Externalities with a Pigouvian Tax</h1>
         <p>See how a tax equal to marginal external damage shifts the market to the socially optimal outcome</p>
     </header>
-    <div class="steps">
+    <div class="steps wa-chrome">
         <div class="step"><div class="step-number">1</div><span>Set External Damage</span></div>
         <div class="step"><div class="step-number">2</div><span>Observe Market Failure</span></div>
         <div class="step"><div class="step-number">3</div><span>Apply Corrective Tax</span></div>
     </div>
     <div class="container">
-        <div class="controls-panel">
-            <div class="card">
+        <div class="controls-panel wa-region-controls wa-col-left">
+            <div class="card" id="card-damage">
                 <div class="card-title">💨 External Damage</div>
                 <div class="control-group">
                     <div class="control-label"><span>Marginal External Cost</span><span class="control-value damage" id="mec-value">$20/unit</span></div>
                     <input type="range" class="damage" id="mec" min="0" max="50" value="20" step="2">
                 </div>
             </div>
-            <div class="card">
+            <div class="card" id="card-params">
                 <div class="card-title">📐 Market Parameters</div>
                 <div class="control-group">
                     <div class="control-label"><span>Demand Intercept (a)</span><span class="control-value" id="demand-a-value">100</span></div>
-                    <input type="range" id="demand-a" min="60" max="140" value="100" step="5">
+                    <input type="range" id="demand_a" min="60" max="140" value="100" step="5">
                 </div>
                 <div class="control-group">
                     <div class="control-label"><span>Demand Slope</span><span class="control-value" id="demand-slope-value">1.0</span></div>
-                    <input type="range" id="demand-slope" min="0.5" max="2.0" value="1.0" step="0.1">
+                    <input type="range" id="n_d" min="0.5" max="2.0" value="1.0" step="0.1">
                 </div>
                 <div class="control-group">
                     <div class="control-label"><span>Supply Slope</span><span class="control-value" id="supply-slope-value">1.0</span></div>
-                    <input type="range" id="supply-slope" min="0.5" max="2.0" value="1.0" step="0.1">
+                    <input type="range" id="n_s" min="0.5" max="2.0" value="1.0" step="0.1">
                 </div>
                 <div class="formula-box">P = <span id="formula-a">100</span> − <span id="formula-d">1.0</span>Q (Demand)<br>P = <span id="formula-s">1.0</span>Q (PMC)</div>
             </div>
-            <div class="card">
+            <div class="card" id="card-tax">
                 <div class="card-title">💵 Pigouvian Tax</div>
                 <div class="control-group">
                     <div class="control-label"><span>Tax per Unit (t)</span><span class="control-value tax" id="tax-value">$20/unit</span></div>
@@ -126,25 +131,25 @@
                 </div>
                 <div class="tax-status optimal" id="tax-status">✓ Tax = MEC — Optimal!</div>
             </div>
-            <div class="card results-card">
+            <div class="card results-card" id="card-results">
                 <div class="card-title">📊 Equilibrium</div>
                 <div class="result-item"><span class="result-label">Market Qₘ</span><span class="result-value" id="market-q">50</span></div>
                 <div class="result-item"><span class="result-label">Optimal Q*</span><span class="result-value" id="optimal-q">40</span></div>
                 <div class="result-item"><span class="result-label">With Tax Qₜ</span><span class="result-value" id="tax-q">40</span></div>
             </div>
-            <div class="card welfare-card">
+            <div class="card welfare-card" id="card-welfare">
                 <div class="card-title">💰 Welfare</div>
                 <div class="result-item"><span class="result-label">DWL (no tax)</span><span class="result-value negative" id="dwl-no-tax">$100</span></div>
                 <div class="result-item"><span class="result-label">DWL (with tax)</span><span class="result-value" id="dwl-with-tax">$0</span></div>
                 <div class="result-item"><span class="result-label">Tax Revenue</span><span class="result-value" id="tax-revenue">$800</span></div>
             </div>
-            <div class="card explanation-card">
+            <div class="card explanation-card wa-region-explanation" id="card-insight">
                 <div class="card-title">💡 Key Insight</div>
                 <p class="explanation-text"><strong>The Pigouvian tax internalizes the externality.</strong> Without tax, firms overproduce (Qₘ > Q*). Setting t = MEC aligns private and social costs.</p>
             </div>
         </div>
-        <div class="graphs-panel">
-            <div class="graph-card">
+        <div class="graphs-panel wa-region-graph wa-col-right">
+            <div class="graph-card" id="card-graph">
                 <div class="graph-header">
                     <div class="graph-title">Market with Negative Externality</div>
                     <div class="graph-subtitle">Private vs. Social Cost and the Corrective Tax</div>
@@ -169,19 +174,28 @@
         const supplyIntercept=0,mainCanvas=document.getElementById('main-canvas');
         const colors={demand:'#2563eb',private:'#059669',social:'#dc2626',tax:'#f59e0b',dwl:'rgba(239,68,68,0.35)',grid:'#e2e8f0',text:'#64748b'};
 
-        function init(){setupCanvas();setupEventListeners();updateAll()}
+        function init(){setupCanvas();setupEventListeners();initViz()}
+
+        // Slider values live in the DOM. Reading them here (rather than in each
+        // listener) is what lets the library restore state from the URL hash without
+        // the app needing to know it happened.
+        function syncFromInputs(){
+            mec=parseFloat(document.getElementById('mec').value);
+            tax=parseFloat(document.getElementById('tax').value);
+            demandIntercept=parseFloat(document.getElementById('demand_a').value);
+            demandSlope=parseFloat(document.getElementById('n_d').value);
+            supplySlope=parseFloat(document.getElementById('n_s').value);
+        }
         function setupCanvas(){const dpr=window.devicePixelRatio||1,rect=mainCanvas.getBoundingClientRect();mainCanvas.width=rect.width*dpr;mainCanvas.height=520*dpr;mainCanvas.style.height='520px';mainCanvas.getContext('2d').scale(dpr,dpr)}
         function setupEventListeners(){
-            document.getElementById('mec').addEventListener('input',e=>{mec=parseFloat(e.target.value);updateAll()});
-            document.getElementById('tax').addEventListener('input',e=>{tax=parseFloat(e.target.value);updateToggleButtons();updateAll()});
-            document.getElementById('demand-a').addEventListener('input',e=>{demandIntercept=parseFloat(e.target.value);updateAll()});
-            document.getElementById('demand-slope').addEventListener('input',e=>{demandSlope=parseFloat(e.target.value);updateAll()});
-            document.getElementById('supply-slope').addEventListener('input',e=>{supplySlope=parseFloat(e.target.value);updateAll()});
+            ['mec','demand_a','n_d','n_s'].forEach(id=>
+                document.getElementById(id).addEventListener('input',updateAll));
+            document.getElementById('tax').addEventListener('input',()=>{syncFromInputs();updateToggleButtons();updateAll()});
             window.addEventListener('resize',()=>{setupCanvas();updateAll()})
         }
-        function setTax(t){tax=t;document.getElementById('tax').value=t;updateToggleButtons();updateAll()}
-        function setOptimalTax(){tax=mec;document.getElementById('tax').value=tax;updateToggleButtons();updateAll()}
-        function overTax(){tax=Math.min(mec+15,50);document.getElementById('tax').value=tax;updateToggleButtons();updateAll()}
+        function setTax(t){document.getElementById('tax').value=t;updateToggleButtons();updateAll()}
+        function setOptimalTax(){setTax(mec)}
+        function overTax(){setTax(Math.min(mec+15,50))}
         function updateToggleButtons(){const btns=document.querySelectorAll('.toggle-btn');btns.forEach(b=>b.classList.remove('active'));if(tax===0)btns[0].classList.add('active');else if(Math.abs(tax-mec)<2)btns[1].classList.add('active');else if(tax>mec+5)btns[2].classList.add('active')}
 
         function demandP(q){return demandIntercept-demandSlope*q}
@@ -193,6 +207,7 @@
         function getTaxQ(){return Math.max(0,(demandIntercept-supplyIntercept-tax)/(demandSlope+supplySlope))}
 
         function updateAll(){
+            syncFromInputs();
             const qMarket=getMarketQ(),qOptimal=getOptimalQ(),qTax=getTaxQ(),pMarket=demandP(qMarket),pOptimal=demandP(qOptimal);
             const dwlNoTax=0.5*Math.abs(qMarket-qOptimal)*mec,dwlWithTax=0.5*Math.abs(qTax-qOptimal)*Math.abs(tax-mec),taxRevenue=tax*qTax;
             document.getElementById('mec-value').textContent=`$${mec}/unit`;
@@ -224,6 +239,18 @@
         function drawMainChart(){
             const ctx=mainCanvas.getContext('2d'),width=mainCanvas.getBoundingClientRect().width,height=520;
             ctx.clearRect(0,0,width,height);
+            
+            // Draw a canvas label at its dragged offset and register its hit box.
+            // ctx.textAlign must already be set by the caller.
+            function label(key,text,x,y){
+                const n=econViz.getNudge(key),px=x+n.dx,py=y+n.dy;
+                ctx.fillText(text,px,py);
+                const w=ctx.measureText(text).width,size=parseInt(ctx.font.match(/(\d+)px/)[1],10);
+                const align=ctx.textAlign;
+                const lx=align==='center'?px-w/2:align==='right'?px-w:px;
+                econViz.regLabel(key,lx-3,py-size,w+6,size+6);
+            }
+            const vis=id=>econViz.vis(id);
             const margin={top:35,right:60,bottom:60,left:70},chartWidth=width-margin.left-margin.right,chartHeight=height-margin.top-margin.bottom;
             const qMarket=getMarketQ(),qOptimal=getOptimalQ(),qTax=getTaxQ();
             const maxQ=Math.max(qMarket*1.25,55),maxP=Math.max(demandIntercept*1.1,socialMC(qMarket)*1.05,110);
@@ -231,26 +258,34 @@
             const pMarket=demandP(qMarket),pOptimal=demandP(qOptimal),pTax=demandP(qTax);
 
             // Grid
-            ctx.strokeStyle=colors.grid;ctx.lineWidth=1;
-            const pStep=Math.ceil(maxP/5/10)*10;
-            for(let p=0;p<=maxP;p+=pStep){ctx.beginPath();ctx.moveTo(margin.left,scaleY(p));ctx.lineTo(width-margin.right,scaleY(p));ctx.stroke()}
-            const qStep=Math.ceil(maxQ/5/5)*5;
-            for(let q=0;q<=maxQ;q+=qStep){ctx.beginPath();ctx.moveTo(scaleX(q),margin.top);ctx.lineTo(scaleX(q),height-margin.bottom);ctx.stroke()}
+            const pStep=Math.ceil(maxP/5/10)*10,qStep=Math.ceil(maxQ/5/5)*5;
+            if(vis('show_grid')){
+                ctx.strokeStyle=colors.grid;ctx.lineWidth=1;
+                for(let p=0;p<=maxP;p+=pStep){ctx.beginPath();ctx.moveTo(margin.left,scaleY(p));ctx.lineTo(width-margin.right,scaleY(p));ctx.stroke()}
+                for(let q=0;q<=maxQ;q+=qStep){ctx.beginPath();ctx.moveTo(scaleX(q),margin.top);ctx.lineTo(scaleX(q),height-margin.bottom);ctx.stroke()}
+            }
 
             // Axes
             ctx.strokeStyle='#475569';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(margin.left,margin.top);ctx.lineTo(margin.left,height-margin.bottom);ctx.lineTo(width-margin.right,height-margin.bottom);ctx.stroke();
-            ctx.fillStyle=colors.text;ctx.font='600 13px Source Sans Pro';ctx.textAlign='center';ctx.fillText('Quantity (Q)',width/2,height-18);
-            ctx.save();ctx.translate(24,height/2);ctx.rotate(-Math.PI/2);ctx.fillText('Price ($)',0,0);ctx.restore();
-            ctx.font='11px Source Sans Pro';ctx.textAlign='center';
-            for(let q=0;q<=maxQ;q+=qStep)ctx.fillText(q.toFixed(0),scaleX(q),height-margin.bottom+16);
-            ctx.textAlign='right';for(let p=0;p<=maxP;p+=pStep)ctx.fillText(p.toFixed(0),margin.left-10,scaleY(p)+4);
+            ctx.fillStyle=colors.text;ctx.font='600 13px Source Sans Pro';ctx.textAlign='center';
+            if(vis('show_xlabel'))label('x',econViz.text('lbl_x'),width/2,height-18);
+            if(vis('show_ylabel')){
+                ctx.save();ctx.translate(24,height/2);ctx.rotate(-Math.PI/2);
+                ctx.fillText(econViz.text('lbl_y'),0,0);
+                ctx.restore();
+            }
+            if(vis('show_ticks')){
+                ctx.font='11px Source Sans Pro';ctx.textAlign='center';
+                for(let q=0;q<=maxQ;q+=qStep)ctx.fillText(q.toFixed(0),scaleX(q),height-margin.bottom+16);
+                ctx.textAlign='right';for(let p=0;p<=maxP;p+=pStep)ctx.fillText(p.toFixed(0),margin.left-10,scaleY(p)+4);
+            }
 
             // DWL
-            if(mec>0&&tax<mec){
+            if(vis('show_dwl')&&mec>0&&tax<mec){
                 ctx.fillStyle=colors.dwl;ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));
                 const qEnd=tax>0?qTax:qMarket;ctx.lineTo(scaleX(qEnd),scaleY(demandP(qEnd)));ctx.lineTo(scaleX(qEnd),scaleY(socialMC(qEnd)));ctx.closePath();ctx.fill()
             }
-            if(tax>mec+1){
+            if(vis('show_dwl')&&tax>mec+1){
                 ctx.fillStyle='rgba(124,58,237,0.3)';ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(qTax),scaleY(pTax));ctx.lineTo(scaleX(qTax),scaleY(socialMC(qTax)));ctx.closePath();ctx.fill()
             }
 
@@ -262,55 +297,133 @@
             if(tax>0){ctx.strokeStyle=colors.tax;ctx.lineWidth=3;ctx.setLineDash([8,5]);ctx.beginPath();ctx.moveTo(scaleX(0),scaleY(tax));ctx.lineTo(scaleX(maxQ),scaleY(privateMCWithTax(maxQ)));ctx.stroke();ctx.setLineDash([])}
 
             // Points
+            if(vis('show_points')){
             ctx.fillStyle='#334155';ctx.beginPath();ctx.arc(scaleX(qMarket),scaleY(pMarket),8,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(scaleX(qMarket),scaleY(pMarket),4,0,Math.PI*2);ctx.fill();
             ctx.fillStyle=colors.private;ctx.beginPath();ctx.arc(scaleX(qOptimal),scaleY(pOptimal),9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(scaleX(qOptimal),scaleY(pOptimal),4,0,Math.PI*2);ctx.fill();
             if(tax>0){ctx.fillStyle=colors.tax;ctx.beginPath();ctx.arc(scaleX(qTax),scaleY(pTax),7,0,Math.PI*2);ctx.fill()}
+            }
 
             // Dashed lines
+            if(vis('show_droplines')){
             ctx.setLineDash([5,4]);ctx.lineWidth=1.5;
             ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(scaleX(qMarket),scaleY(pMarket));ctx.lineTo(scaleX(qMarket),scaleY(0));ctx.stroke();
             ctx.strokeStyle=colors.private;ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(qOptimal),scaleY(0));ctx.stroke();
             ctx.beginPath();ctx.moveTo(scaleX(qOptimal),scaleY(pOptimal));ctx.lineTo(scaleX(0),scaleY(pOptimal));ctx.stroke();
             if(tax>0&&Math.abs(qTax-qOptimal)>2&&Math.abs(qTax-qMarket)>2){ctx.strokeStyle=colors.tax;ctx.beginPath();ctx.moveTo(scaleX(qTax),scaleY(pTax));ctx.lineTo(scaleX(qTax),scaleY(0));ctx.stroke()}
             ctx.setLineDash([]);
+            }
 
             // MEC Bracket
+            if(vis('show_brackets')){
             const bracketQ=maxQ*0.12;
             ctx.strokeStyle=colors.social;ctx.lineWidth=2;ctx.beginPath();
             ctx.moveTo(scaleX(bracketQ)+4,scaleY(privateMC(bracketQ)));ctx.lineTo(scaleX(bracketQ)-6,scaleY(privateMC(bracketQ)));
             ctx.lineTo(scaleX(bracketQ)-6,scaleY(socialMC(bracketQ)));ctx.lineTo(scaleX(bracketQ)+4,scaleY(socialMC(bracketQ)));ctx.stroke();
             ctx.font='700 11px Source Sans Pro';ctx.fillStyle=colors.social;ctx.textAlign='right';
-            ctx.fillText('MEC',scaleX(bracketQ)-10,scaleY((privateMC(bracketQ)+socialMC(bracketQ))/2)+4);
+            label('an.mec',econViz.text('lbl_mec'),scaleX(bracketQ)-10,scaleY((privateMC(bracketQ)+socialMC(bracketQ))/2)+4);
+            }
 
             // Curve labels - RIGHT MARGIN
+            if(vis('show_curvelabel')){
             ctx.font='600 11px Source Sans Pro';ctx.textAlign='left';
-            ctx.fillStyle=colors.demand;ctx.fillText('Demand',width-margin.right+8,scaleY(demandP(maxQ*0.95))+4);
-            ctx.fillStyle=colors.private;ctx.fillText('PMC',width-margin.right+8,scaleY(privateMC(maxQ))+4);
-            ctx.fillStyle=colors.social;ctx.fillText('SMC',width-margin.right+8,scaleY(socialMC(maxQ))+4);
-            if(tax>0){ctx.fillStyle=colors.tax;ctx.fillText('PMC+t',width-margin.right+8,scaleY(privateMCWithTax(maxQ))+4)}
+            ctx.fillStyle=colors.demand;label('d',econViz.text('lbl_d'),width-margin.right+8,scaleY(demandP(maxQ*0.95))+4);
+            ctx.fillStyle=colors.private;label('pmc',econViz.text('lbl_pmc'),width-margin.right+8,scaleY(privateMC(maxQ))+4);
+            ctx.fillStyle=colors.social;label('smc',econViz.text('lbl_smc'),width-margin.right+8,scaleY(socialMC(maxQ))+4);
+            if(tax>0){ctx.fillStyle=colors.tax;label('pmct',econViz.text('lbl_pmct'),width-margin.right+8,scaleY(privateMCWithTax(maxQ))+4)}
+            }
 
             // Q labels
+            if(vis('show_qlabels')){
             ctx.font='700 11px Source Sans Pro';ctx.textAlign='center';
-            ctx.fillStyle='#334155';ctx.fillText('Qₘ',scaleX(qMarket),scaleY(0)+30);
-            ctx.fillStyle=colors.private;ctx.fillText('Q*',scaleX(qOptimal),scaleY(0)+(Math.abs(qMarket-qOptimal)<4?44:30));
-            if(tax>0&&Math.abs(qTax-qOptimal)>3&&Math.abs(qTax-qMarket)>3){ctx.fillStyle=colors.tax;ctx.fillText('Qₜ',scaleX(qTax),scaleY(0)+30)}
+            ctx.fillStyle='#334155';label('an.qm','Qₘ',scaleX(qMarket),scaleY(0)+30);
+            ctx.fillStyle=colors.private;label('an.qo','Q*',scaleX(qOptimal),scaleY(0)+(Math.abs(qMarket-qOptimal)<4?44:30));
+            if(tax>0&&Math.abs(qTax-qOptimal)>3&&Math.abs(qTax-qMarket)>3){ctx.fillStyle=colors.tax;label('an.qt','Qₜ',scaleX(qTax),scaleY(0)+30)}
+            }
 
             // Point labels
+            if(vis('show_labels')){
             ctx.font='600 10px Source Sans Pro';
-            ctx.fillStyle='#334155';ctx.textAlign='left';ctx.fillText('Market Eq.',scaleX(qMarket)+12,scaleY(pMarket)+4);
-            ctx.fillStyle=colors.private;ctx.textAlign='right';ctx.fillText('Social Opt.',scaleX(qOptimal)-12,scaleY(pOptimal)-4);
+            ctx.fillStyle='#334155';ctx.textAlign='left';label('pt.M','Market Eq.',scaleX(qMarket)+12,scaleY(pMarket)+4);
+            ctx.fillStyle=colors.private;ctx.textAlign='right';label('pt.O','Social Opt.',scaleX(qOptimal)-12,scaleY(pOptimal)-4);
+            }
 
             // DWL label
-            if(mec>5&&(tax===0||Math.abs(tax-mec)>2)){
+            if(vis('show_dwl')&&mec>5&&(tax===0||Math.abs(tax-mec)>2)){
                 ctx.fillStyle='#dc2626';ctx.font='700 11px Source Sans Pro';ctx.textAlign='center';
                 const refQ=tax>0?qTax:qMarket,labelQ=(qOptimal+refQ)/2,labelP=(demandP(labelQ)+socialMC(labelQ))/2;
-                ctx.fillText('DWL',scaleX(labelQ),scaleY(labelP)+4)
+                label('an.dwl',econViz.text('lbl_dwl'),scaleX(labelQ),scaleY(labelP)+4)
             }
 
             // P* label
+            if(vis('show_pstar')){
             ctx.font='10px Source Sans Pro';ctx.textAlign='right';ctx.fillStyle=colors.private;
-            ctx.fillText('P*=$'+pOptimal.toFixed(0),margin.left-10,scaleY(pOptimal)-6);
+            label('an.pstar','P*=$'+pOptimal.toFixed(0),margin.left-10,scaleY(pOptimal)-6);
+            }
         }
+        // Shared behaviour comes from econ_viz_textbook.js. This app draws in CSS
+        // pixels after ctx.scale(dpr,dpr), so it runs in canvasUnits 'css' mode and
+        // points the library at the panel markup it already has.
+        function initViz(){
+            new EconViz({
+                canvas: mainCanvas,
+                canvasUnits: 'css',
+                dpr: 1,
+                stateVersion: 1,
+                stateIncludesChrome: true,
+                grid: '.container',
+                optionsMount: '.controls-panel',
+                sliders: [
+                    { id:'mec',      label:'Marginal external cost', min:0,   max:50,  value:20, step:2 },
+                    { id:'tax',      label:'Tax rate',               min:0,   max:50,  value:20, step:2 },
+                    { id:'demand_a', label:'Demand intercept',       min:60,  max:140, value:100, step:5 },
+                    { id:'n_d',      label:'Demand slope',           min:0.5, max:2.0, value:1.0, step:0.1, fmt:function(v){return v.toFixed(1);} },
+                    { id:'n_s',      label:'Supply slope',           min:0.5, max:2.0, value:1.0, step:0.1, fmt:function(v){return v.toFixed(1);} }
+                ],
+                toggles: [
+                    { id:'show_grid',       label:'Gridlines' },
+                    { id:'show_ticks',      label:'Axis numbers' },
+                    { id:'show_xlabel',     label:'X axis title' },
+                    { id:'show_ylabel',     label:'Y axis title' },
+                    { id:'show_curvelabel', label:'Curve labels' },
+                    { id:'show_points',     label:'Equilibrium points' },
+                    { id:'show_labels',     label:'Point labels' },
+                    { id:'show_qlabels',    label:'Quantity labels' },
+                    { id:'show_droplines',  label:'Dashed guides' },
+                    { id:'show_brackets',   label:'MEC bracket' },
+                    { id:'show_dwl',        label:'Deadweight loss' },
+                    { id:'show_pstar',      label:'P* label' }
+                ],
+                texts: [
+                    { id:'lbl_title', label:'Title', value:'Correcting Externalities with a Pigouvian Tax', target:'.header h1' },
+                    { id:'lbl_graph', label:'Graph', value:'Market with Negative Externality', target:'.graph-title' },
+                    { id:'lbl_x',     label:'X axis',        value:'Quantity (Q)' },
+                    { id:'lbl_y',     label:'Y axis',        value:'Price ($)' },
+                    { id:'lbl_d',     label:'Demand curve',  value:'Demand' },
+                    { id:'lbl_pmc',   label:'PMC curve',     value:'PMC' },
+                    { id:'lbl_smc',   label:'SMC curve',     value:'SMC' },
+                    { id:'lbl_pmct',  label:'PMC+t curve',   value:'PMC+t' },
+                    { id:'lbl_mec',   label:'MEC bracket',   value:'MEC' },
+                    { id:'lbl_dwl',   label:'DWL region',    value:'DWL' }
+                ],
+                nudgeKeys: [
+                    'x','d','pmc','smc','pmct',
+                    'an.qm','an.qo','an.qt','pt.M','pt.O',
+                    'an.dwl','an.mec','an.pstar'
+                ],
+                panels: [
+                    { key:'damage',  el:'#card-damage',  title:'.card-title',  name:'External Damage',   column:'left' },
+                    { key:'params',  el:'#card-params',  title:'.card-title',  name:'Market Parameters', column:'left' },
+                    { key:'tax',     el:'#card-tax',     title:'.card-title',  name:'Pigouvian Tax',     column:'left' },
+                    { key:'results', el:'#card-results', title:'.card-title',  name:'Equilibrium',       column:'left' },
+                    { key:'welfare', el:'#card-welfare', title:'.card-title',  name:'Welfare',           column:'left' },
+                    { key:'insight', el:'#card-insight', title:'.card-title',  name:'Key Insight',       column:'left' },
+                    { key:'graph',   el:'#card-graph',   title:'.graph-title', name:'Graph',             column:'right' }
+                ],
+                onLayout: setupCanvas,          // re-measure the canvas after a reflow
+                draw: function(){ updateAll(); }
+            });
+        }
+
         init();
     </script>
 </body>

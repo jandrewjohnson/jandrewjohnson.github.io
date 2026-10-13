@@ -435,7 +435,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="getting-set-up">Getting set up</h2>
 <ul>
 <li>Follow the <a href="../../seals/user_guide/installation.html">installation</a> page first.</li>
-<li>This guide assumes you installed SEALS using the devstack layout — its own project folder under <code>~/Files/</code>, with the repo inside it at <code>~/Files/seals/seals</code>.</li>
+<li>This guide reads the SEALS source, so it assumes the developer install: a clone in the devstack layout — its own project folder under <code>~/Files/</code>, with the repo inside it at <code>~/Files/seals/seals</code>.</li>
+<li>If you installed the <code>sealsmodel</code> package from conda-forge instead, the same files are in your environment’s <code>site-packages/seals/</code>; everything below still applies, and <code>python -c "import seals; print(seals.__file__)"</code> tells you where to look.</li>
 </ul>
 </section>
 <section id="explore-the-seals-code" class="level2">

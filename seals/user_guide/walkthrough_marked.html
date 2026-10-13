@@ -1065,9 +1065,10 @@ margin-right: 0; }
 <div class="r-fit-text">
 <ul>
 <li class="fragment">Follow the <a href="../../seals/user_guide/installation.html">installation</a> page first, or the shorter <a href="../../seals/user_guide/quickstart.html">quickstart</a> if you just want to run the model</li>
-<li class="fragment">Clone SEALS into the devstack layout — its own project folder under <code>~/Files/</code>, at <code>~/Files/seals/seals</code>. Hazelbean is not cloned; it comes from conda-forge</li>
+<li class="fragment">This deck reads the SEALS source, so it assumes the developer install: a clone in the devstack layout — its own project folder under <code>~/Files/</code>, at <code>~/Files/seals/seals</code>. Hazelbean is not cloned; it comes from conda-forge</li>
+<li class="fragment">Users of the conda-forge <code>sealsmodel</code> package find the same files under <code>site-packages/seals/</code></li>
 <li class="fragment">The layout is not cosmetic: ProjectFlow reads it to decide where project directories go</li>
-<li class="fragment">You know the install worked if this prints a path inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
+<li class="fragment">You know the developer install worked if this prints a path inside <code>~/Files/</code>, not inside <code>site-packages</code>:</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">&quot;import seals; print(seals.__file__)&quot;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>

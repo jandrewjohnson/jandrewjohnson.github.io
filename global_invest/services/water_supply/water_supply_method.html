@@ -4412,12 +4412,13 @@ A = \sum_{t=1}^{100} \frac{1}{(1+r)^t}, \qquad r = 0.04
 <section id="method-constants" class="level2">
 <h2 class="anchored" data-anchor-id="method-constants">Method constants</h2>
 <ul>
-<li><code>HYDROPOWER_DISCOUNT_RATE = 0.04</code>, the CWoN standard discount.</li>
-<li><code>HYDROPOWER_HORIZON_YEARS = 100</code>, the CWoN capitalisation horizon.</li>
-<li><code>HYDROPOWER_GEP_YEAR = 2019</code>, the wealth column the rent is read from. Current USD equals real 2019 USD in the 2019 base year, and this is the only variant that covers Venezuela.</li>
-<li><code>HYDROPOWER_REFERENCE_EXCLUDED</code>, seventeen iso3 codes set to NaN to reproduce the reference: AZE, BGR, DOM, GRC, GTM, HTI, KAZ, LBR, MAR, MKD, NIC, POL, PRT, SLV, TJK, UKR and ZAF.</li>
-<li><code>WATER_USE_YEARS = (2000, 2005, 2010, 2015)</code>, the AQUASTAT survey years the calculation keeps.</li>
-<li><code>WATER_USE_EFFICIENCY_SERIES</code>, <code>WATER_USE_COUNTRY_RENAMES</code>, <code>WATER_USE_ISO_LOOKUP</code> and <code>WATER_USE_REGIONS_DROPPED</code>, which reproduce script 02’s name surgery verbatim.</li>
+<li><p><code>water_supply_hydropower_capitalization_rate = 0.04</code> in <code>es_parameters</code>, the rate CWoN capitalized their wealth figure with.</p>
+<p>⚠ <strong>This is not the account’s discount rate and must not be harmonized onto it.</strong> The account discounts future benefits at 2 percent, with sensitivity at 1 and 3. This rate is doing the opposite job: CWoN published a <em>capitalized</em> wealth figure, and hydropower GEP is the annual rent inside it, so the module runs their capitalization backwards. Inverting with any rate but the one they capitalized with returns a rent CWoN never capitalized — the number would become wrong in the act of making it look consistent. The two quantities share a word and nothing else. The consistency gate knows the difference and reports both.</p></li>
+<li><p><code>HYDROPOWER_HORIZON_YEARS = 100</code>, the CWoN capitalisation horizon.</p></li>
+<li><p><code>HYDROPOWER_GEP_YEAR = 2019</code>, the wealth column the rent is read from. Current USD equals real 2019 USD in the 2019 base year, and this is the only variant that covers Venezuela.</p></li>
+<li><p><code>HYDROPOWER_REFERENCE_EXCLUDED</code>, seventeen iso3 codes set to NaN to reproduce the reference: AZE, BGR, DOM, GRC, GTM, HTI, KAZ, LBR, MAR, MKD, NIC, POL, PRT, SLV, TJK, UKR and ZAF.</p></li>
+<li><p><code>WATER_USE_YEARS = (2000, 2005, 2010, 2015)</code>, the AQUASTAT survey years the calculation keeps.</p></li>
+<li><p><code>WATER_USE_EFFICIENCY_SERIES</code>, <code>WATER_USE_COUNTRY_RENAMES</code>, <code>WATER_USE_ISO_LOOKUP</code> and <code>WATER_USE_REGIONS_DROPPED</code>, which reproduce script 02’s name surgery verbatim.</p></li>
 </ul>
 </section>
 <section id="taken-as-given" class="level2">

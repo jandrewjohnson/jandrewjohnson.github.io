@@ -855,6 +855,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Case</strong> — <code>snake_case</code> for variables and functions, <code>CamelCase</code> for classes.</li>
 <li><strong>Quotes</strong> — outer strings use <strong>double quotes</strong>; inner strings (e.g.&nbsp;dict-key string values inside an f-string) use single quotes. Preferring double quotes on the outside avoids escaping apostrophes.</li>
 <li>Avoid global variables; keep functions concise and focused on a single task.</li>
+<li><strong>Match a file’s shape to its status, and to its siblings.</strong> A run-once diagnostic or maintenance script (anything under a <code>scripts/</code> folder, or beside one) is flat: imports, then the work, top to bottom, no <code>argparse</code>, no <code>main()</code>, no helper functions unless something is called twice. Before writing a new file, read the nearest sibling and match it. A CLI, named functions, and input validation are added when the file gains a second caller or a second user, not in anticipation of one.</li>
 </ul>
 </section>
 <section id="docstrings" class="level2">
@@ -1013,6 +1014,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>main</code> holds working releases only.</li>
 <li><code>develop</code> is the integration branch. Branch features off <code>develop</code> as <code>feature_&lt;name&gt;</code> (or <code>develop_&lt;yourname&gt;</code>).</li>
 <li>Open pull requests <strong>into <code>develop</code></strong>, not <code>main</code>. <code>develop</code> is protected — only work that passes unit tests is merged. Releases are promoted from <code>develop</code> to <code>main</code> via pull request.</li>
+<li>Merge pull requests with a <strong>merge commit</strong> (<code>gh pr merge &lt;n&gt; --merge</code>). Do not squash or rebase: each commit and its message stays in history, so <code>git blame</code> and <code>git bisect</code> still work on large feature branches.</li>
 <li>External contributors fork, branch, and PR from their fork into the upstream <code>develop</code>.</li>
 </ul>
 <p>See the full walkthrough on the <em>Contributing</em> page.</p>

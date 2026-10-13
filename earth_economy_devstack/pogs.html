@@ -531,6 +531,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#why-pogs" id="toc-why-pogs" class="nav-link" data-scroll-target="#why-pogs">Why POGs?</a></li>
   <li><a href="#choosing-the-output-resolution-with-output_arcseconds" id="toc-choosing-the-output-resolution-with-output_arcseconds" class="nav-link" data-scroll-target="#choosing-the-output-resolution-with-output_arcseconds">Choosing the output resolution with <code>output_arcseconds</code></a></li>
   <li><a href="#the-pog-spec-in-summary" id="toc-the-pog-spec-in-summary" class="nav-link" data-scroll-target="#the-pog-spec-in-summary">The POG spec, in summary</a></li>
+  <li><a href="#standards" id="toc-standards" class="nav-link" data-scroll-target="#standards">Standards</a></li>
+  <li><a href="#pog-subpog-tile-tile-set-vrt" id="toc-pog-subpog-tile-tile-set-vrt" class="nav-link" data-scroll-target="#pog-subpog-tile-tile-set-vrt">POG, subpog, tile, tile set, VRT</a>
+  <ul class="collapse">
+  <li><a href="#tile-and-subpog-naming" id="toc-tile-and-subpog-naming" class="nav-link" data-scroll-target="#tile-and-subpog-naming">Tile and subpog naming</a></li>
+  <li><a href="#products-with-no-rung" id="toc-products-with-no-rung" class="nav-link" data-scroll-target="#products-with-no-rung">Products with no rung</a></li>
+  <li><a href="#global-pog-or-tile-set-support-both" id="toc-global-pog-or-tile-set-support-both" class="nav-link" data-scroll-target="#global-pog-or-tile-set-support-both">Global POG or tile set? Support both</a></li>
+  </ul></li>
   <li><a href="#handy-extras" id="toc-handy-extras" class="nav-link" data-scroll-target="#handy-extras">Handy extras</a></li>
   </ul></li>
   </ul>
@@ -552,136 +559,682 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Solves zonal statistics inaccuracy once and for all (and is about 10-100x faster than QGIS/ArcGIS)</li>
 <li>Solves the hectare at different latitudes problem once and for all and greatly enhances accuracy (Never, never, NERVER use projected data again!)</li>
 </ol>
-<p>The function for making a pog is in Hazelbean at <code>make_path_pog</code>. Here you can use this by pointing it at any GeoTIFF:</p>
+<p>The function for making a pog is in Hazelbean at <code>make_path_pog</code>. Point it at any GeoTIFF and <strong>declare what the values are</strong>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hazelbean <span class="im">as</span> hb</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rewrite the file in place as a POG</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'my_raster.tif'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'cropland_share.tif'</span>, variable_class<span class="op">=</span><span class="st">'intensive'</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Or write to a new file and control the details</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'my_raster.tif'</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    output_raster_path<span class="op">=</span><span class="st">'my_raster_pog.tif'</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    output_data_type<span class="op">=</span><span class="dv">6</span>,        <span class="co"># optional; defaults to the input's data type</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    output_arcseconds<span class="op">=</span><span class="va">None</span>,    <span class="co"># optional; see below</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    compression<span class="op">=</span><span class="st">'DEFLATE'</span>,     <span class="co"># default</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    blocksize<span class="op">=</span><span class="dv">512</span>,             <span class="co"># default</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If the input is not already on a global pyramidal grid, <code>make_path_pog</code> resamples it onto the matching global grid for its resolution (nearest-neighbor for integer/categorical data, bilinear for floats), then computes exact statistics, builds the prescribed internal overviews, and writes the result through GDAL’s COG driver. If the input already validates as a POG, it does nothing.</p>
-</section>
-<section id="choosing-the-output-resolution-with-output_arcseconds" class="level2">
-<h2 class="anchored" data-anchor-id="choosing-the-output-resolution-with-output_arcseconds">Choosing the output resolution with <code>output_arcseconds</code></h2>
-<p>The match raster that the input is resampled against is chosen automatically: <code>make_path_pog</code> detects the input’s resolution, snaps it to the nearest supported pyramid resolution (within a tight tolerance), and resolves the canonical <code>ha_per_cell_&lt;res&gt;sec.tif</code> for that resolution through the <code>get_path</code> ladder — your project dirs, <code>base_data</code>, any shared data roots configured on the machine, and finally a cloud download.</p>
-<p>That automatic detection only works when the input is already <em>close</em> to a supported resolution. When it isn’t (say, 0.3-degree cells), or when you deliberately want a different resolution than the input’s, pass <code>output_arcseconds</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An input far from any supported resolution: choose the target explicitly</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'weird_resolution.tif'</span>, <span class="st">'now_a_pog.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">1800</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Deliberate cross-resolution conversion: a 10sec POG becomes a 900sec POG</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'lulc_10sec.tif'</span>, <span class="st">'lulc_900sec.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">900</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>output_arcseconds</code> simply declares the resolution of the output POG, whatever the input is. Without it, an input that isn’t close to any supported resolution raises an error telling you to pass it. When the requested grid is genuinely coarser than the input (a true aggregation, not just snapping), the resampling method switches from point-sampling to aggregation — <code>mode</code> for integer types and <code>average</code> for floats, the same logic used for overview levels.</p>
-<p>Beware what aggregation means for your data’s semantics, though: averaging a <em>quantity</em> raster (hectares, tonnes) changes its global sum. The EE Spec convention is to compute and resample in <strong>proportions</strong> and only multiply by the canonical <code>ha_per_cell</code> of the target resolution as a last step, which makes aggregation sum-preserving. See the pyramid resolutions section of the <a href="../earth_economy_devstack/conventions.html">EE Spec conventions</a>.</p>
-<p>You can verify the result (and see exactly which criterion fails, if one does) with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hb.is_path_pog(<span class="st">'my_raster_pog.tif'</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The canonical match rasters live in our base data under <code>pyramids/</code>, one per supported resolution. The example for 300 meter (10 arcsecond) data would be the ref_path <code>os.path.join('pyramids', 'ha_per_cell_10sec.tif')</code> — in a ProjectFlow project, <code>p.get_path()</code> on that ref_path resolves it against your data roots (and downloads it into <code>base_data</code> if you don’t have it yet). You rarely need to touch these directly for pog-making: <code>make_path_pog</code> finds the right one itself, as described next.</p>
-</section>
-<section id="the-pog-spec-in-summary" class="level2">
-<h2 class="anchored" data-anchor-id="the-pog-spec-in-summary">The POG spec, in summary</h2>
-<p>Other sources, including an in-prep manuscript, define fully the pog spec, but for now, the summary is: a POG is a GeoTIFF that passes <strong>both</strong> checks below (this is literally what <code>hb.is_path_pog</code> tests — <code>is_path_global_pyramid</code> and <code>is_path_cog</code>).</p>
-<p><strong>1. It is a global pyramid:</strong></p>
-<ul>
-<li><p><strong>Global extent, exact geotransform.</strong> The raster spans the whole globe, <code>(-180, res, 0, 90, 0, -res)</code>, matching the canonical geotransform for its resolution exactly (not approximately).</p></li>
-<li><p><strong>A supported resolution.</strong> Cell size is one of the pyramid-compatible resolutions, named by arcseconds:</p>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cropland_ha.tif'</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    output_raster_path<span class="op">=</span><span class="st">'cropland_ha_pog.tif'</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    variable_class<span class="op">=</span><span class="st">'extensive'</span>,  <span class="co"># hectares: summed at every coarser rung</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    output_data_type<span class="op">=</span><span class="va">None</span>,       <span class="co"># optional; defaults to the input's data type (integer extensive -&gt; Int64)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    output_arcseconds<span class="op">=</span><span class="va">None</span>,      <span class="co"># optional; see below</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    observed_area_path<span class="op">=</span><span class="va">None</span>,     <span class="co"># 'derive' when the input's nodata means "not observed"; see below</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    compression<span class="op">=</span><span class="st">'DEFLATE'</span>,       <span class="co"># default</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    blocksize<span class="op">=</span><span class="dv">512</span>,               <span class="co"># default</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>variable_class</code> is one of four, and it fixes both how the overviews aggregate and how nodata is carried:</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 27%">
+<col style="width: 30%">
+<col style="width: 22%">
+</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: right;">Arcseconds</th>
-<th style="text-align: right;">Degrees</th>
-<th style="text-align: right;">Approx. at equator</th>
-<th style="text-align: right;">Shape (rows × cols)</th>
+<th style="text-align: left;">Class</th>
+<th style="text-align: left;">Examples</th>
+<th style="text-align: left;">Overviews</th>
+<th style="text-align: left;">Nodata (declared value / cells holding it)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1/3600</td>
-<td style="text-align: right;">~30 m</td>
-<td style="text-align: right;">648,000 × 1,296,000</td>
+<td style="text-align: left;"><code>extensive</code></td>
+<td style="text-align: left;">hectares, tonnes, counts</td>
+<td style="text-align: left;"><strong>sum</strong> of the children, in double precision; integer types are promoted to Int64 so the top rung cannot overflow</td>
+<td style="text-align: left;">the per-type value / none: empty cells hold 0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;"><code>intensive</code></td>
+<td style="text-align: left;">proportions, densities, yields per ha</td>
+<td style="text-align: left;"><strong>area-weighted mean</strong>: the block sum of value × hectares divided by the block sum of hectares, written into the overview directly. <code>intensive_weighting='none'</code> declares the plain mean instead, a fast approximation with no exactness claim</td>
+<td style="text-align: left;">the per-type value / none: empty cells hold 0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>categorical</code></td>
+<td style="text-align: left;">land-use classes, zone ids</td>
+<td style="text-align: left;"><strong>mode</strong>, for display only; model with per-class <code>intensive</code> proportion POGs</td>
+<td style="text-align: left;">the per-type value / none: empty cells hold the none class (<code>categorical_none_value</code>, default 0)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>covariate</code></td>
+<td style="text-align: left;">elevation, temperature, slope</td>
+<td style="text-align: left;">unweighted mean over valid children, no exactness claim</td>
+<td style="text-align: left;">the per-type value / missing cells</td>
+</tr>
+</tbody>
+</table>
+<p>The per-type value is <code>-9999</code> for signed integers and floats and the type maximum for unsigned integers (255 for Byte).</p>
+<p>An input that declares no class (no <code>POG_VARIABLE_CLASS</code> in its metadata, no <code>variable_class</code> argument) is taken as <code>categorical</code> if its data type is an integer and <code>covariate</code> otherwise, with a log line saying so. Those are the two classes that promise nothing, so a guess never manufactures an exactness claim, but declare the class: averaging hectares or summing proportions silently corrupts every coarser rung.</p>
+<p>If the input is not already on the canonical grid, <code>make_path_pog</code> places it there. The steps, in order: snap the cell size to the nearest rung (or take <code>output_arcseconds</code>); if the input is point-registered with samples on canonical grid lines (SRTM, NASADEM, the Copernicus DEM), apply the <strong>registration shift</strong> instead of resampling (below); otherwise resample once onto the rung’s grid (a copy when already aligned; <code>sum</code> for extensive; nearest for categorical and integer data; bilinear for floats; the class aggregation when the target is coarser); apply any <code>ndv_above</code> / <code>ndv_below</code> censoring and <code>value_reclassification_dict</code>; apply the nodata rule of the class; then compute exact statistics, build the overviews by the class rule, and write through GDAL’s COG driver. If the input already validates as a POG, it does nothing.</p>
+<p><strong>Nodata and observed area.</strong> Every POG declares the per-type nodata value, so tools that expect a declaration (and code that copies one from a match raster) find it. In extensive, intensive and categorical POGs <strong>no cell holds it</strong>, so sums, means and zonal statistics never have to tell a missing observation from a true zero; a raster whose real values include the per-type value needs a wider type, and <code>make_path_pog</code> refuses it. When the input’s nodata means <em>not observed</em> rather than <em>empty</em>, pass <code>observed_area_path='derive'</code>: <code>make_path_pog</code> writes <code>&lt;output stem&gt;_observed_area.tif</code> beside the output, an extensive POG of the hectares observed in each cell, derived from the nodata mask, and records it in <code>POG_OBSERVED_AREA</code>. An intensive raster is then weighted by the observed area rather than by <code>ha_per_cell</code> (<code>POG_DENOMINATOR</code> names it). The coverage of a zone is then itself a zonal statistic, the zone’s sum of observed area over its area. Pass a path instead of <code>'derive'</code> to attach an observed-area POG you already have.</p>
+<p><strong>Registration shift.</strong> SRTM, NASADEM and ASTER GDEM are point-registered, with samples on whole arcseconds, half a cell off the canonical area-registered grid. Rather than resampling them, <code>make_path_pog</code> reads each sample as the canonical cell whose north-west corner it occupies: the geotransform moves half a cell east and half a cell south, the values are copied unchanged, the duplicated edge row and column of a 3601 × 3601 tile are dropped, and <code>POG_REGISTRATION_SHIFT=+0.5,-0.5</code> is recorded. Slope, flow direction and every other derivative of the field are unchanged to the bit; the shift (15 m at 1 arcsecond) is inside the products’ own horizontal accuracy. Pass <code>allow_registration_shift=False</code> to resample instead.</p>
+</section>
+<section id="choosing-the-output-resolution-with-output_arcseconds" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-output-resolution-with-output_arcseconds">Choosing the output resolution with <code>output_arcseconds</code></h2>
+<p><code>make_path_pog</code> detects the input’s resolution and snaps it to the nearest rung within a tight tolerance. The target grid is synthesized from the ladder tables (<code>hb.write_pyramid_frame_raster</code>, a sparse raster), so no match raster needs to exist at any rung.</p>
+<p>That automatic detection only works when the input is already <em>close</em> to a rung. When it isn’t (say, 0.3-degree cells), or when you deliberately want a different rung than the input’s, pass <code>output_arcseconds</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An input far from any rung: choose the target explicitly</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'weird_resolution.tif'</span>, <span class="st">'now_a_pog.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">1800</span>, variable_class<span class="op">=</span><span class="st">'covariate'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Deliberate cross-rung conversion: 10 s cropland hectares become 900 s cropland hectares</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>hb.make_path_pog(<span class="st">'crop_ha_10sec.tif'</span>, <span class="st">'crop_ha_900sec.tif'</span>, output_arcseconds<span class="op">=</span><span class="dv">900</span>, variable_class<span class="op">=</span><span class="st">'extensive'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When the requested rung is coarser than the input, the conversion <strong>aggregates by the class rule</strong>. If the input sits aligned on a rung that divides the target (10 s into 900 s, say), the aggregation is exact: block sums for extensive, area-weighted block means for intensive, with nodata children left out and, under <code>observed_area_path='derive'</code>, the observed hectares under each coarse cell carried along. Otherwise it is one GDAL resample, <code>sum</code> for extensive, <code>average</code> for intensive and covariate, <code>mode</code> for categorical: a single documented entry, the only resampling that product will undergo on the lattice. Without <code>output_arcseconds</code>, an input far from every rung raises an error that names its CRS and cell size and suggests the rung to pass.</p>
+<p>The EE Spec convention still holds: compute in <strong>proportions</strong> or per-hectare intensities and multiply by the canonical <code>ha_per_cell</code> of the rung as the last step. <code>hb.write_ha_per_cell_pog(path, arcseconds)</code> writes that raster for any rung, and <code>hb.ha_per_cell_rows(arcseconds, first_row, n_rows)</code> gives the same numbers for a block of rows. It is the single definition: rows are addressed by their global index (row 0 touches 90°N), and row <em>k</em>’s top edge is the exact rational (324000 − <em>k</em> × arcseconds)/3600 degrees rounded to a double once, so a row has the same bits in a global POG, a tile, a column file or an aggregation, however the raster is split. Row areas are differences of one cumulative function at those edges, so the areas of the children of a coarse cell sum to its area, which is what makes area-weighted aggregation exact.</p>
+<p>You can verify the result (and see exactly which criterion fails, if one does) with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hb.is_path_pog(<span class="st">'my_raster_pog.tif'</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="the-pog-spec-in-summary" class="level2">
+<h2 class="anchored" data-anchor-id="the-pog-spec-in-summary">The POG spec, in summary</h2>
+<p>The pyramids paper (Colesanti Senni and Johnson, in prep.) defines the spec in full; this page is its operational summary. A POG is a GeoTIFF that passes <strong>both</strong> checks below (this is literally what <code>hb.is_path_pog</code> tests — <code>is_path_global_pyramid</code> and <code>is_path_cog</code>).</p>
+<p><strong>1. It is a global pyramid:</strong></p>
+<ul>
+<li><p><strong>Global extent, exact geotransform.</strong> The raster spans the whole globe, <code>(-180, res, 0, 90, 0, -res)</code>, matching the canonical geotransform for its rung <strong>bit for bit</strong>. The canonical cell size of a rung of <em>a</em> arcseconds is the double nearest the reduced fraction <em>a</em>/3600 degrees (for 300 s, the double nearest 1/12, <code>0.08333333333333333</code>); a value that is merely close is a different grid. The CRS is EPSG:4326 and the file is area-registered (<code>AREA_OR_POINT=Area</code> or absent).</p></li>
+<li><p><strong>A rung of the ladder.</strong> The ladder has <strong>main rungs</strong> and <strong>side rungs</strong>. A main rung stands in an exact integer ratio to every other main rung, so the main set is closed under divisibility and every path of block sums between two main rungs gives the same result; successive main ratios are 3, 3, 2, 5, 3, 5, 2, 3, 2, 2, 5, 2, 3, 3, 2. A side rung is a rational cell that divides at least one main rung but not all of them; it <strong>joins</strong> the main ladder at the finest main rung it divides. Both are asserted when hazelbean is imported, and ratios are tested as reduced fractions, never as floats. Fractional rungs are named as reduced fractions, <code>3-10sec</code> for 3/10 arcsecond:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 7%">
+<col style="width: 11%">
+<col style="width: 25%">
+<col style="width: 26%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Arcseconds</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: right;">Degrees</th>
+<th style="text-align: right;">Approx. at equator</th>
+<th style="text-align: right;">Shape (rows × cols)</th>
+<th style="text-align: right;">Joins at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1-9</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/32400</td>
+<td style="text-align: right;">~3 m</td>
+<td style="text-align: right;">5,832,000 × 11,664,000</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3-10</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/12000</td>
+<td style="text-align: right;">~9 m</td>
+<td style="text-align: right;">2,160,000 × 4,320,000</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1-3</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/10800</td>
+<td style="text-align: right;">~10 m</td>
+<td style="text-align: right;">1,944,000 × 3,888,000</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9-10</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/4000</td>
+<td style="text-align: right;">~28 m</td>
+<td style="text-align: right;">720,000 × 1,440,000</td>
+<td style="text-align: right;">900</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/3600</td>
+<td style="text-align: right;">~31 m</td>
+<td style="text-align: right;">648,000 × 1,296,000</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/1800</td>
+<td style="text-align: right;">~62 m</td>
+<td style="text-align: right;">324,000 × 648,000</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/1200</td>
+<td style="text-align: right;">~93 m</td>
+<td style="text-align: right;">216,000 × 432,000</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/400</td>
+<td style="text-align: right;">~278 m</td>
+<td style="text-align: right;">72,000 × 144,000</td>
+<td style="text-align: right;">900</td>
+</tr>
+<tr class="odd">
 <td style="text-align: right;">10</td>
+<td style="text-align: left;">main</td>
 <td style="text-align: right;">1/360</td>
-<td style="text-align: right;">~300 m</td>
+<td style="text-align: right;">~309 m</td>
 <td style="text-align: right;">64,800 × 129,600</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/240</td>
+<td style="text-align: right;">~464 m</td>
+<td style="text-align: right;">43,200 × 86,400</td>
+<td style="text-align: right;">30</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">30</td>
+<td style="text-align: left;">main</td>
 <td style="text-align: right;">1/120</td>
-<td style="text-align: right;">~1 km</td>
+<td style="text-align: right;">~928 m</td>
 <td style="text-align: right;">21,600 × 43,200</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="even">
+<td style="text-align: right;">90</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/40</td>
+<td style="text-align: right;">~2.8 km</td>
+<td style="text-align: right;">7,200 × 14,400</td>
+<td style="text-align: right;">900</td>
+</tr>
+<tr class="odd">
 <td style="text-align: right;">150</td>
+<td style="text-align: left;">main</td>
 <td style="text-align: right;">1/24</td>
-<td style="text-align: right;">~5 km</td>
+<td style="text-align: right;">~4.6 km</td>
 <td style="text-align: right;">4,320 × 8,640</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">180</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/20</td>
+<td style="text-align: right;">~5.6 km</td>
+<td style="text-align: right;">3,600 × 7,200</td>
+<td style="text-align: right;">900</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">300</td>
+<td style="text-align: left;">main</td>
 <td style="text-align: right;">1/12</td>
-<td style="text-align: right;">~10 km</td>
+<td style="text-align: right;">~9.3 km</td>
 <td style="text-align: right;">2,160 × 4,320</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">360</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/10</td>
+<td style="text-align: right;">~11.1 km</td>
+<td style="text-align: right;">1,800 × 3,600</td>
+<td style="text-align: right;">1800</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">600</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: right;">1/6</td>
+<td style="text-align: right;">~18.6 km</td>
+<td style="text-align: right;">1,080 × 2,160</td>
+<td style="text-align: right;">1800</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">900</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">~25 km</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/4</td>
+<td style="text-align: right;">~27.8 km</td>
 <td style="text-align: right;">720 × 1,440</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">1800</td>
-<td style="text-align: right;">0.5</td>
-<td style="text-align: right;">~50 km</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1/2</td>
+<td style="text-align: right;">~55.7 km</td>
 <td style="text-align: right;">360 × 720</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3600</td>
-<td style="text-align: right;">1.0</td>
-<td style="text-align: right;">~110 km</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;"></td>
 <td style="text-align: right;">180 × 360</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">7200</td>
-<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">18000</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">5</td>
 <td style="text-align: right;"></td>
-<td style="text-align: right;">90 × 180</td>
+<td style="text-align: right;">36 × 72</td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">14400</td>
-<td style="text-align: right;">4.0</td>
-<td style="text-align: right;"></td>
-<td style="text-align: right;">45 × 90</td>
-</tr>
-<tr class="odd">
 <td style="text-align: right;">36000</td>
-<td style="text-align: right;">10.0</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">10</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;">18 × 36</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">108000</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">6 × 12</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">324000</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">2 × 4</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">648000</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">1 × 2</td>
+<td style="text-align: right;"></td>
 </tr>
 </tbody>
-</table></li>
-<li><p><strong>The standard no-data value for its data type.</strong> NDV is not a free choice: signed integers and floats use <code>-9999</code>; unsigned integers use the maximum value of the type (e.g., 255 for Byte, 65535 for UInt16). <code>make_path_pog</code> sets this for you (it will override whatever NDV the input had).</p></li>
-<li><p><strong>Compressed</strong> with DEFLATE. This is a choice we made and in most tests deflate performs better than the more common LZW. We have also tried out ZSTD which is way better than DEFLATE but is not universally supported (yet), so we don’t use it in the definition.</p></li>
-<li><p><strong>Internal overviews at exactly the prescribed levels</strong> for its resolution (e.g., 10 arcseconds requires levels <code>[3, 15, 30, 90, 180, 360]</code>, so its overviews land exactly on the coarser supported resolutions). The full mapping is <code>hb.pyramid_compatible_overview_levels</code>. Overview resampling is <code>mode</code> for integer types and <code>average</code> for floats.</p></li>
-<li><p><strong>Exact statistics stored internally.</strong> Band statistics must be present and computed exactly (<code>STATISTICS_APPROXIMATE=NO</code>), with no stale <code>.aux.xml</code> sidecar shadowing them.</p></li>
+</table>
+<p>Main rungs from 1/9 s to one degree sit where WGS84 product families live: the USGS 3DEP 1/9” and 1/3” DEMs, SRTM, NASADEM, Copernicus GLO-30 and FABDEM at 1 s, 3DEP 2” (Alaska) at 2 s, ESA CCI at 10 s, WorldClim and GPW at 30 s, WorldClim 2.5’ at 150 s, MapSPAM and EarthStat at 300 s, LUH2 and GTAP-AEZ at 900 s, and the half- and one-degree climate grids. Above one degree they nest toward the <strong>180-degree top rung, a 2 × 1 grid</strong>: the two faces of the equirectangular map. 5° is HadCRUT and NOAA GlobalTemp, 10° is the zoning and tile edge, and 30°, 90° and 180° are structural. The top rung is the aspect ratio of the map itself, so the ladder is <strong>body-independent</strong>: the one body-specific parameter is the area stack that weights aggregation. The side rungs carry the families between: <strong>3-10 s</strong> (1/12000°: ESA WorldCover and the Lang et al.&nbsp;canopy height), <strong>9-10 s</strong> (1/4000°: Hansen Global Forest Change, JRC Global Surface Water, GLAD), <strong>3 s</strong> (the 90 m family: SRTM 3s, GLO-90, TanDEM-X 90, MERIT DEM and Hydro, HydroSHEDS, WorldPop, GHSL), <strong>15 s</strong> (HydroSHEDS 15s, GEBCO), <strong>180 s</strong> (CHIRPS and MODIS CMG at 0.05°), <strong>360 s</strong> (ERA5-Land at 0.1°), <strong>600 s</strong> (WorldClim 10’), and <strong>9 s</strong> and <strong>90 s</strong>, which own no product but give the 9-10 s family factor-10 steps to its join (overviews at about 280 m and 2.8 km rather than none between 28 m and 28 km). Every aligned grid has a rational cell size, so the p-q notation names every rung there could be.</p></li>
+<li><p><strong>The declared variable class and its metadata.</strong> <code>POG_VARIABLE_CLASS</code> is <code>extensive</code>, <code>intensive</code>, <code>categorical</code> or <code>covariate</code>; an intensive raster also declares <code>POG_INTENSIVE_WEIGHTING</code> (<code>area</code>, the default, or <code>none</code>) and, for <code>area</code>, <code>POG_DENOMINATOR</code> (the token <code>ha_per_cell</code>, or the observed-area POG). <code>POG_OBSERVED_AREA</code> names the companion where coverage is incomplete, and <code>POG_REGISTRATION_SHIFT</code> records a shift. Companion paths are stored relative to the POG’s folder.</p></li>
+<li><p><strong>The nodata convention of its class.</strong> Every POG declares the per-type nodata value (<code>-9999</code> for signed integers and floats, the type maximum for unsigned integers, e.g.&nbsp;255 for Byte). In extensive, intensive and categorical rasters no cell holds it; in a covariate it marks missing cells. <code>make_path_pog</code> converts the values, not just the declaration, and the validator checks both (the cell check reads the raster only when the value falls inside the stored exact statistics’ range).</p></li>
+<li><p><strong>Compressed</strong> with DEFLATE. This is a choice we made and in most tests deflate performs better than the more common LZW. We have also tried out ZSTD which is way better than DEFLATE but is not universally supported (yet), so a file compressed with it (or with LZW) is not a POG.</p></li>
+<li><p><strong>Internal overviews at exactly the prescribed levels</strong>, derived from the ladder rather than chosen, asymmetrically: a <strong>main-rung</strong> base carries one overview for every coarser <strong>main</strong> rung, up to the 180-degree top, and no side-rung levels; a <strong>side-rung</strong> base carries every side rung that is a multiple of it and a divisor of its join rung, then every main rung from the join up. Each overview is therefore an exact union of cells of the one before it, and only the top rung has none. The chain derivation raises on any non-integer ratio. Overviews are validated by <strong>dimensions, exactly</strong>, on read as on validation: each factor implies each overview’s size, and a missing level, an extra level or a near-miss factor all fail, since an extra level would be read as a rung that does not exist. Overhead is the sum of the squared inverse factors. The mapping is <code>hb.pyramid_compatible_overview_levels</code>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 26%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Base</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Levels</th>
+<th style="text-align: right;">Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1-9 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 9, 18, 90, 270, 1350, 2700, 8100, 16200, 32400, 162000, 324000, 972000, 2916000, 5832000</td>
+<td style="text-align: right;">12.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3-10 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">10, 50, 100, 500, 1000, 3000, 6000, 12000, 60000, 120000, 360000, 1080000, 2160000</td>
+<td style="text-align: right;">1.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1-3 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 6, 30, 90, 450, 900, 2700, 5400, 10800, 54000, 108000, 324000, 972000, 1944000</td>
+<td style="text-align: right;">14.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9-10 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">10, 100, 200, 1000, 2000, 4000, 20000, 40000, 120000, 360000, 720000</td>
+<td style="text-align: right;">1.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2, 10, 30, 150, 300, 900, 1800, 3600, 18000, 36000, 108000, 324000, 648000</td>
+<td style="text-align: right;">26.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">5, 15, 75, 150, 450, 900, 1800, 9000, 18000, 54000, 162000, 324000</td>
+<td style="text-align: right;">4.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">5, 10, 50, 100, 300, 600, 1200, 6000, 12000, 36000, 108000, 216000</td>
+<td style="text-align: right;">5.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">10, 20, 100, 200, 400, 2000, 4000, 12000, 36000, 72000</td>
+<td style="text-align: right;">1.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 15, 30, 90, 180, 360, 1800, 3600, 10800, 32400, 64800</td>
+<td style="text-align: right;">11.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">2, 10, 20, 60, 120, 240, 1200, 2400, 7200, 21600, 43200</td>
+<td style="text-align: right;">26.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">30 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">5, 10, 30, 60, 120, 600, 1200, 3600, 10800, 21600</td>
+<td style="text-align: right;">5.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">90 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">2, 10, 20, 40, 200, 400, 1200, 3600, 7200</td>
+<td style="text-align: right;">26.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">150 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2, 6, 12, 24, 120, 240, 720, 2160, 4320</td>
+<td style="text-align: right;">28.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">180 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">5, 10, 20, 100, 200, 600, 1800, 3600</td>
+<td style="text-align: right;">5.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">300 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 6, 12, 60, 120, 360, 1080, 2160</td>
+<td style="text-align: right;">14.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">360 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">5, 10, 50, 100, 300, 900, 1800</td>
+<td style="text-align: right;">5.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">600 sec</td>
+<td style="text-align: left;">side</td>
+<td style="text-align: left;">3, 6, 30, 60, 180, 540, 1080</td>
+<td style="text-align: right;">14.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">900 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2, 4, 20, 40, 120, 360, 720</td>
+<td style="text-align: right;">31.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1800 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2, 10, 20, 60, 180, 360</td>
+<td style="text-align: right;">26.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3600 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">5, 10, 30, 90, 180</td>
+<td style="text-align: right;">5.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">18000 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2, 6, 18, 36</td>
+<td style="text-align: right;">28.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">36000 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 9, 18</td>
+<td style="text-align: right;">12.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">108000 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">3, 6</td>
+<td style="text-align: right;">13.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">324000 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">25.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">648000 sec</td>
+<td style="text-align: left;">main</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: right;">0.0%</td>
+</tr>
+</tbody>
+</table>
+<p>(Rule formalized 2026-09-24. Before that the levels came from a draft in which every coarser rung that was a multiple of the base counted, so 1 s files carried 3 s and 15 s levels; before that, from a hand-written table with 2° and 4° rungs that could not nest into 10°. POGs written under either fail the level check and must be regenerated.)</p></li>
+<li><p><strong>Overviews that follow the class rule.</strong> A file records no resampling method, so <code>is_path_pog</code> checks the numbers: in each overview it recomputes a few cells, spread from pole to pole, from the level directly below by the declared rule, so every link of the chain is sampled. Integer levels must agree exactly and floating-point levels to a relative 1e-5 (float32 storage). Categorical and covariate POGs make no exactness claim and pass. <code>hb.is_path_pog_overview_conformant(path, verbose=True)</code> runs this check alone.</p></li>
+<li><p><strong>Exact statistics stored internally.</strong> Band statistics must be present and computed exactly (<code>STATISTICS_APPROXIMATE=NO</code>), with no stale <code>.aux.xml</code> sidecar shadowing them. Together with sum overviews, this makes the header of an extensive POG a source of its exact global total.</p></li>
 </ul>
-<p><strong>2. It is a valid COG:</strong> it passes GDAL’s COG validation — tiled layout, properly ordered internal overviews, cloud-readable header structure. <code>make_path_pog</code> writes through the GDAL COG driver (BIGTIFF, 512-pixel blocks by default), so this comes for free.</p>
+<p><strong>2. It is a valid COG:</strong> it passes GDAL’s COG validation — tiled layout, properly ordered internal overviews, cloud-readable header structure. The validator’s errors fail a file; its advisory warnings (e.g.&nbsp;“recommended to include internal overviews” on a rung with none) do not, because the exact level check above supersedes them. <code>make_path_pog</code> writes through the GDAL COG driver (BigTIFF, 512-pixel blocks by default) with the overviews it built and no others: left to itself the driver inserts dyadic 2, 4, 8… levels into any file that has none.</p>
+</section>
+<section id="standards" class="level2">
+<h2 class="anchored" data-anchor-id="standards">Standards</h2>
+<p>Three separate claims, each with its own evidence:</p>
+<ul>
+<li><strong>A POG is a valid OGC GeoTIFF and a valid OGC Cloud Optimized GeoTIFF.</strong> COG has been an OGC standard since 2023 (OGC 21-026). <code>hb.is_path_cog</code> runs GDAL’s validator, which implements that standard, and <code>make_path_pog</code> writes through GDAL’s COG driver.</li>
+<li><strong>The pyramid tiling scheme is a valid OGC Tile Matrix Set</strong> (OGC 17-083r4, “Two Dimensional Tile Matrix Set and Tile Set Metadata” 2.0). <code>hb.get_pyramid_tile_matrix_set()</code> publishes it: one tile matrix per rung in CRS84 with the origin at the top-left <code>(-180, 90)</code>, id <code>EEPyramidCRS84</code>. It is <strong>not</strong> a quadtree — the scale progression follows the rungs, so it is not the registered <code>WorldCRS84Quad</code> set — which the standard explicitly allows for custom sets. Tile sizes vary by rung (below), which is why the set must be published with all twenty-five matrices (sixteen main, nine side) rather than inferred. <code>hb.validate_tile_matrix_set_json</code> validates the document against the schemas OGC publishes, shipped verbatim in <code>hazelbean/ogc_schemas/tms_2.0/</code>; that validation runs in the unit suite (<code>test_tiles.py</code>) and is the compliance test. <code>hb.write_pyramid_tile_matrix_set_json(path)</code> writes the document for use by OGC API Tiles servers or QGIS.</li>
+<li><strong>A subpog tile set is addressable through that tile matrix set.</strong> Tiles are named on disk by their south-west corner (below); <code>hb.tile_corner_string_to_tile_matrix_index</code> converts a corner name to the standard’s <code>(tileMatrix, tileRow, tileCol)</code> and <code>hb.tile_matrix_index_to_tile_corner_string</code> converts back. The unit suite checks the two are a bijection over every tile of a matrix.</li>
+</ul>
+</section>
+<section id="pog-subpog-tile-tile-set-vrt" class="level2">
+<h2 class="anchored" data-anchor-id="pog-subpog-tile-tile-set-vrt">POG, subpog, tile, tile set, VRT</h2>
+<p>Five things that are easy to conflate, defined so they stay apart:</p>
+<ul>
+<li><strong>POG</strong> — the global raster meeting the full spec above.</li>
+<li><strong>Subpog</strong> — a raster meeting the spec in every respect <strong>except extent</strong>. Its extent is a whole number of cells from the pyramid origin <code>(-180, 90)</code> at its rung (snap a box with <code>hb.snap_bb_to_pyramid(bb, arcseconds)</code>), and its overview levels are the global chain <strong>truncated to the levels whose cell size divides its extent</strong> (<code>hb.get_pyramid_overview_levels_for_bb</code>) — so every overview still lands on a rung, and the coarsest is bounded by the extent. A 1-degree tile of 1-second data therefore stops at level 3600; a 10-degree tile of 10-second data carries the chain through level 3600 (10°) and nothing coarser. Make one with <code>hb.make_path_pog(path, expand_to_global_extent=False)</code> (the parallel converter forwards the same flag); check with <code>hb.is_path_subpog</code>; a POG is a degenerate subpog. A seals AOI clip is a subpog and not a tile. The input’s footprint is snapped <strong>outward</strong>, so an input that straddles cell edges grows by up to a cell per side rather than losing data; such an extent may support no overview level at all, which is legal (the top rung has none either).</li>
+<li><strong>Tile</strong> — a subpog whose extent is exactly one cell of the published tile grid for its rung. Every tile is a subpog; most subpogs are not tiles.</li>
+<li><strong>Tile set</strong> — the tiles of one dataset at one rung and tiling, in one folder, plus the VRT that indexes them. A tile set may be <strong>sparse</strong>: tiles that would hold nothing need not exist.</li>
+<li><strong>VRT</strong> — not a raster. An XML index (<code>gdalbuildvrt</code>) that presents the tiles of a tile set to GDAL as one global raster: it carries the exact global geotransform, lists which tiles exist and where, and reads anything not listed as <strong>zero</strong> — what an empty cell of a POG holds — or, for a covariate tile set, as the per-type nodata. It holds no pixels, has no overviews of its own (coarse reads go to the tiles’ internal overviews), and cannot be a COG. <code>hb.is_path_pog_tileset(vrt)</code> checks the VRT frame is global, every source is a corner-named tile of one dataset, rung and edge covering the extent its name claims, and every tile is a subpog.</li>
+</ul>
+<section id="tile-and-subpog-naming" class="level3">
+<h3 class="anchored" data-anchor-id="tile-and-subpog-naming">Tile and subpog naming</h3>
+<p>Corner-based, following SRTM, NASADEM, Copernicus DEM and ESA WorldCover: the <strong>south-west</strong> corner in whole degrees, latitude then longitude, each with its cardinal letter, followed by the <strong>height and width</strong> of the extent in whole degrees. The extent is in the name, so a file is interpretable without the tile matrix set, a subpog spanning several tiles is named the same way, and the same dataset may exist at more than one tiling:</p>
+<pre><code>lulc_esa_2020_10sec.tif                       the global POG
+lulc_esa_2020_10sec_10deg/                    its tile set (folder)
+lulc_esa_2020_10sec_40N_130W_10_10.tif        one tile: south-west corner 40N 130W, 10 by 10 degrees
+lulc_esa_2020_10sec_10deg.vrt                 the index, beside the folder
+lulc_esa_2020_10sec_20N_30E_30_60.tif         a subpog spanning 20N to 50N and 30E to 90E</code></pre>
+<p>Helpers: <code>hb.get_tile_filename</code>, <code>hb.get_tile_filename_from_bb</code> (names a whole-degree subpog), <code>hb.parse_tile_filename</code> (returns stem, rung, corner, height, width), <code>hb.get_tile_corner_string</code>, <code>hb.parse_tile_corner_string</code>, <code>hb.get_tile_bb_from_corner_string</code>, <code>hb.list_tile_corner_strings</code>. The VRT uses relative source paths, so the folder and its VRT move together. (Names of the form <code>…_10deg_N40W130.tif</code>, used before 2026-09-24, no longer parse.)</p>
+<p>Tile edges are chosen so a tile is a few thousand pixels per side, and every default edge is itself a main rung (1°, 5° or 10°), so tile sets at different rungs nest exactly. They are the scheme’s <code>hb.pyramid_tile_degrees</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Base</th>
+<th style="text-align: right;">Tile edge</th>
+<th style="text-align: right;">Tile pixels</th>
+<th style="text-align: right;">Tiles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1-9 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">32,400 × 32,400</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3-10 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">12,000 × 12,000</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1-3 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">10,800 × 10,800</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9-10 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">4,000 × 4,000</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">3,600 × 3,600</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2 sec</td>
+<td style="text-align: right;">1°</td>
+<td style="text-align: right;">1,800 × 1,800</td>
+<td style="text-align: right;">64,800</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3 sec</td>
+<td style="text-align: right;">5° (MERIT’s tiling)</td>
+<td style="text-align: right;">6,000 × 6,000</td>
+<td style="text-align: right;">2,592</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9 sec</td>
+<td style="text-align: right;">10°</td>
+<td style="text-align: right;">4,000 × 4,000</td>
+<td style="text-align: right;">648</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10 sec</td>
+<td style="text-align: right;">10°</td>
+<td style="text-align: right;">3,600 × 3,600</td>
+<td style="text-align: right;">648</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15 sec</td>
+<td style="text-align: right;">10°</td>
+<td style="text-align: right;">2,400 × 2,400</td>
+<td style="text-align: right;">648</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">30 sec</td>
+<td style="text-align: right;">10°</td>
+<td style="text-align: right;">1,200 × 1,200</td>
+<td style="text-align: right;">648</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">90 sec and coarser</td>
+<td style="text-align: right;">not tiled</td>
+<td style="text-align: right;">the global POG is one tile</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="products-with-no-rung" class="level3">
+<h3 class="anchored" data-anchor-id="products-with-no-rung">Products with no rung</h3>
+<p>Products delivered in a projected CRS (Sentinel-2, Landsat, NAIP and Planet in UTM; MODIS in sinusoidal; SoilGrids in Homolosine; older GHSL releases in Mollweide), products on a geographic grid that is not a rung (Copernicus Global Land Cover at 1/1008°), and products whose cells widen at high latitude (the Copernicus DEM above 50°) <strong>enter the lattice by one resample</strong> onto the rung recorded for them, so the choice is made once per product rather than once per project. The entry is a resample, never an alignment: a 10 m UTM cell is not a 3/10-arcsecond cell, and the paper’s non-nested-support treatment applies. The paper’s Table E2 is the authoritative entry table; in brief:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Product (native grid)</th>
+<th>nominal</th>
+<th>enters at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sentinel-2 (UTM)</td>
+<td>10 / 20 / 60 m</td>
+<td>3-10 s / 1 s / 3 s</td>
+</tr>
+<tr class="even">
+<td>Dynamic World, ESRI 10 m Land Cover (UTM)</td>
+<td>10 m</td>
+<td>3-10 s (WorldCover’s grid)</td>
+</tr>
+<tr class="odd">
+<td>Landsat Collection 2 (UTM)</td>
+<td>30 m</td>
+<td>1 s, or 9-10 s beside the Hansen / GLAD family</td>
+</tr>
+<tr class="even">
+<td>NAIP, PlanetScope (UTM)</td>
+<td>0.6–3 m</td>
+<td>1-9 s</td>
+</tr>
+<tr class="odd">
+<td>MODIS 250 m / 500 m / 1 km (sinusoidal)</td>
+<td>250 m–1 km</td>
+<td>10 s / 15 s / 30 s</td>
+</tr>
+<tr class="even">
+<td>SoilGrids 250 m (Homolosine)</td>
+<td>250 m</td>
+<td>10 s</td>
+</tr>
+<tr class="odd">
+<td>Copernicus Global Land Cover (1/1008°)</td>
+<td>~100 m</td>
+<td>3 s</td>
+</tr>
+<tr class="even">
+<td>GPCC (2.5°)</td>
+<td>278 km</td>
+<td>18000 s (2.5° is not admitted as a rung)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="global-pog-or-tile-set-support-both" class="level3">
+<h3 class="anchored" data-anchor-id="global-pog-or-tile-set-support-both">Global POG or tile set? Support both</h3>
+<p>They solve different problems. <strong>HTTP range requests fetch only the bytes touching a window from inside one COG</strong> — exactly what COG was designed for — and work on a global POG directly, with no tiles and no VRT. So the <strong>global POG is the default form</strong> and range requests are the default subset mechanism (planned for <code>get_path</code>; not yet built). <strong>Tile sets earn their place where a single file is operationally impractical</strong>: 1 second and every rung finer (a global Byte raster at 1 s is over 800 GB uncompressed), datasets regenerated or checksummed piecewise, and the Drive mirror, which syncs whole files. There the VRT is the manifest telling <code>get_path</code> which tile files a requested box touches. Both paths converge on a future bounding-box argument to <code>get_path</code>; they differ only in what is fetched — byte ranges of one file, or whole tiles named in a manifest. A dataset’s entry in base_data should say which form it uses.</p>
+<p>Round trips: <code>hb.tile_pog_to_tileset(pog_path, tile_degrees=None)</code> cuts a POG into a tile set (omitting tiles that hold nothing) and returns the VRT; <code>hb.write_subpog_from_pog_window(pog_path, bb, output_path)</code> cuts one aligned window, carrying the variable class and its metadata; any raster becomes a subpog with <code>make_path_pog(..., expand_to_global_extent=False)</code>; a tile set becomes a global POG again by running <code>make_path_pog</code> on its VRT, which reads the class from the tiles and is byte-identical to the original (<code>test_pog_spec.py</code> checks it).</p>
+</section>
 </section>
 <section id="handy-extras" class="level2">
 <h2 class="anchored" data-anchor-id="handy-extras">Handy extras</h2>
 <ul>
-<li><code>hb.make_paths_pogs_in_parallel(...)</code> converts a list of rasters across multiple processes.</li>
-<li><code>hb.write_pog_of_value_from_scratch(output_path, value, arcsecond_resolution, output_data_type)</code> and <code>hb.write_pog_of_value_from_match(output_path, match_path, value)</code> create constant-valued POGs, useful as templates or masks.</li>
-<li><code>make_path_pog</code> also accepts <code>ndv_above</code> / <code>ndv_below</code> (censor out-of-range values to NDV) and <code>value_reclassification_dict</code> (reclassify while converting) so you can clean a raster in the same pass that pog-ifies it.</li>
+<li><code>hb.make_paths_pogs_in_parallel(...)</code> converts a list of rasters across multiple processes, forwarding <code>variable_class</code>, <code>intensive_weighting</code>, <code>categorical_none_value</code>, <code>allow_registration_shift</code>, <code>observed_area_path='derive'</code> and <code>expand_to_global_extent</code> to every file.</li>
+<li><code>hb.write_pog_of_value_from_scratch(output_path, value, arcsecond_resolution, output_data_type, variable_class=None)</code> and <code>hb.write_pog_of_value_from_match(output_path, match_path, value, variable_class=None)</code> create constant-valued POGs, useful as templates or masks.</li>
+<li><code>hb.write_ha_per_cell_pog(output_path, arcseconds, bb=None)</code> writes the canonical hectares-per-cell POG of any rung (extensive, Float64).</li>
+<li><code>hb.get_pog_metadata(path)</code> returns a file’s <code>POG_*</code> items (for a tile-set VRT, its first tile’s).</li>
+<li><code>make_path_pog</code> also accepts <code>ndv_above</code> / <code>ndv_below</code> (censor out-of-range values before the nodata rule) and <code>value_reclassification_dict</code> (reclassify while converting) so you can clean a raster in the same pass that pog-ifies it.</li>
 </ul>
 
 

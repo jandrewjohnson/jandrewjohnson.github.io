@@ -302,7 +302,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-failure-that-made-this-account-wrong-twice" id="toc-the-failure-that-made-this-account-wrong-twice" class="nav-link" data-scroll-target="#the-failure-that-made-this-account-wrong-twice">The failure that made this account wrong twice</a></li>
   <li><a href="#the-account-should-compute-this-itself" id="toc-the-account-should-compute-this-itself" class="nav-link" data-scroll-target="#the-account-should-compute-this-itself">The account should compute this itself</a></li>
-  <li><a href="#what-running-it-needs" id="toc-what-running-it-needs" class="nav-link" data-scroll-target="#what-running-it-needs">What running it needs</a></li>
+  <li><a href="#what-running-the-remaining-two-needs" id="toc-what-running-the-remaining-two-needs" class="nav-link" data-scroll-target="#what-running-the-remaining-two-needs">What running the remaining two needs</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -397,16 +397,15 @@ window.Quarto = {
 </section>
 <section id="the-account-should-compute-this-itself" class="level3">
 <h3 class="anchored" data-anchor-id="the-account-should-compute-this-itself">The account should compute this itself</h3>
-<p>⚠ <strong>Reading the author’s per-country export is an interim, not the destination.</strong></p>
-<p>Not because every service computes its own — about a third do not, and for some that is right: the account does not recompute the World Bank’s CWON resource rents for extractive materials or energy, because the published rent <em>is</em> the source. The distinction is whether we hold a model we could run.</p>
-<p>Flood’s peers are stormwater and air filtration, both recorded as “not yet”: a model that exists, that we have, and that has not been run here. Erosion is the case to follow — it has no scenario shock either, and it still runs the sediment model here and reports $13.96bn against the author’s $14.59bn.</p>
-<p>The distinction worth keeping: <strong>producing our own number</strong> is what the library is for, and it is what makes the figure reproducible, auditable and rerunnable here. <strong>Comparing it to the author’s</strong> is a fidelity check and not a correctness one. The second does not argue against the first.</p>
-<p>Until then, <code>gep_calculation</code> reads <code>flood_gep_for_merge_v2_2024hazard.csv</code> and the account carries his $11.40bn. That is honest and it is not finished.</p>
+<p><strong>The account computes this figure rather than reading it.</strong> That was not true until 2026-09-01 and this page said so; it is true now.</p>
+<p>Four of the six tasks run here: <code>task_compute_service_flow</code>, <code>task_compute_flood_damages</code>, <code>task_compute_flood_gep</code> and <code>task_generate_maps_and_figures</code>. The GEP chain with the counterfactuals gives <strong>$11,403,596,548</strong> across 250 rows, positive in 163, against the author’s published $11.40bn – his rounding to one decimal, and his committed table agrees with ours to the cent, 250 of 250 countries, largest per-country difference $0.000000. <code>gep = ead_bare - ead_current</code> holds to 1.2e-07 on every row, and the damage side reproduces at $887,827,659,820 / $194,256,309,530 / $551,051,565,602.</p>
+<p>The two tasks that do not run here are <code>task_prepare_flood_inputs</code> and <code>task_build_sda</code>, which are Sections A and B. That is deliberate on the author’s part rather than a gap: his RUN.md tells a reader to copy the staged Sections B and C across because rebuilding them turns a three-hour run into an eleven-hour one. A cold start of those two began on 2026-09-01, once the inputs they need were staged into base_data – the aligned JRC depths at 1.3 GB and the service-providing-area raster at 144 MB.</p>
+<p>⚠ <strong>What reproducing him does and does not establish.</strong> The module is his pipeline with our path handling and ProjectFlow wiring, so agreement was close to guaranteed. It is a build test: it catches our refactor breaking his arithmetic, and says nothing about whether the arithmetic is right.</p>
+<p>⚠ <strong>The water variant moves this figure more than anything else in it.</strong> The run writes four, and <code>gep_flood_bare</code> is $6.29bn on 4rp, $7.34bn on v1_2016, $11.40bn on v2_2024_waterremoved – the delivered one – and $24.54bn on v2_2024_waterkept. Keeping permanent water more than doubles the headline. The author has reported about $11.4bn consistently, in correspondence and in his committed table, so waterremoved is the account’s variant; the gap is pinned by a test so it cannot drift unnoticed.</p>
 </section>
-<section id="what-running-it-needs" class="level3">
-<h3 class="anchored" data-anchor-id="what-running-it-needs">What running it needs</h3>
-<p>The inputs are on MSI at <code>/projects/standard/jajohns/shared/flood_gep</code>, read-only, so a run needs a writable root with those inputs linked in and the Sections B and C rasters copied across — about 1 GB, without which a run rebuilds them and takes eleven hours rather than three. In this library the root is <code>flood_root_dir</code> in <code>es_parameters.csv</code> rather than the source repo’s <code>GEP_FLOOD_ROOT</code> environment variable, so only the linking and copying carry over.</p>
-<p>⚠ <strong>Not done as of 2026-08-28.</strong> Nothing here has been run; the account reads his export.</p>
+<section id="what-running-the-remaining-two-needs" class="level3">
+<h3 class="anchored" data-anchor-id="what-running-the-remaining-two-needs">What running the remaining two needs</h3>
+<p>The inputs live on MSI at <code>/projects/standard/jajohns/shared/flood_gep</code>, read-only. What Sections A and B actually need from it is small – <code>flood_depth_aligned_path</code> and <code>flood_spa_path</code>, 1.5 GB with the optional population grid – and both are staged in base_data now with the template carrying the references. The 129 GB of counterfactual amplification rasters in that tree feed <code>task_compute_flood_gep</code>, which already runs, so they are not part of this.</p>
 
 
 </section>

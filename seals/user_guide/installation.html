@@ -399,17 +399,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a>
   <ul class="collapse">
+  <li><a href="#installation-walkthrough" id="toc-installation-walkthrough" class="nav-link" data-scroll-target="#installation-walkthrough">Installation Walkthrough</a>
+  <ul class="collapse">
   <li><a href="#install-miniforge" id="toc-install-miniforge" class="nav-link" data-scroll-target="#install-miniforge">1. Install Miniforge</a></li>
   <li><a href="#create-and-activate-an-environment" id="toc-create-and-activate-an-environment" class="nav-link" data-scroll-target="#create-and-activate-an-environment">2. Create and activate an environment</a></li>
   <li><a href="#install-seals-from-conda-forge" id="toc-install-seals-from-conda-forge" class="nav-link" data-scroll-target="#install-seals-from-conda-forge">3. Install SEALS from conda-forge</a></li>
-  <li><a href="#verify" id="toc-verify" class="nav-link" data-scroll-target="#verify">4. Verify</a></li>
+  </ul></li>
   <li><a href="#developer-install" id="toc-developer-install" class="nav-link" data-scroll-target="#developer-install">Developer install</a>
   <ul class="collapse">
-  <li><a href="#a.-install-git-and-a-cc-compiler" id="toc-a.-install-git-and-a-cc-compiler" class="nav-link" data-scroll-target="#a.-install-git-and-a-cc-compiler">a. Install git and a C/C++ compiler</a></li>
-  <li><a href="#b.-get-the-dependency-stack-from-conda-forge" id="toc-b.-get-the-dependency-stack-from-conda-forge" class="nav-link" data-scroll-target="#b.-get-the-dependency-stack-from-conda-forge">b. Get the dependency stack from conda-forge</a></li>
-  <li><a href="#c.-clone-seals-into-the-devstack-layout" id="toc-c.-clone-seals-into-the-devstack-layout" class="nav-link" data-scroll-target="#c.-clone-seals-into-the-devstack-layout">c.&nbsp;Clone SEALS into the devstack layout</a></li>
-  <li><a href="#d.-make-the-editable-install" id="toc-d.-make-the-editable-install" class="nav-link" data-scroll-target="#d.-make-the-editable-install">d.&nbsp;Make the editable install</a></li>
-  <li><a href="#e.-verify" id="toc-e.-verify" class="nav-link" data-scroll-target="#e.-verify">e. Verify</a></li>
+  <li><a href="#install-git-and-a-cc-compiler" id="toc-install-git-and-a-cc-compiler" class="nav-link" data-scroll-target="#install-git-and-a-cc-compiler">1. Install git and a C/C++ compiler</a></li>
+  <li><a href="#install-and-then-remove-seals" id="toc-install-and-then-remove-seals" class="nav-link" data-scroll-target="#install-and-then-remove-seals">2. Install and then remove SEALS</a></li>
+  <li><a href="#clone-seals-into-the-devstack-layout" id="toc-clone-seals-into-the-devstack-layout" class="nav-link" data-scroll-target="#clone-seals-into-the-devstack-layout">3. Clone SEALS into the devstack layout</a></li>
+  <li><a href="#install-the-the-repository-via-pip" id="toc-install-the-the-repository-via-pip" class="nav-link" data-scroll-target="#install-the-the-repository-via-pip">4. Install the the repository via pip</a></li>
   <li><a href="#other-devstack-repos-optional" id="toc-other-devstack-repos-optional" class="nav-link" data-scroll-target="#other-devstack-repos-optional">Other devstack repos (optional)</a></li>
   </ul></li>
   <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
@@ -426,35 +427,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="installation" class="level1">
 <h1>Installation</h1>
-<p>SEALS is published on conda-forge as the package <code>sealsmodel</code> (the name <code>seals</code> was already taken; you still <code>import seals</code>). One <code>mamba install</code> gives you SEALS, hazelbean and the whole geospatial stack as prebuilt binaries for Windows, macOS and Linux. No compiler and no clone are needed.</p>
+<p><strong>Quickstart:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install sealsmodel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>SEALS is published on conda-forge as the package <code>sealsmodel</code> (the name <code>seals</code> was already taken; you still <code>import seals</code>). One <code>mamba install sealsmodel</code> gives you SEALS, hazelbean and the whole geospatial stack as prebuilt binaries for Windows, macOS and Linux. No compiler and no clone are needed.</p>
 <p>The <a href="#developer-install">developer install</a> below, an editable install from a clone of the repository, is still the right choice if you intend to change SEALS itself. For everyone else, the conda-forge package is the install.</p>
-<section id="install-miniforge" class="level2">
-<h2 class="anchored" data-anchor-id="install-miniforge">1. Install Miniforge</h2>
+<section id="installation-walkthrough" class="level2">
+<h2 class="anchored" data-anchor-id="installation-walkthrough">Installation Walkthrough</h2>
+<section id="install-miniforge" class="level3">
+<h3 class="anchored" data-anchor-id="install-miniforge">1. Install Miniforge</h3>
 <p>If not already installed: <strong>Miniforge</strong> — <a href="https://github.com/conda-forge/miniforge" class="uri">https://github.com/conda-forge/miniforge</a>. Install for your user account only, and accept the option to add it to your <code>PATH</code>. Miniforge ships both <code>conda</code> and <code>mamba</code> and is preconfigured to use the conda-forge channel, which is where <code>sealsmodel</code> lives.</p>
 </section>
-<section id="create-and-activate-an-environment" class="level2">
-<h2 class="anchored" data-anchor-id="create-and-activate-an-environment">2. Create and activate an environment</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="create-and-activate-an-environment" class="level3">
+<h3 class="anchored" data-anchor-id="create-and-activate-an-environment">2. Create and activate an environment</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate <span class="op">&lt;</span>your_env<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Pick your own environment name — the devstack does not require a particular one. Always activate it before running SEALS scripts.</p>
 <p>The environment starts empty on purpose; Python arrives in step 3 as a dependency of <code>sealsmodel</code>, at a version conda knows the package was built for.</p>
 </section>
-<section id="install-seals-from-conda-forge" class="level2">
-<h2 class="anchored" data-anchor-id="install-seals-from-conda-forge">3. Install SEALS from conda-forge</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install sealsmodel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is the whole install. The solve may take several minutes the first time because it brings in hazelbean, GDAL, NumPy and the rest of the stack as conda builds. <code>conda install sealsmodel</code> works too, just more slowly.</p>
+<section id="install-seals-from-conda-forge" class="level3">
+<h3 class="anchored" data-anchor-id="install-seals-from-conda-forge">3. Install SEALS from conda-forge</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install sealsmodel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the whole install. The solve may take several minutes the first time because it brings in hazelbean, GDAL, NumPy and the rest of the stack as conda builds.</p>
 </section>
-<section id="verify" class="level2">
-<h2 class="anchored" data-anchor-id="verify">4. Verify</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import seals, hazelbean; print(seals.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>A path inside your environment’s <code>site-packages</code> is the expected answer for this install. Then go to <a href="../../seals/user_guide/quickstart.html">Quickstart</a>, which makes a first run from a project folder of your own.</p>
-<p>To upgrade later, run <code>mamba update sealsmodel</code> in the activated environment.</p>
 </section>
 <section id="developer-install" class="level2">
 <h2 class="anchored" data-anchor-id="developer-install">Developer install</h2>
-<p>Use this when you want to edit SEALS and see the change the next time you run it: an <em>editable install</em> of a clone, with the Cython extension compiled on your machine. It replaces step 3 above; steps 1 and 2 still apply.</p>
-<section id="a.-install-git-and-a-cc-compiler" class="level3">
-<h3 class="anchored" data-anchor-id="a.-install-git-and-a-cc-compiler">a. Install git and a C/C++ compiler</h3>
+<p>The developer installation is for people who want to contribute changes to SEALS.</p>
+<section id="install-git-and-a-cc-compiler" class="level3">
+<h3 class="anchored" data-anchor-id="install-git-and-a-cc-compiler">1. Install git and a C/C++ compiler</h3>
 <ul>
 <li><strong>git</strong> — <a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a>. The install starts from a clone.</li>
 <li>SEALS compiles a Cython extension (<code>seals/seals_cython_functions.pyx</code>) when it is installed from source, so <strong>a C/C++ compiler is required</strong> — see <a href="https://justinandrewjohnson.com/earth_economy_devstack/installation.html#compiling-cc-code">Compiling C/C++ Code</a>.
@@ -465,32 +465,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 </section>
-<section id="b.-get-the-dependency-stack-from-conda-forge" class="level3">
-<h3 class="anchored" data-anchor-id="b.-get-the-dependency-stack-from-conda-forge">b. Get the dependency stack from conda-forge</h3>
-<p>The clone needs hazelbean, GDAL, NumPy and friends as conda builds, not pip wheels. Either install <code>sealsmodel</code> and then remove just the package, keeping everything it pulled in:</p>
+<section id="install-and-then-remove-seals" class="level3">
+<h3 class="anchored" data-anchor-id="install-and-then-remove-seals">2. Install and then remove SEALS</h3>
+<p>The clone needs hazelbean, GDAL, NumPy and friends, which we will still get via condaforge. The following two commands install SEALS as above (to get all the dependencies) and then removes SEALS (but leaves the dependencies).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install sealsmodel</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> remove sealsmodel <span class="at">--force</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>or install the dependencies directly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install hazelbean cython libgdal-hdf5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Removing the package is what keeps a packaged copy from shadowing your clone. Use <code>conda remove --force</code>, not <code>pip uninstall</code>: conda owns the package, and pip leaves zombie folders behind.</p>
 </section>
-<section id="c.-clone-seals-into-the-devstack-layout" class="level3">
-<h3 class="anchored" data-anchor-id="c.-clone-seals-into-the-devstack-layout">c.&nbsp;Clone SEALS into the devstack layout</h3>
+<section id="clone-seals-into-the-devstack-layout" class="level3">
+<h3 class="anchored" data-anchor-id="clone-seals-into-the-devstack-layout">3. Clone SEALS into the devstack layout</h3>
 <p>You may clone SEALS wherever you want, but the documentation assumes the repo lives in its own project folder under <code>~/Files/</code> (<code>C:\Users\&lt;you&gt;\Files\</code> on Windows). The command below clones it into a <code>seals</code> subfolder there.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/Files/seals <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/Files/seals</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/jandrewjohnson/seals.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/Files/seals <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/Files/seals</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/jandrewjohnson/seals.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The second <code>seals</code> is the repository itself. Projects, and everything SEALS writes, go beside it in the first <code>seals</code>.</p>
 </section>
-<section id="d.-make-the-editable-install" class="level3">
-<h3 class="anchored" data-anchor-id="d.-make-the-editable-install">d.&nbsp;Make the editable install</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/Files/seals/seals</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> . <span class="at">--no-deps</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="install-the-the-repository-via-pip" class="level3">
+<h3 class="anchored" data-anchor-id="install-the-the-repository-via-pip">4. Install the the repository via pip</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/Files/seals/seals</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> . <span class="at">--no-deps</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>--no-deps</code> is deliberate, and required. SEALS declares <code>hazelbean&gt;=2.1.0</code> as its only runtime dependency, and you already have it from step b. Letting pip resolve dependencies again tends to replace conda’s builds of the geospatial stack (GDAL and friends) with incompatible wheels.</p>
-</section>
-<section id="e.-verify" class="level3">
-<h3 class="anchored" data-anchor-id="e.-verify">e. Verify</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import seals; print(seals.__file__)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>For this install the path must be inside your clone, not under <code>site-packages</code>. If it is under <code>site-packages</code>, a packaged copy is shadowing the clone: remove it as in step b and redo the editable install.</p>
 </section>
 <section id="other-devstack-repos-optional" class="level3">
 <h3 class="anchored" data-anchor-id="other-devstack-repos-optional">Other devstack repos (optional)</h3>

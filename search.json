@@ -6047,27 +6047,39 @@
     "href": "earth_economy_devstack/base_data/index.html",
     "title": "Base Data",
     "section": "",
-    "text": "The Earth-Economy Devstack maintains a single shared, curated data store, base_data, that all projects in the stack draw from. Rather than each project bundling (or losing track of) its own copies of common inputs, code references data by a ref path (a path relative to the base_data root) and ProjectFlow’s get_path() resolves it: locally if present, from a shared data root if one is mounted, and otherwise by downloading it from our cloud storage automatically. The full resolution order is defined in Conventions.\nThe published store, with every dataset, its metadata and its download link, is at https://data.teemlabs.org.\nTwo properties make base_data more than a pile of files:"
+    "text": "The Earth-Economy Devstack maintains a single shared, curated data store, base_data, that all projects in the stack draw from. Rather than each project bundling (or losing track of) its own copies of common inputs, code references data by a ref path (a path relative to the base_data root) and ProjectFlow’s get_path() resolves it: locally if present, from a shared data root if one is mounted, and otherwise by downloading it from our cloud storage automatically. The full resolution order is defined in Conventions.\nThe published store, with every dataset, its metadata and its download link, is at https://data.teemlabs.org.\nTwo properties make base_data more than a pile of files:",
+    "crumbs": [
+      "Base Data"
+    ]
   },
   {
     "objectID": "earth_economy_devstack/base_data/index.html#whats-in-it",
     "href": "earth_economy_devstack/base_data/index.html#whats-in-it",
     "title": "Base Data",
     "section": "What’s in it",
-    "text": "What’s in it\nData are grouped into collections, one per top-level folder. The published ones are listed, with their datasets, at https://data.teemlabs.org:\n\npyramids: the canonical ha_per_cell_&lt;rung&gt;sec.tif grids the POG system is built on.\nlulc: land-use and land-cover time series, starting with the ESA CCI / C3S annual maps.\n\nMore of the local store (cartographic, gtappy, luh2, iams, crops, soil, seals, global_invest, gtap_invest, invest_sample_data) is published as each folder gets its ingestion script. Within these, files follow the EE Spec naming and organization rules in Conventions, so a ref path is predictable from what the data is."
+    "text": "What’s in it\nData are grouped into collections, one per top-level folder. The published ones are listed, with their datasets, at https://data.teemlabs.org:\n\npyramids: the canonical ha_per_cell_&lt;rung&gt;sec.tif grids the POG system is built on.\nlulc: land-use and land-cover time series, starting with the ESA CCI / C3S annual maps.\n\nMore of the local store (cartographic, gtappy, luh2, iams, crops, soil, seals, global_invest, gtap_invest, invest_sample_data) is published as each folder gets its ingestion script. Within these, files follow the EE Spec naming and organization rules in Conventions, so a ref path is predictable from what the data is.",
+    "crumbs": [
+      "Base Data"
+    ]
   },
   {
     "objectID": "earth_economy_devstack/base_data/index.html#how-data-get-in",
     "href": "earth_economy_devstack/base_data/index.html#how-data-get-in",
     "title": "Base Data",
     "section": "How data get in",
-    "text": "How data get in\nEach dataset folder carries its own lineage: an ingestion script (&lt;name&gt;_base_data_ingestion.py) that turns the raw input in its raw/ folder into POGs, and the manifest it writes (&lt;name&gt;_base_data_manifest.csv) listing each dataset with its metadata. publish_base_data.py in this repo combines every manifest, publishes what is new or changed as one release, and rebuilds the pages at data.teemlabs.org. The rules are in Conventions, under “Base data dataset folders and raw/”, and the design in the base data store proposal.\nThe pages there are built from this folder: _landing.html (the landing page), _folder_page.qmd (every collection and dataset folder page), _styles.css, _collections.yml (the collections’ titles and descriptions) and teems_logo.png. The leading underscores keep this site from rendering them itself. How to edit them is in Contributing Base Data."
+    "text": "How data get in\nEach dataset folder carries its own lineage: an ingestion script (&lt;name&gt;_base_data_ingestion.py) that turns the raw input in its raw/ folder into POGs, and the manifest it writes (&lt;name&gt;_base_data_manifest.csv) listing each dataset with its metadata. publish_base_data.py in this repo combines every manifest, publishes what is new or changed as one release, and rebuilds the pages at data.teemlabs.org. The rules are in Conventions, under “Base data dataset folders and raw/”, and the design in the base data store proposal.\nThe pages there are built from this folder: _landing.html (the landing page), _folder_page.qmd (every collection and dataset folder page), _styles.css, _collections.yml (the collections’ titles and descriptions) and teems_logo.png. The leading underscores keep this site from rendering them itself. How to edit them is in Contributing Base Data.",
+    "crumbs": [
+      "Base Data"
+    ]
   },
   {
     "objectID": "earth_economy_devstack/base_data/index.html#contributing",
     "href": "earth_economy_devstack/base_data/index.html#contributing",
     "title": "Base Data",
     "section": "Contributing",
-    "text": "Contributing\nLab members can contribute their project’s input data so their work runs seamlessly for everyone else, by putting it in the base_data_submissions/ inbox on the NatCapTEEMs shared drive: see Contributing Base Data for the submissions workflow and for how curators promote and publish, and POGs for the raster format contributions are cleaned into.\nChanges to the store itself are tracked in the Base Data release notes."
+    "text": "Contributing\nLab members can contribute their project’s input data so their work runs seamlessly for everyone else, by putting it in the base_data_submissions/ inbox on the NatCapTEEMs shared drive: see Contributing Base Data for the submissions workflow and for how curators promote and publish, and POGs for the raster format contributions are cleaned into.\nChanges to the store itself are tracked in the Base Data release notes.",
+    "crumbs": [
+      "Base Data"
+    ]
   }
 ]

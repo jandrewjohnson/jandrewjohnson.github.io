@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Proposal: the canonical base data store – Justin Andrew Johnson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fabeed3329234993a4d83c1b0fda0427.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Justin Andrew Johnson</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-research" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Research</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-research">    
+        <li>
+    <a class="dropdown-item" href="../research/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../publications/index.html">
+ <span class="dropdown-text">Publications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../books/index.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data/index.html">
+ <span class="dropdown-text">Data</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teaching" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teaching</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teaching">    
+        <li>
+    <a class="dropdown-item" href="../teaching/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/applied_earth_economy_modeling.html">
+ <span class="dropdown-text">Applied Earth-Economy Modeling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/big_data_ml_and_ai_for_economists.html">
+ <span class="dropdown-text">Big Data, Machine Learning and AI for Economists</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../teaching/environmental_economics.html">
+ <span class="dropdown-text">Undergraduate Environmental and Natural ResourceEconomics</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../gtap_invest/index.html">
+ <span class="dropdown-text">GTAP-InVEST</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../seals/index.html">
+ <span class="dropdown-text">SEALS</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../global_invest/index.html">
+ <span class="dropdown-text">Global InVEST</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-software" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Software</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-software">    
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/index.html">
+ <span class="dropdown-text">Earth-Economy Devstack</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/installation.html">
+ <span class="dropdown-text">Installation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/hazelbean.html">
+ <span class="dropdown-text">Hazelbean</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/gtappy.html">
+ <span class="dropdown-text">GTAPPy</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../earth_economy_devstack/base_data.qmd">
+ <span class="dropdown-text">Base Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../mesh/index.html">
+ <span class="dropdown-text">MESH</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../projects/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#ngfs-pnas">
+ <span class="dropdown-text">NGFS PNAS</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#elasticities-assessment">
+ <span class="dropdown-text">Elasticities Assessment</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#nff-global">
+ <span class="dropdown-text">Nature Futures Framework Global</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#nz-brazil">
+ <span class="dropdown-text">Net-Zero Brazil</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#nz-south-africa">
+ <span class="dropdown-text">Net-Zero South Africa</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/index.html#seals-es">
+ <span class="dropdown-text">SEALS-ES</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../cv-bio/index.html"> 
+<span class="menu-text">CV/Bio</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jandrewjohnson"> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link active" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#decisions-at-a-glance" id="toc-decisions-at-a-glance" class="nav-link" data-scroll-target="#decisions-at-a-glance">Decisions at a glance</a></li>
+  <li><a href="#vocabulary" id="toc-vocabulary" class="nav-link" data-scroll-target="#vocabulary">Vocabulary</a></li>
+  <li><a href="#the-source-stack" id="toc-the-source-stack" class="nav-link" data-scroll-target="#the-source-stack">The source stack</a></li>
+  <li><a href="#r2-layout" id="toc-r2-layout" class="nav-link" data-scroll-target="#r2-layout">R2 layout</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a>
+  <ul class="collapse">
+  <li><a href="#the-catalogue-entry" id="toc-the-catalogue-entry" class="nav-link" data-scroll-target="#the-catalogue-entry">The catalogue entry</a></li>
+  </ul></li>
+  <li><a href="#versioning" id="toc-versioning" class="nav-link" data-scroll-target="#versioning">Versioning</a>
+  <ul class="collapse">
+  <li><a href="#three-identifiers-three-jobs" id="toc-three-identifiers-three-jobs" class="nav-link" data-scroll-target="#three-identifiers-three-jobs">Three identifiers, three jobs</a></li>
+  <li><a href="#meaning-goes-in-the-name-revisions-do-not" id="toc-meaning-goes-in-the-name-revisions-do-not" class="nav-link" data-scroll-target="#meaning-goes-in-the-name-revisions-do-not">Meaning goes in the name, revisions do not</a></li>
+  <li><a href="#releases" id="toc-releases" class="nav-link" data-scroll-target="#releases">Releases</a></li>
+  <li><a href="#what-a-user-experiences" id="toc-what-a-user-experiences" class="nav-link" data-scroll-target="#what-a-user-experiences">What a user experiences</a></li>
+  </ul></li>
+  <li><a href="#publishing" id="toc-publishing" class="nav-link" data-scroll-target="#publishing">Publishing</a>
+  <ul class="collapse">
+  <li><a href="#manifest" id="toc-manifest" class="nav-link" data-scroll-target="#manifest">Manifests and ingestion scripts</a></li>
+  <li><a href="#the-function" id="toc-the-function" class="nav-link" data-scroll-target="#the-function">The function</a></li>
+  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps">Steps</a></li>
+  <li><a href="#concurrent-publications" id="toc-concurrent-publications" class="nav-link" data-scroll-target="#concurrent-publications">Concurrent publications</a></li>
+  <li><a href="#the-gate" id="toc-the-gate" class="nav-link" data-scroll-target="#the-gate">The gate</a></li>
+  </ul></li>
+  <li><a href="#pages" id="toc-pages" class="nav-link" data-scroll-target="#pages">Browsable pages</a></li>
+  <li><a href="#google-drive" id="toc-google-drive" class="nav-link" data-scroll-target="#google-drive">Google Drive</a>
+  <ul class="collapse">
+  <li><a href="#where-the-mirror-and-the-inbox-live" id="toc-where-the-mirror-and-the-inbox-live" class="nav-link" data-scroll-target="#where-the-mirror-and-the-inbox-live">Where the mirror and the inbox live</a></li>
+  <li><a href="#the-mirror" id="toc-the-mirror" class="nav-link" data-scroll-target="#the-mirror">The mirror</a></li>
+  <li><a href="#submissions" id="toc-submissions" class="nav-link" data-scroll-target="#submissions">Submissions</a></li>
+  </ul></li>
+  <li><a href="#get_path-resolution-order" id="toc-get_path-resolution-order" class="nav-link" data-scroll-target="#get_path-resolution-order">get_path resolution order</a></li>
+  <li><a href="#subset-and-overview-reads" id="toc-subset-and-overview-reads" class="nav-link" data-scroll-target="#subset-and-overview-reads">Subset and overview reads</a>
+  <ul class="collapse">
+  <li><a href="#the-call" id="toc-the-call" class="nav-link" data-scroll-target="#the-call">The call</a></li>
+  <li><a href="#rules" id="toc-rules" class="nav-link" data-scroll-target="#rules">Rules</a></li>
+  <li><a href="#mechanics" id="toc-mechanics" class="nav-link" data-scroll-target="#mechanics">Mechanics</a></li>
+  </ul></li>
+  <li><a href="#base_data_cache" id="toc-base_data_cache" class="nav-link" data-scroll-target="#base_data_cache">base_data_cache</a>
+  <ul class="collapse">
+  <li><a href="#layout" id="toc-layout" class="nav-link" data-scroll-target="#layout">Layout</a></li>
+  <li><a href="#behaviour" id="toc-behaviour" class="nav-link" data-scroll-target="#behaviour">Behaviour</a></li>
+  <li><a href="#rules-1" id="toc-rules-1" class="nav-link" data-scroll-target="#rules-1">Rules</a></li>
+  </ul></li>
+  <li><a href="#tiers" id="toc-tiers" class="nav-link" data-scroll-target="#tiers">Tiers and access</a></li>
+  <li><a href="#the-sync-and-status-tool" id="toc-the-sync-and-status-tool" class="nav-link" data-scroll-target="#the-sync-and-status-tool">The sync and status tool</a></li>
+  <li><a href="#google-cloud-transition" id="toc-google-cloud-transition" class="nav-link" data-scroll-target="#google-cloud-transition">Google Cloud transition</a></li>
+  <li><a href="#implementation-order" id="toc-implementation-order" class="nav-link" data-scroll-target="#implementation-order">Implementation order</a></li>
+  <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Proposal: the canonical base data store</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Status:</strong> proposal 2026-10-16; adopted 2026-10-16. Nothing implements this yet. This document records the design decisions for moving base_data from its current scattered copies to one canonical, versioned store on Cloudflare R2, and is the contract the hazelbean implementation will follow. Open questions are collected at the end.</p>
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
+<p>Base data currently lives in several places that disagree with each other:</p>
+<ul>
+<li>the public Google Cloud bucket <code>gtap_invest_seals_2023_04_21</code> (181 objects, 27.2 GiB), which <code>get_path</code> downloads from anonymously;</li>
+<li>the TEEMs Google Drive <code>Files/base_data</code> folder, reached through the shared-data-root tier;</li>
+<li>each person’s local <code>~/Files/base_data</code> (126 GB on the maintainer’s machine);</li>
+<li>project folders, where regenerated files accumulate.</li>
+</ul>
+<p>Three properties of the current system let these copies drift apart:</p>
+<ol type="1">
+<li><strong><code>get_path</code> only checks existence.</strong> A stale local file shadows a newer remote one indefinitely, and nothing notices.</li>
+<li><strong>Nothing records which bytes a run used.</strong> A result cannot be traced back to the exact data that produced it.</li>
+<li><strong>There is no definition of “the official version”.</strong> Each copy is equally authoritative, so none is.</li>
+</ol>
+<p>A fourth fact makes the cleanup unavoidable: POGs written before the overview rule of September 2026 fail the current <code>is_path_pog</code> level check and must be regenerated (pyramids manuscript, D.10). Most of what is in the cloud today is in that state.</p>
+</section>
+<section id="decisions-at-a-glance" class="level2">
+<h2 class="anchored" data-anchor-id="decisions-at-a-glance">Decisions at a glance</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Canonical store</td>
+<td>Cloudflare R2. Public bucket <code>teems-public-data</code> served at <code>https://data.teemlabs.org</code>; private bucket <code>teems-private-data</code> for paid access.</td>
+</tr>
+<tr class="even">
+<td>Initial contents</td>
+<td>Published from the maintainer’s local <code>~/Files/base_data</code>, which is the reference copy. The Google Cloud contents are out of date and are neither reconciled nor migrated.</td>
+</tr>
+<tr class="odd">
+<td>Source of truth</td>
+<td>A <strong>catalogue</strong> in R2: one entry per dataset, recording its files, hashes, POG semantics, dependencies and provenance.</td>
+</tr>
+<tr class="even">
+<td>Intended contents</td>
+<td>Each dataset folder in <code>base_data/</code> carries an <strong>ingestion script</strong> and the <strong>manifest</strong> it writes (<code>&lt;name&gt;_base_data_ingestion.py</code>, <code>&lt;name&gt;_base_data_manifest.csv</code>), listing that folder’s datasets with their metadata. <code>earth_economy_devstack/publish_base_data.py</code> combines every manifest, compares the result with the local files and the latest release, and publishes what is new or changed.</td>
+</tr>
+<tr class="odd">
+<td>Writes</td>
+<td>Only through <strong>publishing</strong>, which runs a quality gate. A lab member’s submission gets there by <strong>promotion</strong>: a curator moves it from the submissions inbox into <code>base_data/</code> and the manifest, then publishes it like any other row.</td>
+</tr>
+<tr class="even">
+<td>Release cadence</td>
+<td>Every publication cuts a release. A publication may carry several datasets, so a coherent multi-dataset change is one release.</td>
+</tr>
+<tr class="odd">
+<td>Versioning</td>
+<td>Ref paths are stable and carry meaning, never revision numbers. The current version sits at its plain path; replaced versions are archived under <code>static/</code>, unless a publication opts out. Every run writes a lock file of what it used.</td>
+</tr>
+<tr class="even">
+<td>Google Drive</td>
+<td>A generated, read-only <strong>mirror</strong> of the latest release on its own shared drive, and a <strong>submissions</strong> inbox, <code>base_data_submissions/</code>, beside <code>base_data/</code> on the NatCapTEEMs shared drive.</td>
+</tr>
+<tr class="odd">
+<td>Submissions</td>
+<td>A separate root, <code>base_data_submissions/</code>, never inside <code>base_data/</code>. How to submit and promote is in <a href="../earth_economy_devstack/contributing_base_data.html">Contributing Base Data</a>.</td>
+</tr>
+<tr class="even">
+<td>Local <code>base_data/</code></td>
+<td>The catalogued files, plus each dataset’s ingestion script and manifest beside them; no other code.</td>
+</tr>
+<tr class="odd">
+<td>Subsets</td>
+<td><code>get_path(..., rung=, subset=)</code> reads a window by HTTP range request into a separate <code>base_data_cache/</code>.</td>
+</tr>
+<tr class="even">
+<td>Google Cloud</td>
+<td>Stays up for now as a temporary fallback for refs not yet catalogued; retired later.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vocabulary" class="level2">
+<h2 class="anchored" data-anchor-id="vocabulary">Vocabulary</h2>
+<ul>
+<li><strong>Ref path:</strong> a path relative to the base_data root, as defined in <a href="../earth_economy_devstack/conventions.html#get_path-and-ref_path">Conventions</a>. Code refers to data only by ref path.</li>
+<li><strong>Dataset:</strong> the unit that is catalogued, versioned, published and synced. One or more files that only make sense together (see <a href="#datasets">Datasets</a>).</li>
+<li><strong>Catalogue entry:</strong> the immutable JSON record describing one version of one dataset. The latest release says which version is current.</li>
+<li><strong>Content version:</strong> a dataset’s identity at the byte level, its <code>sha256</code>.</li>
+<li><strong>Release:</strong> an immutable snapshot of the whole catalogue: every dataset’s ref path mapped to its content version.</li>
+<li><strong>Lock file:</strong> the record, written by every run, of exactly which content version of each dataset that run used.</li>
+<li><strong>Manifest:</strong> a dataset folder’s CSV, <code>&lt;name&gt;_base_data_manifest.csv</code>, listing what that folder should publish, one row per dataset with its metadata. Combined, the manifests record what base data is <em>intended</em> to contain; R2 records what <em>is</em> published.</li>
+<li><strong>Ingestion script:</strong> <code>&lt;name&gt;_base_data_ingestion.py</code>, beside a dataset’s files, which brings them into <code>base_data/</code> (converting to POGs if needed) and writes its manifest.</li>
+<li><strong>Publishing:</strong> the only operation that writes to R2. It turns the combined manifests and local <code>base_data/</code> into a release.</li>
+<li><strong>Promotion:</strong> moving a submission from the submissions inbox into <code>base_data/</code> under its canonical name, with a manifest row. It writes nothing to R2; publishing follows.</li>
+<li><strong>Curator:</strong> a person holding an R2 write token, and therefore able to publish.</li>
+<li><strong>Tier:</strong> <code>public</code> or <code>private</code>, meaning which bucket a dataset lives in.</li>
+</ul>
+</section>
+<section id="the-source-stack" class="level2">
+<h2 class="anchored" data-anchor-id="the-source-stack">The source stack</h2>
+<p>From most canonical to most local:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Location</th>
+<th>Role</th>
+<th>Who writes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R2 public / private</td>
+<td><code>data.teemlabs.org</code>, <code>teems-private-data</code></td>
+<td>Canonical</td>
+<td><code>hb.publish_base_data</code> only</td>
+</tr>
+<tr class="even">
+<td>Drive mirror</td>
+<td>Shared drive <em>EE Base Data</em></td>
+<td>Generated copy of the latest release, for people who don’t program</td>
+<td>the publish step only</td>
+</tr>
+<tr class="odd">
+<td>Local base_data</td>
+<td><code>~/Files/base_data/</code></td>
+<td>Cache of the catalogue</td>
+<td><code>get_path</code>, the sync tool</td>
+</tr>
+<tr class="even">
+<td>Submissions</td>
+<td><code>NatCapTEEMs/Files/base_data_submissions/</code> on Drive, and <code>~/Files/base_data_submissions/</code></td>
+<td>Inbox, not yet official</td>
+<td>lab members</td>
+</tr>
+<tr class="odd">
+<td>Project base data</td>
+<td><code>&lt;project&gt;/base_data/</code></td>
+<td>Project-specific data</td>
+<td>the project</td>
+</tr>
+<tr class="even">
+<td>Inputs</td>
+<td><code>&lt;project&gt;/input_template/</code>, <code>&lt;project&gt;/input/</code></td>
+<td>Tracked definitions and local overrides</td>
+<td>the project</td>
+</tr>
+<tr class="odd">
+<td>Outputs</td>
+<td><code>&lt;project&gt;/intermediate/</code>, <code>cur_dir</code></td>
+<td>Generated by tasks</td>
+<td>ProjectFlow</td>
+</tr>
+<tr class="even">
+<td>Derived cache</td>
+<td><code>~/Files/base_data_cache/</code></td>
+<td>Subsets and overview extracts; disposable</td>
+<td><code>get_path</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="r2-layout" class="level2">
+<h2 class="anchored" data-anchor-id="r2-layout">R2 layout</h2>
+<p>The two buckets share one layout. The current version of every dataset sits at its plain ref path, so the bucket reads like <code>base_data/</code>. Folders the store uses for itself are reserved: <code>static/</code>, and anything starting with an underscore. The gate refuses ref paths that start with either.</p>
+<pre><code>teems-public-data/
+  &lt;ref_path&gt;                                          the current version, overwritten by each new one
+  static/&lt;ref_path without extension&gt;/v&lt;release&gt;.&lt;ext&gt;  archived versions, never changed
+  _catalogue/&lt;dataset_ref_path&gt;/&lt;release_id&gt;.json     immutable entry, written by the release that published that version
+  _release/&lt;release_id&gt;.json                          immutable release snapshots
+  _release/latest.json                                pointer to the newest non-yanked release
+  _release/yanked.json                                releases that "latest" must skip
+  _staging/&lt;ref_path&gt;/&lt;sha16&gt;.&lt;ext&gt;                   new bytes waiting for their release to commit (normally empty)</code></pre>
+<p>For example, after a second release of the 1-degree area raster:</p>
+<pre><code>https://data.teemlabs.org/pyramids/ha_per_cell_3600sec.tif                    the current version
+https://data.teemlabs.org/static/pyramids/ha_per_cell_3600sec/v2026_10_19_1.tif  the version published in release 2026.10.19.1</code></pre>
+<p>An archived version is named after the release that published it, with dots written as underscores. Catalogue entries are keyed by release ID too: the release ID is claimed before the entries are written, so the key is always unique, even when a dataset returns to bytes it had in an earlier version.</p>
+<p><strong>Archiving is optional per publication.</strong> By default, the version being replaced is copied into <code>static/</code> before the plain path is overwritten. <code>archive_previous=False</code> skips that to save storage. The old version is then gone, and its successor’s catalogue entry records <code>archive_key: null</code>, so a lock file or pinned release that needs it fails clearly rather than silently.</p>
+<p><strong>What this layout trades.</strong> Plain paths are friendly for people, QGIS and links, and no current version is stored twice. The cost is that a plain path is overwritten in place:</p>
+<ul>
+<li><strong>A reader caught during an update can see mixed bytes.</strong> A window read is many HTTP range requests against one URL. If the plain path is replaced partway through, the reader could combine an old header with new blocks. Updates are rare and the replacement takes seconds, but readers that must be exact can guard against it: an object’s ETag changes whenever it is replaced, so a reader records the ETag at the start and sends <code>If-Match: &lt;etag&gt;</code> with each range request. R2 then refuses (412) instead of serving bytes from a newer version, and the reader starts over. (Object metadata such as the stored sha256 is not exposed through the public domain; full downloads are checked against the catalogue’s sha256 after download.)</li>
+<li><strong>Plain paths are cached briefly</strong> (<code>Cache-Control: max-age=3600</code>). Archived versions never change and are cached indefinitely.</li>
+<li><strong>There is a short window after each commit</strong> in which <code>latest.json</code> names the new version while the plain path still serves the old bytes. Publishing copies them into place straight after committing. If it is interrupted, the manifest command reports the dataset as <code>unfinished</code> and completes it on its next run.</li>
+</ul>
+<p>Only curators hold write tokens. No bucket lock is used, so a licensing mistake, such as publishing restricted data to the public tier, remains correctable by deletion.</p>
+</section>
+<section id="datasets" class="level2">
+<h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
+<p>Each file belongs to exactly one dataset. A file shared by many datasets, such as <code>pyramids/ha_per_cell_&lt;rung&gt;sec.tif</code>, is its own dataset, and other datasets reference it as a dependency.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 44%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Kind</th>
+<th>Members</th>
+<th>Dataset ref path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pog</code></td>
+<td>One global POG, plus its observed-area companion if it has one (D.2.6)</td>
+<td>the POG</td>
+</tr>
+<tr class="even">
+<td><code>subpog</code></td>
+<td>One subpog</td>
+<td>the subpog</td>
+</tr>
+<tr class="odd">
+<td><code>class_stack</code></td>
+<td>K per-class proportion POGs plus the closure class (§6)</td>
+<td>the stack’s folder</td>
+</tr>
+<tr class="even">
+<td><code>tileset</code></td>
+<td>Tile folder, VRT, and the coarse companion POG for rungs above the tile edge (A.6)</td>
+<td>the VRT</td>
+</tr>
+<tr class="odd">
+<td><code>zone_set</code></td>
+<td>GeoPackage, attribute table, label POG per rung, per-zone area POGs per rung (Appendix C)</td>
+<td>the GeoPackage</td>
+</tr>
+<tr class="even">
+<td><code>table</code></td>
+<td>CSV or spreadsheet, plus its README</td>
+<td>the table</td>
+</tr>
+<tr class="odd">
+<td><code>vector</code></td>
+<td>Non-canonical vector file</td>
+<td>the file</td>
+</tr>
+<tr class="even">
+<td><code>other</code></td>
+<td>Anything else, such as a zip of sample data</td>
+<td>the file</td>
+</tr>
+</tbody>
+</table>
+<p><strong>A dataset moves as a unit.</strong> Publishing, download and sync are all-or-nothing per dataset. Otherwise a VRT could reference tiles that haven’t arrived, or a per-class stack could be half updated.</p>
+<p><strong>Tile sets keep their D.5.1 layout on R2.</strong> The VRT and its tile folder sit at their plain ref paths, so the VRT’s relative sources resolve against its own URL and <code>/vsicurl/</code> on it fetches only the tiles a window touches. An archived tile set keeps the same relative layout under its <code>static/…/v&lt;release&gt;/</code> folder. (Tile sets can’t be published yet.)</p>
+<section id="the-catalogue-entry" class="level3">
+<h3 class="anchored" data-anchor-id="the-catalogue-entry">The catalogue entry</h3>
+<p>One immutable JSON file per dataset version, at <code>_catalogue/&lt;dataset_ref_path&gt;/&lt;release_id&gt;.json</code>. The release maps each dataset to its <code>dataset_sha256</code>, its <code>version</code>, and the <code>release</code> that published it, which names the entry to read:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dataset"</span><span class="fu">:</span> <span class="st">"pyramids/ha_per_cell_10sec.tif"</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"kind"</span><span class="fu">:</span> <span class="st">"pog"</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"tier"</span><span class="fu">:</span> <span class="st">"public"</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"version"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dataset_sha256"</span><span class="fu">:</span> <span class="st">"&lt;sha256 over the sorted member list&gt;"</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"release"</span><span class="fu">:</span> <span class="st">"2026.10.20.1"</span><span class="fu">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"lattice"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"rung"</span><span class="fu">:</span> <span class="st">"10"</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"storage_form"</span><span class="fu">:</span> <span class="st">"pog"</span><span class="fu">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"tile_edge_degrees"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"coarse_companion"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"extent"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">-180</span><span class="ot">,</span> <span class="dv">-90</span><span class="ot">,</span> <span class="dv">180</span><span class="ot">,</span> <span class="dv">90</span><span class="ot">]</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"semantics"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"variable_class"</span><span class="fu">:</span> <span class="st">"extensive"</span><span class="fu">,</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"intensive_weighting"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"denominator"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"observed_area"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"units"</span><span class="fu">:</span> <span class="st">"ha"</span><span class="fu">,</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"stats"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"sum"</span><span class="fu">:</span> <span class="fl">51007200000.0</span><span class="fu">,</span> <span class="dt">"min"</span><span class="fu">:</span> <span class="fl">0.0</span><span class="fu">,</span> <span class="dt">"max"</span><span class="fu">:</span> <span class="fl">9.56</span><span class="fu">,</span> <span class="dt">"mean"</span><span class="fu">:</span> <span class="fl">6.07</span><span class="fu">}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"files"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"ref_path"</span><span class="fu">:</span> <span class="st">"pyramids/ha_per_cell_10sec.tif"</span><span class="fu">,</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"size"</span><span class="fu">:</span> <span class="dv">1234567890</span><span class="fu">,</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"sha256"</span><span class="fu">:</span> <span class="st">"&lt;64 hex&gt;"</span><span class="fu">,</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"md5"</span><span class="fu">:</span> <span class="st">"&lt;32 hex&gt;"</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"depends_on"</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"conformance"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"pog_spec"</span><span class="fu">:</span> <span class="st">"2026-09"</span><span class="fu">,</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"validator"</span><span class="fu">:</span> <span class="st">"hazelbean &lt;version&gt;"</span><span class="fu">,</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"checks"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"is_path_pog"</span><span class="ot">,</span> <span class="st">"is_path_pog_overview_conformant"</span><span class="ot">]</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"license"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"id"</span><span class="fu">:</span> <span class="st">"CC-BY-4.0"</span><span class="fu">,</span> <span class="dt">"redistribution"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">},</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Hectares of ground in each cell of the canonical 10-arcsecond global grid; the denominator of area-weighted aggregation at that rung."</span><span class="fu">,</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"provenance"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"source"</span><span class="fu">:</span> <span class="st">"computed from the WGS84 ellipsoid"</span><span class="fu">,</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"hazelbean &lt;commit&gt; pog.write_ha_per_cell_pog"</span><span class="fu">,</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"promoted_from"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"published_by"</span><span class="fu">:</span> <span class="st">"jajohns"</span><span class="fu">,</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"published_at"</span><span class="fu">:</span> <span class="st">"2026-10-20T14:02:11Z"</span><span class="fu">,</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"note"</span><span class="fu">:</span> <span class="st">"Regenerated under the September 2026 overview rule."</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"previous"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"dataset_sha256"</span><span class="fu">:</span> <span class="st">"&lt;…&gt;"</span><span class="fu">,</span> <span class="dt">"version"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">"release"</span><span class="fu">:</span> <span class="st">"2026.10.18.1"</span><span class="fu">,</span> <span class="dt">"archive_key"</span><span class="fu">:</span> <span class="st">"static/pyramids/ha_per_cell_10sec/v2026_10_18_1.tif"</span><span class="fu">}</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dataset</code>, <code>kind</code>, <code>tier</code></td>
+<td>Identity. A ref path exists in exactly one tier.</td>
+</tr>
+<tr class="even">
+<td><code>version</code>, <code>dataset_sha256</code>, <code>release</code></td>
+<td>Content version and the release that published it. <code>dataset_sha256</code> is the sha256 of the sorted <code>ref_path&lt;TAB&gt;sha256</code> lines of its members. Whether the dataset is current or retired is recorded in the release, not here, so that entries never change.</td>
+</tr>
+<tr class="odd">
+<td><code>lattice</code></td>
+<td>Rung, storage form (D.5.2 asks the catalogue to record it), tile edge, coarse companion, extent.</td>
+</tr>
+<tr class="even">
+<td><code>semantics</code></td>
+<td>Variable class and weighting (D.2.4), denominator and observed-area companion as <code>ref_path@dataset_sha256</code>, units, and the exact statistics from the header (Requirement 4), so global totals need no download.</td>
+</tr>
+<tr class="odd">
+<td><code>files</code></td>
+<td>Every member file with its ref path, size, <code>sha256</code> (integrity) and <code>md5</code>. The md5 lets files be compared with Google Drive’s <code>md5Checksum</code> without downloading.</td>
+</tr>
+<tr class="even">
+<td><code>depends_on</code></td>
+<td>Other datasets this one requires, as <code>ref_path@dataset_sha256</code>. Derived from <code>semantics</code> plus any declared extras.</td>
+</tr>
+<tr class="odd">
+<td><code>conformance</code></td>
+<td>The POG spec version and validator version it passed, and which checks ran. When the validator tightens, a sweep re-checks entries against the new spec. Not recorded yet.</td>
+</tr>
+<tr class="even">
+<td><code>license</code></td>
+<td>Licence identifier, and whether redistribution is permitted. The gate refuses a private-tier publication without a redistribution right. Only the identifier is recorded so far.</td>
+</tr>
+<tr class="odd">
+<td><code>description</code></td>
+<td>What the data are and how to interpret them, from the manifest row.</td>
+</tr>
+<tr class="even">
+<td><code>provenance</code></td>
+<td>Source, producing code, <code>promoted_from</code> (the submission ref path it was promoted from, or null when published straight from <code>base_data/</code>; never a curator’s local path, since the catalogue is public), who published it, when, and the release’s one-line note.</td>
+</tr>
+<tr class="odd">
+<td><code>previous</code></td>
+<td>The version this one replaced (<code>dataset_sha256</code>, <code>version</code>, <code>release</code>), or null for a first version. Following <code>previous</code> walks the whole history, so a local file can be identified as an old version rather than an unknown modification.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="versioning" class="level2">
+<h2 class="anchored" data-anchor-id="versioning">Versioning</h2>
+<section id="three-identifiers-three-jobs" class="level3">
+<h3 class="anchored" data-anchor-id="three-identifiers-three-jobs">Three identifiers, three jobs</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Identifier</th>
+<th>Example</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ref path</td>
+<td><code>lulc/esa/lulc_esa_2020_10sec.tif</code></td>
+<td>What code uses. Human-readable and stable.</td>
+</tr>
+<tr class="even">
+<td>Content version</td>
+<td><code>dataset_sha256</code></td>
+<td>What the bytes are.</td>
+</tr>
+<tr class="odd">
+<td>Release</td>
+<td><code>2026.10.20.1</code></td>
+<td>A citable snapshot of the whole catalogue.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="meaning-goes-in-the-name-revisions-do-not" class="level3">
+<h3 class="anchored" data-anchor-id="meaning-goes-in-the-name-revisions-do-not">Meaning goes in the name, revisions do not</h3>
+<p>A change in <strong>meaning</strong> gets a new ref path. A change in <strong>content only</strong> keeps the ref path and becomes a new version.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Change</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>New source vintage (ESA 2021 alongside ESA 2020)</td>
+<td>New ref path</td>
+</tr>
+<tr class="even">
+<td>New classification or recategorization</td>
+<td>New ref path</td>
+</tr>
+<tr class="odd">
+<td>New zone boundaries</td>
+<td>New ref path. Correspondences are immutable once published (C.6), so <code>ee_r264</code> stays <code>ee_r264</code>.</td>
+</tr>
+<tr class="even">
+<td>Different rung</td>
+<td>New ref path. The rung is in the name.</td>
+</tr>
+<tr class="odd">
+<td>Bug fix in values</td>
+<td>New version, same ref path</td>
+</tr>
+<tr class="even">
+<td>Regenerated under a newer POG spec</td>
+<td>New version, same ref path</td>
+</tr>
+<tr class="odd">
+<td>Recompression or metadata fix</td>
+<td>New version, same ref path</td>
+</tr>
+</tbody>
+</table>
+<p>Ref paths never carry revision tokens such as <code>_v2</code>, <code>_final</code> or <code>_new</code>; the gate rejects them. Identity tokens are not revision tokens: a source vintage (<code>esa_2020</code>), a rung (<code>10sec</code>) or a zone-set name (<code>ee_r264</code>) says <em>what</em> the data is.</p>
+</section>
+<section id="releases" class="level3">
+<h3 class="anchored" data-anchor-id="releases">Releases</h3>
+<ul>
+<li><strong>Every publication cuts a release.</strong> Release IDs are <code>YYYY.MM.DD.N</code>, numbered from 1 each day.</li>
+<li><strong>A publication may carry several datasets.</strong> Regenerating every LULC year and its per-class stacks is one publication and one release, so no release is ever half updated.</li>
+<li><strong>A release is immutable.</strong> <code>_release/&lt;id&gt;.json</code> maps every current dataset to its <code>dataset_sha256</code>, lists retired datasets with what replaced them, and records its parent release, author, timestamp and note.</li>
+<li><strong><code>latest.json</code> points to the newest release not listed in <code>yanked.json</code>.</strong></li>
+<li><strong>Yanking replaces deleting.</strong> If a release turns out bad, for example because the slower data tests fail after publishing, it is added to <code>yanked.json</code>. “Latest” then skips it, and the fix is a new publication.</li>
+<li><strong>Release notes are generated</strong> from each publication’s required note and appended to <a href="../earth_economy_devstack/base_data_release_notes.html">Base Data release notes</a>.</li>
+<li><strong>Retiring replaces deleting.</strong> Retiring a dataset is a publication whose release moves it from the current map to the retired map, with what replaced it. Its entries remain under <code>_catalogue/</code>, and its last version is archived under <code>static/</code> unless the retiring publication says otherwise.</li>
+</ul>
+</section>
+<section id="what-a-user-experiences" class="level3">
+<h3 class="anchored" data-anchor-id="what-a-user-experiences">What a user experiences</h3>
+<p><strong>A user who knows nothing about versioning sets nothing.</strong> At the start of a run, <code>get_path</code> fetches <code>_release/latest.json</code> once and compares each local base_data file it resolves against that release:</p>
+<ul>
+<li>current → used;</li>
+<li>older version, or missing → the latest version is downloaded, and the update is logged (“updated <code>lulc/…</code> to 2026.10.20.1”);</li>
+<li>offline → the local file is used, with a warning.</li>
+</ul>
+<p><code>p.base_data_policy</code> changes this: <code>'update'</code> (the default, as above), <code>'warn'</code> (report stale files but don’t download), or <code>'offline'</code> (never contact R2).</p>
+<p><strong>Every run writes a lock file</strong>, <code>&lt;project_dir&gt;/base_data_lock/&lt;run timestamp&gt;.json</code>, listing each dataset resolved from a base-data tier with its <code>dataset_sha256</code>, the release it came from, and its source (<code>catalogue</code>, <code>legacy_gcs</code>, <code>submissions</code>, or <code>local_unpublished</code>). This is automatic and invisible. It gives reproducibility after the fact: reproducing a result years later means pointing the project at the lock file from the original run (<code>p.base_data_lock_path = ...</code>), and <code>get_path</code> then fetches those exact bytes: from the plain path if that version is still current, otherwise from its <code>static/</code> archive. A version replaced with <code>archive_previous=False</code> can’t be fetched again, and <code>get_path</code> says so.</p>
+<p><strong>Pinning is for deliberately frozen work</strong>, such as a paper in revision, a team that must all see the same data, or test suites:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p.base_data_release <span class="op">=</span> <span class="st">'2026.10.20.1'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The release ID is also what a paper cites (“EE base data release 2026.10.20.1”).</p>
+</section>
+</section>
+<section id="publishing" class="level2">
+<h2 class="anchored" data-anchor-id="publishing">Publishing</h2>
+<section id="manifest" class="level3">
+<h3 class="anchored" data-anchor-id="manifest">Manifests and ingestion scripts</h3>
+<p>Each dataset folder in <code>base_data/</code> carries two files beside its data, and optionally its raw input:</p>
+<pre><code>base_data/lulc/esa/
+    lulc_esa_base_data_ingestion.py    raw input -&gt; the files below, then writes the manifest
+    lulc_esa_base_data_manifest.csv    one row per dataset in this folder
+    lulc_esa_1992.tif ... lulc_esa_2023.tif
+    raw/                               the raw input, exactly as downloaded (never uploaded)</code></pre>
+<p><code>raw/</code> holds the input exactly as provided at its download link, placed there by hand; the ingestion script reads it, records where each file comes from, and writes elsewhere. Publishing, the manifests and the catalogue ignore it, and nothing in it is ever uploaded. The rules are in <a href="../earth_economy_devstack/conventions.html">Conventions</a>, under “Base data dataset folders and <code>raw/</code>”.</p>
+<p>There are three kinds of ingestion script:</p>
+<ol type="1">
+<li><strong>A raw-data ingest that lives entirely in <code>base_data/</code></strong>, such as the ESA land-cover maps: convert <code>raw/</code> to POGs (skipping years already converted), then list. A step whose history was never recorded, like the ESA maps before 2016, is a function that states that gap rather than being left out.</li>
+<li><strong>A thin call to code in another repo</strong>, such as the pyramids’ <code>pyramids_base_data_ingestion.py</code>, which writes any missing area raster with hazelbean’s <code>hb.write_ha_per_cell_pog</code> and lists the rasters. Larger production code stays in the repo that owns it.</li>
+<li><strong>A bespoke script that moves outputs of a finished, published project</strong> into <code>base_data/</code> and lists them (in time perhaps a simple rule, such as “everything in the project’s output directory”).</li>
+</ol>
+<p>Most scripts end with one call, <code>hb.add_directory_to_base_data(...)</code>. It places or keeps the files under their ref paths, converts rasters that aren’t POGs yet (in place, deleting each original once its POG is written), or leaves that to publishing with <code>make_pogs=False</code>, and adds a row per new dataset to the folder’s manifest. It skips code, manifests, GDAL sidecars, <code>raw/</code> and leftover displaced or temporary files, and can be limited by <code>include</code> patterns or kept out of subdirectories. It never writes to R2, and ends with the publishing dry run.</p>
+<p>A manifest is UTF-8 with a BOM, like every EE Spec CSV:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ref_path</code></td>
+<td>The dataset’s full ref path. The local copy is read from <code>~/Files/base_data/&lt;ref_path&gt;</code>.</td>
+</tr>
+<tr class="even">
+<td><code>kind</code>, <code>tier</code></td>
+<td>Dataset kind (see <a href="#datasets">Datasets</a>) and bucket tier. Only <code>pog</code> and <code>public</code> can be published so far.</td>
+</tr>
+<tr class="odd">
+<td><code>variable_class</code></td>
+<td>For rasters: <code>extensive</code>, <code>intensive</code>, <code>categorical</code> or <code>covariate</code>. Publishing uses it to convert a raster that isn’t a POG yet.</td>
+</tr>
+<tr class="even">
+<td><code>license</code>, <code>units</code>, <code>data_source</code>, <code>description</code></td>
+<td>Required metadata, copied into the catalogue entry. A licence that isn’t a standard identifier is given by name and URL.</td>
+</tr>
+<tr class="odd">
+<td><code>code</code></td>
+<td>The script that produced the files.</td>
+</tr>
+</tbody>
+</table>
+<p>Curators publish with <code>earth_economy_devstack/publish_base_data.py</code>. It is about all datasets rather than any one, so it lives in the devstack, and its one call is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hb.publish_base_data_from_manifests(note<span class="op">=</span><span class="st">"..."</span>, dry_run<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It finds every <code>*_base_data_manifest.csv</code> under <code>base_data/</code> and combines them; a ref path listed by two manifests is an error. On a real run it first converts any listed raster that isn’t a POG yet, using its row’s <code>variable_class</code> (a dry run reports it as <code>needs_pog</code>). It then reports every row as <code>new</code>, <code>changed</code> (local bytes differ from the published version), <code>unchanged</code>, <code>unfinished</code>, <code>missing_locally</code> or <code>unsupported</code>, and every published dataset that no manifest lists as <code>not_in_manifest</code>, and publishes the new and changed rows together as one release, each with its own row’s metadata. <code>dry_run</code> defaults to <code>True</code>, so the report is the plan and publishing is always an explicit second run. Editing only a row’s metadata, with the bytes unchanged, does not yet publish a new entry.</p>
+</section>
+<section id="the-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-function">The function</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hb.publish_base_data(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    sources,          <span class="co"># local POG paths, one per dataset</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    ref_paths,        <span class="co"># destination dataset ref paths, same order</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    note,             <span class="co"># required one-line change note</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    license, units, data_source, description, code<span class="op">=</span><span class="va">None</span>,   <span class="co"># each given once, or once per dataset</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    dry_run<span class="op">=</span><span class="va">False</span>,    <span class="co"># run the gate and report, write nothing</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>publish_base_data</code> is the only code that writes to R2, and the manifest command is a thin loop over it. Data reaches it by two routes:</p>
+<ul>
+<li><strong>Local route.</strong> A curator produces or regenerates files in their own <code>base_data/</code>, adds or updates the manifest rows, and publishes. This is the common case, and the only one built so far.</li>
+<li><strong>Drive route.</strong> A curator first <strong>promotes</strong> a lab member’s submission: reviews it, makes it conform, moves it into <code>base_data/</code> under its canonical name, and adds its manifest row with <code>promoted_from</code> set to the submission’s ref path. Publishing then proceeds as for the local route. The function for this, <code>hb.promote_base_data_submission</code>, is reserved for step F and not built.</li>
+</ul>
+</section>
+<section id="steps" class="level3">
+<h3 class="anchored" data-anchor-id="steps">Steps</h3>
+<ol type="1">
+<li><strong>Resolve</strong> the members of each dataset and its declared dependencies.</li>
+<li><strong>Gate</strong>: every check in the table below. Any failure stops the whole publication, and nothing is written.</li>
+<li><strong>Hash</strong> every member file, computing sha256 and md5.</li>
+<li><strong>Stage</strong> each new file under <code>_staging/</code>. A staged copy that already exists is reused. Upload is multipart for large files.</li>
+<li><strong>Archive</strong> each version being replaced, by a server-side copy from its plain path to <code>static/…/v&lt;release&gt;.&lt;ext&gt;</code>, unless <code>archive_previous=False</code>. The gate has already checked that the plain path holds the published version.</li>
+<li><strong>Claim the release ID and commit</strong> by the protocol in <a href="#concurrent-publications">Concurrent publications</a>, writing the catalogue entries in between.</li>
+<li><strong>Move into place:</strong> copy each staged file over its plain path (server-side), then delete the staged copy. Nothing at a plain path changes before the commit.</li>
+<li><strong>Rebuild the pages</strong> of <code>https://data.teemlabs.org</code> (see <a href="#pages">Browsable pages</a>), when the run is given <code>site_dir</code>.</li>
+<li><strong>Publish</strong> the changed datasets to the Drive mirror (not built yet).</li>
+<li><strong>Append</strong> the release notes (not built yet).</li>
+</ol>
+</section>
+<section id="concurrent-publications" class="level3">
+<h3 class="anchored" data-anchor-id="concurrent-publications">Concurrent publications</h3>
+<p>Two curators may publish at the same moment. R2 evaluates conditional <code>PutObject</code> headers atomically against the bucket’s committed state, so <code>If-None-Match: *</code> (“only if this key does not exist”) and <code>If-Match: &lt;etag&gt;</code> (“only if this object is unchanged”) make one compare-and-swap commit possible with no lock object:</p>
+<ol type="1">
+<li>Read <code>_release/latest.json</code> and keep its ETag. It names the parent release.</li>
+<li>Build the new release snapshot from the parent plus this publication’s changes, with the next release ID: the parent’s plus one if it was cut today, else <code>.1</code>.</li>
+<li>Write <code>_release/&lt;id&gt;.json</code> with <code>If-None-Match: *</code>. This claims the ID; a <code>412 Precondition Failed</code> means another publication took it.</li>
+<li>Write each catalogue entry to <code>_catalogue/&lt;ref_path&gt;/&lt;id&gt;.json</code> with <code>If-None-Match: *</code>. Only this publication holds the ID, so these keys are free.</li>
+<li>Write <code>_release/latest.json</code> with <code>If-Match: &lt;etag from step 1&gt;</code>. A <code>412</code> means another publication committed since step 1, so this release was built on a stale parent and would silently drop the other publication’s changes.</li>
+</ol>
+<p>On a <code>412</code> at any step, the release file and entries this publication wrote are deleted (nothing references them yet) and it stops with “another release was published first; rerun”. Rerunning rebuilds on the new parent and skips files already uploaded. With few curators this is rare, so stopping is preferred over retrying automatically.</p>
+<p>Step 5 is the only commit point. The same <code>If-Match</code> rule applies to every rewrite of <code>yanked.json</code>. A lost commit leaves the plain paths untouched: only staged files and archive copies remain, both harmless and reused by the rerun.</p>
+</section>
+<section id="the-gate" class="level3">
+<h3 class="anchored" data-anchor-id="the-gate">The gate</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Applies to</th>
+<th>Implemented by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Conforms to the POG spec, full check: variable class declared, nodata convention, overview levels and their numerical rule, exact statistics, COG layout</td>
+<td>pog, subpog, class_stack, tileset members</td>
+<td><code>hb.is_path_pog(full_check=True)</code>, <code>hb.is_path_subpog</code>, <code>hb.is_path_pog_tileset</code></td>
+</tr>
+<tr class="even">
+<td>Name is lowercase and relative; no revision tokens; does not start with <code>_</code> or <code>static/</code></td>
+<td>all</td>
+<td>gate</td>
+</tr>
+<tr class="odd">
+<td>Ref path unique across both tiers</td>
+<td>all</td>
+<td>catalogue lookup (not yet: only the public tier exists)</td>
+</tr>
+<tr class="even">
+<td>Every dependency already catalogued, or included in the same publication</td>
+<td>all</td>
+<td>release lookup</td>
+</tr>
+<tr class="odd">
+<td>Zone set canonical at its stated rung (C.7)</td>
+<td>zone_set</td>
+<td>gate</td>
+</tr>
+<tr class="even">
+<td>Licence, units, data source and description given, from the manifest row</td>
+<td>all</td>
+<td>gate</td>
+</tr>
+<tr class="odd">
+<td>Redistribution permitted for the private tier</td>
+<td>private tier</td>
+<td>gate (not yet)</td>
+</tr>
+<tr class="even">
+<td>Not the same bytes as the current version (a no-op publication is refused)</td>
+<td>all</td>
+<td>hash comparison</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The first dataset published must be the <code>pyramids/ha_per_cell_&lt;rung&gt;sec.tif</code> stack.</strong> Every area-weighted intensive POG names it as its denominator, so no intensive raster can pass the dependency check before it is catalogued.</p>
+</section>
+</section>
+<section id="pages" class="level2">
+<h2 class="anchored" data-anchor-id="pages">Browsable pages</h2>
+<p><code>https://data.teemlabs.org</code> serves human-readable pages beside the data, built by <code>hb.write_base_data_index_pages</code> from the manifests and the latest release, and rebuilt by every real run of <code>publish_base_data.py</code>:</p>
+<ul>
+<li><code>index.html</code>, the landing page: a custom HTML page (<code>docs/base_data/_landing.html</code>) describing the collections (the top-level folders, with titles and text from <code>docs/base_data/_collections.yml</code>), the store, and how to read from it.</li>
+<li><code>&lt;folder&gt;/index.html</code> for every folder holding published datasets or above one: <code>docs/base_data/_folder_page.qmd</code> filled in and rendered by Quarto into one self-contained file. It shows the folder’s text, cards for its subfolders, its ingestion script’s docstring as an <strong>About</strong> section, and a table of its published manifest rows with each file’s version, release, size, resolution and archived versions. Metadata shared by every row is shown once.</li>
+</ul>
+<p>The pages are cached for five minutes. R2 doesn’t serve <code>index.html</code> for a folder path, so a Cloudflare URL Rewrite rule on the zone appends <code>index.html</code> to any path ending in <code>/</code>. How to edit the pages is in <a href="../earth_economy_devstack/contributing_base_data.html#site-pages">Contributing Base Data</a>.</p>
+</section>
+<section id="google-drive" class="level2">
+<h2 class="anchored" data-anchor-id="google-drive">Google Drive</h2>
+<section id="where-the-mirror-and-the-inbox-live" class="level3">
+<h3 class="anchored" data-anchor-id="where-the-mirror-and-the-inbox-live">Where the mirror and the inbox live</h3>
+<p>Permissions in a shared drive pass down to every folder in it. The mirror is generated and must not be edited, so it gets a shared drive of its own. The inbox stays on the existing NatCapTEEMs shared drive, as <code>Files/base_data_submissions/</code> beside <code>Files/base_data/</code> (decided 2026-10-20), so lab members need no new drive; that they never write into <code>base_data/</code> there is a convention rather than a permission:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 52%">
+<col style="width: 15%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Location</th>
+<th>Lab members</th>
+<th>Curators and publish step</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>EE Base Data</em> shared drive (mirror)</td>
+<td>Viewer</td>
+<td>Content manager</td>
+</tr>
+<tr class="even">
+<td><code>NatCapTEEMs/Files/base_data_submissions/</code></td>
+<td>Contributor</td>
+<td>Content manager</td>
+</tr>
+</tbody>
+</table>
+<p>The old <code>NatCapTEEMs/Files/base_data/submissions/</code> folder is retired; its contents move into <code>base_data_submissions/</code>.</p>
+</section>
+<section id="the-mirror" class="level3">
+<h3 class="anchored" data-anchor-id="the-mirror">The mirror</h3>
+<ul>
+<li>It contains the latest release, laid out by ref path exactly as <code>base_data/</code> is. Storage is not a constraint (50 TB available), so it mirrors everything, including 1-arcsecond tile sets.</li>
+<li>It is <strong>generated, never edited.</strong> The publish step after each release updates the changed datasets and removes retired ones.</li>
+<li>It includes a human-readable index (<code>index.csv</code> and an HTML page) listing every dataset with its units, licence, release and description, for people who don’t program.</li>
+<li>It can be configured as a shared data root (<code>HB_SHARED_DATA_DIRS</code>). Because every file has a catalogued hash, <code>get_path</code> verifies a mirror copy before trusting it. <code>hb-setup-machine-env</code> is updated to find the new mirror instead of the old <code>NatCapTEEMs/Files/base_data</code> folder, which the mirror replaces.</li>
+</ul>
+</section>
+<section id="submissions" class="level3">
+<h3 class="anchored" data-anchor-id="submissions">Submissions</h3>
+<ul>
+<li><p>Lab members <strong>never</strong> write into <code>base_data/</code>. They put data in <code>base_data_submissions/&lt;project&gt;/</code> on the NatCapTEEMs shared drive, keeping a local copy in <code>~/Files/base_data_submissions/&lt;project&gt;/</code>, together with a README.</p></li>
+<li><p>Their code refers to it by a ref path that starts with <code>base_data_submissions/</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p.emissions_factors_ref_path <span class="op">=</span> os.path.join(<span class="st">'base_data_submissions'</span>, <span class="st">'air_quality'</span>, <span class="st">'emissions_factors.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><code>get_path</code> resolves <code>base_data_submissions/…</code> refs from the local submissions folder, then the mounted submissions drive. It never resolves them from R2.</p></li>
+<li><p><strong>Redirect after promotion.</strong> Promotion usually changes the ref path, because the rung suffix is added and the name standardised. The catalogue’s <code>provenance.promoted_from</code> records the submission path. When a <code>base_data_submissions/…</code> ref no longer resolves, <code>get_path</code> looks it up there, logs “promoted to <code>&lt;new ref path&gt;</code>; update your code”, and resolves to the promoted dataset. Code keeps working on the day of promotion.</p></li>
+<li><p><a href="../earth_economy_devstack/contributing_base_data.html">Contributing Base Data</a> is rewritten to this design (2026-10-20). Until <code>get_path</code> searches the inbox, contributors resolve submission refs with <code>prepend_possible_dirs=[~/Files]</code>, as that page shows, and curators promote by hand.</p></li>
+</ul>
+<p><strong>The invariant this buys:</strong> local <code>~/Files/base_data/</code> holds catalogued files plus each dataset’s ingestion script and manifest. Any other file found there is unambiguously an orphan or a local modification, and the sync tool can say which.</p>
+</section>
+</section>
+<section id="get_path-resolution-order" class="level2">
+<h2 class="anchored" data-anchor-id="get_path-resolution-order">get_path resolution order</h2>
+<p>Searched first to last:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Root</th>
+<th>Role</th>
+<th>Checks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>cur_dir</code></td>
+<td>The task’s own output</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>intermediate_dir</code></td>
+<td>Earlier tasks’ outputs</td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>input_dir</code></td>
+<td>Untracked project overrides</td>
+<td>existing stale-template warning</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>input_template_dir</code></td>
+<td>Tracked project definitions</td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>project_base_data_dir</code></td>
+<td>Project-specific data</td>
+<td>none. <strong>New:</strong> defined today but not searched.</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>caller_dir</code>, <code>cwd</code></td>
+<td>Regenerated files about to replace base data</td>
+<td>warns when it shadows a catalogued ref path with different bytes</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>submissions roots</td>
+<td>Only for <code>base_data_submissions/…</code> refs; redirect if promoted</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>base_data_dir</code></td>
+<td>Local cache of the catalogue</td>
+<td>freshness against the release, per <code>base_data_policy</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>shared data roots (Drive mirror)</td>
+<td>Copy into <code>base_data_dir</code></td>
+<td>hash verified</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>R2 public</td>
+<td>Download, or window read when <code>rung</code> or <code>subset</code> is given</td>
+<td>hash verified on download</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>R2 private</td>
+<td>As 10, only if credentials are configured</td>
+<td>hash verified on download</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Google Cloud (temporary)</td>
+<td>Only for refs not in the catalogue</td>
+<td>logs “legacy source”; lock file records <code>legacy_gcs</code></td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul>
+<li><strong>Shadow warnings, not prohibitions.</strong> A hit at tier 6 for a ref path the catalogue knows, with different bytes, is a legitimate workflow: someone has regenerated a file that will be published. It is logged once per run, and the lock file records it as <code>local_unpublished</code> with its hash. The run is then visibly marked as having used unpublished data, and nothing is silent.</li>
+<li><strong>Hashing is cached.</strong> A local index outside <code>base_data/</code> (under <code>~/.cache/hazelbean/</code>) stores <code>(path, size, mtime) → sha256</code>, so multi-gigabyte files are hashed only when they change.</li>
+<li><strong>The release is fetched once per run,</strong> and served from an ETag-validated local copy when unchanged.</li>
+<li><strong>Tier 12 is removed</strong> in the hazelbean release that accompanies retiring Google Cloud.</li>
+</ul>
+</section>
+<section id="subset-and-overview-reads" class="level2">
+<h2 class="anchored" data-anchor-id="subset-and-overview-reads">Subset and overview reads</h2>
+<section id="the-call" class="level3">
+<h3 class="anchored" data-anchor-id="the-call">The call</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p.get_path(<span class="st">'lulc/esa/lulc_esa_2020_10sec.tif'</span>, rung<span class="op">=</span><span class="dv">900</span>, subset<span class="op">=</span>(<span class="op">-</span><span class="dv">130</span>, <span class="dv">40</span>, <span class="op">-</span><span class="dv">120</span>, <span class="dv">50</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>rung=</code></strong> reads the stored overview for that rung (identified by its dimensions, A.1) instead of the base level. Over HTTP that is a handful of range requests rather than a full download. It must be a rung in the file’s overview chain.</li>
+<li><strong><code>subset=</code></strong> restricts the read to a window:</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Form</th>
+<th>Example</th>
+<th>Resolved as</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bounding box</td>
+<td><code>(xmin, ymin, xmax, ymax)</code></td>
+<td>Snapped outward to whole degrees; returns a subpog</td>
+</tr>
+<tr class="even">
+<td>Tile corner string</td>
+<td><code>'40N_130W_10_10'</code></td>
+<td>Exact extent</td>
+</tr>
+<tr class="odd">
+<td>Zone</td>
+<td><code>('cartographic/ee/ee_r264.gpkg', [840, 124])</code></td>
+<td>Bounding box from the zone set’s per-zone bbox column, plus the per-zone-area subpog as a companion</td>
+</tr>
+<tr class="even">
+<td>Polygon</td>
+<td>a shapely geometry</td>
+<td>Bounding-box subpog, plus an overlap-fraction companion</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rules" class="level3">
+<h3 class="anchored" data-anchor-id="rules">Rules</h3>
+<ul>
+<li><strong>Snap to whole degrees, not to the rung.</strong> D.5.1 names subpogs by whole-degree corner and size, so the cache key is always expressible. Snapping coarser also means nearby requests share files. At rungs of 18000 s (5°) and coarser the global file is at most 72 × 36 cells, so the whole file is fetched.</li>
+<li><strong>Never mask values.</strong> A polygon or zone subset returns the full bounding-box data plus a weights companion. Clipping by centroid or all-touched would reintroduce the zonal error that §4.2.3 removes. Under late binding (§4.5.1), the weights are applied at the end of the computation.</li>
+<li><strong>Overviews are copied, not recomputed.</strong> A subpog’s overview chain is the global chain truncated to levels whose cell divides its extent (<code>hb.get_pyramid_overview_levels_for_bb</code>). Because the extent is snapped to whole degrees, each of those levels is an exact window of the source’s own overview, so the windows are read and written with <code>OVERVIEWS=FORCE_USE_EXISTING</code>.</li>
+<li><strong>Sparse data reads as zero.</strong> Tiles missing from a tile set’s VRT read as 0, or as the covariate nodata value for covariate rasters (A.6). A window entirely inside missing tiles returns a valid all-zero subpog, not an error.</li>
+<li><strong>Rungs coarser than a tile set’s tile edge</strong> are read from the dataset’s <code>coarse_companion</code> (A.6).</li>
+<li><strong>Size guard.</strong> <code>max_subset_cells</code>, with a default to be set and overridable per call, stops accidental requests such as reading a 1-arcsecond continent. It is a safety rail, not access control: anyone with read access can bypass hazelbean.</li>
+<li>This closes D.10(c), “range-request reads of a window from a remote global POG through <code>hb.get_path</code>”.</li>
+</ul>
+</section>
+<section id="mechanics" class="level3">
+<h3 class="anchored" data-anchor-id="mechanics">Mechanics</h3>
+<ul>
+<li><strong>Public tier:</strong> <code>/vsicurl/https://data.teemlabs.org/&lt;ref_path&gt;</code> for the current version, or its <code>static/…/v&lt;release&gt;.&lt;ext&gt;</code> archive for a pinned older one. Window reads send <code>If-Match</code> with the ETag they started with, so a publication that replaces the file mid-read makes them restart rather than mix versions; full downloads are checked against the catalogue’s sha256.</li>
+<li><strong>Tile sets:</strong> <code>/vsicurl/</code> on the VRT at its plain path.</li>
+<li><strong>Private tier:</strong> <code>/vsis3/teems-private-data/&lt;ref_path&gt;</code> with the R2 endpoint and per-person credentials (see <a href="#tiers">Tiers</a>).</li>
+<li><strong>GDAL configuration</strong>, set by hazelbean around remote reads:</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Value</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>GDAL_DISABLE_READDIR_ON_OPEN</code></td>
+<td><code>EMPTY_DIR</code></td>
+<td>Stops GDAL from trying to list the remote directory, which fails on R2</td>
+</tr>
+<tr class="even">
+<td><code>CPL_VSIL_CURL_ALLOWED_EXTENSIONS</code></td>
+<td><code>.tif,.vrt</code></td>
+<td>Avoids probing for sidecar files</td>
+</tr>
+<tr class="odd">
+<td><code>GDAL_HTTP_MULTIRANGE</code></td>
+<td><code>YES</code></td>
+<td>Fetches several blocks per request</td>
+</tr>
+<tr class="even">
+<td><code>GDAL_HTTP_MERGE_CONSECUTIVE_RANGES</code></td>
+<td><code>YES</code></td>
+<td>Merges adjacent block reads</td>
+</tr>
+<tr class="odd">
+<td><code>VSI_CACHE</code></td>
+<td><code>TRUE</code></td>
+<td>Caches fetched ranges within a process</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="base_data_cache" class="level2">
+<h2 class="anchored" data-anchor-id="base_data_cache">base_data_cache</h2>
+<p>All subset and overview reads are written to a user-wide, disposable folder, <code>~/Files/base_data_cache/</code>, never to <code>base_data/</code>. The folder can be overridden with <code>HB_BASE_DATA_CACHE_DIR</code> in <code>machine.env</code>.</p>
+<section id="layout" class="level3">
+<h3 class="anchored" data-anchor-id="layout">Layout</h3>
+<p>One folder per source dataset, then one file per rung and extent:</p>
+<pre><code>base_data_cache/lulc/esa/lulc_esa_2020_10sec/
+    900sec_40N_130W_10_10.tif
+    900sec_20N_30E_30_60.tif
+    10sec_40N_130W_10_10.tif
+    10sec_40N_130W_10_10_zone_ee_r264_840.tif     per-zone-area companion
+    10sec_40N_130W_10_10_geom_7c1e09ab.tif        overlap fraction for an arbitrary polygon (geometry hash)</code></pre>
+<p>Each file records its origin in its metadata: <code>HB_SOURCE_REF_PATH</code>, <code>HB_SOURCE_SHA256</code>, <code>HB_SUBSET</code> and <code>HB_RUNG</code>.</p>
+</section>
+<section id="behaviour" class="level3">
+<h3 class="anchored" data-anchor-id="behaviour">Behaviour</h3>
+<ol type="1">
+<li>The catalogue gives the source’s current <code>dataset_sha256</code>.</li>
+<li>If the cache file exists and its <code>HB_SOURCE_SHA256</code> matches, it is returned with no network traffic.</li>
+<li>Otherwise the window is read from the best available source (a current local copy in <code>base_data/</code>, else R2), written to a temporary name, then renamed into place. Parallel tasks requesting the same subset therefore never see a half-written file.</li>
+</ol>
+</section>
+<section id="rules-1" class="level3">
+<h3 class="anchored" data-anchor-id="rules-1">Rules</h3>
+<ul>
+<li><strong>Never synced, published, mirrored or catalogued.</strong> Deleting the whole folder is always safe; it refills on demand.</li>
+<li><strong>Invalidation is lazy.</strong> When a source’s hash changes, the next request sees the mismatch and fetches again. The sync tool can also sweep stale entries, and one folder per dataset makes that a single folder delete.</li>
+<li><strong>Optional size cap.</strong> <code>HB_CACHE_MAX_GB</code> evicts least-recently-used files.</li>
+<li><strong>Overlapping subsets are stored separately.</strong> That duplication is accepted. A later optimisation can serve a request contained in an existing cached subset at the same rung by cutting it locally with <code>hb.write_subpog_from_pog_window</code>.</li>
+<li><strong>Why not <code>base_data/</code>:</strong> a subset at a canonical ref path would look like a corrupted or modified copy of the full file, and would shadow it.</li>
+<li><strong>Why not the project’s <code>intermediate/</code>:</strong> many projects ask for the same windows, so sharing the cache across projects avoids repeat downloads.</li>
+</ul>
+</section>
+</section>
+<section id="tiers" class="level2">
+<h2 class="anchored" data-anchor-id="tiers">Tiers and access</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Public</th>
+<th>Private</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bucket</td>
+<td><code>teems-public-data</code></td>
+<td><code>teems-private-data</code></td>
+</tr>
+<tr class="even">
+<td>Address</td>
+<td><code>https://data.teemlabs.org</code></td>
+<td>R2 S3 endpoint; later a Worker at a separate subdomain</td>
+</tr>
+<tr class="odd">
+<td>Read access</td>
+<td>Anyone</td>
+<td>Per-person R2 token now; Worker-issued presigned URLs when access is sold</td>
+</tr>
+<tr class="even">
+<td>GDAL path</td>
+<td><code>/vsicurl/</code></td>
+<td><code>/vsis3/</code>, or <code>/vsicurl/</code> with a presigned URL</td>
+</tr>
+<tr class="odd">
+<td>Catalogue</td>
+<td><code>_catalogue/</code> in its bucket</td>
+<td><code>_catalogue/</code> in its bucket</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>GDAL has no permission system of its own.</strong> It signs requests with whatever credentials it finds, and R2 decides. For the private tier, <code>machine.env</code> (never committed) holds <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_S3_ENDPOINT=&lt;account&gt;.r2.cloudflarestorage.com</code> and <code>AWS_VIRTUAL_HOSTING=FALSE</code>. Revoking a person’s token in the Cloudflare dashboard makes their next request fail with 403.</li>
+<li><strong>Enforced limits require a server.</strong> When access is sold, a Cloudflare Worker in front of the private bucket checks a subscriber key, issues short-lived presigned URLs, and enforces a byte quota per key per day. Limiting by extent is only practical through tiles: the private tier can serve tile sets only, and quota whole tiles.</li>
+<li><strong>The public tier needs no limit.</strong> Egress is free and requests are cheap.</li>
+<li><strong>A ref path exists in exactly one tier,</strong> so code never names a tier. <code>get_path</code> tries public, then private if credentials exist.</li>
+</ul>
+</section>
+<section id="the-sync-and-status-tool" class="level2">
+<h2 class="anchored" data-anchor-id="the-sync-and-status-tool">The sync and status tool</h2>
+<p>A command that compares local <code>base_data/</code>, the catalogue (latest or a pinned release), the Drive mirror and the submissions drive, and labels every dataset:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 47%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Label</th>
+<th>Meaning</th>
+<th>Offered action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>current</code></td>
+<td>Local matches the release</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td><code>stale</code></td>
+<td>Local hash matches an older version (found by following <code>previous</code>)</td>
+<td><code>pull</code></td>
+</tr>
+<tr class="odd">
+<td><code>missing</code></td>
+<td>In the release, not local</td>
+<td><code>pull</code> (optional)</td>
+</tr>
+<tr class="even">
+<td><code>modified</code></td>
+<td>Local hash matches no known version</td>
+<td>publish, or revert</td>
+</tr>
+<tr class="odd">
+<td><code>orphan</code></td>
+<td>In <code>base_data/</code>, in no manifest, and not an ingestion script or manifest</td>
+<td>move to submissions, or list it with an ingestion script and publish</td>
+</tr>
+<tr class="even">
+<td><code>mirror_stale</code></td>
+<td>Drive mirror lags the release</td>
+<td><code>republish-mirror</code></td>
+</tr>
+<tr class="odd">
+<td><code>submission_pending</code></td>
+<td>Waiting in the submissions drive</td>
+<td>review, promote, then publish</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nothing ever moves upward automatically.</strong> <code>pull</code> and <code>republish-mirror</code> can run unattended; publishing is always an explicit, non-dry run of the <a href="#manifest">manifest</a> command, which already reports the upward half of these labels (<code>new</code>, <code>changed</code>, <code>unchanged</code>, <code>missing_locally</code>, <code>not_in_manifest</code>).</p>
+<p>The first version is <strong>read-only</strong> and useful before R2 holds anything: it hashes local <code>base_data/</code> through the cached index and compares it with the Drive md5s (from <code>rclone lsjson --hash</code>), showing where the old Drive folder differs from the reference local copy.</p>
+</section>
+<section id="google-cloud-transition" class="level2">
+<h2 class="anchored" data-anchor-id="google-cloud-transition">Google Cloud transition</h2>
+<ul>
+<li><p><strong>Now:</strong> the bucket stays up and unchanged. Its contents are out of date relative to the maintainer’s local copy, so they are not inventoried, reconciled or migrated.</p></li>
+<li><p><strong>During transition:</strong> <code>get_path</code> tier 12 falls back to Google Cloud for refs not yet catalogued, with a warning, and the lock file records the source as <code>legacy_gcs</code>.</p></li>
+<li><p><strong>At retirement</strong>, on an announced date:</p>
+<ol type="1">
+<li>Snapshot the bucket to an R2 bucket <code>ee-legacy-gcs</code> with Cloudflare Super Slurper. This is free apart from R2 Class A operations and Google’s egress, which is a few dollars at 27 GiB.</li>
+<li>Add an indefinite bucket lock and keep <code>ee-legacy-gcs</code> private. <code>get_path</code> never reads it.</li>
+<li>Release the hazelbean version without tier 12.</li>
+<li>Delete the Google bucket. Older hazelbean installs, which hardcode it, stop finding data from that date.</li>
+</ol></li>
+</ul>
+</section>
+<section id="implementation-order" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-order">Implementation order</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 47%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Work</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>Add <code>teemlabs.org</code> to Cloudflare; create <code>teems-public-data</code>; connect <code>data.teemlabs.org</code>; create a curator token</td>
+<td>Cloudflare and hosting.com accounts</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>This document, reviewed and adopted</td>
+<td><code>earth_economy_devstack/docs</code></td>
+</tr>
+<tr class="odd">
+<td>C1</td>
+<td>Read-only status tool: cached local hashing, compared with Drive md5s</td>
+<td>hazelbean</td>
+</tr>
+<tr class="even">
+<td>C2</td>
+<td><code>publish_base_data</code>, folder manifests with <code>add_directory_to_base_data</code> and <code>publish_base_data_from_manifests</code>, local route, <code>pog</code> datasets. First publication: the <code>ha_per_cell</code> stack. Built in <code>hazelbean/base_data_processing.py</code>.</td>
+<td>hazelbean, devstack</td>
+</tr>
+<tr class="odd">
+<td>D</td>
+<td><code>get_path</code> R2 tier: release fetch, download with hash check, freshness policy, lock files, <code>project_base_data_dir</code> search, shadow warnings, temporary Google Cloud tier</td>
+<td>hazelbean <code>project_flow.py</code>, <code>cloud_utils.py</code></td>
+</tr>
+<tr class="even">
+<td>E</td>
+<td><code>rung=</code> and <code>subset=</code> window reads, <code>base_data_cache</code>, size guard; then <code>tileset</code>, <code>class_stack</code> and <code>zone_set</code> datasets</td>
+<td>hazelbean</td>
+</tr>
+<tr class="odd">
+<td>C3</td>
+<td>Browsable pages at <code>data.teemlabs.org</code>: <code>hb.write_base_data_index_pages</code>, templates in <code>docs/base_data/</code>, rebuilt after every real publish. Done.</td>
+<td>hazelbean, devstack</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>Drive mirror publishing, <code>get_path</code> submissions root and redirect, <code>hb.promote_base_data_submission</code>, and the <code>get_path</code> section of the conventions (<code>contributing_base_data.qmd</code> is already rewritten)</td>
+<td>hazelbean, docs</td>
+</tr>
+<tr class="odd">
+<td>G</td>
+<td>Private tier: per-person tokens, then a Worker with byte quotas</td>
+<td>Cloudflare, hazelbean</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
+<ol type="1">
+<li><strong>Default <code>max_subset_cells</code>.</strong></li>
+<li><strong>Lock-file location and retention.</strong> <code>&lt;project_dir&gt;/base_data_lock/</code> with one file per run is proposed; whether old lock files are pruned is open.</li>
+<li><strong>Who the curators are,</strong> meaning who holds R2 write tokens.</li>
+<li><strong>Catalogue scale.</strong> One JSON file per dataset version, with full snapshots per release, is simple and adequate for thousands of datasets. If releases become large, snapshots can store only changes relative to their parent.</li>
+<li><strong>CORS</strong> on the public bucket, needed only if browser-based maps will read from it.</li>
+<li><strong>Private bucket name.</strong> <code>teems-private-data</code> is proposed to match <code>teems-public-data</code>; it is not created yet.</li>
+<li><strong>Whether to keep the Google Cloud fallback (tier 12).</strong> It keeps refs working for users without a local copy until R2 is populated, but it serves data known to be out of date. The alternative is to drop it now and let uncatalogued refs fail with a clear message.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

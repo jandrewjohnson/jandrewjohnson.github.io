@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">GTAPPy</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../earth_economy_devstack/base_data.html">
+    <a class="dropdown-item" href="../earth_economy_devstack/base_data.qmd">
  <span class="dropdown-text">Base Data</span></a>
   </li>  
         <li>
@@ -448,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../earth_economy_devstack/base_data.html" class="sidebar-item-text sidebar-link">
+            <a href="../earth_economy_devstack/base_data.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Base Data</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../earth_economy_devstack/base_data.html" class="sidebar-item-text sidebar-link">
+  <a href="../earth_economy_devstack/base_data.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -553,6 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#pyramid-resolutions-are-expressed-in-arcseconds" id="toc-pyramid-resolutions-are-expressed-in-arcseconds" class="nav-link" data-scroll-target="#pyramid-resolutions-are-expressed-in-arcseconds">Pyramid resolutions are expressed in arcseconds</a></li>
   <li><a href="#get_path-and-ref_path" id="toc-get_path-and-ref_path" class="nav-link" data-scroll-target="#get_path-and-ref_path">get_path and ref_path</a></li>
+  <li><a href="#base-data-dataset-folders-and-raw" id="toc-base-data-dataset-folders-and-raw" class="nav-link" data-scroll-target="#base-data-dataset-folders-and-raw">Base data dataset folders and <code>raw/</code></a></li>
   <li><a href="#directory-and-file-naming" id="toc-directory-and-file-naming" class="nav-link" data-scroll-target="#directory-and-file-naming">Directory and file naming</a></li>
   <li><a href="#variable-naming" id="toc-variable-naming" class="nav-link" data-scroll-target="#variable-naming">Variable naming</a></li>
   <li><a href="#priority-and-debug-markers" id="toc-priority-and-debug-markers" class="nav-link" data-scroll-target="#priority-and-debug-markers">Priority and debug markers</a></li>
@@ -797,6 +798,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Data manipulation</strong> - <strong>extract</strong> — pull specific portions from a larger structure (<code>extract_features</code>). - <strong>execute</strong> — run commands/scripts/processes (<code>execute_query</code>). - <strong>convert</strong> — transform between formats/types (<code>convert_crs</code>).</p>
 <p><strong>Collections</strong> - <strong>list</strong> — return a collection, typically a Python list (<code>list_files</code>). - <strong>remove</strong> — delete from an in-memory collection/structure (<code>remove_duplicates</code>). - <strong>delete</strong> — permanently remove from disk/database (<code>delete_file</code>). - <strong>displace</strong> — (in-house) rename a path with e.g.&nbsp;a timestamp so you can write a new file into the old place without destroying the original; has optional <code>delete_on_exit</code>. - <strong>rename</strong> — change name, same location (<code>rename_column</code>). - <strong>replace</strong> — substitute one value/object for another (<code>replace_missing_values</code>). - <strong>move</strong> — relocate to a different location/container (<code>move_to_archive</code>).</p>
 </section>
+<section id="base-data-dataset-folders-and-raw" class="level2">
+<h2 class="anchored" data-anchor-id="base-data-dataset-folders-and-raw">Base data dataset folders and <code>raw/</code></h2>
+<p>Each dataset folder in <code>base_data</code> (e.g.&nbsp;<code>base_data/lulc/esa/</code>) holds its data and, beside it, the record of where the data came from:</p>
+<pre><code>base_data/lulc/esa/
+    lulc_esa_base_data_ingestion.py    raw input -&gt; the files below, then writes the manifest
+    lulc_esa_base_data_manifest.csv    one row per dataset in this folder, with its metadata
+    lulc_esa_1992.tif ... lulc_esa_2023.tif
+    raw/                               the raw input, exactly as downloaded (never uploaded)</code></pre>
+<ul>
+<li><strong><code>&lt;name&gt;_base_data_ingestion.py</code></strong> is the dataset’s lineage, read top to bottom: from <code>raw/</code> (or from code in another repo, or from a finished project’s outputs) to the files at their ref paths, ending with the manifest. It is the only code allowed in <code>base_data</code>, and it is kept thin: general utilities belong in hazelbean.</li>
+<li><strong><code>raw/</code></strong> holds the raw input exactly as provided at its download link: same file names, same formats, nothing edited, renamed or converted. A person places it there by hand before running the ingestion script, which assumes it is present, reads from it, and writes its outputs elsewhere. <code>raw/</code> is <strong>never uploaded</strong>: publishing, the manifests and the catalogue ignore it, and <code>get_path</code> never resolves into it.</li>
+<li><strong>The ingestion script says where each raw file comes from</strong>: the download page or URL, the version, and anything needed to fetch the same files again, so <code>raw/</code> can be recreated on another machine.</li>
+<li><strong>A step that can be rerun skips work already done</strong>: a year whose output already exists is not converted again. With every output present, the script only refreshes the manifest.</li>
+<li><strong>A step whose history isn’t known is stated, not skipped.</strong> If how some files were produced was never recorded, the script has a function for that step whose only job is to say so (and to stop if those files are missing), so the gap is visible in the lineage rather than silent.</li>
+<li><strong>A dataset folder stays flat.</strong> When the ingestion script is a ProjectFlow run file, its scenarios CSV is <code>&lt;name&gt;_base_data_scenarios.csv</code> beside it, not in an <code>input_template/</code> folder, and its tasks write to the ref paths, not to <code>p.cur_dir</code>. The CSV is part of the lineage, and <code>base_data</code> is not a repository, so neither reason for <code>input_template/</code> (tracked, shadowable by <code>input/</code>) applies.</li>
+</ul>
+</section>
 <section id="directory-and-file-naming" class="level2">
 <h2 class="anchored" data-anchor-id="directory-and-file-naming">Directory and file naming</h2>
 <ul>
@@ -861,25 +879,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="docstrings" class="level2">
 <h2 class="anchored" data-anchor-id="docstrings">Docstrings</h2>
 <p>Use <strong>Google-style docstrings</strong> (they render well with Quarto):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fibonacci(n):</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate the nth Fibonacci number.</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">        n (int): The position in the Fibonacci sequence.</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">        int: The nth Fibonacci number.</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Raises:</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">        NameError: If n is not an int.</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Basic usage:</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">        ```python</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(5)  # Returns 5</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(10) # Returns 55</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">        ```</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fibonacci(n):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate the nth Fibonacci number.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">        n (int): The position in the Fibonacci sequence.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">        int: The nth Fibonacci number.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Raises:</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">        NameError: If n is not an int.</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Examples:</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Basic usage:</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">        ```python</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(5)  # Returns 5</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">        fibonacci(10) # Returns 55</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">        ```</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="utf-8-encoding" class="level2">
 <h2 class="anchored" data-anchor-id="utf-8-encoding">UTF-8 encoding</h2>
@@ -953,9 +971,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong><code>&lt;page&gt;.qmd</code> is the source and the only file you edit.</strong> It is plain prose with <code>#</code>/<code>##</code> headings, and renders normally as a website page.</p></li>
 <li><p><strong><code>&lt;page&gt;_marked.qmd</code> is GENERATED. Never edit it by hand</strong> — your edits are destroyed the next time the deck is built. The <code>_marked</code> suffix means exactly this: “auto-generated slide version of the file with the same stem.” Regenerate it after any change to the source.</p></li>
 <li><p>Generation is two hazelbean calls, usually wrapped in a small script (see <code>website_dev/scripts/create_seals_walkthrough_slides.py</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>marked_path <span class="op">=</span> hb.suri(src_qmd_path, <span class="st">'marked'</span>)          <span class="co"># &lt;page&gt;.qmd -&gt; &lt;page&gt;_marked.qmd</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>hb.qmd_path_to_marked_qmd_path(src_qmd_path, marked_path)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>hb.qmd_to_revealjs(marked_path)                        <span class="co"># quarto render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>marked_path <span class="op">=</span> hb.suri(src_qmd_path, <span class="st">'marked'</span>)          <span class="co"># &lt;page&gt;.qmd -&gt; &lt;page&gt;_marked.qmd</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>hb.qmd_path_to_marked_qmd_path(src_qmd_path, marked_path)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>hb.qmd_to_revealjs(marked_path)                        <span class="co"># quarto render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ul>
 <p><strong>What the marking pass does</strong> (<code>hb.qmd_path_to_marked_qmd_path</code>): it prepends a revealjs YAML header if the source has none, splits content into slides at <code>#</code> and <code>##</code> headings, expands the slide tags below, and auto-wraps any slide whose content exceeds ~300 characters in <code>::: r-fit-text</code> so it scales to the slide.</p>
 <p><strong>Slide tags</strong> are written inline in a heading in the <em>source</em> file and are expanded by the marking pass. They are inert in the prose rendering, so a tagged source page still reads correctly as a web page:</p>
